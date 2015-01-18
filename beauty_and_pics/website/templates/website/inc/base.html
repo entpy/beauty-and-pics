@@ -1,0 +1,78 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<!--[if lt IE 7]><html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]><html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]><html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="it"> <!--<![endif]-->
+	<head>
+		{% block head %}
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+
+		{% block title %}
+		<title></title>
+		{% endblock title %}
+
+		{% block description %}
+		<meta name="description" content="">
+		{% endblock description %}
+
+		<link rel="stylesheet" href="{% static "website/css/bootstrap.min.css" %}">
+		<link rel="stylesheet" href="{% static "website/css/main.css" %}">
+		<script src="{% static "website/js/vendor/modernizr-2.6.2.min.js" %}"></script>
+		{% endblock head %}
+	</head>
+	<body>
+		<header>
+			<nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+				<div class="container">
+					<div class="navbar-header">
+						<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+							<span class="sr-only">Toggle navigation</span>
+							<span class="icon-bar"></span>
+							<span class="icon-bar"></span>
+							<span class="icon-bar"></span>
+						</button>
+						<a class="navbar-brand" href="#">Project name</a>
+					</div>
+					<div id="navbar" class="navbar-collapse collapse">
+						<form class="navbar-form navbar-right" role="form">
+							<div class="form-group">
+								<input type="text" placeholder="Email" class="form-control">
+							</div>
+							<div class="form-group">
+								<input type="password" placeholder="Password" class="form-control">
+							</div>
+							<button type="submit" class="btn btn-success">Sign in</button>
+						</form>
+					</div><!--/.navbar-collapse -->
+				</div>
+			</nav>
+		</header>
+
+		<section>
+			{% block main_content %}
+			{# put main content here #}
+			{% endblock main_content %}
+		<section>
+
+		{% block custom_page_script %}
+		{% endblock custom_page_script %}
+		<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+		<script>window.jQuery || document.write('<script src="js/vendor/jquery-1.11.1.min.js"><\/script>')</script>
+		<script src="{% static "website/js/vendor/bootstrap.min.js" %}"></script>
+		<script src="{% static "website/js/plugins.js" %}"></script>
+		<script src="{% static "website/js/main.js" %}"></script>
+
+		<!-- Google Analytics: change UA-XXXXX-X to be your site's ID. -->
+		<script>
+			(function(b,o,i,l,e,r){b.GoogleAnalyticsObject=l;b[l]||(b[l]=
+			function(){(b[l].q=b[l].q||[]).push(arguments)});b[l].l=+new Date;
+			e=o.createElement(i);r=o.getElementsByTagName(i)[0];
+			e.src='//www.google-analytics.com/analytics.js';
+			r.parentNode.insertBefore(e,r)}(window,document,'script','ga'));
+			ga('create','UA-XXXXX-X');ga('send','pageview');
+		</script>
+	</body>
+</html>
