@@ -23,12 +23,17 @@
 		<link rel="stylesheet" href="{% static "website/css/common.css" %}">
 		<link rel="stylesheet" href="{% static "website/css/main.css" %}">
 		<script src="{% static "website/js/vendor/modernizr-2.6.2.min.js" %}"></script>
+
+		{# Custom page css block #}
+		{% block custom_css %}
+		{% endblock custom_css %}
+
 		{% endblock head %}
 	</head>
 	<body>
 		<header>
 			<div class="header first_color">
-				<div class="content page">
+				<div class="centered_page">
 					<div class="logo_container">
 						<a href="#">
 							<img alt="Beauty and Pics" src="{% static "website/img/logo.png" %}">
@@ -53,8 +58,7 @@
 
 		<section>
 			{% block content_start %}
-			<div class="content page">
-				<div class="page_wrapper">
+			<div class="centered_page">
 			{% endblock content_start %}
 
 			{% block main_content %}
@@ -62,18 +66,19 @@
 			{% endblock main_content %}
 
 			{% block content_end %}
-				</div>
 			</div>
 			{% endblock content_end %}
 		</section>
 
-		{% block custom_page_script %}
-		{% endblock custom_page_script %}
 		<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
 		<script>window.jQuery || document.write('<script src="js/vendor/jquery-1.11.1.min.js"><\/script>')</script>
 		{# <script src="{% static "website/js/vendor/bootstrap.min.js" %}"></script> #}
 		<script src="{% static "website/js/plugins.js" %}"></script>
 		<script src="{% static "website/js/main.js" %}"></script>
+
+		{# Custom page script block #}
+		{% block custom_js %}
+		{% endblock custom_js %}
 
 		<!-- Google Analytics: change UA-XXXXX-X to be your site's ID. -->
 		<script>

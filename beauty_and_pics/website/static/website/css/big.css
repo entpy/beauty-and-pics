@@ -1,5 +1,5 @@
 /* Big screen css style */
-.page { margin: 0 auto; max-width: 1200px; }
+.centered_page { margin: 0 auto; max-width: 1200px; }
 
 /* header */
 .header { height: 140px; }
