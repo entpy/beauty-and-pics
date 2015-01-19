@@ -1,5 +1,13 @@
 {% extends "website/inc/base_index.html" %}
 {% load staticfiles %}
+
+{# Content inside image #}
+{% block image_content %}
+{{ block.super }}
+Content inside image
+{% endblock image_content %}
+
+{# Content outside image #}
 {% block main_content %}
-Main content
+Content outside image
 {% endblock main_content %}

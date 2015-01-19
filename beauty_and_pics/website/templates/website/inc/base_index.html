@@ -9,6 +9,35 @@
 <meta name="description" content="Beauty and Pics: pagina index">
 {% endblock description %}
 
+{# clear default page title block #}
+{% block page_title_block %}
+{% endblock page_title_block %}
+
+{# TODO: add a big background image to this container #}
+<div class="image_background_container">
+	{% block image_content %}
+	<div class="title_block">
+		<div class="title">Sfoggia il tuo stile sul web</div>
+		<div class="description">La prossima o il prossimo miss Beauty and Pics potresti essere tu</div>
+	</div>
+	{# Put content inside image here #}
+	{% endblock image_content %}
+</div>
+
+{# content inside outer {{{ #}
+{% block content_start %}
+{{ block.super }}
+{% endblock content_start %}
+
+{% block main_content %}
+{{ block.super }}
+{% endblock main_content %}
+
+{% block content_end %}
+{{ block.super }}
+{% endblock content_end %}
+{# content outer image }}} #}
+
 {% block custom_page_script %}
 {# Put addictional page script here #}
 {% endblock custom_page_script %}
