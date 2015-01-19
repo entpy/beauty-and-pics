@@ -1,0 +1,13 @@
+/* Big screen css style */
+.page { margin: 0 auto; max-width: 1200px; }
+
+/* header */
+.header { height: 140px; }
+.header > div > div { margin-top: 1px; }
+.header .logo_container { float: left; padding: 13px 0; }
+.header .header_button_container { float: right; padding: 48px 0; }
+.header .header_button_container .btn { width: 100px; }
+.header .header_button_container .btn-success { margin-right: 5px; }
+.header .navigation_container { float: right; margin-right: 25px; }
+.header .navigation_container .navigation_item { float: left; padding: 59px 30px; }
+.header .navigation_container .navigation_label { margin-right: 10px; }

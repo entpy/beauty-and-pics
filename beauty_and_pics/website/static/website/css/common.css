@@ -1,0 +1,13 @@
+/* ==========================================================================
+   Common styles
+   ========================================================================== */
+.first_color { background-color: #2C3E50; }
+
+/* header */
+.header { display: inline-block; width: 100%; }
+.header > div > div { display: inline-block; }
+.header .navigation_container { color: white; }
+.header .navigation_container .navigation_label { font-weight: bold; }
+.header .navigation_container .navigation_arrow { font-size: 13px; }
+.header .navigation_container .navigation_item { cursor: pointer; }
+.header .navigation_container .navigation_item:hover { background-color: #3498DB; }
