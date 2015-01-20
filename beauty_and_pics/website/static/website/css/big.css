@@ -1,13 +1,36 @@
 /* Big screen css style */
-.centered_page { margin: 0 auto; max-width: 1200px; }
+.max_width_page { max-width: 1200px; }
+.image_background_container { }
 
 /* header */
-.header { height: 140px; }
+.header { height: 100px; }
 .header > div > div { margin-top: 1px; }
-.header .logo_container { float: left; padding: 13px 0; }
-.header .header_button_container { float: right; padding: 48px 0; }
+.header .logo_container { float: left; padding: 10px 0; }
+.header .header_button_container { float: right; padding: 28px 0; }
 .header .header_button_container .btn { width: 100px; }
 .header .header_button_container .btn-success { margin-right: 5px; }
 .header .navigation_container { float: right; margin-right: 25px; }
-.header .navigation_container .navigation_item { float: left; padding: 59px 30px; }
+.header .navigation_container .navigation_item { float: left; padding: 39px 30px; }
 .header .navigation_container .navigation_label { margin-right: 10px; }
+
+/* footer */
+.footer_container { padding: 145px 0 45px; }
+.footer_container .powered_by_container { margin: 75px 50px 0; }
+
+/* www index page */
+.catwalk_container { margin-top: 110px; }
+.catwalk_container .catwalk_block { width: 330px; }
+.catwalk_container .catwalk_block1 { margin-left: 10%; }
+.catwalk_container .catwalk_block2 { margin-right: 10%; }
+
+/* www how it works page */
+.generic_container1 { min-height: 400px; width: 800px; }
+.generic_container1 .generic_container_block1 > .left { margin-top: 70px; text-align: center; width: 300px; }
+.generic_container1 .generic_container_block1 > .right { width: 500px; }
+.generic_container1 .generic_container_block1 > .right > .top { padding: 5px 50px 5px 5px; }
+.generic_container1 .generic_container_block1 > .right > .bottom { margin-left: 35px; }
+
+.generic_container1 .generic_container_block2 > .right { margin-top: 70px; text-align: center; width: 300px; }
+.generic_container1 .generic_container_block2 > .left { width: 500px; }
+.generic_container1 .generic_container_block2 > .left > .top { padding: 5px 5px 5px 50px }
+.generic_container1 .generic_container_block2 > .left > .bottom { margin-left: 35px; }

@@ -1,13 +1,32 @@
 {% extends "website/inc/base_index.html" %}
 {% load staticfiles %}
 
-{# Content inside image #}
 {% block image_content %}
 {{ block.super }}
-Content inside image
+<div class="catwalk_container">
+	<!-- passerella donna -->
+	<div class="catwalk_block catwalk_block1 float_left">
+		<div class="title_container">
+			<h3>Passerella donna</h3>
+		</div>
+		<div class="image_container">
+			<img alt="Passerella donna" src="{% static "website/img/passerella_donna.png" %}">
+		</div>
+		<div class="button_container">
+			<a class="btn btn-danger" href="#">Accedi</a>
+		</div>
+	</div>
+	<!-- passerella uomo -->
+	<div class="catwalk_block catwalk_block2 float_right">
+		<div class="title_container">
+			<h3>Passerella uomo</h3>
+		</div>
+		<div class="image_container">
+			<img alt="Passerella donna" src="{% static "website/img/passerella_uomo.png" %}">
+		</div>
+		<div class="button_container">
+			<a class="btn btn-danger" href="#">Accedi</a>
+		</div>
+	</div>
+</div>
 {% endblock image_content %}
-
-{# Content outside image #}
-{% block main_content %}
-Content outside image
-{% endblock main_content %}

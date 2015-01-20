@@ -31,9 +31,9 @@
 		{% endblock head %}
 	</head>
 	<body>
-		<header>
-			<div class="header first_color">
-				<div class="centered_page">
+		<header class="left_100">
+			<div class="header first_color left_100">
+				<div class="centered_page max_width_page">
 					<div class="logo_container">
 						<a href="#">
 							<img alt="Beauty and Pics" src="{% static "website/img/logo.png" %}">
@@ -56,31 +56,52 @@
 			</div>
 		</header>
 
-		<section>
-			{# default page title block #}
-			{% block page_title_block %}
-			<div class="title_block">
-				<h1 class="title">{% block title_h1 %}Sfoggia il tuo stile sul web{% endblock title_h1 %}</h1>
-				<h2 class="description">{% block title_h2 %}La prossima o il prossimo miss Beauty and Pics potresti essere tu{% endblock title_h2 %}</h2>
-			</div>
-			{% endblock page_title_block %}
+		{# content inside image here {{{ #}
+		{% block image_content_start %}
+		{% endblock image_content_start %}
+		{% block image_content %}
+		{% endblock image_content %}
+		{% block image_content_end %}
+		{% endblock image_content_end %}
+		{# content inside image here }}} #}
 
-			{% block content_start %}
-			<div class="centered_page">
-			{% endblock content_start %}
-
+		{# content without image here {{{ #}
+		<section class="left_100">
 			{% block main_content %}
-			{# put main content here #}
-			{% endblock main_content %}
+				{% block page_title_block %}
+				<div class="title_block">
+					<h1 class="title">{% block title_h1 %}Sfoggia il tuo stile sul web{% endblock title_h1 %}</h1>
+					<h4 class="description">{% block title_h2 %}La prossima o il prossimo miss Beauty and Pics potresti essere tu{% endblock title_h2 %}</h4>
+				</div>
+				{% endblock page_title_block %}
 
-			{% block content_end %}
-			</div>
-			{% endblock content_end %}
+				{% block content_start %}
+				<div class="centered_page max_width_page">
+				{% endblock content_start %}
+				{% block content %}
+				{% endblock content %}
+				{% block content_end %}
+				</div>
+				{% endblock content_end %}
+			{% endblock main_content %}
 		</section>
+		{# content without image here }}} #}
 
 		<footer>
-			<div class="centered_page">
-			{# TODO: page footer #}
+			<div class="left_100 second_color">
+				<div class="centered_page max_width_page text-center">
+					<div class="footer_container">
+						<div>
+							<img alt="Beauty and Pics" src="{% static "website/img/unicorn_left.png" %}">
+						</div>
+						<div class="powered_by_container">
+							<span>2015 | Proudly powered by Entpy Software</span>
+						</div>
+						<div>
+							<img alt="Beauty and Pics" src="{% static "website/img/unicorn_right.png" %}">
+						</div>
+					</div>
+				</div>
 			</div>
 		</footer>
 

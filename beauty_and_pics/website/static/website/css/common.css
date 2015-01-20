@@ -1,7 +1,22 @@
 /* ==========================================================================
    Common styles
    ========================================================================== */
+html, body { height: 100%; background-color: #2c3e50; }
+.centered_page { margin: 0 auto; }
+.height_100 { height: 100%; }
+.left_100 { float: left; width: 100%; }
+.float_left { float: left; }
+.float_right { float: right; }
+.readable_text1 { letter-spacing: 0.02em; line-height: 1.8678; }
+
+/* page title block */
+.title_block { float: left; margin-top: 20px; margin-bottom: 25px; padding: 6px 0 20px; text-align: center; width: 100%; background: -moz-linear-gradient(top, rgba(0,0,0,0.4) 0%, rgba(0,0,0,0.4) 100%); /* FF3.6+ */ background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(0,0,0,0.4)), color-stop(100%,rgba(0,0,0,0.4))); /* Chrome,Safari4+ */ background: -webkit-linear-gradient(top, rgba(0,0,0,0.4) 0%,rgba(0,0,0,0.4) 100%); /* Chrome10+,Safari5.1+ */ background: -o-linear-gradient(top, rgba(0,0,0,0.4) 0%,rgba(0,0,0,0.4) 100%); /* Opera 11.10+ */ background: -ms-linear-gradient(top, rgba(0,0,0,0.4) 0%,rgba(0,0,0,0.4) 100%); /* IE10+ */ background: linear-gradient(to bottom, rgba(0,0,0,0.4) 0%,rgba(0,0,0,0.4) 100%); /* W3C */ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#66000000', endColorstr='#66000000',GradientType=0 ); /* IE6-9 */ }
+.image_background_container { background: url(../img/background_page.jpg) no-repeat center top; -webkit-background-size: cover; -moz-background-size: cover; -o-background-size: cover; background-size: cover; /* max-height: 450px; */ height: 100%; }
+
+/* colors */
+.title_block * { color: #fff; }
 .first_color { background-color: #2C3E50; }
+.second_color { background-color: #1A242F; }
 
 /* header */
 .header { display: inline-block; width: 100%; }
@@ -11,3 +26,24 @@
 .header .navigation_container .navigation_arrow { font-size: 13px; }
 .header .navigation_container .navigation_item { cursor: pointer; }
 .header .navigation_container .navigation_item:hover { background-color: #3498DB; }
+/* footer */
+.footer_container { display: inline-block; }
+.footer_container > div { float: left; }
+.footer_container .powered_by_container { margin: 0px 10px; }
+
+/* www index page */
+.catwalk_container .catwalk_block, .catwalk_container .catwalk_block .image_container {	background: -moz-linear-gradient(top, rgba(0,0,0,0.6) 0%, rgba(0,0,0,0.6) 100%); /* FF3.6+ */ background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(0,0,0,0.6)), color-stop(100%,rgba(0,0,0,0.6))); /* Chrome,Safari4+ */ background: -webkit-linear-gradient(top, rgba(0,0,0,0.6) 0%,rgba(0,0,0,0.6) 100%); /* Chrome10+,Safari5.1+ */ background: -o-linear-gradient(top, rgba(0,0,0,0.6) 0%,rgba(0,0,0,0.6) 100%); /* Opera 11.10+ */ background: -ms-linear-gradient(top, rgba(0,0,0,0.6) 0%,rgba(0,0,0,0.6) 100%); /* IE10+ */ background: linear-gradient(to bottom, rgba(0,0,0,0.6) 0%,rgba(0,0,0,0.6) 100%); /* W3C */ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#99000000', endColorstr='#99000000',GradientType=0 ); /* IE6-9 */ }
+.catwalk_container { float: left; width: 100%; }
+.catwalk_container .catwalk_block > div { float: left; text-align: center; width: 100%; }
+.catwalk_container .catwalk_block .title_container { color: #fff; padding: 9px 0;}
+.catwalk_container .catwalk_block .image_container { padding: 9px 0; }
+.catwalk_container .catwalk_block .button_container { padding: 17px 0; }
+
+/* www how it works page */
+.generic_container1 { display: inline-block; text-align: left; }
+.generic_container1 .generic_container_block { margin-bottom: 40px; margin-top: 40px; }
+.generic_container1 .generic_container_block > div { float: left; }
+.generic_container1 .generic_container_block1 > .right > .top { background-color: #0e141a; color: #fff; font-size: 17px; margin-bottom: 30px; text-align: right; }
+.generic_container1 .generic_container_block1 > .right > .bottom { color: #fff; margin-top: 12px; }
+.generic_container1 .generic_container_block2 > .left > .top { background-color: #0e141a; color: #fff; font-size: 17px; margin-bottom: 30px; text-align: left; }
+.generic_container1 .generic_container_block2 > .left > .bottom { color: #fff; margin-top: 12px; }
