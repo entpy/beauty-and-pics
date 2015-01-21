@@ -5,3 +5,12 @@ def index(request):
 
 def come_funziona(request):
     return render(request, 'website/come_funziona.html', False)
+
+def login(request):
+    return render(request, 'website/login.html', False)
+
+def forgot_password(request):
+    return render(request, 'website/forgot_password.html', False)
+
+def register(request):
+    return render(request, 'website/register.html', False)

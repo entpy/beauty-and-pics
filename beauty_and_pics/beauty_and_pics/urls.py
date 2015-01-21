@@ -8,5 +8,8 @@ urlpatterns = patterns('',
 
     url(r'^index/$', 'website.views.index', name='index'),
     url(r'^come-funziona/$', 'website.views.come_funziona', name='come_funziona'),
+    url(r'^login/$', 'website.views.login', name='login'),
+    url(r'^recupera-password/$', 'website.views.forgot_password', name='forgot_password'),
+    url(r'^registrati/$', 'website.views.register', name='register'),
     url(r'^admin/', include(admin.site.urls)),
 )

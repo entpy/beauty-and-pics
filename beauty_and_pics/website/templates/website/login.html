@@ -1,0 +1,36 @@
+{% extends "website/inc/base_login.html" %}
+{% load staticfiles %}
+
+{% block image_content %}
+{{ block.super }}
+<div class="centered_page generic_container2 last_page_element_margin">
+	{# login block #}
+	<div class="well bs-component">
+		<form class="form-horizontal">
+			<fieldset>
+				<legend>Accedi</legend>
+				<div class="form-group">
+					<label for="inputEmail" class="col-lg-2 control-label">Email</label>
+					<div class="col-lg-10">
+						<input class="form-control" id="inputEmail" placeholder="Email" type="text">
+					</div>
+				</div>
+				<div class="form-group">
+					<label for="inputPassword" class="col-lg-2 control-label">Password</label>
+					<div class="col-lg-10">
+						<input class="form-control" id="inputPassword" placeholder="Password" type="password">
+						<span class="help-block text-right">
+							<a href="/recupera-password/">Password dimenticata?</a>
+						</span>
+					</div>
+				</div>
+				<div class="form-group">
+					<div class="col-lg-10 col-lg-offset-2">
+						<button type="submit" class="btn btn-primary">Accedi</button>
+					</div>
+				</div>
+			</fieldset>
+		</form>
+	</div>
+</div>
+{% endblock image_content %}
