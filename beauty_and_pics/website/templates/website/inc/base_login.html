@@ -16,24 +16,12 @@
 {# Put addictional page script here #}
 {% endblock custom_page_script %}
 
-{% block block0_1_start %}
-	<section class="height_100">
-		<div class="image_background_container">
-{% endblock block0_1_start %}
+{% block block0_0_title_h1 %}Già registrato?{% endblock block0_0_title_h1 %}
+{% block block0_0_title_h4 %}Accedi e visualizza i dettagli del concorso{% endblock block0_0_title_h4 %}
 
-{% block block0_1_content %}
-	<div class="title_block">
-		<h1 class="title">Già registrato?</h1>
-		<h4 class="description">Accedi e visualizza i dettagli del concorso</h4>
-	</div>
-	<div class="left_100 text-center">
-	{% block block1_1_content %}
+{% block block0_0_content %}
+	{{ block.super }}
+	{% block block1_0_content %}
 	{# Page main content here #}
-	{% endblock block1_1_content %}
-{% endblock block0_1_content %}
-
-{% block block0_1_end %}
-			</div>
-		</div>
-	</section>
-{% endblock block0_1_end %}
+	{% endblock block1_0_content %}
+{% endblock block0_0_content %}

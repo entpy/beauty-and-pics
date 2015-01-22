@@ -6,7 +6,7 @@
 {% endblock title %}
 
 {% block description %}
-<meta name="description" content="Beauty and Pics: pagina index">
+<meta name="description" content="Beauty and Pics: pagina come funziona">
 {% endblock description %}
 
 {% block main_content %}
@@ -16,21 +16,12 @@
 {# Put addictional page script here #}
 {% endblock custom_page_script %}
 
-{% block image_content_start %}
-	<section class="height_100">
-		<div class="image_background_container">
-{% endblock image_content_start %}
+{% block block0_0_title_h1 %}Sfoggia il tuo stile sul web{% endblock block0_0_title_h1 %}
+{% block block0_0_title_h4 %}La prossima o il prossimo miss Beauty and Pics potresti essere tu{% endblock block0_0_title_h4 %}
 
-{% block image_content %}
-	<div class="title_block">
-		<h1 class="title">Sfoggia il tuo stile sul web</h1>
-		<h4 class="description">La prossima o il prossimo miss Beauty and Pics potresti essere tu</h4>
-	</div>
-	<div class="left_100 text-center">
-{% endblock image_content %}
-
-{% block image_content_end %}
-			</div>
-		</div>
-	</section>
-{% endblock image_content_end %}
+{% block block0_0_content %}
+	{{ block.super }}
+	{% block block1_0_content %}
+	{# Page main content here #}
+	{% endblock block1_0_content %}
+{% endblock block0_0_content %}

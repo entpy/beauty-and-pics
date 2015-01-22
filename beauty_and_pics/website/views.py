@@ -14,3 +14,6 @@ def forgot_password(request):
 
 def register(request):
     return render(request, 'website/register.html', False)
+
+def catwalk_index(request):
+    return render(request, 'website/catwalk/catwalk_index.html', False)
