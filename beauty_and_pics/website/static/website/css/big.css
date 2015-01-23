@@ -23,8 +23,9 @@
 .catwalk_container .catwalk_block1 { margin-left: 10%; }
 .catwalk_container .catwalk_block2 { margin-right: 10%; }
 
-/* www how it works page */
+/* www containers */
 .generic_container1 { min-height: 400px; width: 800px; }
+.generic_container2 { width: 550px; }
 .generic_container1 .generic_container_block1 > .left { margin-top: 70px; text-align: center; width: 300px; }
 .generic_container1 .generic_container_block1 > .right { width: 500px; }
 .generic_container1 .generic_container_block1 > .right > .top { padding: 5px 50px 5px 5px; }
@@ -34,4 +35,13 @@
 .generic_container1 .generic_container_block2 > .left > .top { padding: 5px 5px 5px 50px }
 .generic_container1 .generic_container_block2 > .left > .bottom { margin-left: 35px; }
 
-.generic_container2 { width: 550px; }
+/* backend containers */
+.generic_container4 { width: 850px; }
+.generic_container5 { width: 250px; }
+.generic_container4, .generic_container7 { min-height: 20px; padding: 10px 50px 50px; }
+.generic_container6 { height: 300px; }
+
+/* image grids {{{ */
+ul.grid_container { margin-left: -2.5%; }
+ul.grid_container li { margin: 0 0 2.5% 2.5%; width: 22.5%; }
+/* image grids }}} */

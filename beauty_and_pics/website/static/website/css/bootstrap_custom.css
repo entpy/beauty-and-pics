@@ -3,3 +3,6 @@
 .btn-login:hover { background-color: #fff; color: #2c3e50; }
 .well { padding: 50px; }
 .no-gutters { padding-right: 0; padding-left: 0; }
+.nav-tabs > li.active > a, .nav-tabs > li.active > a:hover, .nav-tabs > li.active > a:focus { background-color: transparent; border-color: #C7C7C7 #C7C7C7 transparent #C7C7C7; }
+.nav > li > a { padding: 10px 15px 4px; }
+.nav.nav-tabs { margin: 35px 0 25px; }
