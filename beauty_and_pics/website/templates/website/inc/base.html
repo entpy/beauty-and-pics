@@ -10,13 +10,9 @@
 		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 
-		{% block title %}
-		<title></title>
-		{% endblock title %}
+		<title>{% block title %}{% endblock title %}</title>
 
-		{% block description %}
-		<meta name="description" content="">
-		{% endblock description %}
+		<meta name="description" content="{% block description %}{% endblock description %}">
 
 		<link rel="stylesheet" href="{% static "website/css/bootstrap.css" %}">
 		<link rel="stylesheet" href="{% static "website/css/bootstrap_custom.css" %}">
@@ -76,29 +72,6 @@
 			</section>
 		{% endblock block0_0 %}
 		{# TODO new content inside image div here }}} #}
-
-		{# TODO (plz remove this fucking stuff!) content inside image div here {{{ #}
-		{% block block0_0 %}
-		{% block block0_0_start %}
-			<section class="height_100">
-			<div class="image_background_container">
-		{% endblock block0_0_start %}
-		{% block block0_0_content %}
-			{% block block0_0_title %}
-				<div class="title_block margin_top_20">
-				<h1 class="title">{% block block0_0_title_h1 %}Main title{% endblock block0_0_title_h1 %}</h1>
-				<h4 class="description">{% block block0_0_title_h4 %}Page description{% endblock block0_0_title_h4 %}</h4>
-				</div>
-			{% endblock block0_0_title %}
-			<div class="left_100 text-center">
-		{% endblock block0_0_content %}
-		{% block block0_0_end %}
-		{% endblock block0_0_end %}
-			</div>
-			</div>
-			</section>
-		{% endblock block0_0 %}
-		{# TODO (plz remove this fucking stuff!) content inside image div here }}} #}
 
 		{# content without image div here {{{ #}
 		{% block block0_1 %}
@@ -170,6 +143,7 @@
 
 		{# Custom page script block #}
 		{% block custom_js %}
+		{# put addictional page script here #}
 		{% endblock custom_js %}
 
 		<!-- Google Analytics: change UA-XXXXX-X to be your site's ID. -->

@@ -1,8 +1,16 @@
-{% extends "website/inc/base_come_funziona.html" %}
+{% extends "website/inc/base_www.html" %}
 {% load staticfiles %}
 
-{% block block1_0_content %}
-{{ block.super }}
+{# page title #}
+{% block title %}Beauty and Pics | pagina come funziona{% endblock %}
+
+{# page description #}
+{% block description %}pagina index{% endblock %}
+
+{% block block0_0_title_h1 %}Sfoggia il tuo stile sul web{% endblock %}
+{% block block0_0_title_h4 %}La prossima o il prossimo miss Beauty and Pics potresti essere tu{% endblock %}
+
+{% block block0_0_content %}
 <div class="centered_page generic_container generic_container1 second_color last_page_element_margin">
 	{# how it works block #}
 	<div class="generic_container_block generic_container_block1 left_100">
@@ -47,4 +55,4 @@
 		</div>
 	</div>
 </div>
-{% endblock block1_0_content %}
+{% endblock block0_0_content %}

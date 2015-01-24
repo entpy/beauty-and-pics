@@ -1,8 +1,16 @@
-{% extends "website/inc/catwalk/base_catwalk_index.html" %}
+{% extends "website/inc/base_catwalk.html" %}
 {% load staticfiles %}
 
+{% block title %}Beauty and Pics | passerella index{% endblock title %}
+
+{% block description %}Beauty and Pics: pagina index passerella{% endblock description %}
+
+{% block block0_1_title_h1 %}<b>123</b> giorni <b>6</b> ore <b>33</b> minuti{% endblock block0_1_title_h1 %}
+{% block block0_1_title_h4 %}alla scadenza del concorso{% endblock block0_1_title_h4 %}
+
+{% block container4_title %}La passerella{% endblock container4_title %}
+
 {% block container4_content %}
-{{ block.super }}
 <ul class="nav nav-tabs">
 	<li class="active"><a aria-expanded="false" href="#home" data-toggle="tab">Le ultime registrate</a></li>
 	<li class=""><a aria-expanded="true" href="#profile" data-toggle="tab">La classifica</a></li>
