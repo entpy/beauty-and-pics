@@ -60,13 +60,29 @@ html, body { height: 100%; background-color: #2c3e50; }
 .generic_container6 > .title { color: white; margin-top: 25px; }
 .generic_container6 > .button_container { margin-top: 195px; }
 
-.background_container1 { background-color: #E9E9E9; padding: 20px; }
-.generic_container8 { display: inline-block; width: 100%; }
-.user_stats_container { text-align: center; }
+/* catwalk user details page */
+.background_container1 { background-color: #E0E0E0; padding: 20px; }
+.generic_container8 { border-radius: 4px; -moz-border-radius: 4px; display: inline-block; width: 100%; }
+.user_stats_container { margin-top: -20px; margin-bottom: 20px; text-align: center; }
 .user_stats_container .user_stats_block { display: inline-block; }
 .user_stats_container .user_stats_block .position { font-size: 55px; }
 .user_stats_container .user_stats_block .points { font-size: 25px; }
 .user_stats_container .user_stats_space { display: inline-block; width: 10%; }
+.user_action_link_container { margin-top: 6px; }
+.user_action_link_container > span { margin-left: 13px; }
+.user_action_link, .user_action_link:hover { color: transparent; text-decoration: none; }
+
+.user_top_info_container { display: inline-block; margin-bottom: 10px; width: 100%; }
+.user_top_info_container > div { float: left; }
+.user_top_info_container .user_top_info_block .user_info_value { font-size: 17px; font-weight: bold; }
+.user_top_info_container .user_top_info_space { min-width: 20px; width: 5%; }
+
+.user_details_container { display: inline-block; width: 100%; }
+.vote_user_container { display: inline-block; text-align: center; width: 95%; }
+.vote_user_container .vote_user_block { display: inline-block; margin: 0 auto 11px; }
+.vote_user_container .vote_user_button_container { margin-top: 10px; }
+.vote_user_container .vote_user_block .vote_user_metric_name { margin-bottom: 5px; text-align: left; }
+.vote_user_container .vote_user_block ul { margin: 0px; }
 
 /* image grids {{{ */
 ul.grid_container { list-style: none; font-size: 0px; padding: 0px; }

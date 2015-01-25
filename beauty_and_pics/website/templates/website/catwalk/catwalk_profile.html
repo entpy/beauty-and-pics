@@ -11,15 +11,43 @@
 {% block container4_title %}Nome Cognome{% endblock container4_title %}
 
 {% block container4_content %}
+<div class="user_top_info_container">
+	<div class="user_top_info_block">
+		<span class="user_info_label">Punti: </span>
+		<span class="user_info_value">321</span>
+	</div>
+	<div class="user_top_info_space">&nbsp;</div>
+	<div class="user_top_info_block">
+		<span class="user_info_label">Età: </span>
+		<span class="user_info_value">25 anni</span>
+	</div>
+	<div class="user_top_info_space">&nbsp;</div>
+	<div class="user_top_info_block">
+		<span class="user_info_label">Città: </span>
+		<span class="user_info_value">Torino (TO)</span>
+	</div>
+</div>
 <div class="background_container1 generic_container8">
 	<div class="left">
 		<div class="top">
 			<img src="https://placekitten.com/g/250/250">
 		</div>
-		<div class="bottom">
-			<span>Preferito</span>
-			<span>Slideshow</span>
-			<span>Segnala</span>
+		<div class="bottom user_action_link_container">
+			<span>
+				<a class="user_action_link" href="#">
+					<img src="{% static "website/img/catwalk/aggiungi-a-preferiti.png" %}" alt="Aggiungi ai preferiti">
+				</a>
+			</span>
+			<span>
+				<a class="user_action_link" href="#">
+					<img src="{% static "website/img/catwalk/visualizza-book.png" %}" alt="Guarda book fotografico">
+				</a>
+			</span>
+			<span>
+				<a class="user_action_link" href="#">
+					<img src="{% static "website/img/catwalk/segnala-utente.png" %}" alt="Segnala utente">
+				</a>
+			</span>
 		</div>
 	</div>
 	<div class="right">
@@ -67,6 +95,122 @@
 		</div>
 	</div>
 </div>
-<div>
+<div class="generic_container user_details_container">
+	<div class="generic_container user_details_left">
+		<div class="generic_container_title">
+			<h3>Vota</h3>
+		</div>
+		<div class="generic_container_content">
+			<div class="background_container1 vote_user_container">
+				<!-- vote user block -->
+				<div class="vote_user_block">
+					<div class="vote_user_metric_name">
+						Globale
+					</div>
+					<div>
+						<ul class="pagination pagination-md">
+							<li class="active"><a href="#">1</a></li>
+							<li><a href="#">2</a></li>
+							<li><a href="#">3</a></li>
+							<li><a href="#">4</a></li>
+							<li><a href="#">5</a></li>
+						</ul>
+					</div>
+				</div>
+				<!-- vote user block -->
+				<div class="vote_user_block">
+					<div class="vote_user_metric_name">
+						Viso
+					</div>
+					<div>
+						<ul class="pagination pagination-md">
+							<li class="active"><a href="#">1</a></li>
+							<li><a href="#">2</a></li>
+							<li><a href="#">3</a></li>
+							<li><a href="#">4</a></li>
+							<li><a href="#">5</a></li>
+						</ul>
+					</div>
+				</div>
+				<!-- vote user block -->
+				<div class="vote_user_block">
+					<div class="vote_user_metric_name">
+						Sguardo
+					</div>
+					<div>
+						<ul class="pagination pagination-md">
+							<li class="active"><a href="#">1</a></li>
+							<li><a href="#">2</a></li>
+							<li><a href="#">3</a></li>
+							<li><a href="#">4</a></li>
+							<li><a href="#">5</a></li>
+						</ul>
+					</div>
+				</div>
+				<div class="vote_user_button_container">
+					<a href="#" class="btn btn-success">Vota</a>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="generic_container user_details_right">
+		<div class="generic_container_title">
+			<h3>Book fotografico</h3>
+		</div>
+		<div class="generic_container_content">
+			<div class="image_container">
+				<ul class="grid_container grid_container_three">
+					<li>
+						<img src="https://placekitten.com/g/185/185">
+					</li>
+					<li>
+						<img src="https://placekitten.com/g/185/185">
+					</li>
+					<li>
+						<img src="https://placekitten.com/g/185/185">
+					</li>
+					<li>
+						<img src="https://placekitten.com/g/185/185">
+					</li>
+					<li>
+						<img src="https://placekitten.com/g/185/185">
+					</li>
+					<li>
+						<img src="https://placekitten.com/g/185/185">
+					</li>
+					<li>
+						<img src="https://placekitten.com/g/185/185">
+					</li>
+					<li>
+						<img src="https://placekitten.com/g/185/185">
+					</li>
+					<li>
+						<img src="https://placekitten.com/g/185/185">
+					</li>
+					<li>
+						<img src="https://placekitten.com/g/185/185">
+					</li>
+					<li>
+						<img src="https://placekitten.com/g/185/185">
+					</li>
+					<li>
+						<img src="https://placekitten.com/g/185/185">
+					</li>
+					<li>
+						<img src="https://placekitten.com/g/185/185">
+					</li>
+					<li>
+						<img src="https://placekitten.com/g/185/185">
+					</li>
+					<li>
+						<img src="https://placekitten.com/g/185/185">
+					</li>
+					<li>
+						<img src="https://placekitten.com/g/185/185">
+					</li>
+				</ul>
+			</div>
+		</div>
+	</div>
 </div>
 {% endblock container4_content %}

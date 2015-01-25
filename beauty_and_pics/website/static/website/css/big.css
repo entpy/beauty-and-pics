@@ -48,7 +48,12 @@
 .generic_container8 > .right > .top { margin-left: auto; width: 90%; }
 .generic_container8 > .right > .bottom { margin-left: auto; width: 90%; }
 
+.user_details_container > div { float: left }
+.user_details_container .user_details_left { width: 40%; }
+.user_details_container .user_details_right { width: 60%; }
+
 /* image grids {{{ */
 ul.grid_container { margin-left: -2.5%; }
 ul.grid_container li { margin: 0 0 2.5% 2.5%; width: 22.5%; }
+ul.grid_container_three li { width: 30.84% }
 /* image grids }}} */
