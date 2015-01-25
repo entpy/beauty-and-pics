@@ -60,6 +60,14 @@ html, body { height: 100%; background-color: #2c3e50; }
 .generic_container6 > .title { color: white; margin-top: 25px; }
 .generic_container6 > .button_container { margin-top: 195px; }
 
+.background_container1 { background-color: #E9E9E9; padding: 20px; }
+.generic_container8 { display: inline-block; width: 100%; }
+.user_stats_container { text-align: center; }
+.user_stats_container .user_stats_block { display: inline-block; }
+.user_stats_container .user_stats_block .position { font-size: 55px; }
+.user_stats_container .user_stats_block .points { font-size: 25px; }
+.user_stats_container .user_stats_space { display: inline-block; width: 10%; }
+
 /* image grids {{{ */
 ul.grid_container { list-style: none; font-size: 0px; padding: 0px; }
 ul.grid_container li { display: inline-block; padding: 2px; background: #18bc9c; border: 1px solid #ddd; box-shadow: 0 0 5px #ddd; }

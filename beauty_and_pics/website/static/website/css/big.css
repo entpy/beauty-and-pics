@@ -40,6 +40,13 @@
 .generic_container5 { width: 250px; }
 .generic_container4, .generic_container7 { min-height: 20px; padding: 10px 50px 50px; }
 .generic_container6 { height: 300px; }
+.generic_container8 > div { float: left; }
+.generic_container8 > .left { width: 36%; }
+.generic_container8 > .left > .top > img { width: 100%; }
+.generic_container8 > .left > .bottom { text-align: right; }
+.generic_container8 > .right { width: 64%; }
+.generic_container8 > .right > .top { margin-left: auto; width: 90%; }
+.generic_container8 > .right > .bottom { margin-left: auto; width: 90%; }
 
 /* image grids {{{ */
 ul.grid_container { margin-left: -2.5%; }

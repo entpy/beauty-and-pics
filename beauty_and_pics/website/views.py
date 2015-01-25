@@ -17,3 +17,6 @@ def register(request):
 
 def catwalk_index(request):
     return render(request, 'website/catwalk/catwalk_index.html', False)
+
+def catwalk_profile(request):
+    return render(request, 'website/catwalk/catwalk_profile.html', False)

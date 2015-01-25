@@ -15,6 +15,7 @@ urlpatterns = patterns('',
 
     # catwalk
     url(r'^passerella/$', 'website.views.catwalk_index', name='catwalk_index'),
+    url(r'^passerella/dettaglio-utente/$', 'website.views.catwalk_profile', name='catwalk_profile'),
 
     # admin
     url(r'^admin/', include(admin.site.urls)),
