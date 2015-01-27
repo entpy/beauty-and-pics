@@ -1,0 +1,45 @@
+{% extends "website/inc/base_catwalk.html" %}
+{% load staticfiles %}
+
+{% block title %}Beauty and Pics | segnala un utente{% endblock %}
+
+{% block description %}Beauty and Pics: pagina di segnalazione utente{% endblock %}
+
+{% block block0_1_title_h1 %}<b>123</b> giorni <b>6</b> ore <b>33</b> minuti{% endblock %}
+{% block block0_1_title_h4 %}alla scadenza del concorso{% endblock %}
+
+{% block container4_title %}Segnala un utente{% endblock %}
+
+{% block container4_content %}
+<div class="row">
+	<div class="col-md-12">
+		<div class="warning warning-info">
+			<h4>Attenzione!</h4>
+			<p>Best check yo self, you're not looking too good. Nulla vitae elit libero, a pharetra augue. Praesent commodo cursus magna, <a href="#" class="alert-link">vel scelerisque nisl consectetur et</a>.</p>
+		</div>
+	</div>
+	<div class="col-md-10">
+		<form class="form-horizontal">
+			<fieldset>
+				<div class="form-group">
+					<label for="inputEmail" class="col-lg-2 control-label">Email</label>
+					<div class="col-lg-10">
+						<input class="form-control" id="inputEmail" placeholder="Email" type="text">
+					</div>
+				</div>
+				<div class="form-group">
+					<label for="textArea" class="col-lg-2 control-label">Textarea</label>
+					<div class="col-lg-10">
+						<textarea class="form-control" rows="3" id="textArea"></textarea>
+					</div>
+				</div>
+				<div class="form-group">
+					<div class="col-lg-10 col-lg-offset-2">
+						<button type="submit" class="btn btn-primary">Segnala utente</button>
+					</div>
+				</div>
+			</fieldset>
+		</form>
+	</div>
+</div>
+{% endblock container4_content %}

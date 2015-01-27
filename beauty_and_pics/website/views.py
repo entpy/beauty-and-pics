@@ -20,3 +20,9 @@ def catwalk_index(request):
 
 def catwalk_profile(request):
     return render(request, 'website/catwalk/catwalk_profile.html', False)
+
+def help(request):
+    return render(request, 'website/catwalk/help.html', False)
+
+def report_user(request):
+    return render(request, 'website/catwalk/report_user.html', False)
