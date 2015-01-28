@@ -7,17 +7,24 @@ urlpatterns = patterns('',
     # url(r'^blog/', include('blog.urls')),
 
     # www 
-    url(r'^index/$', 'website.views.index', name='index'),
-    url(r'^come-funziona/$', 'website.views.how_it_works', name='how_it_works'),
-    url(r'^login/$', 'website.views.login', name='login'),
-    url(r'^recupera-password/$', 'website.views.forgot_password', name='forgot_password'),
-    url(r'^registrati/$', 'website.views.register', name='register'),
+    url(r'^index/$', 'website.views.www_index', name='www_index'),
+    url(r'^come-funziona/$', 'website.views.www_how_it_works', name='www_how_it_works'),
+    url(r'^login/$', 'website.views.www_login', name='www_login'),
+    url(r'^recupera-password/$', 'website.views.www_forgot_password', name='www_forgot_password'),
+    url(r'^registrati/$', 'website.views.www_register', name='www_register'),
 
     # catwalk
     url(r'^passerella/$', 'website.views.catwalk_index', name='catwalk_index'),
     url(r'^passerella/dettaglio-utente/$', 'website.views.catwalk_profile', name='catwalk_profile'),
-    url(r'^passerella/richiesta-aiuto/$', 'website.views.help', name='help'),
-    url(r'^passerella/segnalazine-utente/$', 'website.views.report_user', name='report_user'),
+    url(r'^passerella/richiesta-aiuto/$', 'website.views.catwalk_help', name='catwalk_help'),
+    url(r'^passerella/segnalazione-utente/$', 'website.views.catwalk_report_user', name='catwalk_report_user'),
+
+    # private profile
+    url(r'^profilo/$', 'website.views.profile_index', name='profile_index'),
+    url(r'^profilo/dati-personali/$', 'website.views.profile_data', name='profile_data'),
+    url(r'^profilo/preferiti/$', 'website.views.profile_favorites', name='profile_favorites'),
+    url(r'^profilo/statistiche/$', 'website.views.profile_stats', name='profile_stats'),
+    url(r'^profilo/zona-proibita/$', 'website.views.profile_area51', name='profile_area51'),
 
     # admin
     url(r'^admin/', include(admin.site.urls)),

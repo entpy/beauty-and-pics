@@ -36,7 +36,8 @@
 							<img alt="Beauty and Pics" src="{% static "website/img/logo.png" %}">
 						</a>
 					</div>
-					<div class="header_button_container">
+					{# no-login header #}
+					<!-- <div class="header_button_container">
 						<div>
 							<a href="/registrati/" class="btn btn-success">Partecipa</a>
 							<a href="/login/" class="btn btn-login">Accedi</a>
@@ -48,6 +49,25 @@
 							<a href="/come-funziona/"><div class="navigation_item"><span class="navigation_label">Il concorso</span><span class="navigation_arrow">v</span></div></a>
 							<a href="/come-funziona/"><div class="navigation_item"><span class="navigation_label">Come iscriversi</span><span class="navigation_arrow">v</span></div></a>
 						</nav>
+					</div>-->
+					{# header after login #}
+					<div class="search_form_container">
+						<form class="form-horizontal">
+							<fieldset>
+								<div class="form-group">
+									<label class="control-label">Input addons</label>
+									<div class="input-group">
+										<input class="form-control" type="text">
+										<span class="input-group-btn">
+											<button class="btn btn-default" type="button">Button</button>
+										</span>
+									</div>
+								</div>
+							</fieldset>
+						</form>
+					</div>
+					<div class="profile_container">
+					
 					</div>
 				</div>
 			</div>
