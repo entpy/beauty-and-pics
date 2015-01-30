@@ -159,6 +159,16 @@
 							<h3>
 								{% block container4_title %}Page title{% endblock %}
 							</h3>
+							{# navigation tabs #}
+							{% block container4_navigation %}
+								<ul class="nav nav-tabs">
+									<li class="{% block container4_navigation_profile_index %}{% endblock %}"><a href=/profilo/">Album fotografico</a></li>
+									<li class="{% block container4_navigation_profile_data %}{% endblock %}"><a href="/profilo/dati-personali/">Dati personali</a></li>
+									<li class="{% block container4_navigation_profile_favorites %}{% endblock %}"><a href="/profilo/preferiti/">Preferiti</a></li>
+									<li class="{% block container4_navigation_profile_stats %}{% endblock %}"><a href="/profilo/statistiche/">Statistiche</a></li>
+									<li class="{% block container4_navigation_profile_area51 %}{% endblock %}"><a href="/profilo/zona-proibita/">Zona proibita</a></li>
+								</ul>
+							{% endblock container4_navigation %}
 							{% block container4_content %}
 							{% endblock container4_content %}
 						</div>

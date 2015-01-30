@@ -8,16 +8,22 @@
 {% block block0_1_title_h1 %}<b>123</b> giorni <b>6</b> ore <b>33</b> minuti{% endblock %}
 {% block block0_1_title_h4 %}alla scadenza del concorso{% endblock %}
 
-{% block container4_title %}Il tuo profilo{% endblock %}
+{% block container4_title %}{% endblock %}
+
+{# navigation tabs active element #}
+{% block container4_navigation_profile_favorites %}active{% endblock %}
 
 {% block container4_content %}
-<ul class="nav nav-tabs">
-	<li class="active"><a aria-expanded="false" href=/profilo/" data-toggle="tab">Album fotografico</a></li>
-	<li class=""><a aria-expanded="true" href="/profilo/dati-personali/" data-toggle="tab">Dati personali</a></li>
-	<li class=""><a aria-expanded="true" href="/profilo/preferiti/" data-toggle="tab">Preferiti</a></li>
-	<li class=""><a aria-expanded="true" href="/profilo/statistiche/" data-toggle="tab">Statistiche</a></li>
-	<li class=""><a aria-expanded="true" href="/profilo/zona-proibita/" data-toggle="tab">Zona proibita</a></li>
-</ul>
+<div class="row">
+	<div class="col-sm-12">
+		<h3>I miei preferiti</h3>
+	</div>
+	<div class="col-sm-12">
+		<div class="alert alert-info">
+			<p>Best check yo self, you're not looking too good. Nulla vitae elit libero, a pharetra augue. Praesent commodo cursus magna, <a href="#" class="alert-link">vel scelerisque nisl consectetur et</a>.</p>
+		</div>
+	</div>
+</div>
 <div class="manage_buttons_container">
 	<div class="manage_buttons_block1 text-center">Con i selezionati:</div>
 	<div class="manage_buttons_block2 text-center">
