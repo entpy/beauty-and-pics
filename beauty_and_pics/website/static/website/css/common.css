@@ -113,7 +113,13 @@ ul.grid_container li img:hover { opacity: 0.5; }
 /* profile section {{{ */
 .favorites_question_point_container img { margin-left: 5px; vertical-align: text-bottom; }
 .manage_buttons_container { margin-bottom: 20px; margin-left: auto; }
-.manage_buttons_container .manage_buttons_block1 { margin-right: 8px; }
-.manage_buttons_container .manage_buttons_block2 { margin-right: 15px; }
-.manage_buttons_container .manage_buttons_block3 {  }
+
+.upload_image_button { border: 3px solid #18bc9c; color: #18bc9c; cursor: pointer; font-weight: bold; margin: 0 auto; text-align: center; }
+.upload_image_button.book_images_upload_button { clear: both; margin: 0; }
+.upload_image_button:hover { color: #fff; background-color: #18bc9c; }
+.upload_image_button .upload_image_label { margin-bottom: 10px; }
+.upload_image_button .img_not_active { display: inline-block; }
+.upload_image_button .img_active { display: none; }
+.upload_image_button:hover .img_not_active { display: none; }
+.upload_image_button:hover .img_active { display: inline-block; }
 /* profile section }}} */
