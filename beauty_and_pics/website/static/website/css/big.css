@@ -16,6 +16,7 @@
 .search_form_container { padding: 28px 0; }
 .profile_container { float: right; padding: 14px 0; }
 .profile_container .profile_container_wrapper { float: left; padding: 10px 15px; }
+.profile_container .profile_container_wrapper:hover { padding: 9px 14px; }
 .profile_container .profile_container_wrapper > div { float: left; }
 
 /* footer */
@@ -62,3 +63,9 @@ ul.grid_container { margin-left: -2.5%; }
 ul.grid_container li { margin: 0 0 2.5% 2.5%; width: 22.5%; }
 ul.grid_container_three li { width: 30.84% }
 /* image grids }}} */
+
+/* profile section {{{ */
+.favorites_question_point_container img { margin-left: 5px; vertical-align: text-bottom; }
+.manage_buttons_container { display: table; }
+.manage_buttons_container > div { display: table-cell; float: none; vertical-align: middle; }
+/* profile section }}} */

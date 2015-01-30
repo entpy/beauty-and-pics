@@ -1,0 +1,103 @@
+{% extends "website/inc/base_profile.html" %}
+{% load staticfiles %}
+
+{% block title %}Beauty and Pics | profilo statistiche{% endblock %}
+
+{% block description %}Beauty and Pics: pagina statistiche del profilo{% endblock %}
+
+{% block block0_1_title_h1 %}<b>123</b> giorni <b>6</b> ore <b>33</b> minuti{% endblock %}
+{% block block0_1_title_h4 %}alla scadenza del concorso{% endblock %}
+
+{% block container4_title %}{% endblock %}
+
+{% block container4_content %}
+<ul class="nav nav-tabs">
+	<li class="active"><a aria-expanded="false" href=/profilo/" data-toggle="tab">Album fotografico</a></li>
+	<li class=""><a aria-expanded="true" href="/profilo/dati-personali/" data-toggle="tab">Dati personali</a></li>
+	<li class=""><a aria-expanded="true" href="/profilo/preferiti/" data-toggle="tab">Preferiti</a></li>
+	<li class=""><a aria-expanded="true" href="/profilo/statistiche/" data-toggle="tab">Statistiche</a></li>
+	<li class=""><a aria-expanded="true" href="/profilo/zona-proibita/" data-toggle="tab">Zona proibita</a></li>
+</ul>
+<div class="col-sm-12">
+	<h3>Panoramica</h3>
+</div>
+<div class="col-sm-12">
+	<div class="alert alert-info">
+		<p>Best check yo self, you're not looking too good. Nulla vitae elit libero, a pharetra augue. Praesent commodo cursus magna, <a href="#" class="alert-link">vel scelerisque nisl consectetur et</a>.</p>
+	</div>
+</div>
+<div class="background_container1 styled_container1">
+	<div class="right">
+		<div class="top user_stats_container">
+			<div class="user_stats_block">
+				<span class="position">2°</span>
+				<span>Posizione</span>
+			</div>
+			<div class="user_stats_space"></div>
+			<div class="user_stats_block">
+				<span class="points">327</span>
+				<span>Punti</span>
+			</div>
+			<div class="user_stats_space"></div>
+			<div class="user_stats_block">
+				<span class="points">
+					18
+				</span>
+				<span>
+					<span>
+						Preferiti
+					</span>
+					<span class="favorites_question_point_container">
+						<img data-toggle="tooltip" data-placement="top" title="" data-original-title="Il numero di preferiti che hai salvato" src="{% static "website/img/question-point.png" %}" alt="Cosa indica?">
+					</span>
+				</span>
+			</div>
+		</div>
+		<div class="bottom">
+			<div class="stats_bar_container">
+				<!-- stats block -->
+				<div class="stats_bar_label">Globale</div>
+				<div class="stats_bar">
+					<div class="progress">
+						<div class="progress-bar progress-bar-warning" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 30%">
+							<span class="sr-only">60% Complete (warning)</span>
+						</div>
+					</div>
+				</div>
+				<!-- stats block -->
+				<div class="stats_bar_label">Viso</div>
+				<div class="stats_bar">
+					<div class="progress">
+						<div class="progress-bar progress-bar-warning" role="progressbar" aria-valuenow="30" aria-valuemin="0" aria-valuemax="100" style="width: 60%">
+							<span class="sr-only">60% Complete (warning)</span>
+						</div>
+					</div>
+				</div>
+				<!-- stats block -->
+				<div class="stats_bar_label">Sguardo</div>
+				<div class="stats_bar">
+					<div class="progress">
+						<div class="progress-bar progress-bar-warning" role="progressbar" aria-valuenow="90" aria-valuemin="0" aria-valuemax="100" style="width: 90%">
+							<span class="sr-only">60% Complete (warning)</span>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<div class="col-sm-12">
+	<h3>Visite del profilo mensili</h3>
+</div>
+<div class="col-sm-12">
+	<h3>Punteggio nel tempo</h3>
+</div>
+{% endblock container4_content %}
+
+{% block custom_js %}
+<script>
+	$(function(){
+		$('[data-toggle="tooltip"]').tooltip();
+	});
+</script>
+{% endblock custom_js %}
