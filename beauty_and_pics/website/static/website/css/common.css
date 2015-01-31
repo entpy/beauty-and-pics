@@ -73,11 +73,13 @@ html, body { height: 100%; background-color: #2c3e50; }
 /* backend containers */
 .generic_container3 > .generic_container { float: left; }
 .generic_container4 { margin-right: 20px; }
-.generic_container4, .generic_container6, .generic_container7 { border-radius: 4px; -moz-border-radius: 4px; background-color: #ecf0f1; }
-.generic_container6, .generic_container7 { width: 100%; }
+.generic_container4, .generic_container6, .generic_container7, .generic_container9 { border-radius: 4px; -moz-border-radius: 4px; background-color: #ecf0f1; }
+.generic_container6, .generic_container7, .generic_container9 { width: 100%; }
 .generic_container6 { background: url(../img/partecipa.png) no-repeat center center #3498db; margin-bottom: 20px; text-align: center }
 .generic_container6 > .title { color: white; margin-top: 25px; }
 .generic_container6 > .button_container { margin-top: 195px; }
+.generic_container9 { padding: 0 25px 25px; }
+.generic_container9 > .title { margin-top: 25px; }
 
 /* catwalk user details page */
 .background_container1 { background-color: #E0E0E0; padding: 20px; }
@@ -123,3 +125,13 @@ ul.grid_container li img:hover { opacity: 0.5; }
 .upload_image_button:hover .img_not_active { display: none; }
 .upload_image_button:hover .img_active { display: inline-block; }
 /* profile section }}} */
+
+/* classification block style {{{ */
+.classification_block { background-color: #e0e0e0; border-radius: 4px; -moz-border-radius: 4px; color: #2c3e50; display: inline-block; margin-bottom: 5px; margin-top: 10px; padding: 10px; text-align: left; }
+.classification_block:hover { box-shadow: 0px 0px 2px -1px black; text-decoration: none; }
+.classification_block_wrapper { display: table; width: 100%; }
+.classification_block_wrapper > div { display: table-cell; vertical-align: middle; }
+.classification_block_wrapper > .right { padding-left: 10px; text-align: right; }
+.classification_block_wrapper > .right > .classification_position { font-size: 22px; }
+.classification_block_wrapper > .right > .classification_name, .classification_block_wrapper > .right > .classification_points { font-size: 13px; }
+/* classification block style }}} */
