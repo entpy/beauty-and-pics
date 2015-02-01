@@ -7,6 +7,12 @@
 {# page description #}
 {% block description %}{% endblock %}
 
+{# set navigation type #}
+{% block login-navigation %}{{ block.super }}{% endblock %}
+{% block no-login-navigation %}{% endblock %}
+
+{% block container4_navigation %}{% endblock %}
+
 {% block block0_0 %}{% endblock %}
 
 {# Custom page script block #}
@@ -21,3 +27,6 @@
 
 {# container content #}
 {% block container4_content %}{% endblock %}
+
+{# custom page js #}
+{% block custom_js %}{% endblock %}

@@ -7,6 +7,10 @@
 {# page description #}
 {% block description %}{% endblock %}
 
+{# set navigation type #}
+{% block login-navigation %}{{ block.super }}{% endblock %}
+{% block no-login-navigation %}{% endblock %}
+
 {% block block0_0 %}{% endblock %}
 
 {# Custom page script block #}

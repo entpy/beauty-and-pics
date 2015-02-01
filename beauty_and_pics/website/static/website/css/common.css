@@ -135,3 +135,21 @@ ul.grid_container li img:hover { opacity: 0.5; }
 .classification_block_wrapper > .right > .classification_position { font-size: 22px; }
 .classification_block_wrapper > .right > .classification_name, .classification_block_wrapper > .right > .classification_points { font-size: 13px; }
 /* classification block style }}} */
+
+/* masonry plugin style {{{ */
+#container {
+  background: #DDD;
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.item {
+  width: 200px;
+  float: left;
+}
+
+.item img {
+  display: block;
+  width: 100%;
+}
+/* masonry plugin style }}} */

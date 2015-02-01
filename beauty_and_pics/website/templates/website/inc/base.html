@@ -36,8 +36,9 @@
 							<img alt="Beauty and Pics" src="{% static "website/img/logo.png" %}">
 						</a>
 					</div>
-					{# no-login header #}
-					<!-- <div class="header_button_container">
+					{# navigation before login #}
+					{% block no-login-navigation %}
+					<div class="header_button_container">
 						<div>
 							<a href="/registrati/" class="btn btn-success">Partecipa</a>
 							<a href="/login/" class="btn btn-login">Accedi</a>
@@ -49,8 +50,10 @@
 							<a href="/come-funziona/"><div class="navigation_item"><span class="navigation_label">Il concorso</span><span class="navigation_arrow">v</span></div></a>
 							<a href="/come-funziona/"><div class="navigation_item"><span class="navigation_label">Come iscriversi</span><span class="navigation_arrow">v</span></div></a>
 						</nav>
-					</div>-->
-					{# header after login #}
+					</div>
+					{% endblock no-login-navigation %}
+					{# navigation after login #}
+					{% block login-navigation %}
 					<div class="search_form_container">
 						<form class="form-horizontal">
 							<fieldset>
@@ -75,7 +78,7 @@
 							<div class="profile_menu_container">
 								<!-- single menu item -->
 								<div class="menu_item_container">
-									<a href="#">
+									<a href="/profilo/">
 										<div class="menu_item_image">
 											<img alt="Profilo" src="{% static "website/img/menu_profile.png" %}">
 										</div>
@@ -86,7 +89,7 @@
 								</div>
 								<!-- single menu item -->
 								<div class="menu_item_container">
-									<a href="#">
+									<a href="/profilo/statistiche/">
 										<div class="menu_item_image">
 											<img alt="Profilo" src="{% static "website/img/menu_stats.png" %}">
 										</div>
@@ -119,6 +122,7 @@
 							</div>
 						</div>
 					</div>
+					{% endblock login-navigation %}
 				</div>
 			</div>
 		</header>
@@ -187,7 +191,7 @@
 									<h4>Top 5</h4>
 								</div>
 								{# right classification block #}
-								<a class="classification_block" href="#">
+								<a class="classification_block" href="/passerella/dettaglio-utente/">
 									<div class="classification_block_wrapper">
 										<div class="left"><img alt="Classifica" src="https://placekitten.com/g/70/70"></div>
 										<div class="right">
@@ -197,7 +201,7 @@
 										</div>
 									</div>
 								</a>
-								<a class="classification_block" href="#">
+								<a class="classification_block" href="/passerella/dettaglio-utente/">
 									<div class="classification_block_wrapper">
 										<div class="left"><img alt="Classifica" src="https://placekitten.com/g/70/70"></div>
 										<div class="right">
@@ -207,7 +211,7 @@
 										</div>
 									</div>
 								</a>
-								<a class="classification_block" href="#">
+								<a class="classification_block" href="/passerella/dettaglio-utente/">
 									<div class="classification_block_wrapper">
 										<div class="left"><img alt="Classifica" src="https://placekitten.com/g/70/70"></div>
 										<div class="right">
@@ -217,7 +221,7 @@
 										</div>
 									</div>
 								</a>
-								<a class="classification_block" href="#">
+								<a class="classification_block" href="/passerella/dettaglio-utente/">
 									<div class="classification_block_wrapper">
 										<div class="left"><img alt="Classifica" src="https://placekitten.com/g/70/70"></div>
 										<div class="right">
@@ -227,7 +231,7 @@
 										</div>
 									</div>
 								</a>
-								<a class="classification_block" href="#">
+								<a class="classification_block" href="/passerella/dettaglio-utente/">
 									<div class="classification_block_wrapper">
 										<div class="left"><img alt="Classifica" src="https://placekitten.com/g/70/70"></div>
 										<div class="right">
@@ -270,6 +274,8 @@
 		<script src="{% static "website/js/vendor/bootstrap.min.js" %}"></script>
 		<script src="{% static "website/js/plugins.js" %}"></script>
 		<script src="{% static "website/js/main.js" %}"></script>
+		<script src="{% static "website/js/vendor/masonry.pkgd.min.js" %}"></script>
+		<script src="{% static "website/js/vendor/imagesloaded.pkgd.min.js" %}"></script>
 
 		{# Custom page script block #}
 		{% block custom_js %}
