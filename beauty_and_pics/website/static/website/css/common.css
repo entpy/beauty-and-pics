@@ -138,18 +138,29 @@ ul.grid_container li img:hover { opacity: 0.5; }
 
 /* masonry plugin style {{{ */
 #container {
-  background: #DDD;
-  max-width: 1000px;
-  margin: 0 auto;
+	background: #DDD;
+	max-width: 1000px;
+	margin: 0 auto;
 }
 
-.item {
-  width: 200px;
-  float: left;
-}
+.grid-sizer { width: 1%; }
 
-.item img {
-  display: block;
-  width: 100%;
+.item { float: left; }
+.item img { display: block; width: 100%; }
+
+@media screen and (min-width: 1px) and (max-width: 480px) {
+	.item {
+		width: 50%;
+	}
+}
+@media screen and (min-width: 480px) and (max-width: 949px) {
+	.item {
+		width: 25%;
+	}
+}
+@media screen and (min-width: 950px) {
+	.item {
+		width: 20%;
+	}
 }
 /* masonry plugin style }}} */
