@@ -137,7 +137,7 @@ ul.grid_container li img:hover { opacity: 0.5; }
 /* classification block style }}} */
 
 /* masonry plugin style {{{ */
-#container { margin: 0 auto 30px; }
+#image_grid_container { margin: 0 auto 30px; }
 
 .grid-sizer { width: 1%; }
 
