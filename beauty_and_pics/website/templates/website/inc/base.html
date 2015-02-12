@@ -36,6 +36,13 @@
 							<img alt="Beauty and Pics" src="{% static "website/img/logo.png" %}">
 						</a>
 					</div>
+					<div class="navbar-default">
+						<div class="navbar-toggle collapsed display_only_small">
+							<span class="icon-bar"></span>
+							<span class="icon-bar"></span>
+							<span class="icon-bar"></span>
+						</div>
+					</div>
 					{# navigation before login #}
 					{% block no-login-navigation %}
 					<div class="header_button_container">
@@ -44,17 +51,17 @@
 							<a href="/login/" class="btn btn-login">Accedi</a>
 						</div>
 					</div>
-					<div class="navigation_container">
+					<div class="navigation_container toggle_navigation">
 						<nav>
-							<a href="/come-funziona/"><div class="navigation_item"><span class="navigation_label">Come funziona</span><span class="navigation_arrow">v</span></div></a>
-							<a href="/come-funziona/"><div class="navigation_item"><span class="navigation_label">Il concorso</span><span class="navigation_arrow">v</span></div></a>
-							<a href="/come-funziona/"><div class="navigation_item"><span class="navigation_label">Come iscriversi</span><span class="navigation_arrow">v</span></div></a>
+							<a href="/come-funziona/"><div class="navigation_item"><span class="navigation_label">Come funziona</span><span class="navigation_arrow display_only_big">v</span></div></a>
+							<a href="/come-funziona/"><div class="navigation_item"><span class="navigation_label">Il concorso</span><span class="navigation_arrow display_only_big">v</span></div></a>
+							<a href="/come-funziona/"><div class="navigation_item"><span class="navigation_label">Come iscriversi</span><span class="navigation_arrow display_only_big">v</span></div></a>
 						</nav>
 					</div>
 					{% endblock no-login-navigation %}
 					{# navigation after login #}
 					{% block login-navigation %}
-					<div class="search_form_container">
+					<div class="search_form_container display_only_big">
 						<form class="form-horizontal">
 							<fieldset>
 								<div class="input-group">
@@ -66,16 +73,61 @@
 							</fieldset>
 						</form>
 					</div>
-					<div class="profile_container">
+					<div class="profile_container toggle_navigation">
 						<div class="profile_container_wrapper">
-							<div class="profile_image_container">
-								<img class="img-circle" alt="Immagine del profilo" src="https://placekitten.com/g/51/51">
+							<div class="profile_name_image_container">
+								<div class="profile_image_container">
+									<img class="img-circle" alt="Immagine del profilo" src="https://placekitten.com/g/51/51">
+								</div>
+								<div class="profile_name_container">
+									<div>Ciao</div>
+									<strong>Nome Cognome <img class="profile_arrow_bottom display_only_big" alt="Bottom arrow" src="{% static "website/img/bottom-arrow.png" %}"></strong>
+								</div>
 							</div>
-							<div class="profile_name_container">
-								<div>Ciao</div>
-								<strong>Nome Cognome <img class="profile_arrow_bottom" alt="Bottom arrow" src="{% static "website/img/bottom-arrow.png" %}"></strong>
+							{# small logon menu {{{ #}
+							<div class="navigation_container toggle_navigation display_only_small">
+								<nav>
+									<!-- single menu item -->
+									<a href="/profilo/">
+										<div class="navigation_item">
+											<div class="menu_item_image">
+												<img alt="Profilo" src="{% static "website/img/menu_profile.png" %}">
+											</div>
+											<span class="navigation_label">Profilo</span>
+										</div>
+									</a>
+									<!-- single menu item -->
+									<a href="/profilo/statistiche/">
+										<div class="navigation_item">
+											<div class="menu_item_image">
+												<img alt="Profilo" src="{% static "website/img/menu_stats.png" %}">
+											</div>
+											<span class="navigation_label">Sguardo rapido</span>
+										</div>
+									</a>
+									<!-- single menu item -->
+									<a href="/profilo/statistiche/">
+										<div class="navigation_item">
+											<div class="menu_item_image">
+												<img alt="Profilo" src="{% static "website/img/menu_help.png" %}">
+											</div>
+											<span class="navigation_label">Bisogno di aiuto?</span>
+										</div>
+									</a>
+									<!-- single menu item -->
+									<a href="#">
+										<div class="navigation_item">
+											<div class="menu_item_image">
+												<img alt="Profilo" src="{% static "website/img/menu_logout.png" %}">
+											</div>
+											<span class="navigation_label">Esci</span>
+										</div>
+									</a>
+								</nav>
 							</div>
-							<div class="profile_menu_container">
+							{# small logon menu }}} #}
+							{# big logon menu {{{ #}
+							<div class="profile_menu_container display_only_big">
 								<!-- single menu item -->
 								<div class="menu_item_container">
 									<a href="/profilo/">
@@ -120,6 +172,7 @@
 										</div>
 									</a>
 							</div>
+							{# big logon menu }}} #}
 						</div>
 					</div>
 					{% endblock login-navigation %}
@@ -160,9 +213,11 @@
 					<div class="generic_container generic_container3">
 						<div class="generic_container generic_container4">
 							{# left block (with catwalk) #}
-							<h3>
-								{% block container4_title %}Page title{% endblock %}
-							</h3>
+							<div class="row">
+								<div class="col-sm-12">
+									<h3>{% block container4_title %}Page title{% endblock %}</h3>
+								</div>
+							</div>
 							{# navigation tabs #}
 							{% block container4_navigation %}
 								<ul class="nav nav-tabs">
@@ -290,6 +345,13 @@
 			e.src='//www.google-analytics.com/analytics.js';
 			r.parentNode.insertBefore(e,r)}(window,document,'script','ga'));
 			ga('create','UA-XXXXX-X');ga('send','pageview');
+		</script>
+		<script>
+			$(document).ready(function(){
+				$(".navbar-toggle").on( "click", function() {
+					$(".toggle_navigation").toggle();
+				});
+			});
 		</script>
 	</body>
 </html>

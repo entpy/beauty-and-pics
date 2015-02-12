@@ -1,10 +1,12 @@
 /* Big screen css style */
+.display_only_small { display: none; }
+.display_only_big { display: inline-block; }
 .max_width_page { max-width: 1200px; }
 .image_background_container { }
 
 /* header */
 .header { height: 100px; }
-.header > div > div { margin-top: 1px; }
+.header > div > div { display: inline-block; margin-top: 1px; }
 .header .logo_container { float: left; padding: 10px 0; }
 .header .header_button_container { float: right; padding: 28px 0; }
 .header .header_button_container .btn { width: 100px; }
@@ -16,8 +18,9 @@
 .search_form_container { padding: 28px 0; }
 .profile_container { float: right; padding: 14px 0; }
 .profile_container .profile_container_wrapper { float: left; padding: 10px 15px; }
-.profile_container .profile_container_wrapper:hover { padding: 9px 14px; }
-.profile_container .profile_container_wrapper > div { float: left; }
+.profile_container .profile_container_wrapper:hover { border: 1px solid #000; box-shadow: 0 0 4px 0 black; background-color: #1A242F; color: #fff; padding: 9px 14px; }
+.profile_container .profile_container_wrapper .profile_name_image_container > div { float: left; }
+.profile_container .profile_container_wrapper:hover .profile_menu_container { display: inline-block; margin-top: 30px; }
 
 /* footer */
 .footer_container { padding: 145px 0 45px; }
@@ -42,7 +45,7 @@
 .generic_container1 .generic_container_block2 > .left > .bottom { margin-left: 35px; }
 
 /* backend containers */
-.generic_container4 { width: 900px; }
+.generic_container4 { margin-right: 20px; width: 900px; }
 .generic_container5 { width: 280px; }
 .generic_container4, .generic_container7 { min-height: 20px; padding: 10px 50px 50px; }
 .generic_container6 { height: 300px; }

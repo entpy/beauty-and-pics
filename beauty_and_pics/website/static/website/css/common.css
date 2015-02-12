@@ -24,20 +24,18 @@ html, body { height: 100%; background-color: #2c3e50; }
 /* header */
 .header { display: inline-block; width: 100%; }
 .header > div { text-align: center; }
-.header > div > div { display: inline-block; }
 .header .navigation_container { color: white; }
 .header .navigation_container .navigation_label { font-weight: bold; }
 .header .navigation_container .navigation_arrow { font-size: 13px; }
-.header .navigation_container .navigation_item { cursor: pointer; }
-.header .navigation_container .navigation_item:hover { background-color: #3498DB; }
+.header .navigation_container .navigation_item { color: #fff; cursor: pointer; }
+.header .navigation_container a { text-decoration: none; }
+.header .navigation_container .navigation_item:hover, .header .navigation_container a:hover { background-color: #3498DB; }
 	/* after login */
 .profile_container { color: white; position: relative; text-align: left; z-index: 1; }
 .profile_container .profile_container_wrapper { cursor: default; display: inline-block; }
-.profile_container .profile_container_wrapper:hover { border: 1px solid #000; box-shadow: 0 0 4px 0 black; background-color: #1A242F; color: #fff; }
-.profile_container .profile_container_wrapper:hover .profile_menu_container { display: block; }
-.profile_container .profile_container_wrapper .profile_name_container { line-height: 17px; margin-left: 10px; margin-top: 6px; }
+.profile_container .profile_container_wrapper .profile_name_container { line-height: 17px; margin-left: 15px; margin-top: 6px; }
 .profile_container .profile_container_wrapper .profile_name_container .profile_arrow_bottom { margin-left: 5px; }
-.profile_container .profile_container_wrapper .profile_menu_container { clear: left; display: none; margin-top: 30px; width: 100%; }
+.profile_container .profile_container_wrapper .profile_menu_container { clear: left; display: none; width: 100%; }
 .profile_menu_container .menu_item_container { cursor: pointer; clear: left; float: left; margin-bottom: 5px; padding: 3px 5px; width: 100%; }
 .profile_menu_container .menu_item_container:hover { background-color: #95a5a6; }
 .profile_menu_container .menu_item_container > a { color: white; }
@@ -72,7 +70,6 @@ html, body { height: 100%; background-color: #2c3e50; }
 
 /* backend containers */
 .generic_container3 > .generic_container { float: left; }
-.generic_container4 { margin-right: 20px; }
 .generic_container4, .generic_container6, .generic_container7, .generic_container9 { border-radius: 4px; -moz-border-radius: 4px; background-color: #ecf0f1; }
 .generic_container6, .generic_container7, .generic_container9 { width: 100%; }
 .generic_container6 { background: url(../img/partecipa.png) no-repeat center center #3498db; margin-bottom: 20px; text-align: center }
@@ -138,9 +135,7 @@ ul.grid_container li img:hover { opacity: 0.5; }
 
 /* masonry plugin style {{{ */
 #image_grid_container { margin: 0 auto 30px; }
-
 .grid-sizer { width: 1%; }
-
 .item { float: left; }
 .item img { cursor: pointer; display: block; width: 90%; margin: 5%; }
 .item img:hover { opacity: 0.5; }
