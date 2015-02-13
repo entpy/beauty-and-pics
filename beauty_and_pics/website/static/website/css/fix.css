@@ -1,13 +1,18 @@
 /* Medium screen css style */
 
+/* bootstrap elements fix {{{ */
+.nav.nav-tabs { margin: 25px 0 25px; }
+/* bootstrap elements fix }}} */
+
 /* header style {{{ */
 .header .logo_container { float: left; padding: 20px 0; width: 140px; }
 .logo_container img { width: 100%; }
-.header .navigation_container { float: right; margin-right: 15px; }
+.header .navigation_container { float: right; }
 .header .navigation_container .navigation_item { float: left; padding: 39px 5px; }
 .header .navigation_container .navigation_label { margin-right: 3px; }
 .header .logo_container { margin-left: 1%; }
 .header .header_button_container { margin-right: 1%; }
+.profile_container { margin-right: 1%; }
 /* header style }}} */
 
 /* www index page {{{ */

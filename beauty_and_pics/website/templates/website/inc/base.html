@@ -31,11 +31,13 @@
 		<header class="left_100">
 			<div class="header first_color left_100">
 				<div class="centered_page max_width_page">
+					{# logo container #}
 					<div class="logo_container">
 						<a href="/index/">
 							<img alt="Beauty and Pics" src="{% static "website/img/logo.png" %}">
 						</a>
 					</div>
+					{# toggle menu button #}
 					<div class="navbar-default">
 						<div class="navbar-toggle collapsed display_only_small">
 							<span class="icon-bar"></span>
@@ -43,7 +45,7 @@
 							<span class="icon-bar"></span>
 						</div>
 					</div>
-					{# navigation before login #}
+					{# navigation before login {{{ #}
 					{% block no-login-navigation %}
 					<div class="header_button_container">
 						<div>
@@ -59,7 +61,8 @@
 						</nav>
 					</div>
 					{% endblock no-login-navigation %}
-					{# navigation after login #}
+					{# navigation before login }}} #}
+					{# navigation after login {{{ #}
 					{% block login-navigation %}
 					<div class="search_form_container display_only_big">
 						<form class="form-horizontal">
@@ -84,50 +87,8 @@
 									<strong>Nome Cognome <img class="profile_arrow_bottom display_only_big" alt="Bottom arrow" src="{% static "website/img/bottom-arrow.png" %}"></strong>
 								</div>
 							</div>
-							{# small logon menu {{{ #}
-							<div class="navigation_container toggle_navigation display_only_small">
-								<nav>
-									<!-- single menu item -->
-									<a href="/profilo/">
-										<div class="navigation_item">
-											<div class="menu_item_image">
-												<img alt="Profilo" src="{% static "website/img/menu_profile.png" %}">
-											</div>
-											<span class="navigation_label">Profilo</span>
-										</div>
-									</a>
-									<!-- single menu item -->
-									<a href="/profilo/statistiche/">
-										<div class="navigation_item">
-											<div class="menu_item_image">
-												<img alt="Profilo" src="{% static "website/img/menu_stats.png" %}">
-											</div>
-											<span class="navigation_label">Sguardo rapido</span>
-										</div>
-									</a>
-									<!-- single menu item -->
-									<a href="/profilo/statistiche/">
-										<div class="navigation_item">
-											<div class="menu_item_image">
-												<img alt="Profilo" src="{% static "website/img/menu_help.png" %}">
-											</div>
-											<span class="navigation_label">Bisogno di aiuto?</span>
-										</div>
-									</a>
-									<!-- single menu item -->
-									<a href="#">
-										<div class="navigation_item">
-											<div class="menu_item_image">
-												<img alt="Profilo" src="{% static "website/img/menu_logout.png" %}">
-											</div>
-											<span class="navigation_label">Esci</span>
-										</div>
-									</a>
-								</nav>
-							</div>
-							{# small logon menu }}} #}
-							{# big logon menu {{{ #}
-							<div class="profile_menu_container display_only_big">
+							{# after login menu {{{ #}
+							<div class="navigation_container toggle_navigation">
 								<!-- single menu item -->
 								<div class="menu_item_container">
 									<a href="/profilo/">
@@ -152,7 +113,7 @@
 								</div>
 								<!-- single menu item -->
 								<div class="menu_item_container">
-									<a href="#">
+									<a href="/passerella/richiesta-aiuto">
 										<div class="menu_item_image">
 											<img alt="Profilo" src="{% static "website/img/menu_help.png" %}">
 										</div>
@@ -171,11 +132,13 @@
 											Esci
 										</div>
 									</a>
+								</div>
 							</div>
-							{# big logon menu }}} #}
+							{# after login menu }}} #}
 						</div>
 					</div>
 					{% endblock login-navigation %}
+					{# navigation after login }}} #}
 				</div>
 			</div>
 		</header>
@@ -213,11 +176,13 @@
 					<div class="generic_container generic_container3">
 						<div class="generic_container generic_container4">
 							{# left block (with catwalk) #}
+							{% block container4_title_block %}
 							<div class="row">
 								<div class="col-sm-12">
 									<h3>{% block container4_title %}Page title{% endblock %}</h3>
 								</div>
 							</div>
+							{% endblock container4_title_block %}
 							{# navigation tabs #}
 							{% block container4_navigation %}
 								<ul class="nav nav-tabs">
@@ -241,11 +206,11 @@
 									<a class="btn btn-danger" href="#">Partecipa</a>
 								</div>
 							</div>
+							{# right classification block {{{ #}
 							<div class="text-center inline_block generic_container9">
 								<div class="title">
 									<h4>Top 5</h4>
 								</div>
-								{# right classification block #}
 								<a class="classification_block" href="/passerella/dettaglio-utente/">
 									<div class="classification_block_wrapper">
 										<div class="left"><img alt="Classifica" src="https://placekitten.com/g/70/70"></div>
@@ -297,6 +262,7 @@
 									</div>
 								</a>
 							</div>
+							{# right classification block }}} #}
 						</div>
 					</div>
 				</div>
@@ -306,16 +272,16 @@
 
 		{% block footer %}
 		<footer>
-			<div class="left_100 second_color">
+			<div class="left_100 second_color footer_block">
 				<div class="centered_page max_width_page text-center">
 					<div class="footer_container">
-						<div>
+						<div class="footer_image_continer">
 							<img alt="Beauty and Pics" src="{% static "website/img/unicorn_left.png" %}">
 						</div>
 						<div class="powered_by_container">
-							<span>2015 | Proudly powered by Entpy Software</span>
+							<span><span class="footer_year">2015</span><span class="display_only_big">&nbsp;|&nbsp;</span>Proudly powered by <b>Entpy Software</b></span>
 						</div>
-						<div>
+						<div class="footer_image_continer">
 							<img alt="Beauty and Pics" src="{% static "website/img/unicorn_right.png" %}">
 						</div>
 					</div>
@@ -328,13 +294,12 @@
 		<script>window.jQuery || document.write('<script src="js/vendor/jquery-1.11.1.min.js"><\/script>')</script>
 		<script src="{% static "website/js/vendor/bootstrap.min.js" %}"></script>
 		<script src="{% static "website/js/plugins.js" %}"></script>
-		<script src="{% static "website/js/main.js" %}"></script>
 		<script src="{% static "website/js/vendor/masonry.pkgd.min.js" %}"></script>
 		<script src="{% static "website/js/vendor/imagesloaded.pkgd.min.js" %}"></script>
+		<script src="{% static "website/js/main.js" %}"></script>
 
 		{# Custom page script block #}
 		{% block custom_js %}
-		{# put addictional page script here #}
 		{% endblock custom_js %}
 
 		<!-- Google Analytics: change UA-XXXXX-X to be your site's ID. -->
@@ -345,13 +310,6 @@
 			e.src='//www.google-analytics.com/analytics.js';
 			r.parentNode.insertBefore(e,r)}(window,document,'script','ga'));
 			ga('create','UA-XXXXX-X');ga('send','pageview');
-		</script>
-		<script>
-			$(document).ready(function(){
-				$(".navbar-toggle").on( "click", function() {
-					$(".toggle_navigation").toggle();
-				});
-			});
 		</script>
 	</body>
 </html>

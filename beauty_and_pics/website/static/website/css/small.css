@@ -1,4 +1,14 @@
 /* Small screen css style */
+
+/* bootstrap elements fix {{{ */
+.row { margin: 0px; }
+.pagination > li > a, .pagination > li > span { padding: 8px 13px; }
+.well { padding: 25px; }
+.nav.nav-tabs { margin: 10px 0 25px; }
+.nav-tabs > li { margin-bottom: 10px; width: 50%; }
+.form-control { margin-bottom: 5px; }
+/* bootstrap elements fix }}} */
+
 .display_only_small { display: inline-block; }
 .display_only_big { display: none; }
 
@@ -17,26 +27,53 @@
 .header .profile_container .profile_container_wrapper .profile_name_image_container { margin-bottom: 5px; margin-top: 15px; }
 .header .profile_container .profile_container_wrapper .profile_name_image_container .profile_name_container { display: inline-block; margin-left: 10px; margin-top: 0; text-align: left; vertical-align: middle; }
 .header .profile_container .profile_container_wrapper .profile_name_image_container .profile_image_container { display: inline-block; }
-.header .profile_container .navigation_container .navigation_item { text-align: left; }
+.header .profile_container .navigation_container .menu_item_container { text-align: left; }
+.header .profile_container .navigation_container .menu_item_container .menu_item_image { display: inline-block; margin-left: 5%; margin-right: 2%; }
+.header .profile_container .navigation_container .menu_item_container .menu_item_label { display: inline-block; vertical-align: middle; }
 /* header style }}} */
+
+/* page title block */
+.title_block { padding: 0 2.5%; }
+
+/* footer style {{{ */
+.footer_block { margin-top: 30px; }
+.footer_block .footer_image_continer { width: 15%; }
+.footer_block .footer_image_continer img { width: 90%; }
+.footer_block .powered_by_container { margin-left: 2%; margin-right: 2%; margin-top: 15px; width: 66%; }
+.footer_container { padding: 100px 0 25px; }
+.footer_block .powered_by_container .footer_year { display: block; }
+/* footer style }}} */
 
 /* www style {{{ */
 .catwalk_block { display: inline-block; float: none; max-width: 280px; width: 90%; }
 .generic_container2 { width: 95%; max-width: 450px; }
+.generic_container1 { width: 95%; max-width: 500px; }
+.generic_container1 .generic_container_block1 .left { width: 36%; margin-left: 2%; margin-right: 2%; }
+.generic_container1 .generic_container_block1 .left img { width: 95%; }
+.generic_container1 .generic_container_block1 .right { width: 60%; }
+.generic_container1 .generic_container_block2 .right { width: 36%; margin-left: 2%; margin-right: 2%; }
+.generic_container1 .generic_container_block2 .right img { width: 95%; }
+.generic_container1 .generic_container_block2 .left { width: 60%; }
+.generic_container1 .generic_container_block1 > .right > .top { padding-right: 10%; }
+.generic_container1 .generic_container_block2 > .left > .top { padding-left: 10%; }
+.generic_container1 .generic_container_block1 > .right > .bottom { padding-right: 10%; }
+.generic_container1 .generic_container_block2 > .left > .bottom { padding-left: 10%; }
 /* www style }}} */
 
-/* bootstrap elements fix {{{ */
-.row { margin: 0px; }
-.pagination > li > a, .pagination > li > span { padding: 8px 13px; }
-.well { padding: 25px; }
-/* bootstrap elements fix }}} */
+/* profile section {{{ */
+.upload_image_button { width: 100%; max-width: 220px; }
+.manage_buttons_container .manage_buttons_block3 { margin-top: 25px; }
+.classification_block { width: 100%; }
+/* profile section }}} */
 
 .generic_container8 .left { margin-bottom: 25px; text-align: center; }
 .user_action_link_container { margin-top: 15px; }
 .generic_container8, .vote_user_container { display: block; margin: 0 auto; width: 95%; }
 .generic_container4, .generic_container6, .generic_container7, .generic_container9 { display: block; margin: 20px auto 0; padding: 15px; width: 95%; }
+.generic_container9 { max-width: 390px; }
 .generic_container3 > .generic_container { float: none; }
 .generic_container6 { max-width: 270px; }
+.generic_container6 > .title { margin-top: 10px; }
 .styled_container1 { display: block; margin: 0 auto; width: 95%; }
 .user_top_info_container { margin-left: 15px; width: auto; }
 .catwalk_user_main_image { max-width: 250px; width: 100%; }

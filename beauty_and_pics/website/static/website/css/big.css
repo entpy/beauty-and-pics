@@ -1,8 +1,12 @@
 /* Big screen css style */
+
+/* bootstrap elements fix {{{ */
+.nav.nav-tabs { margin: 25px 0 25px; }
+/* bootstrap elements fix }}} */
+
 .display_only_small { display: none; }
 .display_only_big { display: inline-block; }
 .max_width_page { max-width: 1200px; }
-.image_background_container { }
 
 /* header */
 .header { height: 100px; }
@@ -11,7 +15,7 @@
 .header .header_button_container { float: right; padding: 28px 0; }
 .header .header_button_container .btn { width: 100px; }
 .header .header_button_container .btn-success { margin-right: 5px; }
-.header .navigation_container { float: right; margin-right: 25px; }
+.header .navigation_container { float: right; }
 .header .navigation_container .navigation_item { float: left; padding: 39px 30px; }
 .header .navigation_container .navigation_label { margin-right: 10px; }
 	/* after login */
@@ -20,11 +24,17 @@
 .profile_container .profile_container_wrapper { float: left; padding: 10px 15px; }
 .profile_container .profile_container_wrapper:hover { border: 1px solid #000; box-shadow: 0 0 4px 0 black; background-color: #1A242F; color: #fff; padding: 9px 14px; }
 .profile_container .profile_container_wrapper .profile_name_image_container > div { float: left; }
-.profile_container .profile_container_wrapper:hover .profile_menu_container { display: inline-block; margin-top: 30px; }
+.profile_container .profile_container_wrapper:hover .navigation_container { display: inline-block; margin-top: 30px; }
+.profile_container .navigation_container .menu_item_container { cursor: pointer; clear: left; float: left; margin-bottom: 5px; padding: 3px 5px; width: 100%; }
+.profile_container .navigation_container .menu_item_container:hover { background-color: #95a5a6; }
+.profile_container .navigation_container .menu_item_container > a > div { float: left; }
+.profile_container .navigation_container .menu_item_container .menu_item_image {  }
+.profile_container .navigation_container .menu_item_container .menu_item_label { margin-top: 3px; margin-left: 34px; }
 
-/* footer */
+/* footer style {{{ */
 .footer_container { padding: 145px 0 45px; }
 .footer_container .powered_by_container { margin: 75px 50px 0; }
+/* footer style }}} */
 
 /* www index page */
 .catwalk_container { margin-top: 110px; }
@@ -38,7 +48,7 @@
 .generic_container1 .generic_container_block1 > .left { margin-top: 70px; text-align: center; width: 300px; }
 .generic_container1 .generic_container_block1 > .right { width: 500px; }
 .generic_container1 .generic_container_block1 > .right > .top { padding: 5px 50px 5px 5px; }
-.generic_container1 .generic_container_block1 > .right > .bottom { margin-left: 35px; }
+.generic_container1 .generic_container_block1 > .right > .bottom { margin-right: 35px; }
 .generic_container1 .generic_container_block2 > .right { margin-top: 70px; text-align: center; width: 300px; }
 .generic_container1 .generic_container_block2 > .left { width: 500px; }
 .generic_container1 .generic_container_block2 > .left > .top { padding: 5px 5px 5px 50px }
