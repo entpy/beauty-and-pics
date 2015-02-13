@@ -15,7 +15,7 @@
 .header .header_button_container { float: right; padding: 28px 0; }
 .header .header_button_container .btn { width: 100px; }
 .header .header_button_container .btn-success { margin-right: 5px; }
-.header .navigation_container { float: right; }
+.header .www_navigation { float: right; margin-right: 8%; }
 .header .navigation_container .navigation_item { float: left; padding: 39px 30px; }
 .header .navigation_container .navigation_label { margin-right: 10px; }
 	/* after login */

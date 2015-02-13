@@ -46,6 +46,7 @@
 
 /* www style {{{ */
 .catwalk_block { display: inline-block; float: none; max-width: 280px; width: 90%; }
+.generic_container { width: 100%; }
 .generic_container2 { width: 95%; max-width: 450px; }
 .generic_container1 { width: 95%; max-width: 500px; }
 .generic_container1 .generic_container_block1 .left { width: 36%; margin-left: 2%; margin-right: 2%; }
