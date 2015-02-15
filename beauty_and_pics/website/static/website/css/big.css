@@ -26,10 +26,9 @@
 .profile_container .profile_container_wrapper .profile_name_image_container > div { float: left; }
 .profile_container .profile_container_wrapper:hover .navigation_container { display: inline-block; margin-top: 30px; }
 .profile_container .navigation_container .menu_item_container { cursor: pointer; clear: left; float: left; margin-bottom: 5px; padding: 3px 5px; width: 100%; }
-.profile_container .navigation_container .menu_item_container:hover { background-color: #95a5a6; }
 .profile_container .navigation_container .menu_item_container > a > div { float: left; }
 .profile_container .navigation_container .menu_item_container .menu_item_image {  }
-.profile_container .navigation_container .menu_item_container .menu_item_label { margin-top: 3px; margin-left: 34px; }
+.profile_container .navigation_container .menu_item_container .menu_item_label { margin-left: 34px; }
 
 /* footer style {{{ */
 .footer_container { padding: 145px 0 45px; }
