@@ -1,4 +1,7 @@
 from django.shortcuts import render
+from django.http import HttpResponseRedirect
+from django.contrib import messages
+from website.forms import *
 
 # www {{{
 def www_index(request):
@@ -14,7 +17,39 @@ def www_forgot_password(request):
     return render(request, 'website/www/www_forgot_password.html', False)
 
 def www_register(request):
-    return render(request, 'website/www/www_register.html', False)
+
+    FormCommonUtils_obj = FormCommonUtils()
+    # built html birthday select
+    birthday_select = {}
+    birthday_select["days"] = FormCommonUtils_obj.get_days_select_value()
+    birthday_select["months"] = FormCommonUtils_obj.get_months_select_value()
+    birthday_select["years"] = FormCommonUtils_obj.get_years_select_value()
+
+    # if this is a POST request we need to process the form data
+    if request.method == 'POST':
+        # create a form instance and populate it with data from the request:
+        form = RegisterForm(request.POST)
+        # check whether it's valid:
+        if form.is_valid():
+            # TODO: process the data in form.cleaned_data as required
+            # ...
+            # redirect to user profile
+            return HttpResponseRedirect('/registrati/')
+        else:
+            # ops..an error was occured
+            messages.add_message(request, messages.ERROR, 'Ricontrolla i tuoi dati')
+
+    # if a GET (or any other method) we'll create a blank form
+    else:
+        form = RegisterForm()
+
+    context = {
+        "post" : request.POST,
+        "form": form,
+        "birthday_select" : birthday_select,
+    }
+
+    return render(request, 'website/www/www_register.html', context)
 # }}}
 
 # catwalk {{{
