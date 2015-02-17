@@ -18,13 +18,6 @@ def www_forgot_password(request):
 
 def www_register(request):
 
-    FormCommonUtils_obj = FormCommonUtils()
-    # built html birthday select
-    birthday_select = {}
-    birthday_select["days"] = FormCommonUtils_obj.get_days_select_value()
-    birthday_select["months"] = FormCommonUtils_obj.get_months_select_value()
-    birthday_select["years"] = FormCommonUtils_obj.get_years_select_value()
-
     # if this is a POST request we need to process the form data
     if request.method == 'POST':
         # create a form instance and populate it with data from the request:
@@ -46,7 +39,6 @@ def www_register(request):
     context = {
         "post" : request.POST,
         "form": form,
-        "birthday_select" : birthday_select,
     }
 
     return render(request, 'website/www/www_register.html', context)

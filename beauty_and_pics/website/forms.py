@@ -44,9 +44,9 @@ class RegisterForm(forms.Form):
 
     first_name = forms.CharField(label='Nome', max_length=20, required=True)
     last_name = forms.CharField(label='Cognome', max_length=20, required=False)
-    birthday_day = forms.ChoiceField(label='Giorno', max_length=2, required=True, choices=DAYS_SELECT_CHOICES)
-    birthday_month = forms.ChoiceField(label='Mese', max_length=2, required=True, choices=MONTHS_SELECT_CHOICES)
-    birthday_year = forms.ChoiceField(label='Anno', max_length=4, required=True, choices=YEARS_SELECT_CHOICES)
-    gender = forms.CharField(label='Sesso', max_length=1, required=True, choices=GENDERS_SELECT_CHOICES)
+    birthday_day = forms.ChoiceField(label='Giorno', required=True, choices=DAYS_SELECT_CHOICES)
+    birthday_month = forms.ChoiceField(label='Mese', required=True, choices=MONTHS_SELECT_CHOICES)
+    birthday_year = forms.ChoiceField(label='Anno', required=True, choices=YEARS_SELECT_CHOICES)
+    gender = forms.ChoiceField(label='Sesso', required=True, choices=GENDERS_SELECT_CHOICES)
     email = forms.CharField(label='Email', max_length=100, required=True)
     password = forms.CharField(label='Password', max_length=100, required=True)
