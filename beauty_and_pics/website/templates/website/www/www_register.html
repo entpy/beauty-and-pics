@@ -18,7 +18,7 @@
 		{% if messages %}
 			<div class="row">
 				<div class="col-md-12">
-					<div class="alert alert-error">
+					<div class="alert alert-danger">
 						<h4>Uhm qualcosa non va!</h4>
 						<ul>
 							{% for message in messages %}
@@ -34,7 +34,7 @@
 			{% if form.errors %}
 				{% for field in form %}
 					{% if field.errors %}
-						<div>{{ field.label|escape }}</div>
+						<div>{{ field.label|escape }} {{ field.errors|escape }}</div>
 					{% endif %}
 				{% endfor %}
 			{% endif %}
@@ -55,30 +55,30 @@
 						<input name="{{ form.last_name.name }}" class="form-control" id="{{ form.last_name.id_for_label }}" placeholder="{{ form.last_name.label }}" value="{{ post.last_name }}" type="text">
 					</div>
 				</div>
-				<div class="form-group">
+				<div class="form-group {% if form.birthday_day.errors or form.birthday_month.errors or form.birthday_year.errors %}has-error{% endif %}">
 					<label for="{{ form.birthday_day.id_for_label }}" class="col-lg-4 control-label">Data di nascita *</label>
 					<div class="col-lg-8">
 						<div class="col-lg-4 no-gutters">
 							<select name="{{ form.birthday_day.name }}" class="form-control" id="{{ form.birthday_day.id_for_label }}">
 								<option selected="selected">{{ form.birthday_day.label }}</option>
-								{% for day_number in birthday_select.days %}
-									<option {% if post.birthday_day == day_number|slugify %}selected="selected"{% endif %} value="{{ day_number }}">{{ day_number }}</option>
+								{% for key,value in form.fields.birthday_day.choices %}
+									<option value="{{ key }}" {% if post.birthday_day == key|slugify %}selected="selected"{% endif %}>{{ value }}</option>
 								{% endfor %}
 							</select>
 						</div>
 						<div class="col-lg-4 no-gutters">
 							<select name="{{ form.birthday_month.name }}" class="form-control">
 								<option selected="selected">{{ form.birthday_month.label }}</option>
-								{% for month_number in birthday_select.months %}
-									<option {% if post.birthday_month == month_number.0|slugify %}selected="selected"{% endif %} value="{{ month_number.0 }}">{{ month_number.1 }}</option>
+								{% for key,value in form.fields.birthday_month.choices %}
+									<option value="{{ key }}" {% if post.birthday_month == key|slugify %}selected="selected"{% endif %}>{{ value }}</option>
 								{% endfor %}
 							</select>
 						</div>
 						<div class="col-lg-4 no-gutters">
 							<select name="{{ form.birthday_year.name }}" class="form-control">
 								<option selected="selected">{{ form.birthday_year.label }}</option>
-								{% for year_number in birthday_select.years %}
-									<option {% if post.birthday_year == year_number|slugify %}selected="selected"{% endif %} value="{{ year_number }}">{{ year_number }}</option>
+								{% for key,value in form.fields.birthday_year.choices %}
+									<option value="{{ key }}" {% if post.birthday_year == key|slugify %}selected="selected"{% endif %}>{{ value }}</option>
 								{% endfor %}
 							</select>
 						</div>
@@ -90,8 +90,9 @@
 						<div class="col-lg-4 no-gutters">
 							<select name="{{ form.gender.name }}" class="form-control" id="{{ form.gender.id_for_label }}">
 								<option selected="selected">{{ form.gender.label }}</option>
-								<option {% if post.gender == "f"|slugify %}selected="selected"{% endif %} value="f">Donna</option>
-								<option {% if post.gender == "m"|slugify %}selected="selected"{% endif %} value="m">Uomo</option>
+								{% for key,value in form.fields.gender.choices %}
+									<option value="{{ key }}" {% if post.gender == key|slugify %}selected="selected"{% endif %}>{{ value }}</option>
+								{% endfor %}
 							</select>
 						</div>
 					</div>
