@@ -18,16 +18,30 @@ def www_forgot_password(request):
 
 def www_register(request):
 
+    FormCommonUtils_obj = FormCommonUtils();
+
     # if this is a POST request we need to process the form data
     if request.method == 'POST':
         # create a form instance and populate it with data from the request:
         form = RegisterForm(request.POST)
         # check whether it's valid:
         if form.is_valid():
-            # TODO: process the data in form.cleaned_data as required
-            # ...
-            # redirect to user profile
-            return HttpResponseRedirect('/registrati/')
+            # check if user is adult
+            birthday_dictionary = {
+                "birthday_year" : form.cleaned_data["birthday_year"],
+                "birthday_month" : form.cleaned_data["birthday_month"],
+                "birthday_day" : form.cleaned_data["birthday_day"],
+            }
+            if FormCommonUtils_obj.check_if_user_is_adult(birthday_dictionary=birthday_dictionary):
+                # ok, user is adult
+                # TODO: process the data in form.cleaned_data as required
+                # ...
+                # redirect to user profile
+                return HttpResponseRedirect('/registrati/')
+            else:
+                # ops, user isn't adult
+                #messages.add_message(request, messages.ERROR, 'Devi essere maggiorenne per poterti registrare')
+                pass
         else:
             # ops..an error was occured
             messages.add_message(request, messages.ERROR, 'Ricontrolla i tuoi dati')

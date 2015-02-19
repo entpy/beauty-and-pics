@@ -32,11 +32,12 @@
 		<form class="form-horizontal" method="post" action="">
 			{% csrf_token %}
 			{% if form.errors %}
-				{% for field in form %}
-					{% if field.errors %}
-						<div>{{ field.label|escape }} {{ field.errors|escape }}</div>
-					{% endif %}
-				{% endfor %}
+				<div>{{ form.errors|escape }}</div>
+				{#{% for field in form %}#}
+					{#{% if field.errors %}#}
+						{#<div>{{ field.label|escape }} {{ field.errors|escape }}</div>#}
+					{#{% endif %}#}
+				{#{% endfor %}#}
 			{% endif %}
 			<fieldset>
 				<legend>Registrati</legend>
