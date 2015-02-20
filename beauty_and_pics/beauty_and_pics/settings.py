@@ -82,3 +82,35 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.7/howto/static-files/
 
 STATIC_URL = '/static/'
+
+"""
+HOW TO SUL LOGGING
+------------------
+
+Il logger e' un contenitore per i log, vengono inseriti dentro di esso
+solo se i livelli di logging del file sono >= a quelli del contenitore
+
+l' handler del logger gestisce dove i messaggi di log raccolti dal logger
+andranno spediti, per esempio su file, console, ecc..
+
+E' inoltre possibile impostare filtri e formattazione per i log
+(per ora qui non viene fatto!)
+"""
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'file': {
+            'level': 'DEBUG',
+            'class': 'logging.FileHandler',
+            'filename': '/tmp/debug.log',
+        },
+    },
+    'loggers': {
+        'django.request': {
+            'handlers': ['file'],
+            'level': 'DEBUG',
+            'propagate': True,
+        },
+    },
+}

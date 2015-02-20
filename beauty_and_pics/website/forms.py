@@ -1,7 +1,10 @@
 from django import forms
 from datetime import date
 from dateutil.relativedelta import *
-import calendar
+import calendar, logging
+
+# Get an instance of a logger
+logger = logging.getLogger('django.request')
 
 class FormCommonUtils():
     def get_days_select_choices(self):
@@ -24,7 +27,8 @@ class FormCommonUtils():
         #                           |
         #                           V
         select_choices = []
-        for i in range(1960, (date.today().year - 17)):
+        #for i in range(1960, (date.today().year - 17)):
+        for i in range(1960, (date.today().year - 10)):
                 select_choices.append((i, i))
         return select_choices
 
@@ -40,9 +44,9 @@ class FormCommonUtils():
         Return: true on success, false otherwise"""
 
         return_var = False
-        birthday_year = birthday_dictionary.get("birthday_year")
-        birthday_month = birthday_dictionary.get("birthday_month")
-        birthday_day = birthday_dictionary.get("birthday_day")
+        birthday_year = int(birthday_dictionary.get("birthday_year"))
+        birthday_month = int(birthday_dictionary.get("birthday_month"))
+        birthday_day = int(birthday_dictionary.get("birthday_day"))
 
         if (birthday_year and birthday_month and birthday_day):
             # date(yy/mm/dd)
@@ -56,8 +60,29 @@ class FormCommonUtils():
                 return_var = True
         return return_var
 
-class RegisterForm(forms.Form):
+    def clean_form_custom(self, formObject):
+		lista_errori = []
+		# checking if all fields are valid
+		form_is_valid = formObject.is_valid()
+		if not form_is_valid:
+			self.add_error(None, "Ricontrolla i tuoi dati")
+		else: 
+			cleaned_data = formObject.clean()
+			birthday_dictionary = {
+			    "birthday_year" : cleaned_data.get("birthday_year"),
+			    "birthday_month" : cleaned_data.get("birthday_month"),
+			    "birthday_day" : cleaned_data.get("birthday_day"),
+			}
 
+			if (not self.check_if_user_is_adult(birthday_dictionary=birthday_dictionary)):
+				# raise an exception if user is not adult
+				self.add_error(None, "Per continuare devi essere maggiorenne")
+
+		return True
+
+class RegisterForm(forms.Form, FormCommonUtils):
+
+    # TODO: devo utilizzare i metodi della classe parent
     FormCommonUtils_obj = FormCommonUtils();
     DAYS_SELECT_CHOICES = FormCommonUtils_obj.get_days_select_choices()
     MONTHS_SELECT_CHOICES = FormCommonUtils_obj.get_months_select_choices()
@@ -74,28 +99,23 @@ class RegisterForm(forms.Form):
     password = forms.CharField(label='Password', max_length=100, required=True)
 
     def clean(self):
-
+	super(RegisterForm, self).clean_form_custom(formObject=super(RegisterForm, self))
+	"""
         lista_errori = []
-        #cleaned_data = super(RegisterForm, self).clean()
-        try:
-            cleaned_data = super(RegisterForm, self).clean()
-        except ValidationError:
-            lista_errori.append("compila tutti i campi")
+	# checking if all fields are valid
+	form_is_valid = super(RegisterForm, self).is_valid()
+	if not form_is_valid:
+	   	self.add_error(None, "Ricontrolla i tuoi dati")
+	else: 
+		cleaned_data = super(RegisterForm, self).clean()
+		birthday_dictionary = {
+		    "birthday_year" : cleaned_data.get("birthday_year"),
+		    "birthday_month" : cleaned_data.get("birthday_month"),
+		    "birthday_day" : cleaned_data.get("birthday_day"),
+		}
 
-        birthday_dictionary = {
-            "birthday_year" : cleaned_data.get("birthday_year"),
-            "birthday_month" : cleaned_data.get("birthday_month"),
-            "birthday_day" : cleaned_data.get("birthday_day"),
-        }
-
-        #if (!FormCommonUtils_obj.check_if_user_is_adult(birthday_dictionary=birthday_dictionary)):
-        if (True):
-            # raise an exception if user is not adult
-            lista_errori.append("altro errore sconosciuto")
-
-        raise forms.ValidationError([
-                    forms.ValidationError(lista_errori.pop(), code='error1'),
-                    forms.ValidationError(lista_errori.pop(), code='error2'),
-                ])
-
+		if (not super(RegisterForm, self).check_if_user_is_adult(birthday_dictionary=birthday_dictionary)):
+			# raise an exception if user is not adult
+			self.add_error(None, "Per continuare devi essere maggiorenne")
+	"""
         return True
