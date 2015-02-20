@@ -30,9 +30,6 @@ def www_register(request):
 		# ...
 		# redirect to user profile
 		return HttpResponseRedirect('/registrati/')
-        else:
-	    # ops..an error was occured
-            messages.add_message(request, messages.ERROR, 'Ricontrolla i tuoi dati')
 
     # if a GET (or any other method) we'll create a blank form
     else:
