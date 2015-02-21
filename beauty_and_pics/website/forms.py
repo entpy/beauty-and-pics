@@ -9,7 +9,7 @@ logger = logging.getLogger('django.request')
 class FormCommonUtils():
 
     # list of valid validation methods
-    valid_custom_validation_list = ('all_fields_valid', 'user_is_adult',)
+    valid_custom_validation_list = ()
     # list of custom validation methods, eg. ('all_fields_valid', 'another_method',)
     custom_validation_list = ()
     # adductional fields used in validation methods
@@ -17,26 +17,14 @@ class FormCommonUtils():
     # TODO: use this field to add errors
     validation_errors = {}
     # form to validate instance
-    validation_form = False
+    #validation_form = False
     # valid data retrieved after method "all_fields_valid"
     form_validated_data = False
 
-    def __init__(self, *args, **kwargs):
-        # custom_validation_list = False, addictional_validation_fields = False, validation_form = False
-        # setting form validation list
-        if custom_validation_list:
-            for validation in custom_validation_list:
-                # a method will be used only if exists inside 
-                # "valid_custom_validation_list" list
-                if self.check_if_validation_method_is_valid(validation):
-                    self.custom_validation_list + (validation,)
-        # setting form addictional validation fields
-        if addictional_validation_fields:
-            self.addictional_validation_fields = addictional_validation_fields
-
-        # setting form instance
-        if validation_form:
-            self.validation_form = validation_form
+    def __init__(self):
+	logger.debug("init di FormCommonUtils")
+	FormCommonUtils.valid_custom_validation_list += ('all_fields_valid',)
+	FormCommonUtils.valid_custom_validation_list += ('user_is_adult',)
 
     def check_if_validation_method_is_valid(self, validation_method = False):
         """Checking if a validation method exists"""
@@ -45,11 +33,11 @@ class FormCommonUtils():
     def clean_form_custom(self):
         """Running all validation functions"""
         if self.custom_validation_list:
-            cont = 0
             for validation in self.custom_validation_list:
-                logger.debug(str(cont) + " metodo: " + str(validation))
-                exec("self." + validation + "()")
-                cont += 1
+		if self.check_if_validation_method_is_valid(validation_method = validation):
+			exec("self." + validation + "()")
+		else:
+			logger.debug("metodo " + str(validation) + " non valido")
 
         return True
 
@@ -126,9 +114,24 @@ class FormCommonUtils():
         Return: true on success, false otherwise"""
 
         return_var = False
-        birthday_year = int(birthday_dictionary.get("birthday_year", 0))
-        birthday_month = int(birthday_dictionary.get("birthday_month", 0))
-        birthday_day = int(birthday_dictionary.get("birthday_day", 0))
+        birthday_year = birthday_dictionary.get("birthday_year", 0)
+        birthday_month = birthday_dictionary.get("birthday_month", 0)
+        birthday_day = birthday_dictionary.get("birthday_day", 0)
+
+        if not birthday_year:
+		birthday_year = 0
+        if not birthday_month:
+		birthday_month = 0
+        if not birthday_day:
+		birthday_day = 0
+
+        birthday_year = int(birthday_year)
+        birthday_month = int(birthday_month)
+        birthday_day = int(birthday_day)
+
+	logger.debug("anno: " + str(birthday_year))
+	logger.debug("mese: " + str(birthday_month))
+	logger.debug("giorno: " + str(birthday_day))
 
         if (birthday_year and birthday_month and birthday_day):
             # date(yy/mm/dd)
@@ -140,9 +143,8 @@ class FormCommonUtils():
             if (diff_between_dates.years >= 18):
                 # user is adult
                 return_var = True
+
         return return_var
-
-
 
 class RegisterForm(forms.Form, FormCommonUtils):
 
@@ -169,8 +171,8 @@ class RegisterForm(forms.Form, FormCommonUtils):
         # parent forms.Form init
         super(RegisterForm, self).__init__(*args, **kwargs)
 
-        # parent FormCommonUtils  init
-        FormCommonUtils.__init__(self, custom_validation_list = self.custom_validation_list, addictional_validation_fields = self.addictional_validation_fields, validation_form = super(RegisterForm, self))
+	# current form instance
+        self.validation_form = super(RegisterForm, self)
 
         # setting addicitonal data to form fields
         self.fields["birthday_day"].choices=self.get_days_select_choices()
