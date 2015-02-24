@@ -11,18 +11,20 @@
 {% block container4_title %}La passerella{% endblock container4_title %}
 
 {% block container4_content %}
-<div>
-	<ul class="nav nav-pills">
-		<li class="active"><a aria-expanded="false" href="#" data-toggle="tab">Le ultime registrate</a></li>
-		<li class=""><a aria-expanded="true" href="#" data-toggle="tab">La classifica</a></li>
-		<li class=""><a aria-expanded="true" href="#" data-toggle="tab">Le più visitate</a></li>
-		<li class=""><a aria-expanded="true" href="#" data-toggle="tab">Il sorriso più bello</a></li>
-		<li class=""><a aria-expanded="true" href="#" data-toggle="tab">Lo sguardo più bello</a></li>
-	</ul>
+<div class="row">
+	<div class="col-sm-12">
+		<ul class="nav nav-pills">
+			<li class="active"><a aria-expanded="false" href="#" data-toggle="tab">Le ultime registrate</a></li>
+			<li class=""><a aria-expanded="true" href="#" data-toggle="tab">La classifica</a></li>
+			<li class=""><a aria-expanded="true" href="#" data-toggle="tab">Le più visitate</a></li>
+			<li class=""><a aria-expanded="true" href="#" data-toggle="tab">Il sorriso più bello</a></li>
+			<li class=""><a aria-expanded="true" href="#" data-toggle="tab">Lo sguardo più bello</a></li>
+		</ul>
+	</div>
 </div>
 {# image grid #}
-<div id="image_grid_container">
-	<div class="grid-sizer"></div>
+<div class="row">
+	<div class="col-sm-12 margin_top_15 image_grid_container"></div>
 </div>
 <div class="text-center">
 	<a class="btn btn-success load_more_images" href="#">Carica altre</a>
@@ -32,14 +34,9 @@
 {% block custom_js %}
 <script>
 	$(document).ready(function(){
-		var $container = $('#image_grid_container').masonry({
-			itemSelector: '.item',
-			columnWidth: '.grid-sizer'
-		});
-
-		$('.load_more_images').click(function(){
-			var $items = getItems();
-			$container.masonryImagesReveal( $items );
+		$(".load_more_images").click(function(){
+			var elements = getItems();
+			$(".image_grid_container").append(elements);
 
 			return false;
 		});

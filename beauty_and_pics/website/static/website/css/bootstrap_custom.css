@@ -9,5 +9,39 @@
 .pagination > li > a:hover, .pagination > li > span:hover, .pagination > .active > a, .pagination > .active > span, .pagination > .active > a:hover, .pagination > .active > span:hover, .pagination > .active > a:focus, .pagination > .active > span:focus { background-color: #217dbb; }
 .navbar-toggle { cursor: pointer; margin: 0px; }
 .nav-pills > li + li { margin: 0px; }
-.nav > li > a, h3, .h3, .alert { margin-left: 5px; margin-right: 5px; }
+/*.nav > li > a, h3, .h3, .alert { margin-left: 5px; margin-right: 5px; }*/
+
+/* new bootstrap column {{{ */
+.col-xs-15,
+.col-sm-15,
+.col-md-15,
+.col-lg-15 {
+	position: relative;
+	min-height: 1px;
+	padding-right: 10px;
+	padding-left: 10px;
+}
+.col-xs-15 {
+	width: 20%;
+	float: left;
+}
+@media (min-width: 768px) {
+.col-sm-15 {
+	width: 20%;
+	float: left;
+	}
+}
+@media (min-width: 992px) {
+    .col-md-15 {
+        width: 20%;
+        float: left;
+	}
+}
+@media (min-width: 1200px) {
+    .col-lg-15 {
+        width: 20%;
+        float: left;
+	}
+}
+/* new bootstrap column }}} */
 /* bootstrap theme custom style }}} */

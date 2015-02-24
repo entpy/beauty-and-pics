@@ -80,7 +80,7 @@
 						<div class="profile_container_wrapper">
 							<div class="profile_name_image_container">
 								<div class="profile_image_container">
-									<img class="img-circle" alt="Immagine del profilo" src="https://placekitten.com/g/51/51">
+									<img class="img-circle" alt="Immagine del profilo" src="http://placekitten.com/g/51/51">
 								</div>
 								<div class="profile_name_container">
 									<div>Ciao</div>
@@ -185,13 +185,17 @@
 							{% endblock container4_title_block %}
 							{# navigation tabs #}
 							{% block container4_navigation %}
-								<ul class="nav nav-pills">
-									<li class="{% block container4_navigation_profile_index %}{% endblock %}"><a href="/profilo/">Album fotografico</a></li>
-									<li class="{% block container4_navigation_profile_data %}{% endblock %}"><a href="/profilo/dati-personali/">Dati personali</a></li>
-									<li class="{% block container4_navigation_profile_favorites %}{% endblock %}"><a href="/profilo/preferiti/">Preferiti</a></li>
-									<li class="{% block container4_navigation_profile_stats %}{% endblock %}"><a href="/profilo/statistiche/">Statistiche</a></li>
-									<li class="{% block container4_navigation_profile_area51 %}{% endblock %}"><a href="/profilo/zona-proibita/">Zona proibita</a></li>
-								</ul>
+							<div class="row">
+								<div class="col-sm-12">
+									<ul class="nav nav-pills">
+										<li class="{% block container4_navigation_profile_index %}{% endblock %}"><a href="/profilo/">Album fotografico</a></li>
+										<li class="{% block container4_navigation_profile_data %}{% endblock %}"><a href="/profilo/dati-personali/">Dati personali</a></li>
+										<li class="{% block container4_navigation_profile_favorites %}{% endblock %}"><a href="/profilo/preferiti/">Preferiti</a></li>
+										<li class="{% block container4_navigation_profile_stats %}{% endblock %}"><a href="/profilo/statistiche/">Statistiche</a></li>
+										<li class="{% block container4_navigation_profile_area51 %}{% endblock %}"><a href="/profilo/zona-proibita/">Zona proibita</a></li>
+									</ul>
+								</div>
+							</div>
 							{% endblock container4_navigation %}
 							{% block container4_content %}
 							{% endblock container4_content %}
@@ -213,7 +217,7 @@
 								</div>
 								<a class="classification_block" href="/passerella/dettaglio-utente/">
 									<div class="classification_block_wrapper">
-										<div class="left"><img alt="Classifica" src="https://placekitten.com/g/70/70"></div>
+										<div class="left"><img alt="Classifica" src="http://placekitten.com/g/70/70"></div>
 										<div class="right">
 											<div class="classification_position">1°</div>
 											<div class="classification_name">Nome Cognome</div>
@@ -223,7 +227,7 @@
 								</a>
 								<a class="classification_block" href="/passerella/dettaglio-utente/">
 									<div class="classification_block_wrapper">
-										<div class="left"><img alt="Classifica" src="https://placekitten.com/g/70/70"></div>
+										<div class="left"><img alt="Classifica" src="http://placekitten.com/g/70/70"></div>
 										<div class="right">
 											<div class="classification_position">2°</div>
 											<div class="classification_name">Nome Cognome</div>
@@ -233,7 +237,7 @@
 								</a>
 								<a class="classification_block" href="/passerella/dettaglio-utente/">
 									<div class="classification_block_wrapper">
-										<div class="left"><img alt="Classifica" src="https://placekitten.com/g/70/70"></div>
+										<div class="left"><img alt="Classifica" src="http://placekitten.com/g/70/70"></div>
 										<div class="right">
 											<div class="classification_position">3°</div>
 											<div class="classification_name">Nome Cognome</div>
@@ -243,7 +247,7 @@
 								</a>
 								<a class="classification_block" href="/passerella/dettaglio-utente/">
 									<div class="classification_block_wrapper">
-										<div class="left"><img alt="Classifica" src="https://placekitten.com/g/70/70"></div>
+										<div class="left"><img alt="Classifica" src="http://placekitten.com/g/70/70"></div>
 										<div class="right">
 											<div class="classification_position">4°</div>
 											<div class="classification_name">Nome Cognome</div>
@@ -253,7 +257,7 @@
 								</a>
 								<a class="classification_block" href="/passerella/dettaglio-utente/">
 									<div class="classification_block_wrapper">
-										<div class="left"><img alt="Classifica" src="https://placekitten.com/g/70/70"></div>
+										<div class="left"><img alt="Classifica" src="http://placekitten.com/g/70/70"></div>
 										<div class="right">
 											<div class="classification_position">5°</div>
 											<div class="classification_name">Nome Cognome</div>
