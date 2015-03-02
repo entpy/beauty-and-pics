@@ -36,6 +36,8 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'account_app',
+    'contest_app',
     'website',
 )
 
@@ -114,3 +116,15 @@ LOGGING = {
         },
     },
 }
+
+MEDIA_ROOT = '/tmp/images'
+MEDIA_URL = '/tmp/'
+
+# loading local settings
+try:
+    LOCAL_SETTINGS
+except NameError:
+    try:
+        from local_settings import *
+    except ImportError:
+        pass

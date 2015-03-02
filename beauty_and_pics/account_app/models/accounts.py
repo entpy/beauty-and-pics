@@ -14,7 +14,7 @@ class Account(models.Model):
     update_date = models.DateField()
 
     class Meta:
-        app_label = 'website' 
+        app_label = 'account_app' 
 
 """
 	* id_account (PK)
