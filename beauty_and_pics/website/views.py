@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.http import HttpResponseRedirect
 from django.contrib import messages
-from website.forms import *
+from custom_form_app.forms.register_form import *
 
 # www {{{
 def www_index(request):
@@ -25,7 +25,8 @@ def www_register(request):
         # check whether it's valid:
         if form.is_valid():
 		# TODO: process the data in form.cleaned_data as required
-		# ...
+                form.save()
+
 		# redirect to user profile
 		return HttpResponseRedirect('/registrati/')
 

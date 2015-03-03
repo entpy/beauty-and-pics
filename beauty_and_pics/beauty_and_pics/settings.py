@@ -39,6 +39,7 @@ INSTALLED_APPS = (
     'account_app',
     'contest_app',
     'website',
+    'custom_form_app',
     'ajaximage',
 )
 

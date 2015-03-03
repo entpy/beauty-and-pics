@@ -14,15 +14,15 @@ class FormCommonUtils():
     custom_validation_list = ()
     # adductional fields used in validation methods
     addictional_validation_fields = {}
-    # TODO: use this field to add errors
-    validation_errors = {}
+    # use this field to add errors
+    _validation_errors = 0
     # form to validate instance
     #validation_form = False
     # valid data retrieved after method "all_fields_valid"
     form_validated_data = False
 
     def __init__(self):
-	logger.debug("init di FormCommonUtils")
+        # list of valid methods
 	FormCommonUtils.valid_custom_validation_list += ('all_fields_valid',)
 	FormCommonUtils.valid_custom_validation_list += ('user_is_adult',)
 
@@ -37,9 +37,20 @@ class FormCommonUtils():
 		if self.check_if_validation_method_is_valid(validation_method = validation):
 			exec("self." + validation + "()")
 		else:
-			logger.debug("metodo " + str(validation) + " non valido")
+			logger.debug("method " + str(validation) + " is not a valid method")
 
         return True
+
+    def add_validation_error(self, type=None, error_msg=False):
+        """Function to add a validation error to current form instance"""
+        self.add_error(type, error_msg)
+        FormCommonUtils._validation_errors = 1
+
+        return True
+
+    def validation_errors(self):
+        """Function to retrieve _validation_errors flag"""
+        return FormCommonUtils._validation_errors
 
     ##########################
     ##  validation methods  ##
@@ -49,7 +60,7 @@ class FormCommonUtils():
         """Validation method to check if all fields are valid"""
         form_is_valid = self.validation_form.is_valid()
         if not form_is_valid:
-            self.add_error(None, "Ricontrolla i tuoi dati")
+            self.add_validation_error(None, "Ricontrolla i tuoi dati")
 
         # inserisco i valori validi
         self.form_validated_data = self.validation_form.clean()
@@ -66,10 +77,10 @@ class FormCommonUtils():
 
         if (not self.check_if_user_is_adult(birthday_dictionary=birthday_dictionary)):
             # raise an exception if user is not adult
-            self.add_error(None, "Per continuare devi essere maggiorenne")
-            self.add_error(self.addictional_validation_fields["year"], True)
-            self.add_error(self.addictional_validation_fields["month"], True)
-            self.add_error(self.addictional_validation_fields["day"], True)
+            self.add_validation_error(None, "Per continuare devi essere maggiorenne")
+            self.add_validation_error(self.addictional_validation_fields["year"], True)
+            self.add_validation_error(self.addictional_validation_fields["month"], True)
+            self.add_validation_error(self.addictional_validation_fields["day"], True)
 
         return True
 
@@ -145,41 +156,3 @@ class FormCommonUtils():
                 return_var = True
 
         return return_var
-
-class RegisterForm(forms.Form, FormCommonUtils):
-
-    first_name = forms.CharField(label='Nome', max_length=20, required=True)
-    last_name = forms.CharField(label='Cognome', max_length=20, required=False)
-    birthday_day = forms.ChoiceField(label='Giorno', required=True)
-    birthday_month = forms.ChoiceField(label='Mese', required=True)
-    birthday_year = forms.ChoiceField(label='Anno', required=True)
-    gender = forms.ChoiceField(label='Sesso', required=True)
-    email = forms.CharField(label='Email', max_length=100, required=True)
-    password = forms.CharField(label='Password', max_length=100, required=True)
-
-    custom_validation_list = (
-        'all_fields_valid',
-        'user_is_adult',
-    )
-    addictional_validation_fields = {
-        "year":"birthday_year",
-        "month":"birthday_month",
-        "day":"birthday_day",
-    }
-
-    def __init__(self, *args, **kwargs):
-        # parent forms.Form init
-        super(RegisterForm, self).__init__(*args, **kwargs)
-
-	# current form instance
-        self.validation_form = super(RegisterForm, self)
-
-        # setting addicitonal data to form fields
-        self.fields["birthday_day"].choices=self.get_days_select_choices()
-        self.fields["birthday_month"].choices=self.get_months_select_choices()
-        self.fields["birthday_year"].choices=self.get_years_select_choices()
-        self.fields["gender"].choices=self.get_genders_select_choices()
-
-    def clean(self):
-	super(RegisterForm, self).clean_form_custom()
-        return True
