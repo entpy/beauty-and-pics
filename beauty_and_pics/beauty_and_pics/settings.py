@@ -39,6 +39,7 @@ INSTALLED_APPS = (
     'account_app',
     'contest_app',
     'website',
+    'ajaximage',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -119,6 +120,9 @@ LOGGING = {
 
 MEDIA_ROOT = '/tmp/images'
 MEDIA_URL = '/tmp/'
+
+# AJAX image Settings
+AJAXIMAGE_AUTH_TEST = lambda u: True
 
 # loading local settings
 try:

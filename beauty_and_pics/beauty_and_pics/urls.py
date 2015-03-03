@@ -30,4 +30,7 @@ urlpatterns = patterns('',
 
     # admin
     url(r'^admin/', include(admin.site.urls)),
+
+    # ajax image loading
+    url(r'^ajaximage/', include('ajaximage.urls')),
 ) + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
