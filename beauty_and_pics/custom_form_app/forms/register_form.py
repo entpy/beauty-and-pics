@@ -2,7 +2,6 @@ from django import forms
 from datetime import date
 from dateutil.relativedelta import *
 import calendar, logging
-from account_app.models.accounts import *
 from custom_form_app.forms.base_form_class import *
 
 # Get an instance of a logger
@@ -48,20 +47,18 @@ class RegisterForm(forms.Form, FormCommonUtils):
 	super(RegisterForm, self).clean_form_custom()
         return True
 
-    def save(self):
+    def save(self, models = None):
         logger.debug("call RegisterForm.save()")
         return_var = False
-        if super(RegisterForm, self).validation_errors() == 0:
-            # TODO saving form data
-            account_obj = Account()
-            account_obj.first_name = self.cleaned_data["first_name"]
-            account_obj.last_name = self.cleaned_data["last_name"]
-            account_obj.email = self.cleaned_data["email"]
-            account_obj.password = self.cleaned_data["password"]
-            account_obj.gender = self.cleaned_data["gender"]
+        if models and super(RegisterForm, self).get_validation_errors_status() is False:
+            # save data inside model
+            account_obj = models["Account"]
+            account_obj.first_name = self.form_validated_data["first_name"]
+            account_obj.last_name = self.form_validated_data["last_name"]
+            account_obj.email = self.form_validated_data["email"]
+            account_obj.password = self.form_validated_data["password"]
+            account_obj.gender = self.form_validated_data["gender"]
             account_obj.status = 1
-            # account_obj.creation_date = self.cleaned_data["first_name"]
-            # account_obj.update_date = self.cleaned_data["first_name"]
             # account_obj.birthday_date = self.cleaned_data["first_name"]
 
             account_obj.save()

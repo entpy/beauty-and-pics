@@ -2,14 +2,14 @@ from django.db import models
 from ajaximage.fields import AjaxImageField
 
 class Image(models.Model):
-    id_image = models.IntegerField(primary_key=True)
+    id_image = models.AutoField(primary_key=True)
     id_account = models.ForeignKey('Account')
     # image_url = models.ImageField(upload_to='book_img/')
     image_url = AjaxImageField(upload_to='book_img/')
     image_type = models.IntegerField()
 
     class Meta:
-        app_label = 'account_app' 
+        app_label = 'account_app'
 
 """
 	* id_image (PK)

@@ -15,11 +15,11 @@ class FormCommonUtils():
     # adductional fields used in validation methods
     addictional_validation_fields = {}
     # use this field to add errors
-    _validation_errors = 0
-    # form to validate instance
-    #validation_form = False
+    _validation_errors = False
     # valid data retrieved after method "all_fields_valid"
     form_validated_data = False
+    # flag to check if validation process is completed
+    _validation_process_completed = False
 
     def __init__(self):
         # list of valid methods
@@ -39,18 +39,35 @@ class FormCommonUtils():
 		else:
 			logger.debug("method " + str(validation) + " is not a valid method")
 
+        self.set_validation_process_status(True)
         return True
 
     def add_validation_error(self, type=None, error_msg=False):
         """Function to add a validation error to current form instance"""
         self.add_error(type, error_msg)
-        FormCommonUtils._validation_errors = 1
+        self.set_validation_errors_status(True)
 
         return True
 
-    def validation_errors(self):
+    def get_validation_errors_status(self):
         """Function to retrieve _validation_errors flag"""
         return FormCommonUtils._validation_errors
+
+    def set_validation_errors_status(self, v = None):
+        """Function to set _validation_errors flag"""
+        if v is not None:
+            FormCommonUtils._validation_errors = v
+        return True
+
+    def get_validation_process_status(self):
+        """Function to retrieve _validation_process_completed flag"""
+        return FormCommonUtils._validation_process_completed
+
+    def set_validation_process_status(self, v = None):
+        """Function to retrieve _validation_process_completed flag"""
+        if v is not None:
+            FormCommonUtils._validation_process_completed = v
+        return True
 
     ##########################
     ##  validation methods  ##
@@ -87,6 +104,18 @@ class FormCommonUtils():
     ##########################
     ##     other stuff      ##
     ##########################
+
+    def get_validation_json_response(self):
+        """Function to retrieve JSON response after form validation"""
+        import json
+
+        if self.get_validation_process_status() is True:
+            data = [ { 'success' : True, 'form_data' : self.form_validated_data } ]
+            data_string = json.dumps(data)
+
+        logger.debug("json retrieved " + str(data_string))
+
+        return True
 
     def get_days_select_choices(self):
         """Create a list of days for select element"""

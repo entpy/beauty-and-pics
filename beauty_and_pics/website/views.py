@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from django.http import HttpResponseRedirect
 from django.contrib import messages
+from account_app.models.accounts import *
 from custom_form_app.forms.register_form import *
 
 # www {{{
@@ -24,8 +25,11 @@ def www_register(request):
         form = RegisterForm(request.POST)
         # check whether it's valid:
         if form.is_valid():
-		# TODO: process the data in form.cleaned_data as required
-                form.save()
+		# saving data inside model
+                form.save(models = {"Account" : Account()})
+
+                # retrieving json data
+                form.get_validation_json_response()
 
 		# redirect to user profile
 		return HttpResponseRedirect('/registrati/')
