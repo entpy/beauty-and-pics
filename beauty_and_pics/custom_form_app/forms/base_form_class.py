@@ -110,7 +110,7 @@ class FormCommonUtils():
         import json
 
         if self.get_validation_process_status() is True:
-            data = [ { 'success' : True, 'form_data' : self.form_validated_data } ]
+            data = [ { 'success' : True, 'form_data' : self.validation_form.errors.as_json() } ]
             data_string = json.dumps(data)
 
         logger.debug("json retrieved " + str(data_string))

@@ -28,11 +28,11 @@ def www_register(request):
 		# saving data inside model
                 form.save(models = {"Account" : Account()})
 
-                # retrieving json data
-                form.get_validation_json_response()
-
 		# redirect to user profile
 		return HttpResponseRedirect('/registrati/')
+
+        # retrieving json data
+        form.get_validation_json_response()
 
     # if a GET (or any other method) we'll create a blank form
     else:
