@@ -33,4 +33,7 @@ urlpatterns = patterns('',
 
     # ajax image loading
     url(r'^ajaximage/', include('ajaximage.urls')),
+
+    # custom form
+    url(r'^manage_form/', include('custom_form_app.urls', namespace="custom_form_app")),
 ) + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

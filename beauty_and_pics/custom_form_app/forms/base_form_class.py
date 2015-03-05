@@ -1,7 +1,7 @@
 from django import forms
 from datetime import date
 from dateutil.relativedelta import *
-import calendar, logging
+import calendar, logging, json
 
 # Get an instance of a logger
 logger = logging.getLogger('django.request')
@@ -51,22 +51,22 @@ class FormCommonUtils():
 
     def get_validation_errors_status(self):
         """Function to retrieve _validation_errors flag"""
-        return FormCommonUtils._validation_errors
+        return self._validation_errors
 
     def set_validation_errors_status(self, v = None):
         """Function to set _validation_errors flag"""
         if v is not None:
-            FormCommonUtils._validation_errors = v
+            self._validation_errors = v
         return True
 
     def get_validation_process_status(self):
         """Function to retrieve _validation_process_completed flag"""
-        return FormCommonUtils._validation_process_completed
+        return self._validation_process_completed
 
     def set_validation_process_status(self, v = None):
         """Function to retrieve _validation_process_completed flag"""
         if v is not None:
-            FormCommonUtils._validation_process_completed = v
+            self._validation_process_completed = v
         return True
 
     ##########################
@@ -110,12 +110,14 @@ class FormCommonUtils():
         import json
 
         if self.get_validation_process_status() is True:
-            data = [ { 'success' : True, 'form_data' : self.validation_form.errors.as_json() } ]
+            if self.get_validation_errors_status() is True:
+                data = [ { 'error' : True, 'form_data' : self.validation_form.errors.as_json() } ]
+            else:
+                data = [ { 'success' : True, 'form_data' : self.validation_form.errors.as_json() } ]
             data_string = json.dumps(data)
 
-        logger.debug("json retrieved " + str(data_string))
-
-        return True
+        # logger.debug("json retrieved " + str(data_string))
+        return data_string
 
     def get_days_select_choices(self):
         """Create a list of days for select element"""

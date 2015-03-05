@@ -56,3 +56,39 @@ function getItems(block_size) {
 	// return jQuery object
 	return $(items);
 }
+
+/*
+TODO:
+fare un oggetto js per la validazione dei form:
+iterare sul json di risposta se error = True
+prependere "id_" alle chiavi del json per aggiungere all'elemento errato la classe "has-error"
+i messaggi generici vanno invece inseriti in un box a parte
+*/
+function send_form_data(call_data) {
+	if (typeof call_data !== 'undefined') {
+		if (call_data["url"] && call_data["data"] && call_data["form_class"]) {
+			// reading csrfmiddlewaretoken from cookie
+			var csrftoken = $.cookie('csrftoken');
+			var ajaxCallData = {
+				url : call_data["url"],
+				data : call_data["data"] + "&form_class=" + call_data["form_class"],
+				async : false,
+				headers: { "X-CSRFToken": csrftoken },
+				success : function(result) {
+					// console.log(result);
+					// function to manage JSON response
+					console.log(result);
+				},
+				error : function(result) {
+					// ...fuck
+					// console.log(result);
+				}
+			}
+
+			// performing ajax call
+			loadDataWrapper.getGenericDataViaAjaxCall(ajaxCallData);
+		}
+	}
+
+	return true;
+}
