@@ -18,7 +18,6 @@ def www_forgot_password(request):
     return render(request, 'website/www/www_forgot_password.html', False)
 
 def www_register(request):
-    """
     # if this is a POST request we need to process the form data
     if request.method == 'POST':
         # create a form instance and populate it with data from the request:
@@ -26,18 +25,14 @@ def www_register(request):
         # check whether it's valid:
         if form.is_valid():
 		# saving data inside model
-                form.save(models = {"Account" : Account()})
+                form.actions()
 
 		# redirect to user profile
 		return HttpResponseRedirect('/registrati/')
 
-        # retrieving json data
-        form.get_validation_json_response()
-
     # if a GET (or any other method) we'll create a blank form
     else:
-    """
-    form = RegisterForm()
+        form = RegisterForm()
 
     context = {
         "post" : request.POST,

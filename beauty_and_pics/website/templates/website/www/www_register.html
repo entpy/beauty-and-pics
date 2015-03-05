@@ -15,6 +15,7 @@
 	{# register block #}
 	<div class="well bs-component">
 		{# messages block #}
+		<div class="error_container"></div>
 		{% if form.errors %}
 			<div class="row">
 				<div class="col-md-12">
@@ -116,16 +117,17 @@
 {% block custom_js %}
 <script>
 	$(document).ready(function(){
-		$(".submitButtonClickAction").click(function(){
+		$(".submitButtonClickAction").click(function(event){
+			event.preventDefault();
 			// performing ajax call
-			var call_data = Array();
-			call_data["url"] = "/manage_form/";
-			call_data["data"] = $(".ajax_form").serialize();
-			call_data["form_class"] = "RegisterForm";
+			ajaxFormValidation.callData["post_url"] = "/validate_form/";
+			ajaxFormValidation.callData["data"] = $(".ajax_form").serialize();
+			ajaxFormValidation.callData["form_class"] = "RegisterForm";
+			// ajaxFormValidation.redirectUrl = "/registrati/";
 
-			send_form_data(call_data);
+			ajaxFormValidation.validateForm();
 
-			return false;
+			return true;
 		});
 	});
 </script>

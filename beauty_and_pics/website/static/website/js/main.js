@@ -4,26 +4,6 @@ $(document).ready(function(){
 	});
 });
 
-/*$.fn.masonryImagesReveal = function($items) {
-	var msnry = this.data('masonry');
-	var itemSelector = msnry.options.itemSelector;
-	// hide by default
-	$items.hide();
-	// append to container
-	this.append($items);
-	$items.imagesLoaded().progress(function(imgLoad, image) {
-		// get item
-		// image is imagesLoaded class, not <img>, <img> is image.img
-		var $item = $(image.img).parents(itemSelector);
-		// un-hide item
-		$item.show();
-		// masonry does its thing
-		msnry.appended($item);
-	});
-
-	return this;
-};*/
-
 function randomInt(min, max) {
 	return Math.floor(Math.random() * max + min);
 }
@@ -57,27 +37,128 @@ function getItems(block_size) {
 	return $(items);
 }
 
-/*
-TODO:
-fare un oggetto js per la validazione dei form:
-iterare sul json di risposta se error = True
-prependere "id_" alle chiavi del json per aggiungere all'elemento errato la classe "has-error"
-i messaggi generici vanno invece inseriti in un box a parte
-*/
-function send_form_data(call_data) {
-	if (typeof call_data !== 'undefined') {
-		if (call_data["url"] && call_data["data"] && call_data["form_class"]) {
+
+/* Object to manage form error and success redirect */
+var ajaxFormValidation = {
+
+	formClassName : 'ajax_form', // Default "ajax_form"
+	errorMessageBoxClassName : 'error_container', // Default "error_container"
+	errorClassName : 'has-error', // Default "has-error"
+	formGroupClassName : 'form-group', // Default "form-group"
+	// redirectUrl : '', // Es . "/registrati/" Default None
+	callData : Array(),
+
+	/* Function to read csrftoken from cookie */
+	readCsrftokenFromCookie : function() {
+		return $.cookie('csrftoken');
+	},
+
+	/* Function to manage Ajax form response */
+	manageFormResponse : function(jsonResponse) {
+		try {
+			if (!$.isEmptyObject(jsonResponse)) {
+				JSONResult = $.parseJSON(JSON.stringify(jsonResponse));
+				this.removeFormErrors();
+				if (JSONResult["error"]) {
+					this.showFormErrorMessages(JSONResult);
+				} else if (JSONResult["success"]) {
+					// console.log("Form salvato con successo");
+					// submit current form after successfully validation
+					this.submitForm();
+				}
+			}
+		} catch(Exception) {
+		    // ops...ajax resonse may be corrupted
+		    console.log("manageFormErrorResponse error: " + Exception);
+		} 
+		return true;
+	},
+
+	/* Function to submit current form after successfully validation */
+	submitForm : function() {
+		$("." + this.formClassName).submit();
+		return true;
+	},
+
+	/* Function to remove all previously errors messagges */
+	removeFormErrors : function() {
+		$("." + this.formGroupClassName).removeClass(this.errorClassName);
+		$("." + this.errorMessageBoxClassName).html("");
+		return true;
+	},
+
+	/* Function to show form error message after Ajax call */
+	showFormErrorMessages : function(jsonResponse) {
+		if (!$.isEmptyObject(jsonResponse)) {
+			$.each(jsonResponse["form_data"], function(fieldName, errorList) {
+				if (fieldName == "__all__") {
+					ajaxFormValidation.showAllFieldErrorsBox(errorList);
+				} else {
+					ajaxFormValidation.addSingleFieldErrorClass(fieldName);
+				}
+			});
+		}
+		return true;
+	},
+
+	/* Function to show a box with main form validation error */
+	showAllFieldErrorsBox : function(errorListJson) {
+		var errorList = '';
+		var htmlErrorBoxTemplate = '';
+
+		$.each(errorListJson, function(field_name, field_errors) {
+			errorList += "<li>" + field_errors["message"] + "</li>";
+		});
+
+		if (errorList) {
+			htmlErrorBoxTemplate += '<div class="row">';
+			htmlErrorBoxTemplate += '<div class="col-md-12">';
+			htmlErrorBoxTemplate += '<div class="alert alert-danger">';
+			htmlErrorBoxTemplate += '<h4>Uhm qualcosa non va!</h4>';
+			htmlErrorBoxTemplate += '<ul>';
+			htmlErrorBoxTemplate += errorList;
+			htmlErrorBoxTemplate += '</ul>';
+			htmlErrorBoxTemplate += '</div>';
+			htmlErrorBoxTemplate += '</div>';
+			htmlErrorBoxTemplate += '</div>';
+
+			$("." + this.errorMessageBoxClassName).html(htmlErrorBoxTemplate);
+		}
+		return true;
+	},
+
+	/* Function to show error on single fields */
+	addSingleFieldErrorClass : function(fieldName) {
+		$("#id_" + fieldName).parents("." + this.formGroupClassName).addClass(this.errorClassName);
+		return true;
+	},
+
+	/* Function to check if ajax call can be performed */
+	ajaxCallCanBePerformed : function() {
+		var returnVar = false;
+		if (typeof this.callData !== 'undefined') {
+			if (this.callData["post_url"] && this.callData["data"] && this.callData["form_class"]) {
+				returnVar = true;
+			}
+		}
+		return returnVar;
+	},
+
+	/* Function to send form data via Ajax */
+	validateForm : function(){
+		// check if ajax call can be performed
+		if (this.ajaxCallCanBePerformed()) {
 			// reading csrfmiddlewaretoken from cookie
-			var csrftoken = $.cookie('csrftoken');
+			var csrftoken = this.readCsrftokenFromCookie();
 			var ajaxCallData = {
-				url : call_data["url"],
-				data : call_data["data"] + "&form_class=" + call_data["form_class"],
+				url : this.callData["post_url"],
+				data : this.callData["data"] + "&form_class=" + this.callData["form_class"],
 				async : false,
 				headers: { "X-CSRFToken": csrftoken },
-				success : function(result) {
-					// console.log(result);
+				success : function(jsonResponse) {
 					// function to manage JSON response
-					console.log(result);
+					// console.log(result);
+					ajaxFormValidation.manageFormResponse(jsonResponse);
 				},
 				error : function(result) {
 					// ...fuck
@@ -86,9 +167,8 @@ function send_form_data(call_data) {
 			}
 
 			// performing ajax call
-			loadDataWrapper.getGenericDataViaAjaxCall(ajaxCallData);
+			loadDataWrapper.performAjaxCall(ajaxCallData);
 		}
-	}
-
-	return true;
+		return true;
+	},
 }

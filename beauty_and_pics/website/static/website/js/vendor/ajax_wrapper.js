@@ -1,5 +1,5 @@
 /**
- * 	Author: Ivan Torchio <i.torchio at entpy dot com>
+ * 	Author: Entpy Software <developer at entpy dot com>
  * 	Version: 0.1.0
  *
  * 	License: GPL_v3 {Link: http://gplv3.fsf.org/}
@@ -40,7 +40,7 @@ var loadDataWrapper = {
 		return this.__idPage;
 	},
 
-	getGenericDataViaAjaxCall : function(ajaxCallData){
+	performAjaxCall : function(ajaxCallData){
 
 		// setting ajax call data
 		ajaxCallObj.setAjaxData(ajaxCallData);

@@ -109,15 +109,16 @@ class FormCommonUtils():
         """Function to retrieve JSON response after form validation"""
         import json
 
+        data = {}
         if self.get_validation_process_status() is True:
             if self.get_validation_errors_status() is True:
-                data = [ { 'error' : True, 'form_data' : self.validation_form.errors.as_json() } ]
+                data = {'error' : True,'form_data' : json.loads(self.validation_form.errors.as_json()) }
             else:
-                data = [ { 'success' : True, 'form_data' : self.validation_form.errors.as_json() } ]
-            data_string = json.dumps(data)
+                data = {'success' : True,'form_data' : json.loads(self.validation_form.errors.as_json()) }
+            json_data_string = json.dumps(data)
 
         # logger.debug("json retrieved " + str(data_string))
-        return data_string
+        return json_data_string
 
     def get_days_select_choices(self):
         """Create a list of days for select element"""

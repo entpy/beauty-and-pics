@@ -3,6 +3,7 @@ from datetime import date
 from dateutil.relativedelta import *
 import calendar, logging
 from custom_form_app.forms.base_form_class import *
+from account_app.models import *
 
 # Get an instance of a logger
 logger = logging.getLogger('django.request')
@@ -47,12 +48,11 @@ class RegisterForm(forms.Form, FormCommonUtils):
 	super(RegisterForm, self).clean_form_custom()
         return True
 
-    def save(self, models = None):
-        logger.debug("call RegisterForm.save()")
+    def actions(self):
         return_var = False
-        if models and super(RegisterForm, self).get_validation_errors_status() is False:
+        if super(RegisterForm, self).get_validation_errors_status() is False:
             # save data inside model
-            account_obj = models["Account"]
+            account_obj = Account()
             account_obj.first_name = self.form_validated_data["first_name"]
             account_obj.last_name = self.form_validated_data["last_name"]
             account_obj.email = self.form_validated_data["email"]
