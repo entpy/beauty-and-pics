@@ -182,22 +182,13 @@ class FormCommonUtils():
 
     def check_if_user_is_adult(self, birthday_dictionary):
         """Check if a user is adult or not. Return: true on success, false otherwise"""
-
         return_var = False
-        birthday_year = birthday_dictionary.get("birthday_year")
-        birthday_month = birthday_dictionary.get("birthday_month")
-        birthday_day = birthday_dictionary.get("birthday_day")
+        account_obj = Account()
 
-	"""
-	logger.debug("anno: " + str(birthday_year))
-	logger.debug("mese: " + str(birthday_month))
-	logger.debug("giorno: " + str(birthday_day))
-	"""
-
-        if (birthday_year and birthday_month and birthday_day):
+        birthday_date = account_obj.create_date(date_dictionary={"day" : birthday_dictionary.get("birthday_day"), "month" : birthday_dictionary.get("birthday_month"), "year" : birthday_dictionary.get("birthday_year")})
+        if (birthday_date):
             # date(yy/mm/dd)
             today_date=date(year=date.today().year,month=date.today().month,day=date.today().day)
-            birthday_date=date(year=int(birthday_year),month=int(birthday_month),day=int(birthday_day))
 
             # diff between two dates
             diff_between_dates = relativedelta(today_date, birthday_date)

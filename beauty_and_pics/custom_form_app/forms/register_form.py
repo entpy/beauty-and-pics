@@ -55,24 +55,20 @@ class RegisterForm(forms.Form, FormCommonUtils):
         return_var = False
         if super(RegisterForm, self).get_validation_errors_status() is False:
             account_obj = Account()
-	    # building birthday date
-	    # fare una funzione sotto account per calcolare la data di nascita ed utilizzarla anche in custom form base
-            birthday_day = self.form_validated_data.get("birthday_day")
-            birthday_month = self.form_validated_data.get("birthday_month")
-            birthday_year = self.form_validated_data.get("birthday_year")
-
 	    # TODO password must be encripted
 
 	    # delete last_name key from dictionary if is empty
-            if (not self.form_validated_data["last_name"]):
-	        del self.form_validated_data["last_name"]
+            #if (not self.form_validated_data["last_name"]):
+	    #    del self.form_validated_data["last_name"]
 
 	    # setting addictional fields
-	    if (birthday_day and birthday_month and birthday_year):
-                self.form_validated_data["birthday_date"] = date(year=int(birthday_year), month=int(birthday_month), day=int(birthday_day)).isoformat()
+	    # building birthday date
+            birthday_date = account_obj.create_date(date_dictionary={"day" : self.form_validated_data.get("birthday_day"), "month" : self.form_validated_data.get("birthday_month"), "year" : self.form_validated_data.get("birthday_year")}, get_isoformat=True)
+	    if (birthday_date):
+                self.form_validated_data["birthday_date"] = birthday_date
             self.form_validated_data["status"] = 1
 
-	    # saving data inside account model
+	    # save data inside account model
             account_obj.save_data(save_data=(self.form_validated_data))
             return_var = True
         return return_var

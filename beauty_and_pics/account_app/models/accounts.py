@@ -1,11 +1,15 @@
 # -*- coding: utf-8 -*-
 
 from django.db import models
-import sys
+from datetime import date
+import sys, logging
 
 # force utf8 read data
 reload(sys);
 sys.setdefaultencoding("utf8")
+
+# Get an instance of a logger
+logger = logging.getLogger('django.request')
 
 class Account(models.Model):
     id_account = models.AutoField(primary_key=True)
@@ -49,7 +53,6 @@ class Account(models.Model):
 
 	if "first_name" in save_data:
 	    account_obj.first_name = save_data["first_name"]
-	# TODO: last_name viene salvato con '' perchè dal form è sempre passato anche se non inserito..che fare?
 	if "last_name" in save_data:
 	    account_obj.last_name = save_data["last_name"]
 	if "email" in save_data:
@@ -69,6 +72,24 @@ class Account(models.Model):
 
         return_var = account_obj.save()
 	return return_var
+
+    def create_date(self, date_dictionary=None, get_isoformat=False):
+        """Function to create birthday date starting from dd, mm, yyyy"""
+	return_var = False
+
+        if date_dictionary:
+            day = date_dictionary.get("day")
+            month = date_dictionary.get("month")
+            year = date_dictionary.get("year")
+
+            # building birthday date
+	    if (day and month and year):
+                if get_isoformat:
+                    return_var = date(year=int(year), month=int(month), day=int(day)).isoformat()
+                else:
+                    return_var = date(year=int(year), month=int(month), day=int(day))
+
+        return return_var
 
 """
 	* id_account (PK)
