@@ -25,7 +25,7 @@ def www_register(request):
         # check whether it's valid:
         if form.is_valid():
 		# saving data inside model
-                form.actions()
+                form.save()
 
 		# redirect to user profile
 		return HttpResponseRedirect('/registrati/')

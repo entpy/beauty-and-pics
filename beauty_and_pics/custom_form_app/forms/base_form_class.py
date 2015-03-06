@@ -1,7 +1,14 @@
+# -*- coding: utf-8 -*-
+
 from django import forms
 from datetime import date
 from dateutil.relativedelta import *
-import calendar, logging, json
+from account_app.models import *
+import calendar, logging, json, sys, re
+
+# force utf8 read data
+reload(sys);
+sys.setdefaultencoding("utf8")
 
 # Get an instance of a logger
 logger = logging.getLogger('django.request')
@@ -10,23 +17,25 @@ class FormCommonUtils():
 
     # list of valid validation methods
     valid_custom_validation_list = ()
-    # list of custom validation methods, eg. ('all_fields_valid', 'another_method',)
+    # list of custom validation methods, eg. ('check_all_fields_valid', 'another_method',)
     custom_validation_list = ()
     # adductional fields used in validation methods
     addictional_validation_fields = {}
     # use this field to add errors
     _validation_errors = False
-    # valid data retrieved after method "all_fields_valid"
+    # valid data retrieved after method "check_all_fields_valid"
     form_validated_data = False
     # flag to check if validation process is completed
     _validation_process_completed = False
 
     def __init__(self):
         # list of valid methods
-	FormCommonUtils.valid_custom_validation_list += ('all_fields_valid',)
-	FormCommonUtils.valid_custom_validation_list += ('user_is_adult',)
+	FormCommonUtils.valid_custom_validation_list += ('check_all_fields_valid',)
+	FormCommonUtils.valid_custom_validation_list += ('check_user_is_adult',)
+	FormCommonUtils.valid_custom_validation_list += ('check_email_already_exists',)
+	FormCommonUtils.valid_custom_validation_list += ('check_email_is_valid',)
 
-    def check_if_validation_method_is_valid(self, validation_method = False):
+    def check_if_validation_method_is_valid(self, validation_method=False):
         """Checking if a validation method exists"""
         return validation_method in self.valid_custom_validation_list
 
@@ -53,7 +62,7 @@ class FormCommonUtils():
         """Function to retrieve _validation_errors flag"""
         return self._validation_errors
 
-    def set_validation_errors_status(self, v = None):
+    def set_validation_errors_status(self, v=None):
         """Function to set _validation_errors flag"""
         if v is not None:
             self._validation_errors = v
@@ -63,7 +72,7 @@ class FormCommonUtils():
         """Function to retrieve _validation_process_completed flag"""
         return self._validation_process_completed
 
-    def set_validation_process_status(self, v = None):
+    def set_validation_process_status(self, v=None):
         """Function to retrieve _validation_process_completed flag"""
         if v is not None:
             self._validation_process_completed = v
@@ -73,7 +82,7 @@ class FormCommonUtils():
     ##  validation methods  ##
     ##########################
 
-    def all_fields_valid(self):
+    def check_all_fields_valid(self):
         """Validation method to check if all fields are valid"""
         form_is_valid = self.validation_form.is_valid()
         if not form_is_valid:
@@ -84,7 +93,7 @@ class FormCommonUtils():
 
         return True
 
-    def user_is_adult(self):
+    def check_user_is_adult(self):
         """Validation method to check if a user is adult"""
         birthday_dictionary = {
             "birthday_year" : self.form_validated_data.get(self.addictional_validation_fields["year"]),
@@ -98,7 +107,26 @@ class FormCommonUtils():
             self.add_validation_error(self.addictional_validation_fields["year"], True)
             self.add_validation_error(self.addictional_validation_fields["month"], True)
             self.add_validation_error(self.addictional_validation_fields["day"], True)
+        return True
 
+    def check_email_already_exists(self):
+        """Validation method to check if an email already exists"""
+        account_obj = Account()
+        if (account_obj.check_if_email_exists(email_to_check=self.form_validated_data.get(self.addictional_validation_fields["email"])) == True):
+	    # raise an exception if email already exists
+	    self.add_validation_error(None, "La mail inserita è già presente")
+            self.add_validation_error(self.addictional_validation_fields["email"], True)
+        return True
+
+    def check_email_is_valid(self):
+        """Validation method to check if an email is valid"""
+        email_to_check = self.form_validated_data.get(self.addictional_validation_fields["email"])
+	if email_to_check:
+	    # regexp to check if this is a valid email
+            match = re.search('^[a-zA-Z0-9_-][^@]*@(?:[^\.@]+\.)+[a-zA-Z_-]+$', email_to_check)
+            if match is None or not match.group(0):
+	        self.add_validation_error(None, "La mail inserita non è valida")
+                self.add_validation_error(self.addictional_validation_fields["email"], True)
         return True
 
     ##########################
@@ -153,33 +181,23 @@ class FormCommonUtils():
         return select_choices
 
     def check_if_user_is_adult(self, birthday_dictionary):
-        """Check if a user is adult or not.
-        Return: true on success, false otherwise"""
+        """Check if a user is adult or not. Return: true on success, false otherwise"""
 
         return_var = False
-        birthday_year = birthday_dictionary.get("birthday_year", 0)
-        birthday_month = birthday_dictionary.get("birthday_month", 0)
-        birthday_day = birthday_dictionary.get("birthday_day", 0)
+        birthday_year = birthday_dictionary.get("birthday_year")
+        birthday_month = birthday_dictionary.get("birthday_month")
+        birthday_day = birthday_dictionary.get("birthday_day")
 
-        if not birthday_year:
-		birthday_year = 0
-        if not birthday_month:
-		birthday_month = 0
-        if not birthday_day:
-		birthday_day = 0
-
-        birthday_year = int(birthday_year)
-        birthday_month = int(birthday_month)
-        birthday_day = int(birthday_day)
-
+	"""
 	logger.debug("anno: " + str(birthday_year))
 	logger.debug("mese: " + str(birthday_month))
 	logger.debug("giorno: " + str(birthday_day))
+	"""
 
         if (birthday_year and birthday_month and birthday_day):
             # date(yy/mm/dd)
             today_date=date(year=date.today().year,month=date.today().month,day=date.today().day)
-            birthday_date=date(year=birthday_year,month=birthday_month,day=birthday_day)
+            birthday_date=date(year=int(birthday_year),month=int(birthday_month),day=int(birthday_day))
 
             # diff between two dates
             diff_between_dates = relativedelta(today_date, birthday_date)

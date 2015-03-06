@@ -58,8 +58,8 @@ var ajaxFormValidation = {
 		try {
 			if (!$.isEmptyObject(jsonResponse)) {
 				JSONResult = $.parseJSON(JSON.stringify(jsonResponse));
-				this.removeFormErrors();
 				if (JSONResult["error"]) {
+					this.removeFormErrors();
 					this.showFormErrorMessages(JSONResult);
 				} else if (JSONResult["success"]) {
 					// console.log("Form salvato con successo");
@@ -153,7 +153,7 @@ var ajaxFormValidation = {
 			var ajaxCallData = {
 				url : this.callData["post_url"],
 				data : this.callData["data"] + "&form_class=" + this.callData["form_class"],
-				async : false,
+				async : true,
 				headers: { "X-CSRFToken": csrftoken },
 				success : function(jsonResponse) {
 					// function to manage JSON response

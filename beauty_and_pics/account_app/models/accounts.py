@@ -1,4 +1,11 @@
+# -*- coding: utf-8 -*-
+
 from django.db import models
+import sys
+
+# force utf8 read data
+reload(sys);
+sys.setdefaultencoding("utf8")
 
 class Account(models.Model):
     id_account = models.AutoField(primary_key=True)
@@ -16,6 +23,52 @@ class Account(models.Model):
 
     class Meta:
         app_label = 'account_app'
+
+    def check_if_email_exists(self, email_to_check=None):
+        """Function to check if an email already exists"""
+	return_var = None
+	try:
+	    Account.objects.get(email=email_to_check)
+	    return_var = True
+	except Account.DoesNotExist:
+	    return_var = False
+
+	return return_var
+
+    def save_data(self, save_data=None):
+        """Function to save data inside db"""
+	return_var = False
+	account_obj = Account()
+
+	# if exists an id_account trying to retrieve modify data about an existing account
+	if save_data.get("id_account", 0):
+	    try:
+	        account_obj = Account.objects.get(id_account=save_data["id_account"])
+	    except Account.DoesNotExist:
+	        pass
+
+	if "first_name" in save_data:
+	    account_obj.first_name = save_data["first_name"]
+	# TODO: last_name viene salvato con '' perchè dal form è sempre passato anche se non inserito..che fare?
+	if "last_name" in save_data:
+	    account_obj.last_name = save_data["last_name"]
+	if "email" in save_data:
+	    account_obj.email = save_data["email"]
+	if "password" in save_data:
+	    account_obj.password = save_data["password"]
+	if "city" in save_data:
+	    account_obj.city = save_data["city"]
+	if "country" in save_data:
+	    account_obj.country = save_data["country"]
+	if "gender" in save_data:
+	    account_obj.gender = save_data["gender"]
+	if "status" in save_data:
+	    account_obj.status = save_data["status"]
+	if "birthday_date" in save_data:
+	    account_obj.birthday_date = save_data["birthday_date"]
+
+        return_var = account_obj.save()
+	return return_var
 
 """
 	* id_account (PK)

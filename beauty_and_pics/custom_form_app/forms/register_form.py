@@ -21,13 +21,16 @@ class RegisterForm(forms.Form, FormCommonUtils):
 
     # list of validator for this form
     custom_validation_list = (
-        'all_fields_valid',
-        'user_is_adult',
+        'check_all_fields_valid',
+        'check_user_is_adult',
+	'check_email_already_exists',
+	'check_email_is_valid',
     )
     addictional_validation_fields = {
         "year":"birthday_year",
         "month":"birthday_month",
         "day":"birthday_day",
+        "email":"email",
     }
 
     def __init__(self, *args, **kwargs):
@@ -48,21 +51,28 @@ class RegisterForm(forms.Form, FormCommonUtils):
 	super(RegisterForm, self).clean_form_custom()
         return True
 
-    def actions(self):
+    def save(self):
         return_var = False
         if super(RegisterForm, self).get_validation_errors_status() is False:
-            # save data inside model
             account_obj = Account()
-            account_obj.first_name = self.form_validated_data["first_name"]
-            account_obj.last_name = self.form_validated_data["last_name"]
-            account_obj.email = self.form_validated_data["email"]
-            account_obj.password = self.form_validated_data["password"]
-            account_obj.gender = self.form_validated_data["gender"]
-            account_obj.status = 1
-            # account_obj.birthday_date = self.cleaned_data["first_name"]
+	    # building birthday date
+	    # fare una funzione sotto account per calcolare la data di nascita ed utilizzarla anche in custom form base
+            birthday_day = self.form_validated_data.get("birthday_day")
+            birthday_month = self.form_validated_data.get("birthday_month")
+            birthday_year = self.form_validated_data.get("birthday_year")
 
-            account_obj.save()
+	    # TODO password must be encripted
 
+	    # delete last_name key from dictionary if is empty
+            if (not self.form_validated_data["last_name"]):
+	        del self.form_validated_data["last_name"]
+
+	    # setting addictional fields
+	    if (birthday_day and birthday_month and birthday_year):
+                self.form_validated_data["birthday_date"] = date(year=int(birthday_year), month=int(birthday_month), day=int(birthday_day)).isoformat()
+            self.form_validated_data["status"] = 1
+
+	    # saving data inside account model
+            account_obj.save_data(save_data=(self.form_validated_data))
             return_var = True
-
         return return_var
