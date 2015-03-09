@@ -1,9 +1,9 @@
 from django import forms
 from datetime import date
 from dateutil.relativedelta import *
-import calendar, logging
 from custom_form_app.forms.base_form_class import *
 from account_app.models import *
+import calendar, logging
 
 # Get an instance of a logger
 logger = logging.getLogger('django.request')
@@ -16,7 +16,7 @@ class RegisterForm(forms.Form, FormCommonUtils):
     birthday_month = forms.ChoiceField(label='Mese', required=True)
     birthday_year = forms.ChoiceField(label='Anno', required=True)
     gender = forms.ChoiceField(label='Sesso', required=True)
-    email = forms.CharField(label='Email', max_length=100, required=True)
+    email = forms.CharField(label='Email', max_length=75, required=True)
     password = forms.CharField(label='Password', max_length=100, required=True)
 
     # list of validator for this form
@@ -53,13 +53,8 @@ class RegisterForm(forms.Form, FormCommonUtils):
 
     def save(self):
         return_var = False
-        if super(RegisterForm, self).get_validation_errors_status() is False:
+        if super(RegisterForm, self).form_can_be_saved():
             account_obj = Account()
-	    # TODO password must be encripted
-
-	    # delete last_name key from dictionary if is empty
-            #if (not self.form_validated_data["last_name"]):
-	    #    del self.form_validated_data["last_name"]
 
 	    # setting addictional fields
 	    # building birthday date
@@ -68,7 +63,9 @@ class RegisterForm(forms.Form, FormCommonUtils):
                 self.form_validated_data["birthday_date"] = birthday_date
             self.form_validated_data["status"] = 1
 
-	    # save data inside account model
-            account_obj.save_data(save_data=(self.form_validated_data))
+	    # create new account
+            new_account = account_obj.create_user_account(email=self.form_validated_data["email"], password=self.form_validated_data["password"])
+            # insert addictional data inside User and Account models
+            account_obj.update_data(save_data=(self.form_validated_data), account_obj=new_account)
             return_var = True
         return return_var

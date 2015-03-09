@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from django.http import HttpResponseRedirect
 from django.contrib import messages
+from django.contrib.auth.decorators import login_required
 from account_app.models.accounts import *
 from custom_form_app.forms.register_form import *
 
@@ -28,7 +29,7 @@ def www_register(request):
                 form.save()
 
 		# redirect to user profile
-		return HttpResponseRedirect('/registrati/')
+		return HttpResponseRedirect('/profilo/')
 
     # if a GET (or any other method) we'll create a blank form
     else:
@@ -57,18 +58,23 @@ def catwalk_report_user(request):
 # }}}
 
 # private profile {{{
+@login_required
 def profile_index(request):
     return render(request, 'website/profile/profile_index.html', False)
 
+@login_required
 def profile_data(request):
     return render(request, 'website/profile/profile_data.html', False)
 
+@login_required
 def profile_favorites(request):
     return render(request, 'website/profile/profile_favorites.html', False)
 
+@login_required
 def profile_stats(request):
     return render(request, 'website/profile/profile_stats.html', False)
 
+@login_required
 def profile_area51(request):
     return render(request, 'website/profile/profile_area51.html', False)
 # }}}

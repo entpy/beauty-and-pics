@@ -53,6 +53,14 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 )
 
+# login with username and password
+AUTHENTICATION_BACKENDS = (
+    'django.contrib.auth.backends.ModelBackend',
+    'account_app.backends.EmailPasswordAuthBackend',
+)
+
+LOGIN_URL = "/login/"
+
 ROOT_URLCONF = 'beauty_and_pics.urls'
 
 WSGI_APPLICATION = 'beauty_and_pics.wsgi.application'
