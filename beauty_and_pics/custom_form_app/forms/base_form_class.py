@@ -145,6 +145,7 @@ class FormCommonUtils():
         import json
 
         data = {}
+        json_data_string = {}
         if self.get_validation_process_status() is True:
             if self.get_validation_errors_status() is True:
                 data = {'error' : True,'form_data' : json.loads(self.validation_form.errors.as_json()) }

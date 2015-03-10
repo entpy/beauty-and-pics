@@ -14,7 +14,7 @@ class EmailPasswordAuthBackend(object):
     """Custom authentication backend, log in users users using email and password"""
 
     def authenticate(self, email=None, password=None):
-        """authenticate via email password"""
+        """Function to authenticate users via email and password"""
         try:
             user = User.objects.get(email=email)
             if user.check_password(password):
@@ -23,6 +23,7 @@ class EmailPasswordAuthBackend(object):
             return None
 
     def get_user(self, user_id):
+        """Function to get the user instance"""
         try:
             user = User.objects.get(pk=user_id)
             if user.is_active:

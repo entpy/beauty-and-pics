@@ -2,6 +2,7 @@
 
 from django.db import models
 from datetime import date
+from django.contrib.auth import authenticate, login
 from django.contrib.auth.models import User
 import sys, logging, base64, hashlib
 
@@ -73,7 +74,7 @@ class Account(models.Model):
         """Function to save data inside db"""
 	return_var = False
 
-        if account_obj:
+        if save_data and account_obj:
             # save User model addictional informations
             if "first_name" in save_data:
                 account_obj.user.first_name = save_data["first_name"]
@@ -112,6 +113,33 @@ class Account(models.Model):
                     return_var = date(year=int(year), month=int(month), day=int(day)).isoformat()
                 else:
                     return_var = date(year=int(year), month=int(month), day=int(day))
+
+        return return_var
+
+    def create_login_session(self, email=None, password=None, request=None):
+        """Function to create a login session (logging user inside website)"""
+	return_var = False
+
+        if (email and password and request):
+            # Use custom email-password backend to check if the email/password
+            # combination is valid - a User object is returned if it is.
+            user_obj = authenticate(email=email, password=password)
+
+            # If we have a User object, the details are correct.
+            # If None (Python's way of representing the absence of a value), no user
+            # with matching credentials was found.
+            if user_obj:
+                # Is the account active? It could have been disabled.
+                if user_obj.is_active:
+                    # If the account is valid and active, we can log the user in.
+                    login(request, user_obj)
+                    return_var = True
+                else:
+                    # An inactive account was used - no logging in!
+                    return_var = "Caspita, il tuo account è stato bloccato...AHAH"
+            else:
+                # Ops...email or password not valid - no logging in!
+                return_var = "Email o password non validi, prova ancora"
 
         return return_var
 

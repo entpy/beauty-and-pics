@@ -3,7 +3,10 @@ from django.http import HttpResponseRedirect
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from account_app.models.accounts import *
+
+# loading forms
 from custom_form_app.forms.register_form import *
+from custom_form_app.forms.login_form import *
 
 # www {{{
 def www_index(request):
@@ -13,6 +16,26 @@ def www_how_it_works(request):
     return render(request, 'website/www/www_come_funziona.html', False)
 
 def www_login(request):
+    # if this is a POST request we need to process the form data
+    if request.method == 'POST':
+        # create a form instance and populate it with data from the request:
+        form = LoginForm(request.POST, request)
+
+        # check whether it's valid:
+        if form.is_valid() and form.form_actions():
+
+		# redirect to catwalk
+		return HttpResponseRedirect('/passerella/')
+
+    # if a GET (or any other method) we'll create a blank form
+    else:
+        form = LoginForm()
+
+    context = {
+        "post" : request.POST,
+        "form": form,
+    }
+
     return render(request, 'website/www/www_login.html', False)
 
 def www_forgot_password(request):
@@ -23,10 +46,9 @@ def www_register(request):
     if request.method == 'POST':
         # create a form instance and populate it with data from the request:
         form = RegisterForm(request.POST)
+        form.request_data=request
         # check whether it's valid:
-        if form.is_valid():
-		# saving data inside model
-                form.save()
+        if form.is_valid() and form.form_actions():
 
 		# redirect to user profile
 		return HttpResponseRedirect('/profilo/')

@@ -33,6 +33,9 @@ class RegisterForm(forms.Form, FormCommonUtils):
         "email":"email",
     }
 
+    # addictional request data
+    request_data = None
+
     def __init__(self, *args, **kwargs):
         # parent forms.Form init
         super(RegisterForm, self).__init__(*args, **kwargs)
@@ -51,7 +54,7 @@ class RegisterForm(forms.Form, FormCommonUtils):
 	super(RegisterForm, self).clean_form_custom()
         return True
 
-    def save(self):
+    def save_form(self):
         return_var = False
         if super(RegisterForm, self).form_can_be_saved():
             account_obj = Account()
@@ -68,4 +71,23 @@ class RegisterForm(forms.Form, FormCommonUtils):
             # insert addictional data inside User and Account models
             account_obj.update_data(save_data=(self.form_validated_data), account_obj=new_account)
             return_var = True
+        return return_var
+
+    def form_actions(self):
+        """Function to create new user and logging into website"""
+        return_var = False
+        account_obj = Account()
+
+        if self.save_form():
+            # TODO log new user in
+            # retrieving validated email and password
+            email = self.form_validated_data["email"]
+            password = self.form_validated_data["password"]
+            request_data = self.request_data
+
+            account_obj = Account()
+            login_status = account_obj.create_login_session(email=email, password=password, request=request_data)
+            if login_status == True
+            return_var = True
+
         return return_var
