@@ -111,40 +111,59 @@ E' inoltre possibile impostare filtri e formattazione per i log
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
+    'filters': {
+        'require_debug_false': {
+            '()': 'django.utils.log.RequireDebugFalse'
+        }
+    },
     'formatters': {
         'verbose': {
-            'format': '%(levelname)s %(asctime)s %(module)s %(process)d %(thread)d %(message)s'
+            'format': '%(levelname)s %(asctime)s %(module)s %(process)d %(thread)d %(message)s',
+            'datefmt' : "%d/%b/%Y %H:%M:%S"
         },
         'simple': {
-            'format': '%(levelname)s %(message)s'
+            'format': '%(levelname)s %(asctime)s %(message)s',
+            'datefmt' : "%d/%b/%Y %H:%M:%S"
         },
     },
     'handlers': {
-        'file_debug': {
+        # Send all messages to console
+        'console': {
             'level': 'DEBUG',
+            'class': 'logging.StreamHandler',
+        },
+        # Send info messages to syslog
+        'file':{
+            'level':'INFO',
             'class': 'logging.FileHandler',
             'filename': '/tmp/bep_debug.log',
-            'formatter': 'simple',
+            'formatter': 'verbose',
         },
-        'file_error': {
+        # Warning messages are sent to admin emails
+        """
+        'mail_admins': {
+            'level': 'WARNING',
+            'filters': ['require_debug_false'],
+            'class': 'django.utils.log.AdminEmailHandler',
+        },
+        """
+        # critical errors are logged to sentry
+        'sentry': {
             'level': 'ERROR',
+            'filters': ['require_debug_false'],
             'class': 'logging.FileHandler',
-            'filename': '/tmp/bep_error.log',
+            'filename': '/tmp/bep_debug.log',
             'formatter': 'verbose',
         },
     },
     'loggers': {
-        'django.request': {
-            'handlers': ['file_debug'],
+        # This is the "catch all" logger
+        '': {
+            'handlers': ['console', 'syslog', 'mail_admins', 'sentry'],
             'level': 'DEBUG',
-            'propagate': True,
+            'propagate': False,
         },
-        'django.errors': {
-            'handlers': ['file_error'],
-            'level': 'ERROR',
-            'propagate': True,
-        },
-    },
+    }
 }
 
 MEDIA_ROOT = '/tmp/images'

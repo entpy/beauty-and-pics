@@ -5,6 +5,7 @@ from datetime import date
 from dateutil.relativedelta import *
 from custom_form_app.forms.base_form_class import *
 from account_app.models import *
+from website.exceptions import *
 import calendar, logging, sys
 
 # force utf8 read data
@@ -12,7 +13,7 @@ reload(sys);
 sys.setdefaultencoding("utf8")
 
 # Get an instance of a logger
-logger = logging.getLogger('django.request')
+logger = logging.getLogger(__name__)
 
 class LoginForm(forms.Form, FormCommonUtils):
 
@@ -32,9 +33,6 @@ class LoginForm(forms.Form, FormCommonUtils):
         super(LoginForm, self).__init__(*args, **kwargs)
         FormCommonUtils.__init__(self)
 
-        # setting current request (used to log the user in)
-        self.request_data = request
-
 	# current form instance
         self.validation_form = super(LoginForm, self)
 
@@ -46,16 +44,23 @@ class LoginForm(forms.Form, FormCommonUtils):
         return_var = False
         if (super(LoginForm, self).form_can_be_saved() and self.request_data):
 
-            # retrieving validated email and password
+            account_obj = Account()
+            # retrieving validated email and password, then try to log user in
             email = self.form_validated_data["email"]
             password = self.form_validated_data["password"]
 
-            account_obj = Account()
-            login_status = account_obj.create_login_session(email=email, password=password, request=self.request_data)
-
-            if login_status == True:
+            try:
+                login_status = account_obj.create_login_session(email=email, password=password, request=self.request_data)
                 return_var = True
-            else:
-                super(LoginForm, self).add_validation_error(error_msg=login_status)
+            except UserNotActiveError:
+                # bad
+                logger.error("Errore nel login: utente non attivo " + str(self.form_validated_data) + " | error code: " + str(UserNotActiveError.get_error_code))
+                self._errors = {"__all__": ["Caspita, il tuo account è stato bloccato...AHAH"]}
+            except UserLoginError:
+                # bad
+                logger.error("Errore nel login: email o password non validi " + str(self.form_validated_data) + " | error code: " + str(UserLoginError.get_error_code))
+                self._errors = {"__all__": ["Email o password non validi, prova ancora"]}
+            logger.info("Login ")
+                   
 
         return return_var

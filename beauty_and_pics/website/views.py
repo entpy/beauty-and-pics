@@ -20,6 +20,7 @@ def www_login(request):
     if request.method == 'POST':
         # create a form instance and populate it with data from the request:
         form = LoginForm(request.POST, request)
+        form.request_data=request
 
         # check whether it's valid:
         if form.is_valid() and form.form_actions():
@@ -36,7 +37,7 @@ def www_login(request):
         "form": form,
     }
 
-    return render(request, 'website/www/www_login.html', False)
+    return render(request, 'website/www/www_login.html', context)
 
 def www_forgot_password(request):
     return render(request, 'website/www/www_forgot_password.html', False)
