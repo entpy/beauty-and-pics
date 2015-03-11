@@ -4,6 +4,7 @@ from django.db import models
 from datetime import date
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.models import User
+from website.exceptions import *
 import sys, logging, base64, hashlib
 
 # force utf8 read data
@@ -11,7 +12,8 @@ reload(sys);
 sys.setdefaultencoding("utf8")
 
 # Get an instance of a logger
-logger = logging.getLogger('django.request')
+logger_debug = logging.getLogger('django.request')
+logger_error = logging.getLogger('django.errors')
 
 # extends User model
 class Account(models.Model):
@@ -47,6 +49,21 @@ class Account(models.Model):
 
 	return return_var
 
+    def register_account(self, user_info=None):
+        """Function to register a new account"""
+
+        return_var = False
+        if user_info:
+            account_obj = Account()
+            # create new account
+            new_account = account_obj.create_user_account(email=user_info["email"], password=user_info["password"])
+
+            # insert addictional data inside User and Account models
+            account_obj.update_data(save_data=user_info, account_obj=new_account)
+            return_var = True
+
+        return return_var
+
     def create_user_account(self, email=None, password=None):
         """Function to create user and related account"""
 	return_var = False
@@ -56,6 +73,10 @@ class Account(models.Model):
                 account_obj.user = User.objects.create_user(username=self._email_to_username(email), email=email, password=password)
                 account_obj.save()
                 return_var = account_obj
+
+                # raise an exception if occur errors in account creation
+                if not return_var:
+                    raise UserCreateError
 
         return return_var
 
@@ -94,7 +115,10 @@ class Account(models.Model):
             # saving addictiona models data
             account_obj.user.save()
             account_obj.save()
-            return_var = True
+            return_var = account_obj
+
+        if not return_var:
+            raise UserUpdateDataError
 
 	return return_var
 
@@ -136,10 +160,12 @@ class Account(models.Model):
                     return_var = True
                 else:
                     # An inactive account was used - no logging in!
-                    return_var = "Caspita, il tuo account è stato bloccato...AHAH"
+                    raise UserNotActiveError
+                    # return_var = "Caspita, il tuo account è stato bloccato...AHAH"
             else:
                 # Ops...email or password not valid - no logging in!
-                return_var = "Email o password non validi, prova ancora"
+                raise UserLoginError
+                # return_var = "Email o password non validi, prova ancora"
 
         return return_var
 

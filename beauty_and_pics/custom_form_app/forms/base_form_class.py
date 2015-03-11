@@ -130,7 +130,7 @@ class FormCommonUtils():
         email_to_check = self.form_validated_data.get(self.addictional_validation_fields["email"])
 	if email_to_check:
 	    # regexp to check if this is a valid email
-            match = re.search('^[a-zA-Z0-9_-][^@]*@(?:[^\.@]+\.)+[a-zA-Z_-]+$', email_to_check)
+            match = re.search('^[a-zA-Z0-9_-][^@]*@(?:[^\.@]+\.)+[a-zA-Z0-9_-]+$', email_to_check)
             if match is None or not match.group(0):
 	        self.add_validation_error(None, "La mail inserita non è valida")
                 self.add_validation_error(self.addictional_validation_fields["email"], True)

@@ -111,17 +111,37 @@ E' inoltre possibile impostare filtri e formattazione per i log
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
+    'formatters': {
+        'verbose': {
+            'format': '%(levelname)s %(asctime)s %(module)s %(process)d %(thread)d %(message)s'
+        },
+        'simple': {
+            'format': '%(levelname)s %(message)s'
+        },
+    },
     'handlers': {
-        'file': {
+        'file_debug': {
             'level': 'DEBUG',
             'class': 'logging.FileHandler',
-            'filename': '/tmp/debug.log',
+            'filename': '/tmp/bep_debug.log',
+            'formatter': 'simple',
+        },
+        'file_error': {
+            'level': 'ERROR',
+            'class': 'logging.FileHandler',
+            'filename': '/tmp/bep_error.log',
+            'formatter': 'verbose',
         },
     },
     'loggers': {
         'django.request': {
-            'handlers': ['file'],
+            'handlers': ['file_debug'],
             'level': 'DEBUG',
+            'propagate': True,
+        },
+        'django.errors': {
+            'handlers': ['file_error'],
+            'level': 'ERROR',
             'propagate': True,
         },
     },

@@ -48,10 +48,11 @@ def www_register(request):
         form = RegisterForm(request.POST)
         form.request_data=request
         # check whether it's valid:
+        # if form.is_valid() and form.form_actions():
         if form.is_valid() and form.form_actions():
 
-		# redirect to user profile
-		return HttpResponseRedirect('/profilo/')
+            # redirect to user profile
+            return HttpResponseRedirect('/profilo/')
 
     # if a GET (or any other method) we'll create a blank form
     else:

@@ -1,12 +1,20 @@
+# -*- coding: utf-8 -*-
+
 from django import forms
 from datetime import date
 from dateutil.relativedelta import *
 from custom_form_app.forms.base_form_class import *
 from account_app.models import *
-import calendar, logging
+from website.exceptions import *
+import calendar, logging, sys
+
+# force utf8 read data
+reload(sys);
+sys.setdefaultencoding("utf8")
 
 # Get an instance of a logger
-logger = logging.getLogger('django.request')
+logger_debug = logging.getLogger('django.request')
+logger_error = logging.getLogger('django.errors')
 
 class RegisterForm(forms.Form, FormCommonUtils):
 
@@ -66,11 +74,22 @@ class RegisterForm(forms.Form, FormCommonUtils):
                 self.form_validated_data["birthday_date"] = birthday_date
             self.form_validated_data["status"] = 1
 
-	    # create new account
-            new_account = account_obj.create_user_account(email=self.form_validated_data["email"], password=self.form_validated_data["password"])
-            # insert addictional data inside User and Account models
-            account_obj.update_data(save_data=(self.form_validated_data), account_obj=new_account)
-            return_var = True
+            # saving new account
+            try:
+                account_obj.register_account(user_info=self.form_validated_data)
+                return_var = True
+            except UserCreateError:
+                # bad
+                logger_error.error("Errore nel salvataggio del nuovo User e/o Account: " + str(self.form_validated_data) + " | error code: " + str(UserCreateError.get_error_code))
+                self._errors = {"__all__": ["Errore nel salvataggio del tuo account. Sii gentile, segnala il problema (Codice " + str(UserCreateError.get_error_code) + ")"]}
+            except UserUpdateDataError:
+                # bad
+                logger_error.error("Errore nell'aggiornamento dei dati dell'account dopo la creazione: " + str(self.form_validated_data) + " | error code: " + str(UserUpdateDataError.get_error_code))
+                self._errors = {"__all__": ["Errore nel salvataggio del tuo account. Sii gentile, segnala il problema (Codice " + str(UserUpdateDataError.get_error_code) + ")"]}
+            else:
+                # logger_debug.debug("Utente salvato con successo, preparo il login")
+                pass
+
         return return_var
 
     def form_actions(self):
@@ -79,15 +98,20 @@ class RegisterForm(forms.Form, FormCommonUtils):
         account_obj = Account()
 
         if self.save_form():
-            # TODO log new user in
-            # retrieving validated email and password
+            # retrieving validated email and password, then try to log user in
             email = self.form_validated_data["email"]
             password = self.form_validated_data["password"]
-            request_data = self.request_data
 
-            account_obj = Account()
-            login_status = account_obj.create_login_session(email=email, password=password, request=request_data)
-            if login_status == True
-            return_var = True
+            try:
+                login_status = account_obj.create_login_session(email=email, password=password, request=self.request_data)
+                return_var = True
+            except UserNotActiveError:
+                # bad
+                logger_error.error("Errore nel login: utente non attivo " + str(self.form_validated_data) + " | error code: " + str(UserNotActiveError.get_error_code))
+                self._errors = {"__all__": ["Caspita, il tuo account è stato bloccato...AHAH"]}
+            except UserLoginError:
+                # bad
+                logger_error.error("Errore nel login: email o password non validi " + str(self.form_validated_data) + " | error code: " + str(UserLoginError.get_error_code))
+                self._errors = {"__all__": ["Email o password non validi, prova ancora"]}
 
         return return_var
