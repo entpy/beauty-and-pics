@@ -7,6 +7,7 @@ from account_app.models.accounts import *
 # loading forms
 from custom_form_app.forms.register_form import *
 from custom_form_app.forms.login_form import *
+from custom_form_app.forms.password_recovery import *
 
 # www {{{
 def www_index(request):
@@ -40,7 +41,27 @@ def www_login(request):
     return render(request, 'website/www/www_login.html', context)
 
 def www_forgot_password(request):
-    return render(request, 'website/www/www_forgot_password.html', False)
+    # if this is a POST request we need to process the form data
+    if request.method == 'POST':
+        # create a form instance and populate it with data from the request:
+        form = passwordRecoveryForm(request.POST, request)
+        form.request_data=request
+
+        # check whether it's valid:
+        if form.is_valid() and form.form_actions():
+
+		# redirect to catwalk
+		return HttpResponseRedirect('/recupera-password/')
+
+    # if a GET (or any other method) we'll create a blank form
+    else:
+        form = passwordRecoveryForm()
+
+    context = {
+        "post" : request.POST,
+        "form": form,
+    }
+    return render(request, 'website/www/www_forgot_password.html', context)
 
 def www_register(request):
     # if this is a POST request we need to process the form data

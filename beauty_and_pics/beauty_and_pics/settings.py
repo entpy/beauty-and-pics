@@ -108,6 +108,7 @@ andranno spediti, per esempio su file, console, ecc..
 E' inoltre possibile impostare filtri e formattazione per i log
 (per ora qui non viene fatto!)
 """
+"""
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
@@ -140,13 +141,11 @@ LOGGING = {
             'formatter': 'verbose',
         },
         # Warning messages are sent to admin emails
-        """
         'mail_admins': {
             'level': 'WARNING',
             'filters': ['require_debug_false'],
             'class': 'django.utils.log.AdminEmailHandler',
         },
-        """
         # critical errors are logged to sentry
         'sentry': {
             'level': 'ERROR',
@@ -165,6 +164,7 @@ LOGGING = {
         },
     }
 }
+"""
 
 MEDIA_ROOT = '/tmp/images'
 MEDIA_URL = '/tmp/'

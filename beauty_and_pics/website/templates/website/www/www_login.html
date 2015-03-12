@@ -36,7 +36,7 @@
 				<div class="form-group {% if form.email.errors %}has-error{% endif %}">
 					<label for="{{ form.email.id_for_label }}" class="col-lg-4 control-label">{{ form.email.label }} *</label>
 					<div class="col-lg-8">
-						<input name="{{ form.email.name }}" class="form-control" id="{{ form.email.id_for_label }}" placeholder="{{ form.email.label }}" value="{{ post.email }}" type="text">
+						<input name="{{ form.email.name }}" class="form-control" id="{{ form.email.id_for_label }}" placeholder="{{ form.email.label }}" value="{{ post.email }}" type="email">
 					</div>
 				</div>
 				<div class="form-group {% if form.password.errors %}has-error{% endif %}">

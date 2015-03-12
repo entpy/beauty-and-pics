@@ -5,15 +5,14 @@ from datetime import date
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.models import User
 from website.exceptions import *
-import sys, logging, base64, hashlib
+import sys, logging, base64, hashlib, string, random
 
 # force utf8 read data
 reload(sys);
 sys.setdefaultencoding("utf8")
 
 # Get an instance of a logger
-logger_debug = logging.getLogger('django.request')
-logger_error = logging.getLogger('django.errors')
+logger = logging.getLogger(__name__)
 
 # extends User model
 class Account(models.Model):
@@ -166,6 +165,26 @@ class Account(models.Model):
                 # Ops...email or password not valid - no logging in!
                 raise UserLoginError
                 # return_var = "Email o password non validi, prova ancora"
+
+        return return_var
+
+    def generate_new_password(self):
+        """Function to generate a new password"""
+        return ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(5))
+
+    def update_user_password(self, email=None, new_password=None):
+        """Function to replace user password with new generated password (used in recovery password)"""
+        return_var = False
+        if email and new_password:
+	    try:
+	        u = User.objects.get(email=email)
+	    except User.DoesNotExist:
+	        logger.info("recupero password per un utente non esistente: email=" + str(email))
+                raise User.DoesNotExist
+            else:
+	        u.set_password('new password')
+	        u.save()
+	        return_var = True
 
         return return_var
 

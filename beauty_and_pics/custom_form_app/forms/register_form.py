@@ -13,8 +13,7 @@ reload(sys);
 sys.setdefaultencoding("utf8")
 
 # Get an instance of a logger
-logger_debug = logging.getLogger('django.request')
-logger_error = logging.getLogger('django.errors')
+logger = logging.getLogger(__name__)
 
 class RegisterForm(forms.Form, FormCommonUtils):
 
@@ -80,14 +79,14 @@ class RegisterForm(forms.Form, FormCommonUtils):
                 return_var = True
             except UserCreateError:
                 # bad
-                logger_error.error("Errore nel salvataggio del nuovo User e/o Account: " + str(self.form_validated_data) + " | error code: " + str(UserCreateError.get_error_code))
+                logger.error("Errore nel salvataggio del nuovo User e/o Account: " + str(self.form_validated_data) + " | error code: " + str(UserCreateError.get_error_code))
                 self._errors = {"__all__": ["Errore nel salvataggio del tuo account. Sii gentile, segnala il problema (Codice " + str(UserCreateError.get_error_code) + ")"]}
             except UserUpdateDataError:
                 # bad
-                logger_error.error("Errore nell'aggiornamento dei dati dell'account dopo la creazione: " + str(self.form_validated_data) + " | error code: " + str(UserUpdateDataError.get_error_code))
+                logger.error("Errore nell'aggiornamento dei dati dell'account dopo la creazione: " + str(self.form_validated_data) + " | error code: " + str(UserUpdateDataError.get_error_code))
                 self._errors = {"__all__": ["Errore nel salvataggio del tuo account. Sii gentile, segnala il problema (Codice " + str(UserUpdateDataError.get_error_code) + ")"]}
             else:
-                # logger_debug.debug("Utente salvato con successo, preparo il login")
+                logger.info("Utente salvato con successo, preparo il login")
                 pass
 
         return return_var
@@ -107,11 +106,11 @@ class RegisterForm(forms.Form, FormCommonUtils):
                 return_var = True
             except UserNotActiveError:
                 # bad
-                logger_error.error("Errore nel login: utente non attivo " + str(self.form_validated_data) + " | error code: " + str(UserNotActiveError.get_error_code))
-                self._errors = {"__all__": ["Caspita, il tuo account è stato bloccato...AHAH"]}
+                logger.error("Errore nel login: utente non attivo " + str(self.form_validated_data) + " | error code: " + str(UserNotActiveError.get_error_code))
+                self._errors = {"__all__": ["Errore nel salvataggio del tuo account. Sii gentile, segnala il problema (Codice " + str(UserNotActiveError.get_error_code) + ")"]}
             except UserLoginError:
                 # bad
-                logger_error.error("Errore nel login: email o password non validi " + str(self.form_validated_data) + " | error code: " + str(UserLoginError.get_error_code))
-                self._errors = {"__all__": ["Email o password non validi, prova ancora"]}
+                logger.error("Errore nel login: email o password non validi " + str(self.form_validated_data) + " | error code: " + str(UserLoginError.get_error_code))
+                self._errors = {"__all__": ["Errore nel salvataggio del tuo account. Sii gentile, segnala il problema (Codice " + str(UserLoginError.get_error_code) + ")"]}
 
         return return_var

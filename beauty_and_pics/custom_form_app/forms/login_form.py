@@ -60,7 +60,6 @@ class LoginForm(forms.Form, FormCommonUtils):
                 # bad
                 logger.error("Errore nel login: email o password non validi " + str(self.form_validated_data) + " | error code: " + str(UserLoginError.get_error_code))
                 self._errors = {"__all__": ["Email o password non validi, prova ancora"]}
-            logger.info("Login ")
-                   
+            logger.info("Login avvenuto con successo: " + str(self.form_validated_data))
 
         return return_var
