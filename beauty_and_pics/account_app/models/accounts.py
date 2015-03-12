@@ -182,7 +182,7 @@ class Account(models.Model):
 	        logger.info("recupero password per un utente non esistente: email=" + str(email))
                 raise User.DoesNotExist
             else:
-	        u.set_password('new password')
+	        u.set_password(new_password)
 	        u.save()
 	        return_var = True
 

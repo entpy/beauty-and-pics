@@ -6,6 +6,7 @@ from dateutil.relativedelta import *
 from custom_form_app.forms.base_form_class import *
 from account_app.models import *
 from website.exceptions import *
+from website.email.email_template import *
 from django.contrib.auth.models import User
 import calendar, logging, sys
 
@@ -58,9 +59,18 @@ class passwordRecoveryForm(forms.Form, FormCommonUtils):
             except User.DoesNotExist:
                 logger.error("Errore nel recupero password: utente non esistente" + str(self.form_validated_data))
                 self._errors = {"__all__": ["Sembrerebbe che l'email inserita non esista"]}
+            else:
+                # send new password via email
 
-	    # TODO: send new password via email
+                logger.info("nuova password generata (" + str(new_password) + ") per: " + str(self.form_validated_data))
 
-            logger.info("nuova password generata (" + str(new_password) + ") per: " + str(self.form_validated_data))
+                # sending email with new password
+                custom_email_template_obj = CustomEmailTemplate()
+                custom_email_template_obj.template_name = "recover_password"
+                custom_email_template_obj.email_subject = "Beauty & Pics: recupero password!"
+                custom_email_template_obj.email_context = {"email": email, "password": new_password}
+                custom_email_template_obj.send_mail()
+
+                return_var = True
 
         return return_var

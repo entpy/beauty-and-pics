@@ -12,6 +12,7 @@ urlpatterns = patterns('',
     url(r'^index/$', 'website.views.www_index', name='www_index'),
     url(r'^come-funziona/$', 'website.views.www_how_it_works', name='www_how_it_works'),
     url(r'^login/$', 'website.views.www_login', name='www_login'),
+    url(r'^logout/$', 'website.views.www_logout', name='www_logout'),
     url(r'^recupera-password/$', 'website.views.www_forgot_password', name='www_forgot_password'),
     url(r'^registrati/$', 'website.views.www_register', name='www_register'),
 

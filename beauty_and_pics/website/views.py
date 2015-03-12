@@ -1,7 +1,10 @@
+# -*- coding: utf-8 -*-
+
 from django.shortcuts import render
 from django.http import HttpResponseRedirect
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth import logout
 from account_app.models.accounts import *
 
 # loading forms
@@ -40,6 +43,10 @@ def www_login(request):
 
     return render(request, 'website/www/www_login.html', context)
 
+def www_logout(request):
+    logout(request)
+    return render(request, 'website/www/www_index.html', False)
+
 def www_forgot_password(request):
     # if this is a POST request we need to process the form data
     if request.method == 'POST':
@@ -50,6 +57,7 @@ def www_forgot_password(request):
         # check whether it's valid:
         if form.is_valid() and form.form_actions():
 
+                messages.add_message(request, messages.SUCCESS, 'Una nuova password ti è stata inviata, cambiala appena possibile nella tua area privata!')
 		# redirect to catwalk
 		return HttpResponseRedirect('/recupera-password/')
 

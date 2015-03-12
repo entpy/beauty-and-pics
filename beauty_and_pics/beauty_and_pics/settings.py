@@ -106,8 +106,6 @@ l' handler del logger gestisce dove i messaggi di log raccolti dal logger
 andranno spediti, per esempio su file, console, ecc..
 
 E' inoltre possibile impostare filtri e formattazione per i log
-(per ora qui non viene fatto!)
-"""
 """
 LOGGING = {
     'version': 1,
@@ -129,45 +127,47 @@ LOGGING = {
     },
     'handlers': {
         # Send all messages to console
-        'console': {
+        'console_debug': {
             'level': 'DEBUG',
             'class': 'logging.StreamHandler',
         },
-        # Send info messages to syslog
-        'file':{
+        # Send info messages to local file
+        'file_info':{
             'level':'INFO',
             'class': 'logging.FileHandler',
             'filename': '/tmp/bep_debug.log',
             'formatter': 'verbose',
         },
         # Warning messages are sent to admin emails
-        'mail_admins': {
+        'mail_warning': {
             'level': 'WARNING',
             'filters': ['require_debug_false'],
             'class': 'django.utils.log.AdminEmailHandler',
         },
-        # critical errors are logged to sentry
-        'sentry': {
+        # Critical errors are sent to local file
+        'file_error': {
             'level': 'ERROR',
             'filters': ['require_debug_false'],
             'class': 'logging.FileHandler',
-            'filename': '/tmp/bep_debug.log',
+            'filename': '/tmp/bep_error.log',
             'formatter': 'verbose',
         },
     },
     'loggers': {
         # This is the "catch all" logger
         '': {
-            'handlers': ['console', 'syslog', 'mail_admins', 'sentry'],
+            'handlers': ['console_debug', 'file_info', 'mail_warning', 'file_error'],
             'level': 'DEBUG',
             'propagate': False,
         },
     }
 }
-"""
 
 MEDIA_ROOT = '/tmp/images'
 MEDIA_URL = '/tmp/'
+
+# email settings
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend' # this backend is only for development debug
 
 # AJAX image Settings
 AJAXIMAGE_AUTH_TEST = lambda u: True

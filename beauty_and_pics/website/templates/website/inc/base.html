@@ -50,23 +50,6 @@
 							<span class="icon-bar"></span>
 						</div>
 					</div>
-					{# navigation before login {{{ #}
-					{% block no-login-navigation %}
-					<div class="header_button_container">
-						<div>
-							<a href="/registrati/" class="btn btn-success">Partecipa</a>
-							<a href="/login/" class="btn btn-login">Accedi</a>
-						</div>
-					</div>
-					<div class="navigation_container www_navigation toggle_navigation">
-						<nav>
-							<a href="/come-funziona/"><div class="navigation_item"><span class="navigation_label">Come funziona</span><span class="navigation_arrow display_only_big">v</span></div></a>
-							<a href="/come-funziona/"><div class="navigation_item"><span class="navigation_label">Il concorso</span><span class="navigation_arrow display_only_big">v</span></div></a>
-							<a href="/come-funziona/"><div class="navigation_item"><span class="navigation_label">Come iscriversi</span><span class="navigation_arrow display_only_big">v</span></div></a>
-						</nav>
-					</div>
-					{% endblock no-login-navigation %}
-					{# navigation before login }}} #}
 					{# navigation after login {{{ #}
 					{% block login-navigation %}
 					<div class="search_form_container display_only_big">
@@ -129,7 +112,7 @@
 								</div>
 								<!-- single menu item -->
 								<div class="menu_item_container last_menu_item_container">
-									<a href="#">
+									<a href="/logout/">
 										<div class="menu_item_image">
 											<img alt="Profilo" src="{% static "website/img/menu_logout.png" %}">
 										</div>
@@ -144,6 +127,23 @@
 					</div>
 					{% endblock login-navigation %}
 					{# navigation after login }}} #}
+					{# navigation before login {{{ #}
+					{% block no-login-navigation %}
+					<div class="header_button_container">
+						<div>
+							<a href="/registrati/" class="btn btn-success">Partecipa</a>
+							<a href="/login/" class="btn btn-login">Accedi</a>
+						</div>
+					</div>
+					<div class="navigation_container www_navigation toggle_navigation">
+						<nav>
+							<a href="/come-funziona/"><div class="navigation_item"><span class="navigation_label">Come funziona</span><span class="navigation_arrow display_only_big">v</span></div></a>
+							<a href="/come-funziona/"><div class="navigation_item"><span class="navigation_label">Il concorso</span><span class="navigation_arrow display_only_big">v</span></div></a>
+							<a href="/come-funziona/"><div class="navigation_item"><span class="navigation_label">Come iscriversi</span><span class="navigation_arrow display_only_big">v</span></div></a>
+						</nav>
+					</div>
+					{% endblock no-login-navigation %}
+					{# navigation before login }}} #}
 				</div>
 			</div>
 		</header>

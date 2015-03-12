@@ -43,6 +43,7 @@ var ajaxFormValidation = {
 
 	formClassName : 'ajax_form', // Default "ajax_form"
 	errorMessageBoxClassName : 'error_container', // Default "error_container"
+	serverMsgContainer : 'server_msg_container', // Server side message container class name
 	errorClassName : 'has-error', // Default "has-error"
 	formGroupClassName : 'form-group', // Default "form-group"
 	// redirectUrl : '', // Es . "/registrati/" Default None
@@ -84,6 +85,7 @@ var ajaxFormValidation = {
 	removeFormErrors : function() {
 		$("." + this.formGroupClassName).removeClass(this.errorClassName);
 		$("." + this.errorMessageBoxClassName).html("");
+		$("." + this.serverMsgContainer).html("");
 		return true;
 	},
 
