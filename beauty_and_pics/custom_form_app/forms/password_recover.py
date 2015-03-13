@@ -17,7 +17,7 @@ sys.setdefaultencoding("utf8")
 # Get an instance of a logger
 logger = logging.getLogger(__name__)
 
-class passwordRecoveryForm(forms.Form, FormCommonUtils):
+class passwordRecoverForm(forms.Form, FormCommonUtils):
 
     email = forms.CharField(label='Email', max_length=75, required=True)
 
@@ -32,19 +32,19 @@ class passwordRecoveryForm(forms.Form, FormCommonUtils):
 
     def __init__(self, *args, **kwargs):
         # parent forms.Form init
-        super(passwordRecoveryForm, self).__init__(*args, **kwargs)
+        super(passwordRecoverForm, self).__init__(*args, **kwargs)
         FormCommonUtils.__init__(self)
 
 	# current form instance
-        self.validation_form = super(passwordRecoveryForm, self)
+        self.validation_form = super(passwordRecoverForm, self)
 
     def clean(self):
-	super(passwordRecoveryForm, self).clean_form_custom()
+	super(passwordRecoverForm, self).clean_form_custom()
         return True
 
     def form_actions(self):
         return_var = False
-        if (super(passwordRecoveryForm, self).form_can_be_saved()):
+        if (super(passwordRecoverForm, self).form_can_be_saved()):
 
             account_obj = Account()
             # retrieving user by email

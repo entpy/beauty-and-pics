@@ -16,9 +16,9 @@ logger = logging.getLogger(__name__)
 
 # extends User model
 class Account(models.Model):
-    id_account = models.AutoField(primary_key=True)
+    # id_account = models.AutoField(primary_key=True)
     # Links Account to a User model instance.
-    user = models.OneToOneField(User)
+    user = models.OneToOneField(User, primary_key=True)
     city = models.CharField(max_length=100, null=True)
     country = models.CharField(max_length=100, null=True)
     gender = models.CharField(max_length=100, null=True)
@@ -153,7 +153,7 @@ class Account(models.Model):
             # combination is valid - a User object is returned if it is.
             user_obj = authenticate(email=email, password=password)
 
-            # If we have a User object, the details are correct.
+            # If we have a User object, the email and password are correct.
             # If None (Python's way of representing the absence of a value), no user
             # with matching credentials was found.
             if user_obj:
@@ -165,11 +165,9 @@ class Account(models.Model):
                 else:
                     # An inactive account was used - no logging in!
                     raise UserNotActiveError
-                    # return_var = "Caspita, il tuo account è stato bloccato...AHAH"
             else:
                 # Ops...email or password not valid - no logging in!
                 raise UserLoginError
-                # return_var = "Email o password non validi, prova ancora"
 
         return return_var
 
@@ -193,8 +191,8 @@ class Account(models.Model):
 
         return return_var
 
-    def get_autenticate_user_email(self, request=None):
-        """Function to retrieve the email about current logged in user"""
+    def get_autenticated_user_email(self, request=None):
+        """Function to retrieve the email address about current logged in user"""
         return_var = False
         if request and request.user.is_authenticated():
 	    return_var = request.user.email
@@ -202,17 +200,31 @@ class Account(models.Model):
 
         return return_var
 
-"""
-	* id_account (PK)
-	* first_name
-	* last_name
-	* email
-	* password
-	* city
-	* country
-	* gender
-	* status
-	* birthday_date
-	* creation_date
-	* update_date
-"""
+    def get_autenticated_user_data(self, request=None):
+        """
+        Function to retrieve current user/account logged in data (es. first_name, last_name, gender, ecc...)
+        """
+        return_var = {}
+
+        if request and request.user.is_authenticated():
+            # from user model {{{
+	    return_var["first_name"] = get(request.user.first_name, "")
+	    return_var["last_name"] = get(request.user.last_name, "")
+	    return_var["email"] = get(request.user.email, "")
+            # from user model }}}
+            # from account model {{{
+	    return_var["city"] = get(request.user.account.city, "")
+	    return_var["country"] = get(request.user.account.country, "")
+	    return_var["gender"] = get(request.user.account.gender, "")
+	    return_var["birthday_date"] = get(request.user.account.birthday_date, "")
+	    return_var["birthday_day"] = get(str(request.user.account.birthday_date.day), "")
+	    return_var["birthday_month"] = get(str(request.user.account.birthday_date.month), "")
+	    return_var["birthday_year"] = get(str(request.user.account.birthday_date.year), "")
+	    return_var["hair"] = get(request.user.account.hair, "")
+	    return_var["eyes"] = get(request.user.account.eyes, "")
+	    return_var["height"] = get(request.user.account.height, "")
+            # from account model }}}
+
+	    logger.info("data about current logged in user: " + str(return_var))
+
+        return return_var

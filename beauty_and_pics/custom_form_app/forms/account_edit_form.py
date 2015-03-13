@@ -24,7 +24,6 @@ class AccountEditForm(forms.Form, FormCommonUtils):
     birthday_year = forms.ChoiceField(label='Anno', required=True)
     gender = forms.ChoiceField(label='Sesso', required=True)
     email = forms.CharField(label='Email', max_length=75, required=True)
-    password = forms.CharField(label='Password', max_length=100, required=True)
     hair = forms.ChoiceField(label="Capelli", required=False) 
     eyes = forms.ChoiceField(label="Occhi", required=False)
     height = forms.CharField(label="Altezza (cm)", max_length=3, required=False)
@@ -33,14 +32,11 @@ class AccountEditForm(forms.Form, FormCommonUtils):
     custom_validation_list = (
         'check_all_fields_valid',
         'check_user_is_adult',
-	'check_email_already_exists',
-	'check_email_is_valid',
     )
     addictional_validation_fields = {
         "year":"birthday_year",
         "month":"birthday_month",
         "day":"birthday_day",
-        "email":"email",
     }
 
     # addictional request data
@@ -71,6 +67,7 @@ class AccountEditForm(forms.Form, FormCommonUtils):
         if super(AccountEditForm, self).form_can_be_saved():
             account_obj = Account()
 
+            """
 	    # setting addictional fields
 	    # building birthday date
             birthday_date = account_obj.create_date(date_dictionary={"day" : self.form_validated_data.get("birthday_day"), "month" : self.form_validated_data.get("birthday_month"), "year" : self.form_validated_data.get("birthday_year")}, get_isoformat=True)
@@ -93,6 +90,7 @@ class AccountEditForm(forms.Form, FormCommonUtils):
             else:
                 logger.info("Utente salvato con successo, preparo il login")
                 pass
+            """
 
         return return_var
 

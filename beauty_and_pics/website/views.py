@@ -10,7 +10,7 @@ from account_app.models.accounts import *
 # loading forms
 from custom_form_app.forms.register_form import *
 from custom_form_app.forms.login_form import *
-from custom_form_app.forms.password_recovery import *
+from custom_form_app.forms.password_recover import *
 from custom_form_app.forms.account_edit_form import *
 
 # www {{{
@@ -52,7 +52,7 @@ def www_forgot_password(request):
     # if this is a POST request we need to process the form data
     if request.method == 'POST':
         # create a form instance and populate it with data from the request:
-        form = passwordRecoveryForm(request.POST, request)
+        form = passwordRecoverForm(request.POST, request)
         form.request_data=request
 
         # check whether it's valid:
@@ -64,7 +64,7 @@ def www_forgot_password(request):
 
     # if a GET (or any other method) we'll create a blank form
     else:
-        form = passwordRecoveryForm()
+        form = passwordRecoverForm()
 
     context = {
         "post" : request.POST,
@@ -133,11 +133,9 @@ def profile_data(request):
 
     # if a GET (or any other method) we'll create a blank form
     else:
-	# TODO prepopulate post dictionary with current user data
+	# pre-prepopulate post dictionary with current user data
 	account_obj =  Account()
-	account_obj.get_autenticate_user_email(request=request)
-	# TODO retrieve instance about current user
-	request.POST = {"first_name": "troppo fico", "birthday_day": "2"}
+        request.POST = account_obj.get_autenticated_user_data(request=request)
         form = AccountEditForm()
 
     context = {
