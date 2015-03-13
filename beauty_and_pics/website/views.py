@@ -11,6 +11,7 @@ from account_app.models.accounts import *
 from custom_form_app.forms.register_form import *
 from custom_form_app.forms.login_form import *
 from custom_form_app.forms.password_recovery import *
+from custom_form_app.forms.account_edit_form import *
 
 # www {{{
 def www_index(request):
@@ -117,7 +118,34 @@ def profile_index(request):
 
 @login_required
 def profile_data(request):
-    return render(request, 'website/profile/profile_data.html', False)
+    # if this is a POST request we need to process the form data
+    if request.method == 'POST':
+        # create a form instance and populate it with data from the request:
+        form = AccountEditForm(request.POST)
+        form.request_data=request
+        # check whether it's valid:
+        # if form.is_valid() and form.form_actions():
+        if form.is_valid() and form.form_actions():
+
+            messages.add_message(request, messages.SUCCESS, 'Tutte le informazioni sono state salvate correttamente')
+            # redirect to user profile
+            return HttpResponseRedirect('/dati-personali/')
+
+    # if a GET (or any other method) we'll create a blank form
+    else:
+	# TODO prepopulate post dictionary with current user data
+	account_obj =  Account()
+	account_obj.get_autenticate_user_email(request=request)
+	# TODO retrieve instance about current user
+	request.POST = {"first_name": "troppo fico", "birthday_day": "2"}
+        form = AccountEditForm()
+
+    context = {
+        "post" : request.POST,
+        "form": form,
+    }
+
+    return render(request, 'website/profile/profile_data.html', context)
 
 @login_required
 def profile_favorites(request):

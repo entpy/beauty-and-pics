@@ -188,6 +188,28 @@ class FormCommonUtils():
         select_choices.append(("m", "Uomo"))
         return select_choices
 
+    def get_hair_select_choices(self):
+        """Create a list of hair color for select element"""
+        select_choices = []
+        select_choices.append(("", "-"))
+        select_choices.append(("light_brown", "Castano chiaro"))
+        select_choices.append(("dark_brown", "Castano scuro"))
+        select_choices.append(("black", "Nero"))
+        select_choices.append(("blond", "Biondo"))
+        select_choices.append(("red", "Rosso"))
+        return select_choices
+
+    def get_eyes_select_choices(self):
+        """Create a list of eyes color for select element"""
+        select_choices = []
+        select_choices.append(("", "-"))
+        select_choices.append(("light_brown", "Marrone chiaro"))
+        select_choices.append(("dark_brown", "Marrone scuro"))
+        select_choices.append(("light_green", "Verde chiaro"))
+        select_choices.append(("dark_green", "Verde scuro"))
+        select_choices.append(("azure", "Azzurro"))
+        return select_choices
+
     def check_if_user_is_adult(self, birthday_dictionary):
         """Check if a user is adult or not. Return: true on success, false otherwise"""
         return_var = False

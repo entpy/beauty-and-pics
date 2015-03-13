@@ -2,6 +2,7 @@ from django.shortcuts import render
 from django.http import HttpResponse
 from custom_form_app.forms.register_form import *
 from custom_form_app.forms.password_recovery import *
+from custom_form_app.forms.account_edit_form import *
 import logging, json
 
 # Get an instance of a logger

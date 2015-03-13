@@ -51,99 +51,102 @@
 						</div>
 					</div>
 					{# navigation after login {{{ #}
-					{% block login-navigation %}
-					<div class="search_form_container display_only_big">
-						<form class="form-horizontal">
-							<fieldset>
-								<div class="input-group">
-									<input class="form-control" placeholder="Cerca una persona..." type="text">
-									<span class="input-group-btn">
-										<button class="btn btn-success" type="button">Cerca</button>
-									</span>
-								</div>
-							</fieldset>
-						</form>
-					</div>
-					<div class="profile_container toggle_navigation">
-						<div class="profile_container_wrapper">
-							<div class="profile_name_image_container">
-								<div class="profile_image_container">
-									<img class="img-circle" alt="Immagine del profilo" src="http://placekitten.com/g/51/51">
-								</div>
-								<div class="profile_name_container">
-									<div>Ciao</div>
-									<strong>Nome Cognome <img class="profile_arrow_bottom display_only_big" alt="Bottom arrow" src="{% static "website/img/bottom-arrow.png" %}"></strong>
-								</div>
-							</div>
-							{# after login menu {{{ #}
-							<div class="navigation_container toggle_navigation">
-								<!-- single menu item -->
-								<div class="menu_item_container">
-									<a href="/profilo/">
-										<div class="menu_item_image">
-											<img alt="Profilo" src="{% static "website/img/menu_profile.png" %}">
-										</div>
-										<div class="menu_item_label">
-											Profilo
-										</div>
-									</a>
-								</div>
-								<!-- single menu item -->
-								<div class="menu_item_container">
-									<a href="/profilo/statistiche/">
-										<div class="menu_item_image">
-											<img alt="Profilo" src="{% static "website/img/menu_stats.png" %}">
-										</div>
-										<div class="menu_item_label">
-											Sguardo rapido
-										</div>
-									</a>
-								</div>
-								<!-- single menu item -->
-								<div class="menu_item_container">
-									<a href="/passerella/richiesta-aiuto">
-										<div class="menu_item_image">
-											<img alt="Profilo" src="{% static "website/img/menu_help.png" %}">
-										</div>
-										<div class="menu_item_label">
-											Bisogno di aiuto?
-										</div>
-									</a>
-								</div>
-								<!-- single menu item -->
-								<div class="menu_item_container last_menu_item_container">
-									<a href="/logout/">
-										<div class="menu_item_image">
-											<img alt="Profilo" src="{% static "website/img/menu_logout.png" %}">
-										</div>
-										<div class="menu_item_label">
-											Esci
-										</div>
-									</a>
-								</div>
-							</div>
-							{# after login menu }}} #}
+					{#% block login-navigation %#}
+					{% if user.is_authenticated %}
+						<div class="search_form_container display_only_big">
+							<form class="form-horizontal">
+								<fieldset>
+									<div class="input-group">
+										<input class="form-control" placeholder="Cerca una persona..." type="text">
+										<span class="input-group-btn">
+											<button class="btn btn-success" type="button">Cerca</button>
+										</span>
+									</div>
+								</fieldset>
+							</form>
 						</div>
-					</div>
-					{% endblock login-navigation %}
-					{# navigation after login }}} #}
-					{# navigation before login {{{ #}
-					{% block no-login-navigation %}
-					<div class="header_button_container">
-						<div>
-							<a href="/registrati/" class="btn btn-success">Partecipa</a>
-							<a href="/login/" class="btn btn-login">Accedi</a>
+						<div class="profile_container toggle_navigation">
+							<div class="profile_container_wrapper">
+								<div class="profile_name_image_container">
+									<div class="profile_image_container">
+										<img class="img-circle" alt="Immagine del profilo" src="http://placekitten.com/g/51/51">
+									</div>
+									<div class="profile_name_container">
+										<div>Ciao</div>
+										<strong>{{ user.first_name }} {{ user.last_name }} <img class="profile_arrow_bottom display_only_big" alt="Bottom arrow" src="{% static "website/img/bottom-arrow.png" %}"></strong>
+									</div>
+								</div>
+								{# after login menu {{{ #}
+								<div class="navigation_container toggle_navigation">
+									<!-- single menu item -->
+									<div class="menu_item_container">
+										<a href="/profilo/">
+											<div class="menu_item_image">
+												<img alt="Profilo" src="{% static "website/img/menu_profile.png" %}">
+											</div>
+											<div class="menu_item_label">
+												Profilo
+											</div>
+										</a>
+									</div>
+									<!-- single menu item -->
+									<div class="menu_item_container">
+										<a href="/profilo/statistiche/">
+											<div class="menu_item_image">
+												<img alt="Profilo" src="{% static "website/img/menu_stats.png" %}">
+											</div>
+											<div class="menu_item_label">
+												Sguardo rapido
+											</div>
+										</a>
+									</div>
+									<!-- single menu item -->
+									<div class="menu_item_container">
+										<a href="/passerella/richiesta-aiuto">
+											<div class="menu_item_image">
+												<img alt="Profilo" src="{% static "website/img/menu_help.png" %}">
+											</div>
+											<div class="menu_item_label">
+												Bisogno di aiuto?
+											</div>
+										</a>
+									</div>
+									<!-- single menu item -->
+									<div class="menu_item_container last_menu_item_container">
+										<a href="/logout/">
+											<div class="menu_item_image">
+												<img alt="Profilo" src="{% static "website/img/menu_logout.png" %}">
+											</div>
+											<div class="menu_item_label">
+												Esci
+											</div>
+										</a>
+									</div>
+								</div>
+								{# after login menu }}} #}
+							</div>
 						</div>
-					</div>
-					<div class="navigation_container www_navigation toggle_navigation">
-						<nav>
-							<a href="/come-funziona/"><div class="navigation_item"><span class="navigation_label">Come funziona</span><span class="navigation_arrow display_only_big">v</span></div></a>
-							<a href="/come-funziona/"><div class="navigation_item"><span class="navigation_label">Il concorso</span><span class="navigation_arrow display_only_big">v</span></div></a>
-							<a href="/come-funziona/"><div class="navigation_item"><span class="navigation_label">Come iscriversi</span><span class="navigation_arrow display_only_big">v</span></div></a>
-						</nav>
-					</div>
-					{% endblock no-login-navigation %}
-					{# navigation before login }}} #}
+						{#% endblock login-navigation %#}
+						{# navigation after login }}} #}
+					{% else %}
+						{# navigation before login {{{ #}
+						{#% block no-login-navigation %#}
+						<div class="header_button_container">
+							<div>
+								<a href="/registrati/" class="btn btn-success">Partecipa</a>
+								<a href="/login/" class="btn btn-login">Accedi</a>
+							</div>
+						</div>
+						<div class="navigation_container www_navigation toggle_navigation">
+							<nav>
+								<a href="/come-funziona/"><div class="navigation_item"><span class="navigation_label">Come funziona</span><span class="navigation_arrow display_only_big">v</span></div></a>
+								<a href="/come-funziona/"><div class="navigation_item"><span class="navigation_label">Il concorso</span><span class="navigation_arrow display_only_big">v</span></div></a>
+								<a href="/come-funziona/"><div class="navigation_item"><span class="navigation_label">Come iscriversi</span><span class="navigation_arrow display_only_big">v</span></div></a>
+							</nav>
+						</div>
+						{#% endblock no-login-navigation %#}
+						{# navigation before login }}} #}
+					{% endif %}
 				</div>
 			</div>
 		</header>

@@ -19,15 +19,14 @@ class Account(models.Model):
     id_account = models.AutoField(primary_key=True)
     # Links Account to a User model instance.
     user = models.OneToOneField(User)
-    # first_name = models.CharField(max_length=50)
-    # last_name = models.CharField(max_length=50, null=True)
-    # email = models.CharField(max_length=100)
-    # password = models.CharField(max_length=100)
     city = models.CharField(max_length=100, null=True)
     country = models.CharField(max_length=100, null=True)
     gender = models.CharField(max_length=100, null=True)
     status = models.IntegerField(null=True)
     birthday_date = models.DateField(null=True)
+    hair = models.CharField(max_length=15, null=True) 
+    eyes = models.CharField(max_length=15, null=True)
+    height = models.CharField(max_length=3, null=True)
     creation_date = models.DateTimeField(auto_now_add=True)
     update_date = models.DateTimeField(auto_now=True)
 
@@ -111,6 +110,12 @@ class Account(models.Model):
                 account_obj.status = save_data["status"]
             if "birthday_date" in save_data:
                 account_obj.birthday_date = save_data["birthday_date"]
+            if "hair" in save_data:
+                account_obj.hair = save_data["hair"]
+            if "eyes" in save_data:
+                account_obj.eyes = save_data["eyes"]
+            if "height" in save_data:
+                account_obj.height = save_data["height"]
             # saving addictiona models data
             account_obj.user.save()
             account_obj.save()
@@ -185,6 +190,15 @@ class Account(models.Model):
 	        u.set_password(new_password)
 	        u.save()
 	        return_var = True
+
+        return return_var
+
+    def get_autenticate_user_email(self, request=None):
+        """Function to retrieve the email about current logged in user"""
+        return_var = False
+        if request and request.user.is_authenticated():
+	    return_var = request.user.email
+	    logger.info("email of current logged in user: " + str(return_var))
 
         return return_var
 
