@@ -26,7 +26,7 @@ class Account(models.Model):
     birthday_date = models.DateField(null=True)
     hair = models.CharField(max_length=15, null=True) 
     eyes = models.CharField(max_length=15, null=True)
-    height = models.CharField(max_length=3, null=True)
+    height = models.CharField(max_length=4, null=True)
     creation_date = models.DateTimeField(auto_now_add=True)
     update_date = models.DateTimeField(auto_now=True)
 
@@ -54,10 +54,10 @@ class Account(models.Model):
         if user_info:
             account_obj = Account()
             # create new account
-            new_account = account_obj.create_user_account(email=user_info["email"], password=user_info["password"])
+            new_user = account_obj.create_user_account(email=user_info["email"], password=user_info["password"])
 
             # insert addictional data inside User and Account models
-            account_obj.update_data(save_data=user_info, account_obj=new_account)
+            account_obj.update_data(save_data=user_info, user_obj=new_user)
             return_var = True
 
         return return_var
@@ -70,7 +70,7 @@ class Account(models.Model):
             if not self.check_if_email_exists(email_to_check=email):
                 account_obj.user = User.objects.create_user(username=self._email_to_username(email), email=email, password=password)
                 account_obj.save()
-                return_var = account_obj
+                return_var = account_obj.user
 
                 # raise an exception if occur errors in account creation
                 if not return_var:
@@ -89,37 +89,37 @@ class Account(models.Model):
         converted = email.encode('utf8', 'ignore')
         return base64.urlsafe_b64encode(hashlib.sha256(converted).digest())[:30]
 
-    def update_data(self, save_data=None, account_obj=None):
+    def update_data(self, save_data=None, user_obj=None):
         """Function to save data inside db"""
 	return_var = False
 
-        if save_data and account_obj:
+        if save_data and user_obj:
             # save User model addictional informations
             if "first_name" in save_data:
-                account_obj.user.first_name = save_data["first_name"]
+                user_obj.first_name = save_data["first_name"]
             if "last_name" in save_data:
-                account_obj.user.last_name = save_data["last_name"]
+                user_obj.last_name = save_data["last_name"]
             # save Account model addictional informations
             if "city" in save_data:
-                account_obj.city = save_data["city"]
+                user_obj.account.city = save_data["city"]
             if "country" in save_data:
-                account_obj.country = save_data["country"]
+                user_obj.account.country = save_data["country"]
             if "gender" in save_data:
-                account_obj.gender = save_data["gender"]
+                user_obj.account.gender = save_data["gender"]
             if "status" in save_data:
-                account_obj.status = save_data["status"]
+                user_obj.account.status = save_data["status"]
             if "birthday_date" in save_data:
-                account_obj.birthday_date = save_data["birthday_date"]
+                user_obj.account.birthday_date = save_data["birthday_date"]
             if "hair" in save_data:
-                account_obj.hair = save_data["hair"]
+                user_obj.account.hair = save_data["hair"]
             if "eyes" in save_data:
-                account_obj.eyes = save_data["eyes"]
+                user_obj.account.eyes = save_data["eyes"]
             if "height" in save_data:
-                account_obj.height = save_data["height"]
+                user_obj.account.height = save_data["height"]
             # saving addictiona models data
-            account_obj.user.save()
-            account_obj.save()
-            return_var = account_obj
+            user_obj.save()
+            user_obj.account.save()
+            return_var = user_obj
 
         if not return_var:
             raise UserUpdateDataError
@@ -182,7 +182,7 @@ class Account(models.Model):
 	    try:
 	        u = User.objects.get(email=email)
 	    except User.DoesNotExist:
-	        logger.info("recupero password per un utente non esistente: email=" + str(email))
+	        logger.error("recupero password per un utente non esistente: email=" + str(email))
                 raise User.DoesNotExist
             else:
 	        u.set_password(new_password)
@@ -208,21 +208,21 @@ class Account(models.Model):
 
         if request and request.user.is_authenticated():
             # from user model {{{
-	    return_var["first_name"] = get(request.user.first_name, "")
-	    return_var["last_name"] = get(request.user.last_name, "")
-	    return_var["email"] = get(request.user.email, "")
+	    return_var["first_name"] = request.user.first_name or ''
+	    return_var["last_name"] = request.user.last_name or ''
+	    return_var["email"] = request.user.email or ''
             # from user model }}}
             # from account model {{{
-	    return_var["city"] = get(request.user.account.city, "")
-	    return_var["country"] = get(request.user.account.country, "")
-	    return_var["gender"] = get(request.user.account.gender, "")
-	    return_var["birthday_date"] = get(request.user.account.birthday_date, "")
-	    return_var["birthday_day"] = get(str(request.user.account.birthday_date.day), "")
-	    return_var["birthday_month"] = get(str(request.user.account.birthday_date.month), "")
-	    return_var["birthday_year"] = get(str(request.user.account.birthday_date.year), "")
-	    return_var["hair"] = get(request.user.account.hair, "")
-	    return_var["eyes"] = get(request.user.account.eyes, "")
-	    return_var["height"] = get(request.user.account.height, "")
+	    return_var["city"] = request.user.account.city or ''
+	    return_var["country"] = request.user.account.country or ''
+	    return_var["gender"] = request.user.account.gender or ''
+	    return_var["birthday_date"] = request.user.account.birthday_date or ''
+	    return_var["birthday_day"] = str(request.user.account.birthday_date.day or '')
+	    return_var["birthday_month"] = str(request.user.account.birthday_date.month or '')
+	    return_var["birthday_year"] = str(request.user.account.birthday_date.year or '')
+	    return_var["hair"] = request.user.account.hair or ''
+	    return_var["eyes"] = request.user.account.eyes or ''
+	    return_var["height"] = request.user.account.height or ''
             # from account model }}}
 
 	    logger.info("data about current logged in user: " + str(return_var))

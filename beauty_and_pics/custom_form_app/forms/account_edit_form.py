@@ -23,10 +23,9 @@ class AccountEditForm(forms.Form, FormCommonUtils):
     birthday_month = forms.ChoiceField(label='Mese', required=True)
     birthday_year = forms.ChoiceField(label='Anno', required=True)
     gender = forms.ChoiceField(label='Sesso', required=True)
-    email = forms.CharField(label='Email', max_length=75, required=True)
     hair = forms.ChoiceField(label="Capelli", required=False) 
     eyes = forms.ChoiceField(label="Occhi", required=False)
-    height = forms.CharField(label="Altezza (cm)", max_length=3, required=False)
+    height = forms.CharField(label="Altezza (cm)", max_length=4, required=False)
 
     # list of validator for this form
     custom_validation_list = (
@@ -66,31 +65,8 @@ class AccountEditForm(forms.Form, FormCommonUtils):
         return_var = False
         if super(AccountEditForm, self).form_can_be_saved():
             account_obj = Account()
-
-            """
-	    # setting addictional fields
-	    # building birthday date
-            birthday_date = account_obj.create_date(date_dictionary={"day" : self.form_validated_data.get("birthday_day"), "month" : self.form_validated_data.get("birthday_month"), "year" : self.form_validated_data.get("birthday_year")}, get_isoformat=True)
-	    if (birthday_date):
-                self.form_validated_data["birthday_date"] = birthday_date
-
-            # saving new account
-            try:
-                # TODO update data about this account
-                # account_obj.register_account(user_info=self.form_validated_data)
-                return_var = True
-            except UserCreateError:
-                # bad
-                logger.error("Errore nel salvataggio del nuovo User e/o Account: " + str(self.form_validated_data) + " | error code: " + str(UserCreateError.get_error_code))
-                self._errors = {"__all__": ["Errore nel salvataggio del tuo account. Sii gentile, segnala il problema (Codice " + str(UserCreateError.get_error_code) + ")"]}
-            except UserUpdateDataError:
-                # bad
-                logger.error("Errore nell'aggiornamento dei dati dell'account dopo la creazione: " + str(self.form_validated_data) + " | error code: " + str(UserUpdateDataError.get_error_code))
-                self._errors = {"__all__": ["Errore nel salvataggio del tuo account. Sii gentile, segnala il problema (Codice " + str(UserUpdateDataError.get_error_code) + ")"]}
-            else:
-                logger.info("Utente salvato con successo, preparo il login")
-                pass
-            """
+            account_obj.update_data(save_data=self.form_validated_data, user_obj=self.request_data.user)
+            return_var = True
 
         return return_var
 

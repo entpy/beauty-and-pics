@@ -129,7 +129,7 @@ def profile_data(request):
 
             messages.add_message(request, messages.SUCCESS, 'Tutte le informazioni sono state salvate correttamente')
             # redirect to user profile
-            return HttpResponseRedirect('/dati-personali/')
+            return HttpResponseRedirect('/profilo/dati-personali/')
 
     # if a GET (or any other method) we'll create a blank form
     else:
