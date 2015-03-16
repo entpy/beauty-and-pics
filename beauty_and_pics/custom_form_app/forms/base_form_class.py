@@ -27,6 +27,8 @@ class FormCommonUtils():
     form_validated_data = False
     # flag to check if validation process is completed
     _validation_process_completed = False
+    # request_data, extended from form classes
+    request_data = False
 
     def __init__(self):
         # list of valid methods
@@ -34,6 +36,8 @@ class FormCommonUtils():
 	FormCommonUtils.valid_custom_validation_list += ('check_user_is_adult',)
 	FormCommonUtils.valid_custom_validation_list += ('check_email_already_exists',)
 	FormCommonUtils.valid_custom_validation_list += ('check_email_is_valid',)
+	FormCommonUtils.valid_custom_validation_list += ('check_current_password',)
+	# self.request_data = False
 
     def check_if_validation_method_is_valid(self, validation_method=False):
         """Checking if a validation method exists"""
@@ -119,10 +123,19 @@ class FormCommonUtils():
     def check_email_already_exists(self):
         """Validation method to check if an email already exists"""
         account_obj = Account()
-        if (account_obj.check_if_email_exists(email_to_check=self.form_validated_data.get(self.addictional_validation_fields["email"])) == True):
-	    # raise an exception if email already exists
-	    self.add_validation_error(None, "La mail inserita è già presente")
-            self.add_validation_error(self.addictional_validation_fields["email"], True)
+	# TODO: sostituire questo valore con quello presente nella lista degli elementi validati (vedi sotto)
+	if self.addictional_validation_fields["email"] != account_obj.get_autenticated_user_email(self.request_data):
+            if (account_obj.check_if_email_exists(email_to_check=self.form_validated_data.get(self.addictional_validation_fields["email"])) == True):
+	        # raise an exception if email already exists
+	        self.add_validation_error(None, "La mail inserita è già presente: " + str(account_obj.get_autenticated_user_email(self.request_data)) + " " + str(self.form_validated_data.get(self.addictional_validation_fields["email"])))
+                self.add_validation_error(self.addictional_validation_fields["email"], True)
+        return True
+
+    def check_current_password(self):
+        """Validation method to check if a password match the user password"""
+        account_obj = Account()
+	self.add_validation_error(None, "Completare la funzione per il controllo della password")
+        self.add_validation_error(self.addictional_validation_fields["current_password"], True)
         return True
 
     def check_email_is_valid(self):

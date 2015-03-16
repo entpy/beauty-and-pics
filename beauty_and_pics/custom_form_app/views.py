@@ -3,6 +3,7 @@ from django.http import HttpResponse
 from custom_form_app.forms.register_form import *
 from custom_form_app.forms.password_recover import *
 from custom_form_app.forms.account_edit_form import *
+from custom_form_app.forms.area51_form import *
 import logging, json
 
 # Get an instance of a logger
@@ -18,6 +19,8 @@ def validate_form(request):
     if request.method == 'POST':
         # create a form instance and populate it with data from the request:
 	exec("form = " + form_class + "(request.POST)")
+        # TODO: setting request data attribute
+        form.set_current_request(request=request)
         # check if form is valid
         form.is_valid()
         json_response = form.get_validation_json_response()

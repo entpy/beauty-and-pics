@@ -12,6 +12,7 @@ from custom_form_app.forms.register_form import *
 from custom_form_app.forms.login_form import *
 from custom_form_app.forms.password_recover import *
 from custom_form_app.forms.account_edit_form import *
+from custom_form_app.forms.area51_form import *
 
 # www {{{
 def www_index(request):
@@ -155,5 +156,30 @@ def profile_stats(request):
 
 @login_required
 def profile_area51(request):
-    return render(request, 'website/profile/profile_area51.html', False)
+    # if this is a POST request we need to process the form data
+    if request.method == 'POST':
+        # create a form instance and populate it with data from the request:
+        form = Area51Form(request.POST)
+        # form.set_current_request(request=request)
+        # check whether it's valid:
+        # if form.is_valid() and form.form_actions():
+        if form.is_valid() and form.form_actions():
+
+            messages.add_message(request, messages.SUCCESS, 'Tutte le informazioni sono state salvate correttamente')
+            # redirect to user profile
+            return HttpResponseRedirect('/profilo/dati-personali/')
+
+    # if a GET (or any other method) we'll create a blank form
+    else:
+	# pre-prepopulate post dictionary with current user data
+	account_obj =  Account()
+        #request.POST = account_obj.get_autenticated_user_data(request=request)
+        form = Area51Form()
+
+    context = {
+        "post" : request.POST,
+        "form": form,
+    }
+
+    return render(request, 'website/profile/profile_area51.html', context)
 # }}}

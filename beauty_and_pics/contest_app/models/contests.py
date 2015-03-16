@@ -19,3 +19,7 @@ class Contest(models.Model):
 	* description
 	* status (0 in attesa di apertura, 1 attivo, 2 chiuso)
 """
+
+"""
+Script settimanale che apre/chiude i concorsi
+"""
