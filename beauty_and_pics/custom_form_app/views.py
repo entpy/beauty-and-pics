@@ -7,7 +7,7 @@ from custom_form_app.forms.area51_form import *
 import logging, json
 
 # Get an instance of a logger
-logger = logging.getLogger('django.request')
+logger = logging.getLogger(__name__)
 
 def validate_form(request):
     """ View to validate a form via AJAX """

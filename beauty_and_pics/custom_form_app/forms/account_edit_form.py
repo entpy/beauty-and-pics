@@ -17,7 +17,7 @@ logger = logging.getLogger(__name__)
 
 class AccountEditForm(forms.Form, FormCommonUtils):
 
-    first_name = forms.CharField(label='Nome', max_length=20, required=True, initial='Prova')
+    first_name = forms.CharField(label='Nome', max_length=20, required=True)
     last_name = forms.CharField(label='Cognome', max_length=20, required=False)
     birthday_day = forms.ChoiceField(label='Giorno', required=True)
     birthday_month = forms.ChoiceField(label='Mese', required=True)
@@ -39,7 +39,7 @@ class AccountEditForm(forms.Form, FormCommonUtils):
     }
 
     # addictional request data
-    request_data = None
+    # request_data = None
 
     def __init__(self, *args, **kwargs):
         # parent forms.Form init

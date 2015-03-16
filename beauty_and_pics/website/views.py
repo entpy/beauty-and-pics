@@ -6,13 +6,16 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import logout
 from account_app.models.accounts import *
-
 # loading forms
 from custom_form_app.forms.register_form import *
 from custom_form_app.forms.login_form import *
 from custom_form_app.forms.password_recover import *
 from custom_form_app.forms.account_edit_form import *
 from custom_form_app.forms.area51_form import *
+import logging
+
+# Get an instance of a logger
+logger = logging.getLogger(__name__)
 
 # www {{{
 def www_index(request):
@@ -26,7 +29,7 @@ def www_login(request):
     if request.method == 'POST':
         # create a form instance and populate it with data from the request:
         form = LoginForm(request.POST, request)
-        form.request_data=request
+        form.set_current_request(request=request)
 
         # check whether it's valid:
         if form.is_valid() and form.form_actions():
@@ -54,7 +57,7 @@ def www_forgot_password(request):
     if request.method == 'POST':
         # create a form instance and populate it with data from the request:
         form = passwordRecoverForm(request.POST, request)
-        form.request_data=request
+        form.set_current_request(request=request)
 
         # check whether it's valid:
         if form.is_valid() and form.form_actions():
@@ -78,7 +81,7 @@ def www_register(request):
     if request.method == 'POST':
         # create a form instance and populate it with data from the request:
         form = RegisterForm(request.POST)
-        form.request_data=request
+        form.set_current_request(request=request)
         # check whether it's valid:
         # if form.is_valid() and form.form_actions():
         if form.is_valid() and form.form_actions():
@@ -123,7 +126,7 @@ def profile_data(request):
     if request.method == 'POST':
         # create a form instance and populate it with data from the request:
         form = AccountEditForm(request.POST)
-        form.request_data=request
+        form.set_current_request(request=request)
         # check whether it's valid:
         # if form.is_valid() and form.form_actions():
         if form.is_valid() and form.form_actions():

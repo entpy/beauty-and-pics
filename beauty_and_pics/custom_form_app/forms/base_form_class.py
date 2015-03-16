@@ -16,32 +16,31 @@ logger = logging.getLogger('django.request')
 class FormCommonUtils():
 
     # list of valid validation methods
-    valid_custom_validation_list = ()
+    __valid_custom_validation_list = ()
     # list of custom validation methods, eg. ('check_all_fields_valid', 'another_method',)
     custom_validation_list = ()
     # adductional fields used in validation methods
     addictional_validation_fields = {}
     # use this field to add errors
-    _validation_errors = False
+    __validation_errors = False
     # valid data retrieved after method "check_all_fields_valid"
     form_validated_data = False
     # flag to check if validation process is completed
-    _validation_process_completed = False
+    __validation_process_completed = False
     # request_data, extended from form classes
     request_data = False
 
     def __init__(self):
         # list of valid methods
-	FormCommonUtils.valid_custom_validation_list += ('check_all_fields_valid',)
-	FormCommonUtils.valid_custom_validation_list += ('check_user_is_adult',)
-	FormCommonUtils.valid_custom_validation_list += ('check_email_already_exists',)
-	FormCommonUtils.valid_custom_validation_list += ('check_email_is_valid',)
-	FormCommonUtils.valid_custom_validation_list += ('check_current_password',)
-	# self.request_data = False
+	FormCommonUtils.__valid_custom_validation_list += ('check_all_fields_valid',)
+	FormCommonUtils.__valid_custom_validation_list += ('check_user_is_adult',)
+	FormCommonUtils.__valid_custom_validation_list += ('check_email_already_exists',)
+	FormCommonUtils.__valid_custom_validation_list += ('check_email_is_valid',)
+	FormCommonUtils.__valid_custom_validation_list += ('check_current_password',)
 
     def check_if_validation_method_is_valid(self, validation_method=False):
         """Checking if a validation method exists"""
-        return validation_method in self.valid_custom_validation_list
+        return validation_method in self.__valid_custom_validation_list
 
     def clean_form_custom(self):
         """Running all validation functions"""
@@ -63,23 +62,23 @@ class FormCommonUtils():
         return True
 
     def get_validation_errors_status(self):
-        """Function to retrieve _validation_errors flag"""
-        return self._validation_errors
+        """Function to retrieve __validation_errors flag"""
+        return self.__validation_errors
 
     def set_validation_errors_status(self, v=None):
-        """Function to set _validation_errors flag"""
+        """Function to set __validation_errors flag"""
         if v is not None:
-            self._validation_errors = v
+            self.__validation_errors = v
         return True
 
     def get_validation_process_status(self):
-        """Function to retrieve _validation_process_completed flag"""
-        return self._validation_process_completed
+        """Function to retrieve __validation_process_completed flag"""
+        return self.__validation_process_completed
 
     def set_validation_process_status(self, v=None):
-        """Function to retrieve _validation_process_completed flag"""
+        """Function to retrieve __validation_process_completed flag"""
         if v is not None:
-            self._validation_process_completed = v
+            self.__validation_process_completed = v
         return True
 
     def form_can_be_saved(self):
@@ -88,6 +87,11 @@ class FormCommonUtils():
         if (not self.get_validation_errors_status()) and self.get_validation_process_status():
             return_var = True
         return return_var
+
+    def set_current_request(self, request=None):
+        if request:
+            self.request_data = request
+        return True
 
     ##########################
     ##  validation methods  ##
@@ -123,19 +127,25 @@ class FormCommonUtils():
     def check_email_already_exists(self):
         """Validation method to check if an email already exists"""
         account_obj = Account()
-	# TODO: sostituire questo valore con quello presente nella lista degli elementi validati (vedi sotto)
-	if self.addictional_validation_fields["email"] != account_obj.get_autenticated_user_email(self.request_data):
-            if (account_obj.check_if_email_exists(email_to_check=self.form_validated_data.get(self.addictional_validation_fields["email"])) == True):
+        validated_email = self.form_validated_data.get(self.addictional_validation_fields["email"])
+        # if form email is != from current logged in user email, checking if email exists or not
+	if validated_email != account_obj.get_autenticated_user_email(self.request_data):
+            if (account_obj.check_if_email_exists(email_to_check=validated_email) == True):
 	        # raise an exception if email already exists
-	        self.add_validation_error(None, "La mail inserita è già presente: " + str(account_obj.get_autenticated_user_email(self.request_data)) + " " + str(self.form_validated_data.get(self.addictional_validation_fields["email"])))
+	        self.add_validation_error(None, "La mail \"" + str(validated_email) + "\" è già presente.")
                 self.add_validation_error(self.addictional_validation_fields["email"], True)
         return True
 
+    # TODO
     def check_current_password(self):
         """Validation method to check if a password match the user password"""
         account_obj = Account()
-	self.add_validation_error(None, "Completare la funzione per il controllo della password")
-        self.add_validation_error(self.addictional_validation_fields["current_password"], True)
+        validated_current_password = self.form_validated_data.get(self.addictional_validation_fields["current_password"])
+        try:
+            account_obj.check_user_password(request=self.request_data, password_to_check=validated_current_password)
+        except UserPasswordMatchError:
+            self.add_validation_error(None, "Per poter salvare le informazioni è necessario inserire la tua password attuale")
+            self.add_validation_error(self.addictional_validation_fields["current_password"], True)
         return True
 
     def check_email_is_valid(self):

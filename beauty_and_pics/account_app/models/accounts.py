@@ -8,7 +8,7 @@ from website.exceptions import *
 import sys, logging, base64, hashlib, string, random
 
 # force utf8 read data
-reload(sys);
+reload(sys)
 sys.setdefaultencoding("utf8")
 
 # Get an instance of a logger
@@ -188,6 +188,17 @@ class Account(models.Model):
 	        u.set_password(new_password)
 	        u.save()
 	        return_var = True
+
+        return return_var
+
+    def check_user_password(self, request=None, password_to_check=None):
+        """Function to check if a password match the current logged in user password"""
+        return_var = False
+        if request and password_to_check:
+            # to see how it works see the docs
+            if not request.user.check_password(password_to_check):
+                raise UserPasswordMatchError
+            return_var = True
 
         return return_var
 

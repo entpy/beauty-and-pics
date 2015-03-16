@@ -44,11 +44,6 @@ class Area51Form(forms.Form, FormCommonUtils):
 	# current form instance
         self.validation_form = super(Area51Form, self)
 
-    def set_current_request(self, request=None):
-        if request:
-            self.request_data = request
-        return True
-
     def clean(self):
 	super(Area51Form, self).clean_form_custom()
         return True
@@ -63,7 +58,7 @@ class Area51Form(forms.Form, FormCommonUtils):
         return return_var
 
     def form_actions(self):
-        """Function to create new user and logging into website"""
+        """Function to update user email and password"""
         return_var = False
 
         if self.save_form():

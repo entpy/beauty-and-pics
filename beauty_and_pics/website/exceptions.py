@@ -19,3 +19,8 @@ class UserLoginError(Exception):
     """Error in user login, email and/or password invalid."""
     get_error_code = "004"
     pass
+
+class UserPasswordMatchError(Exception):
+    """Error in check password, give password doesn't match the user password."""
+    get_error_code = "005"
+    pass
