@@ -163,20 +163,20 @@ def profile_area51(request):
     if request.method == 'POST':
         # create a form instance and populate it with data from the request:
         form = Area51Form(request.POST)
-        # form.set_current_request(request=request)
+        form.set_current_request(request=request)
         # check whether it's valid:
         # if form.is_valid() and form.form_actions():
         if form.is_valid() and form.form_actions():
 
             messages.add_message(request, messages.SUCCESS, 'Tutte le informazioni sono state salvate correttamente')
             # redirect to user profile
-            return HttpResponseRedirect('/profilo/dati-personali/')
+            return HttpResponseRedirect('/profilo/zona-proibita/')
 
     # if a GET (or any other method) we'll create a blank form
     else:
 	# pre-prepopulate post dictionary with current user data
 	account_obj =  Account()
-        #request.POST = account_obj.get_autenticated_user_data(request=request)
+        request.POST = account_obj.get_autenticated_user_data(request=request)
         form = Area51Form()
 
     context = {

@@ -45,30 +45,24 @@ class passwordRecoverForm(forms.Form, FormCommonUtils):
     def form_actions(self):
         return_var = False
         if (super(passwordRecoverForm, self).form_can_be_saved()):
-
-            account_obj = Account()
-            # retrieving user by email
-            email = self.form_validated_data["email"]
-
-            # generate user password
-	    new_password = account_obj.generate_new_password()
-
-	    # update user with new password
             try:
-	        account_obj.update_user_password(email=email, new_password=new_password)
+                account_obj = Account()
+                # generate user password
+                new_password = account_obj.generate_new_password()
+	        account_obj.update_email_password(current_email=self.form_validated_data["email"], password=new_password)
             except User.DoesNotExist:
                 logger.error("Errore nel recupero password: utente non esistente" + str(self.form_validated_data))
                 self._errors = {"__all__": ["Sembrerebbe che l'email inserita non esista"]}
+            except UserEmailPasswordUpdateError:
+                logger.error("Errore nel recupero password: " + str(self.form_validated_data) + " | error code: " + str(UserEmailPasswordUpdateError.get_error_code))
+                self._errors = {"__all__": ["Errore nel recupero password. Sii gentile, segnala il problema (Codice " + str(UserEmailPasswordUpdateError.get_error_code) + ")"]}
             else:
-                # send new password via email
-
                 logger.info("nuova password generata (" + str(new_password) + ") per: " + str(self.form_validated_data))
-
-                # sending email with new password
+                # send new password via email
                 custom_email_template_obj = CustomEmailTemplate()
                 custom_email_template_obj.template_name = "recover_password"
                 custom_email_template_obj.email_subject = "Beauty & Pics: recupero password!"
-                custom_email_template_obj.email_context = {"email": email, "password": new_password}
+                custom_email_template_obj.email_context = {"email": self.form_validated_data["email"], "password": new_password}
                 custom_email_template_obj.send_mail()
 
                 return_var = True

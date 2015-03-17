@@ -4,6 +4,7 @@ from django import forms
 from datetime import date
 from dateutil.relativedelta import *
 from account_app.models import *
+from website.exceptions import *
 import calendar, logging, json, sys, re
 
 # force utf8 read data
@@ -47,9 +48,9 @@ class FormCommonUtils():
         if self.custom_validation_list:
             for validation in self.custom_validation_list:
 		if self.check_if_validation_method_is_valid(validation_method = validation):
-			exec("self." + validation + "()")
+                    exec("self." + validation + "()")
 		else:
-			logger.debug("method " + str(validation) + " is not a valid method")
+                    logger.error("method " + str(validation) + " is not a valid method")
 
         self.set_validation_process_status(True)
         return True
@@ -136,7 +137,6 @@ class FormCommonUtils():
                 self.add_validation_error(self.addictional_validation_fields["email"], True)
         return True
 
-    # TODO
     def check_current_password(self):
         """Validation method to check if a password match the user password"""
         account_obj = Account()
@@ -144,7 +144,7 @@ class FormCommonUtils():
         try:
             account_obj.check_user_password(request=self.request_data, password_to_check=validated_current_password)
         except UserPasswordMatchError:
-            self.add_validation_error(None, "Per poter salvare le informazioni è necessario inserire la tua password attuale")
+            self.add_validation_error(None, "Per poter salvare le informazioni è necessario inserire la tua password attuale (corretta!)")
             self.add_validation_error(self.addictional_validation_fields["current_password"], True)
         return True
 

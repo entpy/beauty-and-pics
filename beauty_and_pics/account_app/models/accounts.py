@@ -47,6 +47,17 @@ class Account(models.Model):
 
 	return return_var
 
+    def get_user_about_email(self, email=None):
+        """Function to retrieve user about an email"""
+	return_var = None
+	try:
+	    return_var = User.objects.get(email=email)
+	except User.DoesNotExist:
+	    return_var = False
+            raise
+
+	return return_var
+
     def register_account(self, user_info=None):
         """Function to register a new account"""
 
@@ -68,7 +79,7 @@ class Account(models.Model):
 	account_obj = Account()
         if email and password:
             if not self.check_if_email_exists(email_to_check=email):
-                account_obj.user = User.objects.create_user(username=self._email_to_username(email), email=email, password=password)
+                account_obj.user = User.objects.create_user(username=self.__email_to_username(email), email=email, password=password)
                 account_obj.save()
                 return_var = account_obj.user
 
@@ -78,7 +89,7 @@ class Account(models.Model):
 
         return return_var
 
-    def _email_to_username(self, email):
+    def __email_to_username(self, email):
         """
         Function to convert email to username
         taken from -> https://github.com/dabapps/django-email-as-username/blob/master/emailusernames/utils.py
@@ -88,6 +99,34 @@ class Account(models.Model):
         # Deal with internationalized email addresses
         converted = email.encode('utf8', 'ignore')
         return base64.urlsafe_b64encode(hashlib.sha256(converted).digest())[:30]
+
+    def update_email_password(self, current_email=None, new_email=None, password=None):
+        """Function to update email and password about a user"""
+        return_var = False
+        if current_email:
+            try:
+                user_obj = User.objects.get(email=current_email)
+            except User.DoesNotExist:
+                # sending exception to parent try-except block
+                raise
+            else:
+                # save new password
+                if password:
+                    user_obj.set_password(password)
+                # save new email
+                if new_email:
+                    user_obj.email = new_email
+                    # create new username starting from email
+                    user_obj.username = self.__email_to_username(email=new_email)
+                # save account instance
+                if password or new_email:
+                    user_obj.save()
+                return_var = True
+
+        if not return_var:
+            raise UserEmailPasswordUpdateError
+
+        return return_var
 
     def update_data(self, save_data=None, user_obj=None):
         """Function to save data inside db"""
@@ -175,22 +214,6 @@ class Account(models.Model):
         """Function to generate a new password"""
         return ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(5))
 
-    def update_user_password(self, email=None, new_password=None):
-        """Function to replace user password with new generated password (used in recovery password)"""
-        return_var = False
-        if email and new_password:
-	    try:
-	        u = User.objects.get(email=email)
-	    except User.DoesNotExist:
-	        logger.error("recupero password per un utente non esistente: email=" + str(email))
-                raise User.DoesNotExist
-            else:
-	        u.set_password(new_password)
-	        u.save()
-	        return_var = True
-
-        return return_var
-
     def check_user_password(self, request=None, password_to_check=None):
         """Function to check if a password match the current logged in user password"""
         return_var = False
@@ -236,6 +259,6 @@ class Account(models.Model):
 	    return_var["height"] = request.user.account.height or ''
             # from account model }}}
 
-	    logger.info("data about current logged in user: " + str(return_var))
+	    # logger.info("data about current logged in user: " + str(return_var))
 
         return return_var

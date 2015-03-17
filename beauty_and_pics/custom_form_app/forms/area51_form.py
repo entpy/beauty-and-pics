@@ -3,6 +3,7 @@
 from django import forms
 from datetime import date
 from dateutil.relativedelta import *
+from django.contrib.auth.models import User
 from custom_form_app.forms.base_form_class import *
 from account_app.models import *
 from website.exceptions import *
@@ -25,6 +26,7 @@ class Area51Form(forms.Form, FormCommonUtils):
     custom_validation_list = (
         'check_all_fields_valid',
         'check_current_password',
+	'check_email_is_valid',
 	'check_email_already_exists',
     )
 
@@ -51,8 +53,38 @@ class Area51Form(forms.Form, FormCommonUtils):
     def save_form(self):
         return_var = False
         if super(Area51Form, self).form_can_be_saved():
+            # update user email and password
             account_obj = Account()
-            account_obj.update_data(save_data=self.form_validated_data, user_obj=self.request_data.user)
+            try:
+                account_obj.update_email_password(
+                    current_email=self.request_data.user.email,
+                    new_email=self.form_validated_data.get("email"),
+                    password=self.form_validated_data.get("password")
+                )
+            except User.DoesNotExist:
+                logger.error("Errore nell'aggiornamento email e password (utente non esistente): " + str(self.form_validated_data))
+                self._errors = {"__all__": ["Errore nell'aggiornamento email e/o password. Sii gentile, segnala il problema"]}
+            except UserEmailPasswordUpdateError:
+                logger.error("Errore nell'aggiornamento email e password: " + str(self.form_validated_data) + " | error code: " + str(UserEmailPasswordUpdateError.get_error_code))
+                self._errors = {"__all__": ["Errore nel salvataggio del tuo account. Sii gentile, segnala il problema (Codice " + str(UserEmailPasswordUpdateError.get_error_code) + ")"]}
+            else:                
+                return_var = True
+
+        return return_var
+
+    def update_login_session(self):
+        """Function to update created login session with new email and password"""
+        return_var = False
+        account_obj = Account()
+        try:
+            account_obj.create_login_session(
+                email=self.form_validated_data.get("email"),
+                password=self.form_validated_data.get("password"),
+                request=self.request_data
+            )
+        except UserNotActiveError, UserLoginError:
+            logger.error("Errore nell'aggiornamento email e password, non sono riuscito a ricreare la sessione di login: " + str(self.form_validated_data))
+        else:
             return_var = True
 
         return return_var
@@ -61,7 +93,10 @@ class Area51Form(forms.Form, FormCommonUtils):
         """Function to update user email and password"""
         return_var = False
 
+        # update user emal and password
         if self.save_form():
-            return_var = True
+            # create new login session
+            if self.update_login_session():
+                return_var = True
 
         return return_var

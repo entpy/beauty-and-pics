@@ -24,3 +24,8 @@ class UserPasswordMatchError(Exception):
     """Error in check password, give password doesn't match the user password."""
     get_error_code = "005"
     pass
+
+class UserEmailPasswordUpdateError(Exception):
+    """Error in update user email and password."""
+    get_error_code = "006"
+    pass
