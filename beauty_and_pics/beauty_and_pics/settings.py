@@ -40,7 +40,8 @@ INSTALLED_APPS = (
     'contest_app',
     'website',
     'custom_form_app',
-    'ajaximage',
+    #'ajaximage',    # per ora no
+    'email_template',
 )
 
 MIDDLEWARE_CLASSES = (

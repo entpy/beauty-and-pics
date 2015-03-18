@@ -6,7 +6,7 @@ from dateutil.relativedelta import *
 from custom_form_app.forms.base_form_class import *
 from account_app.models import *
 from website.exceptions import *
-from website.email.email_template import *
+from email_template.email.email_template import *
 from django.contrib.auth.models import User
 import calendar, logging, sys
 
@@ -59,10 +59,8 @@ class passwordRecoverForm(forms.Form, FormCommonUtils):
             else:
                 logger.info("nuova password generata (" + str(new_password) + ") per: " + str(self.form_validated_data))
                 # send new password via email
-                custom_email_template_obj = CustomEmailTemplate()
-                custom_email_template_obj.template_name = "recover_password"
-                custom_email_template_obj.email_subject = "Beauty & Pics: recupero password!"
-                custom_email_template_obj.email_context = {"email": self.form_validated_data["email"], "password": new_password}
+                email_context = {"email": self.form_validated_data["email"], "password": new_password}
+                custom_email_template_obj = CustomEmailTemplate(email_name="recover_password_email", email_context=email_context)
                 custom_email_template_obj.send_mail()
 
                 return_var = True

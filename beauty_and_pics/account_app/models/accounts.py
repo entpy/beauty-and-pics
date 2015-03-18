@@ -100,6 +100,7 @@ class Account(models.Model):
         converted = email.encode('utf8', 'ignore')
         return base64.urlsafe_b64encode(hashlib.sha256(converted).digest())[:30]
 
+    # TODO: try to manually raise error in this function
     def update_email_password(self, current_email=None, new_email=None, password=None):
         """Function to update email and password about a user"""
         return_var = False
@@ -107,7 +108,7 @@ class Account(models.Model):
             try:
                 user_obj = User.objects.get(email=current_email)
             except User.DoesNotExist:
-                # sending exception to parent try-except block
+                # send exception to parent try-except block
                 raise
             else:
                 # save new password

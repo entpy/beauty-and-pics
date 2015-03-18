@@ -67,7 +67,7 @@ class Area51Form(forms.Form, FormCommonUtils):
             except UserEmailPasswordUpdateError:
                 logger.error("Errore nell'aggiornamento email e password: " + str(self.form_validated_data) + " | error code: " + str(UserEmailPasswordUpdateError.get_error_code))
                 self._errors = {"__all__": ["Errore nel salvataggio del tuo account. Sii gentile, segnala il problema (Codice " + str(UserEmailPasswordUpdateError.get_error_code) + ")"]}
-            else:                
+            else:
                 return_var = True
 
         return return_var
