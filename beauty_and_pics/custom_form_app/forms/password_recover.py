@@ -21,13 +21,12 @@ class passwordRecoverForm(forms.Form, FormCommonUtils):
 
     email = forms.CharField(label='Email', max_length=75, required=True)
 
-    # addictional request data
-    request_data = None
-
     # list of validator for this form
     custom_validation_list = (
         'check_all_fields_valid',
     )
+
+    # list of addictional validator fied
     addictional_validation_fields = {}
 
     def __init__(self, *args, **kwargs):
@@ -40,29 +39,50 @@ class passwordRecoverForm(forms.Form, FormCommonUtils):
 
     def clean(self):
 	super(passwordRecoverForm, self).clean_form_custom()
+
+        return True
+
+    def generate_new_password(self):
+        """Function to genereate a new password"""
+        return_var = False
+        try:
+            # generate a new password
+            account_obj = Account()
+            new_password = account_obj.generate_new_password()
+            account_obj.update_email_password(current_email=self.form_validated_data["email"], password=new_password)
+        except User.DoesNotExist:
+            logger.error("Errore nel recupero password: utente non esistente" + str(self.form_validated_data))
+            self._errors = {"__all__": ["Sembrerebbe che l'email inserita non esista"]}
+        except UserEmailPasswordUpdateError:
+            logger.error("Errore nel recupero password: " + str(self.form_validated_data) + " | error code: " + str(UserEmailPasswordUpdateError.get_error_code))
+            self._errors = {"__all__": ["Errore nel recupero password. Sii gentile, segnala il problema (Codice " + str(UserEmailPasswordUpdateError.get_error_code) + ")"]}
+        else:
+            logger.info("nuova password generata (" + str(new_password) + ") per: " + str(self.form_validated_data))
+            return_var = new_password
+
+        return return_var
+
+    def send_password_email(self, new_password=None):
+        """Function to send generated password via email"""
+        # send new password via email
+        email_context = {"email": self.form_validated_data["email"], "password": new_password}
+        CustomEmailTemplate(
+                                email_name="recover_password_email",
+                                email_context=email_context,
+                                template_type="user",
+                                recipient_list=[self.form_validated_data["email"],]
+                            )
+
         return True
 
     def form_actions(self):
         return_var = False
-        if (super(passwordRecoverForm, self).form_can_be_saved()):
-            try:
-                account_obj = Account()
-                # generate user password
-                new_password = account_obj.generate_new_password()
-	        account_obj.update_email_password(current_email=self.form_validated_data["email"], password=new_password)
-            except User.DoesNotExist:
-                logger.error("Errore nel recupero password: utente non esistente" + str(self.form_validated_data))
-                self._errors = {"__all__": ["Sembrerebbe che l'email inserita non esista"]}
-            except UserEmailPasswordUpdateError:
-                logger.error("Errore nel recupero password: " + str(self.form_validated_data) + " | error code: " + str(UserEmailPasswordUpdateError.get_error_code))
-                self._errors = {"__all__": ["Errore nel recupero password. Sii gentile, segnala il problema (Codice " + str(UserEmailPasswordUpdateError.get_error_code) + ")"]}
-            else:
-                logger.info("nuova password generata (" + str(new_password) + ") per: " + str(self.form_validated_data))
-                # send new password via email
-                email_context = {"email": self.form_validated_data["email"], "password": new_password}
-                custom_email_template_obj = CustomEmailTemplate(email_name="recover_password_email", email_context=email_context)
-                custom_email_template_obj.send_mail()
-
+        if (super(passwordRecoverForm, self).form_can_perform_actions()):
+            # generate a new password
+            new_password = self.generate_new_password()
+            if new_password:
+                # send generated password via mail
+                self.send_password_email(new_password=new_password)
                 return_var = True
 
         return return_var

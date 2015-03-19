@@ -12,6 +12,7 @@ from custom_form_app.forms.login_form import *
 from custom_form_app.forms.password_recover import *
 from custom_form_app.forms.account_edit_form import *
 from custom_form_app.forms.area51_form import *
+from custom_form_app.forms.help_request_form import *
 import logging
 
 # Get an instance of a logger
@@ -28,7 +29,7 @@ def www_login(request):
     # if this is a POST request we need to process the form data
     if request.method == 'POST':
         # create a form instance and populate it with data from the request:
-        form = LoginForm(request.POST, request)
+        form = LoginForm(request.POST)
         form.set_current_request(request=request)
 
         # check whether it's valid:
@@ -56,7 +57,7 @@ def www_forgot_password(request):
     # if this is a POST request we need to process the form data
     if request.method == 'POST':
         # create a form instance and populate it with data from the request:
-        form = passwordRecoverForm(request.POST, request)
+        form = passwordRecoverForm(request.POST)
         form.set_current_request(request=request)
 
         # check whether it's valid:
@@ -82,8 +83,8 @@ def www_register(request):
         # create a form instance and populate it with data from the request:
         form = RegisterForm(request.POST)
         form.set_current_request(request=request)
+
         # check whether it's valid:
-        # if form.is_valid() and form.form_actions():
         if form.is_valid() and form.form_actions():
 
             # redirect to user profile
@@ -109,7 +110,31 @@ def catwalk_profile(request):
     return render(request, 'website/catwalk/catwalk_profile.html', False)
 
 def catwalk_help(request):
-    return render(request, 'website/catwalk/catwalk_help.html', False)
+    # if this is a POST request we need to process the form data
+    if request.method == 'POST':
+        # create a form instance and populate it with data from the request:
+        form = HelpRequestForm(request.POST)
+        form.set_current_request(request=request)
+
+        # check whether it's valid:
+        if form.is_valid() and form.form_actions():
+
+            messages.add_message(request, messages.SUCCESS, 'La richiesta di aiuto è stata inviata, ti risponderemo appena poss...tut-tut-tut-tut')
+            # redirect to user profile
+            return HttpResponseRedirect('/profilo/richiesta-aiuto/')
+
+    # if a GET (or any other method) we'll create a blank form
+    else:
+	# pre-prepopulate post dictionary with current user data
+	account_obj =  Account()
+        request.POST = account_obj.get_autenticated_user_data(request=request)
+        form = HelpRequestForm()
+
+    context = {
+        "post" : request.POST,
+        "form": form,
+    }
+    return render(request, 'website/catwalk/catwalk_help.html', context)
 
 def catwalk_report_user(request):
     return render(request, 'website/catwalk/catwalk_report_user.html', False)
@@ -127,8 +152,8 @@ def profile_data(request):
         # create a form instance and populate it with data from the request:
         form = AccountEditForm(request.POST)
         form.set_current_request(request=request)
+
         # check whether it's valid:
-        # if form.is_valid() and form.form_actions():
         if form.is_valid() and form.form_actions():
 
             messages.add_message(request, messages.SUCCESS, 'Tutte le informazioni sono state salvate correttamente')
@@ -164,8 +189,8 @@ def profile_area51(request):
         # create a form instance and populate it with data from the request:
         form = Area51Form(request.POST)
         form.set_current_request(request=request)
+
         # check whether it's valid:
-        # if form.is_valid() and form.form_actions():
         if form.is_valid() and form.form_actions():
 
             messages.add_message(request, messages.SUCCESS, 'Tutte le informazioni sono state salvate correttamente')

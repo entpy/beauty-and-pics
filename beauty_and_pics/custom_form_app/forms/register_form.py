@@ -4,6 +4,7 @@ from django import forms
 from datetime import date
 from dateutil.relativedelta import *
 from custom_form_app.forms.base_form_class import *
+from email_template.email.email_template import *
 from account_app.models import *
 from website.exceptions import *
 import calendar, logging, sys
@@ -33,6 +34,8 @@ class RegisterForm(forms.Form, FormCommonUtils):
 	'check_email_already_exists',
 	'check_email_is_valid',
     )
+
+    # list of addictional validator fied
     addictional_validation_fields = {
         "year":"birthday_year",
         "month":"birthday_month",
@@ -63,54 +66,76 @@ class RegisterForm(forms.Form, FormCommonUtils):
 
     def save_form(self):
         return_var = False
-        if super(RegisterForm, self).form_can_be_saved():
-            account_obj = Account()
+        account_obj = Account()
+        # setting addictional fields
+        # building birthday date
+        birthday_date = account_obj.create_date(date_dictionary={"day" : self.form_validated_data.get("birthday_day"), "month" : self.form_validated_data.get("birthday_month"), "year" : self.form_validated_data.get("birthday_year")}, get_isoformat=True)
+        if (birthday_date):
+            self.form_validated_data["birthday_date"] = birthday_date
+        self.form_validated_data["status"] = 1
 
-	    # setting addictional fields
-	    # building birthday date
-            birthday_date = account_obj.create_date(date_dictionary={"day" : self.form_validated_data.get("birthday_day"), "month" : self.form_validated_data.get("birthday_month"), "year" : self.form_validated_data.get("birthday_year")}, get_isoformat=True)
-	    if (birthday_date):
-                self.form_validated_data["birthday_date"] = birthday_date
-            self.form_validated_data["status"] = 1
+        # saving new account
+        try:
+            account_obj.register_account(user_info=self.form_validated_data)
+            return_var = True
+        except UserCreateError:
+            # bad
+            logger.error("Errore nel salvataggio del nuovo User e/o Account: " + str(self.form_validated_data) + " | error code: " + str(UserCreateError.get_error_code))
+            self._errors = {"__all__": ["Errore nel salvataggio del tuo account. Sii gentile, segnala il problema (Codice " + str(UserCreateError.get_error_code) + ")"]}
+        except UserUpdateDataError:
+            # bad
+            logger.error("Errore nell'aggiornamento dei dati dell'account dopo la creazione: " + str(self.form_validated_data) + " | error code: " + str(UserUpdateDataError.get_error_code))
+            self._errors = {"__all__": ["Errore nel salvataggio del tuo account. Sii gentile, segnala il problema (Codice " + str(UserUpdateDataError.get_error_code) + ")"]}
+        else:
+            logger.info("Utente salvato con successo, preparo il login")
+            pass
 
-            # saving new account
-            try:
-                account_obj.register_account(user_info=self.form_validated_data)
-                return_var = True
-            except UserCreateError:
-                # bad
-                logger.error("Errore nel salvataggio del nuovo User e/o Account: " + str(self.form_validated_data) + " | error code: " + str(UserCreateError.get_error_code))
-                self._errors = {"__all__": ["Errore nel salvataggio del tuo account. Sii gentile, segnala il problema (Codice " + str(UserCreateError.get_error_code) + ")"]}
-            except UserUpdateDataError:
-                # bad
-                logger.error("Errore nell'aggiornamento dei dati dell'account dopo la creazione: " + str(self.form_validated_data) + " | error code: " + str(UserUpdateDataError.get_error_code))
-                self._errors = {"__all__": ["Errore nel salvataggio del tuo account. Sii gentile, segnala il problema (Codice " + str(UserUpdateDataError.get_error_code) + ")"]}
-            else:
-                logger.info("Utente salvato con successo, preparo il login")
-                pass
+        return return_var
+
+    def send_welcome_email(self):
+            """Function to send a welcome email"""
+            email_context = {"first_name": self.form_validated_data["first_name"]}
+            CustomEmailTemplate(
+                                    email_name="signup_email",
+                                    email_context=email_context,
+                                    template_type="user",
+                                    recipient_list=[self.form_validated_data["email"],]
+                                )
+
+    def log_user(self):
+        """Function to create login session"""
+        return_var = False
+
+        # retrieving validated email and password, then try to log user in
+        email = self.form_validated_data["email"]
+        password = self.form_validated_data["password"]
+
+        try:
+            login_status = account_obj.create_login_session(email=email, password=password, request=self.request_data)
+        except UserNotActiveError:
+            # bad
+            logger.error("Errore nel login: utente non attivo " + str(self.form_validated_data) + " | error code: " + str(UserNotActiveError.get_error_code))
+            self._errors = {"__all__": ["Errore nel salvataggio del tuo account. Sii gentile, segnala il problema (Codice " + str(UserNotActiveError.get_error_code) + ")"]}
+        except UserLoginError:
+            # bad
+            logger.error("Errore nel login: email o password non validi " + str(self.form_validated_data) + " | error code: " + str(UserLoginError.get_error_code))
+            self._errors = {"__all__": ["Errore nel salvataggio del tuo account. Sii gentile, segnala il problema (Codice " + str(UserLoginError.get_error_code) + ")"]}
+        else:
+            # new user successfully logged in
+            return_var = True
 
         return return_var
 
     def form_actions(self):
         """Function to create new user and logging into website"""
         return_var = False
-        account_obj = Account()
-
-        if self.save_form():
-            # retrieving validated email and password, then try to log user in
-            email = self.form_validated_data["email"]
-            password = self.form_validated_data["password"]
-
-            try:
-                login_status = account_obj.create_login_session(email=email, password=password, request=self.request_data)
-                return_var = True
-            except UserNotActiveError:
-                # bad
-                logger.error("Errore nel login: utente non attivo " + str(self.form_validated_data) + " | error code: " + str(UserNotActiveError.get_error_code))
-                self._errors = {"__all__": ["Errore nel salvataggio del tuo account. Sii gentile, segnala il problema (Codice " + str(UserNotActiveError.get_error_code) + ")"]}
-            except UserLoginError:
-                # bad
-                logger.error("Errore nel login: email o password non validi " + str(self.form_validated_data) + " | error code: " + str(UserLoginError.get_error_code))
-                self._errors = {"__all__": ["Errore nel salvataggio del tuo account. Sii gentile, segnala il problema (Codice " + str(UserLoginError.get_error_code) + ")"]}
+        if super(RegisterForm, self).form_can_perform_actions():
+            # try to save form data
+            if self.save_form():
+                # try to log user in
+                if self.log_user():
+                    # send welcome email
+                    self.send_welcome_email()
+                    return_var = True
 
         return return_var

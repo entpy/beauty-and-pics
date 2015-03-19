@@ -82,10 +82,10 @@ class FormCommonUtils():
             self.__validation_process_completed = v
         return True
 
-    def form_can_be_saved(self):
-        """Function to check if a form can be saved"""
+    def form_can_perform_actions(self):
+        """Function to check if a form can perform actions"""
         return_var = False
-        if (not self.get_validation_errors_status()) and self.get_validation_process_status():
+        if (not self.get_validation_errors_status()) and self.get_validation_process_status() and self.request_data:
             return_var = True
         return return_var
 

@@ -32,14 +32,13 @@ class AccountEditForm(forms.Form, FormCommonUtils):
         'check_all_fields_valid',
         'check_user_is_adult',
     )
+
+    # list of addictional validator fied
     addictional_validation_fields = {
         "year":"birthday_year",
         "month":"birthday_month",
         "day":"birthday_day",
     }
-
-    # addictional request data
-    # request_data = None
 
     def __init__(self, *args, **kwargs):
         # parent forms.Form init
@@ -63,7 +62,7 @@ class AccountEditForm(forms.Form, FormCommonUtils):
 
     def save_form(self):
         return_var = False
-        if super(AccountEditForm, self).form_can_be_saved():
+        if super(AccountEditForm, self).form_can_perform_actions():
             account_obj = Account()
             account_obj.update_data(save_data=self.form_validated_data, user_obj=self.request_data.user)
             return_var = True
@@ -73,7 +72,6 @@ class AccountEditForm(forms.Form, FormCommonUtils):
     def form_actions(self):
         """Function to create new user and logging into website"""
         return_var = False
-
         if self.save_form():
             return_var = True
 

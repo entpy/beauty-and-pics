@@ -30,13 +30,11 @@ class Area51Form(forms.Form, FormCommonUtils):
 	'check_email_already_exists',
     )
 
+    # list of addictional validator fied
     addictional_validation_fields = {
         "current_password":"current_password",
         "email":"email",
     }
-
-    # addictional request data
-    # request_data = None
 
     def __init__(self, *args, **kwargs):
         # parent forms.Form init
@@ -52,7 +50,7 @@ class Area51Form(forms.Form, FormCommonUtils):
 
     def save_form(self):
         return_var = False
-        if super(Area51Form, self).form_can_be_saved():
+        if super(Area51Form, self).form_can_perform_actions():
             # update user email and password
             account_obj = Account()
             try:
@@ -92,7 +90,6 @@ class Area51Form(forms.Form, FormCommonUtils):
     def form_actions(self):
         """Function to update user email and password"""
         return_var = False
-
         # update user emal and password
         if self.save_form():
             # create new login session

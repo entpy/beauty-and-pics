@@ -20,12 +20,12 @@ class LoginForm(forms.Form, FormCommonUtils):
     email = forms.CharField(label='Email', max_length=75, required=True)
     password = forms.CharField(label='Password', max_length=100, required=True)
 
-    # addictional request data
-    request_data = None
     # list of validator for this form
     custom_validation_list = (
         'check_all_fields_valid',
     )
+
+    # list of addictional validator fied
     addictional_validation_fields = {}
 
     def __init__(self, *args, **kwargs):
@@ -40,26 +40,34 @@ class LoginForm(forms.Form, FormCommonUtils):
 	super(LoginForm, self).clean_form_custom()
         return True
 
-    def form_actions(self):
+    def log_user_in(self):
+        """Function to create a login session"""
         return_var = False
-        if (super(LoginForm, self).form_can_be_saved() and self.request_data):
-
-            account_obj = Account()
+        try:
             # retrieving validated email and password, then try to log user in
+            account_obj = Account()
             email = self.form_validated_data["email"]
             password = self.form_validated_data["password"]
-
-            try:
-                login_status = account_obj.create_login_session(email=email, password=password, request=self.request_data)
-                return_var = True
-            except UserNotActiveError:
-                # bad
-                logger.error("Errore nel login: utente non attivo " + str(self.form_validated_data) + " | error code: " + str(UserNotActiveError.get_error_code))
-                self._errors = {"__all__": ["Caspita, il tuo account è stato bloccato...AHAH"]}
-            except UserLoginError:
-                # bad
-                logger.error("Errore nel login: email o password non validi " + str(self.form_validated_data) + " | error code: " + str(UserLoginError.get_error_code))
-                self._errors = {"__all__": ["Email o password non validi, prova ancora"]}
+            login_status = account_obj.create_login_session(email=email, password=password, request=self.request_data)
+        except UserNotActiveError:
+            # bad
+            logger.error("Errore nel login: utente non attivo " + str(self.form_validated_data) + " | error code: " + str(UserNotActiveError.get_error_code))
+            self._errors = {"__all__": ["Caspita, il tuo account è stato bloccato...AHAH"]}
+        except UserLoginError:
+            # bad
+            logger.error("Errore nel login: email o password non validi " + str(self.form_validated_data) + " | error code: " + str(UserLoginError.get_error_code))
+            self._errors = {"__all__": ["Email o password non validi, prova ancora"]}
+        else:
+            return_var = True
             logger.info("Login avvenuto con successo: " + str(self.form_validated_data))
+
+        return return_var
+
+    def form_actions(self):
+        return_var = False
+        if (super(LoginForm, self).form_can_perform_actions()):
+            # try to log user in
+            if self.log_user_in():
+                return_var = True
 
         return return_var
