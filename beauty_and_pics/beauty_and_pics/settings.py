@@ -70,12 +70,14 @@ WSGI_APPLICATION = 'beauty_and_pics.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/1.7/ref/settings/#databases
 
+"""
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
     }
 }
+"""
 
 # Internationalization
 # https://docs.djangoproject.com/en/1.7/topics/i18n/
@@ -157,7 +159,7 @@ LOGGING = {
     'loggers': {
         # This is the "catch all" logger
         '': {
-            'handlers': ['console_debug', 'file_info', 'mail_warning', 'file_error'],
+            'handlers': ['file_info', 'console_debug', 'mail_warning', 'file_error'],
             'level': 'DEBUG',
             'propagate': False,
         },

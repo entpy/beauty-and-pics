@@ -6,6 +6,7 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import logout
 from account_app.models.accounts import *
+from contest_app.models.contests import *
 # loading forms
 from custom_form_app.forms.register_form import *
 from custom_form_app.forms.login_form import *
@@ -20,6 +21,9 @@ logger = logging.getLogger(__name__)
 
 # www {{{
 def www_index(request):
+    # TODO: debug only, plz remove
+    Contest_obj = Contest()
+    Contest_obj.get_contests_expiring()
     return render(request, 'website/www/www_index.html', False)
 
 def www_how_it_works(request):

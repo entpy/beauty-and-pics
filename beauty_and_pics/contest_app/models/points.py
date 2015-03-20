@@ -12,6 +12,9 @@ class Point(models.Model):
     class Meta:
         app_label = 'contest_app'
 
+    def __unicode__(self):
+        return str(self.id_contest.id_contest_type.code) + " " + str(self.id_account.user.email)
+
 """
 	* id_point (PK)
 	* id_contest (FK)

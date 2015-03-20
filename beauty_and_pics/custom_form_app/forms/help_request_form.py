@@ -20,7 +20,7 @@ logger = logging.getLogger(__name__)
 class HelpRequestForm(forms.Form, FormCommonUtils):
 
     email = forms.CharField(label='La tua email', max_length=75, required=True)
-    help_text = forms.TextField(label='Dettagli', max_length=1000, required=True)
+    help_text = forms.CharField(label='Dettagli', max_length=1000, required=True, widget=forms.Textarea)
 
     # list of validator for this form
     custom_validation_list = (
