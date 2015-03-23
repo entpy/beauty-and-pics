@@ -1,9 +1,11 @@
 # -*- coding: utf-8 -*-
 
 from django.db import models
+from django.db.models import Q
 from datetime import timedelta
 from django.utils import timezone
 from contest_app.models.contest_types import Contest_Type
+from beauty_and_pics.consts import project_constants
 import logging
 
 # Get an instance of a logger
@@ -14,7 +16,7 @@ class Contest(models.Model):
     id_contest_type = models.ForeignKey('Contest_Type')
     start_date = models.DateTimeField(null=True)
     end_date = models.DateTimeField(null=True)
-    status = models.IntegerField(default=0)
+    status = models.CharField(max_length=25)
 
     class Meta:
         app_label = 'contest_app'
@@ -35,23 +37,23 @@ class Contest(models.Model):
         Funzione per creare i concorsi()
 
         Itero sui tipi di concorso con tipo_status=1 (solo quelli attivi, per ora "uomo" e "donna")
-            Se per ogni tipo non esiste il concorso attivo (con concorso.status=1)
+            Se per ogni tipo non esiste il concorso attivo o in fase di
+            apertura (con concorso.status!=0 o concorso.status=1)
                 - creo il concorso, ponendo come start_date "+ 1 mese" a partire dalla data attuale
-                e mettendo lo status a 0 (default)
+                  e mettendo lo status a 0 (default)
                 - notifico tutti gli utenti appartenenti al concorso che tra un mese
                   aprirà il concorso
-
         """
         for contest_type in Contest_Type.objects.all():
-            if not Contest.objects.filter(id_contest_type=contest_type.id_contest_type, status=1).count():
-                # no active contest, must be create a new one
-                Contest_obj = Contest()
-                Contest_obj.id_contest_type = contest_type
-                # Contest_obj.start_date = timezone.now()+timedelta(days=35)
-                # XXX: debug, use this --^
-                Contest_obj.start_date = timezone.now()-timedelta(days=2)
+            if not Contest.objects.filter(Q(id_contest_type=contest_type.id_contest_type), Q(status=project_constants.CONTEST_OPENING) | Q(status=project_constants.CONTEST_ACTIVE)).count():
+                # no active or opening contests, must be create a new one
+                Contest_obj = Contest(
+                    id_contest_type = contest_type,
+                    start_date = timezone.now() + timedelta(days=project_constants.CONTEST_OPENING_DAYS),
+                    status = project_constants.CONTEST_OPENING,
+                )
                 Contest_obj.save()
-                # send email
+                # send an email
                 logger.info("contest creato: " + str(Contest_obj))
 
         return True
@@ -66,12 +68,12 @@ class Contest(models.Model):
                 - notifico tutti gli utenti (TUTTI!) che il concorso è stato chiuso
 
         """
-        for contest in Contest.objects.filter(status=1):
+        for contest in Contest.objects.filter(status=project_constants.CONTEST_ACTIVE):
             if timezone.now() >= contest.end_date:
-                # send email
+                # send an email
                 logger.info("contest chiuso:" + str(contest))
                 pass
-        Contest.objects.filter(status=1, end_date__lte=timezone.now()).update(status=2)
+        Contest.objects.filter(status=project_constants.CONTEST_ACTIVE, end_date__lte=timezone.now()).update(status=project_constants.CONTEST_CLOSED)
 
         return True
 
@@ -85,18 +87,26 @@ class Contest(models.Model):
                 ponendo come end_date "+ 10 mesi" a partire dalla data attuale
                 - notifico tutti gli utenti (TUTTI!) che il concorso è stato aperto
         """
-        for contest in Contest.objects.filter(status=0):
+        for contest in Contest.objects.filter(status=project_constants.CONTEST_OPENING):
             if timezone.now() >= contest.start_date:
-                # send email
+                # send an email
                 logger.info("contest attivato:" + str(contest))
                 pass
-        Contest.objects.filter(status=0, start_date__lte=timezone.now()).update(status=1, end_date=(timezone.now()+timedelta(days=330)))
+        Contest.objects.filter(status=project_constants.CONTEST_OPENING, start_date__lte=timezone.now()).update(status=project_constants.CONTEST_ACTIVE, end_date=(timezone.now()+timedelta(days=project_constants.CONTEST_EXPIRING_DAYS)))
+
+        return True
+
+    def __create_default_types(self):
+        """creating contest type firstly, if not exists"""
+        Contest_Type_obj = Contest_Type()
+        Contest_Type_obj.create_default()
 
         return True
 
     def contest_manager(self):
         """Function to manage contests"""
         logger.info("gestore dei contest")
+        self.__create_default_types()
         self.__close_contests()
         self.__create_contests()
         self.__activate_contests()
@@ -110,27 +120,49 @@ class Contest(models.Model):
     __activate_contests()
     """
 
-    def get_contests_expiring(self):
-        """Function to calculate expiration about all active contests"""
-        # update contests
-        return_var = {}
-        self.contest_manager()
-        for contest in Contest.objects.filter(status=1):
-            # return_var[contest.id_contest_type.code] = contest.end_date - timezone.now()
-            contest_expiring = contest.end_date - timezone.now()
-            return_var[contest.id_contest_type.code]["days"] = contest_expiring.days
-            return_var[contest.id_contest_type.code]["hours"] = contest_expiring.seconds // 3600 # 3600 = 60 min * 60 sec (sec in 1 hour)
-            return_var[contest.id_contest_type.code]["minutes"] = contest_expiring.seconds // 60 % 60
-            return_var[contest.id_contest_type.code]["seconds"] = contest_expiring.seconds % 60
-            return_var[contest.id_contest_type.code] = {""}contest_expiring.seconds % 60
+    def format_contest_time(self, date=None):
+        """Function to format the contest start/end date as dictionary"""
+        return_var = None
 
-        """
-        days = return_var["woman_contest"].days
-        hours = return_var["woman_contest"].seconds // 3600 # 3600 = 60 min * 60 sec (sec in 1 hour)
-        minutes = return_var["woman_contest"].seconds // 60 % 60
-        seconds = return_var["woman_contest"].seconds % 60
-        """
-        logger.info("man_contest scadenza:" + str(return_var["man_contest"]))
-        logger.info("woman_contest ore scadenza:" + str(return_var["woman_contest"]))
+        if date:
+            return_var = {
+                "days": date.days,
+                "hours": date.seconds // 3600, # 3600 = 60 min * 60 sec (sec in 1 hour)
+                "minutes": date.seconds // 60 % 60,
+                "seconds": date.seconds % 60,
+                "total_seconds": date.seconds,
+            }
+
+        return return_var
+
+    def get_active_contests_end_time(self):
+        """Function to retrieve endd time info about all active constests"""
+        return_var = {}
+        # update contests
+        self.contest_manager()
+        # list of all active contests
+        for contest in Contest.objects.filter(status=project_constants.CONTEST_ACTIVE):
+            contest_expiring = contest.end_date - timezone.now()
+            return_var[contest.id_contest_type.code] = self.format_contest_time(date=contest_expiring)
+
+        # debug info only
+        for contest in Contest.objects.filter(status=project_constants.CONTEST_ACTIVE):
+            logger.info(str(contest.id_contest_type.code) + " scadenza:" + str(return_var[contest.id_contest_type.code]))
+
+        return return_var
+
+    def get_opening_contests_start_time(self):
+        """Function to retrieve start time info about all opening constests"""
+        return_var = {}
+        # update contests
+        self.contest_manager()
+        # list of all opening contests
+        for contest in Contest.objects.filter(status=project_constants.CONTEST_OPENING):
+            contest_opening = contest.start_date - timezone.now()
+            return_var[contest.id_contest_type.code] = self.format_contest_time(date=contest_opening)
+
+        # debug info only
+        for contest in Contest.objects.filter(status=project_constants.CONTEST_OPENING):
+            logger.info(str(contest.id_contest_type.code) + " inizio:" + str(return_var[contest.id_contest_type.code]))
 
         return return_var

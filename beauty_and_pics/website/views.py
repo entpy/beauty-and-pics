@@ -23,7 +23,8 @@ logger = logging.getLogger(__name__)
 def www_index(request):
     # TODO: debug only, plz remove
     Contest_obj = Contest()
-    Contest_obj.get_contests_expiring()
+    Contest_obj.get_active_contests_end_time()
+    Contest_obj.get_opening_contests_start_time()
     return render(request, 'website/www/www_index.html', False)
 
 def www_how_it_works(request):
