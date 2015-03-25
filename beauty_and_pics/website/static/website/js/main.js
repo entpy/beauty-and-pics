@@ -37,6 +37,128 @@ function getItems(block_size) {
 	return $(items);
 }
 
+/* Object to retrieve a filtered list of users */
+var userListObject = {
+	__startLimit : 0, // element retrieving start limit
+	__showLimit : 10, // number of element retrieved per call
+	__elementsListFilters : {
+		"userId" : null, // required in "favorites" and "book" elementsListType
+		"elementsListType" : null, // catwalker, favorites, book
+	}, // list of AND filters Es. */
+	ajaxCallUrl : "/ajax/validate_form/perform_action", // the ajax call url
+
+	/* Function to read csrftoken from cookie */
+	readCsrftokenFromCookie : function() {
+		return $.cookie('csrftoken');
+	},
+
+	retrieveUserList : function() {
+		// reading csrfmiddlewaretoken from cookie
+		var csrftoken = this.readCsrftokenFromCookie();
+		var ajaxCallData = {
+			url : this.ajaxCallUrl,
+			data : "data=" + JSON.stringify(this.getElementsListFilters()) + "&action=elements_list",
+			async : true,
+			headers: { "X-CSRFToken": csrftoken },
+			success : function(jsonResponse) {
+				// function to manage JSON response
+				 console.log(jsonResponse);
+			},
+			error : function(jsonResponse) {
+				// ...fuck
+				console.log(jsonResponse);
+			}
+		}
+
+		// performing ajax call
+		loadDataWrapper.performAjaxCall(ajaxCallData);
+
+		return true;
+	},
+
+	/* Function to add a new AND filter */
+	addFilter : function(filterName, filterValue) {
+		if (filterName) {
+			if (!filterValue) filterValue = null
+			// retrieve previously added filters
+			var existing_filters = this.getElementsListFilters();
+			existing_filters[filterName] = filterValue;
+			// setting new filters object
+			this.setElementsListFilters(existing_filters);
+		}
+
+		return true;
+	},
+
+	/* Function to set list of AND filters */
+	setElementsListFilters : function(elementsListFilters) {
+		if (elementsListFilters) {
+			this.__elementsListFilters = elementsListFilters
+		}
+
+		return true;
+	},
+
+	/* Function to retrieve list of AND filters */
+	getElementsListFilters : function() { return this.__elementsListFilters; },
+
+	/* Function to set element start limit */
+	setStartLimit : function(startLimit) {
+		if (startLimit) {
+			this.__startLimit = startLimit
+		}
+
+		return true;
+	},
+
+	/* Function to set element show limit */
+	setShowLimit : function(showLimit) {
+		if (showLimit) {
+			this.__showLimit = showLimit
+		}
+
+		return true;
+	},
+
+	/* Function to set user id */
+	setUserId : function(userId) {
+		if (userId) {
+			// retrieve previously added filters
+			var existing_filters = this.getElementsListFilters();
+			existing_filters["userId"] = userId;
+			// setting new filters object
+			this.setElementsListFilters(existing_filters);
+		}
+
+		return true;
+	},
+
+	/* Function to set elements list type */
+	setElementsListType : function(elementsListType) {
+		if (elementsListType) {
+			// retrieve previously added filters
+			var existing_filters = this.getElementsListFilters();
+			existing_filters["elementsListType"] = elementsListType;
+			// setting new filters object
+			this.setElementsListFilters(existing_filters);
+		}
+
+		return true;
+	},
+
+	/* Function to retrieve element start limit */
+	getStartLimit : function() { return this.__startLimit; },
+
+	/* Function to retrieve number of elements per call */
+	getShowLimit : function() { return this.__showLimit; },
+
+	/* Function to retrieve user id */
+	getUserId : function() { return this.__userId; },
+
+	/* Function to retrieve elements list type */
+	getElementsListType : function() { return this.__elementsListType; },
+};
+
 
 /* Object to manage form error and success redirect */
 var ajaxFormValidation = {
@@ -47,6 +169,7 @@ var ajaxFormValidation = {
 	errorClassName : 'has-error', // Default "has-error"
 	formGroupClassName : 'form-group', // Default "form-group"
 	// redirectUrl : '', // Es . "/registrati/" Default None
+	ajaxCallUrl : "/ajax/", // the ajax call url
 	callData : Array(),
 
 	/* Function to read csrftoken from cookie */
@@ -139,7 +262,7 @@ var ajaxFormValidation = {
 	ajaxCallCanBePerformed : function() {
 		var returnVar = false;
 		if (typeof this.callData !== 'undefined') {
-			if (this.callData["post_url"] && this.callData["data"] && this.callData["form_class"]) {
+			if (this.ajaxCallUrl && this.callData["data"]) {
 				returnVar = true;
 			}
 		}
@@ -153,8 +276,8 @@ var ajaxFormValidation = {
 			// reading csrfmiddlewaretoken from cookie
 			var csrftoken = this.readCsrftokenFromCookie();
 			var ajaxCallData = {
-				url : this.callData["post_url"],
-				data : this.callData["data"] + "&form_class=" + this.callData["form_class"],
+				url : this.ajaxCallUrl,
+				data : this.callData["data"] + "&ajax_action=form_validation",
 				async : true,
 				headers: { "X-CSRFToken": csrftoken },
 				success : function(jsonResponse) {
@@ -173,4 +296,4 @@ var ajaxFormValidation = {
 		}
 		return true;
 	},
-}
+};

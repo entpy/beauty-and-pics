@@ -51,6 +51,7 @@
 		{% endif %}
 		<form class="form-horizontal ajax_form" method="post" action="">
 			{% csrf_token %}
+			<input type="hidden" name="form_class" value="Area51Form">
 			<fieldset class="col-md-9">
 				<div class="form-group {% if form.email.errors %}has-error{% endif %}">
 					<label for="{{ form.email.id_for_label }}" class="col-md-4 control-label">{{ form.email.label }} *</label>
@@ -113,12 +114,11 @@
 		$('[data-toggle="tooltip"]').tooltip();
 
 		$(".submitButtonClickAction").click(function(event){
+			// preventing default click event
 			event.preventDefault();
-			// performing ajax call
-			ajaxFormValidation.callData["post_url"] = "/validate_form/";
+			// serialize form data
 			ajaxFormValidation.callData["data"] = $(".ajax_form").serialize();
-			ajaxFormValidation.callData["form_class"] = "Area51Form";
-
+			// performing ajax call
 			ajaxFormValidation.validateForm();
 
 			return true;

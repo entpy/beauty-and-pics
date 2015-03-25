@@ -3,8 +3,9 @@
 from django.db import models
 from datetime import date
 from django.contrib.auth import authenticate, login
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User, Group
 from website.exceptions import *
+from beauty_and_pics.consts import project_constants
 import sys, logging, base64, hashlib, string, random
 
 # force utf8 read data
@@ -80,12 +81,27 @@ class Account(models.Model):
         if email and password:
             if not self.check_if_email_exists(email_to_check=email):
                 account_obj.user = User.objects.create_user(username=self.__email_to_username(email), email=email, password=password)
+                # add "catwalk_user" group in user groups
+                account_obj.user.groups.add(self.__create_defaul_user_group())
                 account_obj.save()
                 return_var = account_obj.user
 
                 # raise an exception if occur errors in account creation
                 if not return_var:
                     raise UserCreateError
+
+        return return_var
+
+    def __create_defaul_user_group(self):
+        """Function to [create if not exists and] retrieve catwalk_user group"""
+        return_var = None
+	try:
+	    return_var = Group.objects.get(name=project_constants.CATWALK_GROUP_NAME)
+	except Group.DoesNotExist:
+            # group must be created
+            group = Group(name=project_constants.CATWALK_GROUP_NAME)
+            group.save()
+            return_var = group
 
         return return_var
 

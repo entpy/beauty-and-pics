@@ -64,6 +64,11 @@ class AccountEditForm(forms.Form, FormCommonUtils):
         return_var = False
         if super(AccountEditForm, self).form_can_perform_actions():
             account_obj = Account()
+            # building birthday date
+            birthday_date = account_obj.create_date(date_dictionary={"day" : self.form_validated_data.get("birthday_day"), "month" : self.form_validated_data.get("birthday_month"), "year" : self.form_validated_data.get("birthday_year")}, get_isoformat=True)
+            if (birthday_date):
+                self.form_validated_data["birthday_date"] = birthday_date
+            # update account info
             account_obj.update_data(save_data=self.form_validated_data, user_obj=self.request_data.user)
             return_var = True
 

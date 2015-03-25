@@ -1,0 +1,89 @@
+from django.shortcuts import render
+from django.http import HttpResponse
+from custom_form_app.forms.base_form_class import *
+from custom_form_app.forms.register_form import *
+from custom_form_app.forms.password_recover import *
+from custom_form_app.forms.account_edit_form import *
+from custom_form_app.forms.area51_form import *
+import logging, json
+
+# Get an instance of a logger
+logger = logging.getLogger(__name__)
+
+class ajaxManager():
+
+    __json_response = None
+    __valid_action_list = ()
+
+    def __init__(self, request=None):
+        # list of valid methods
+	self.__valid_action_list += ('form_validation',)
+        # retrieve action to perform
+        self.ajax_action = request.POST.get("ajax_action")
+        # ajax request (POST data)
+        self.request = request
+
+    def check_if_action_is_valid(self):
+        """Function to check if an ajax action is valid"""
+        return self.ajax_action in self.__valid_action_list
+
+    def check_if_is_post(self):
+        """Function to check if a request is performed via POST"""
+        return_var = False
+        if self.request.method == 'POST':
+            return_var = True
+
+        return return_var
+
+    def perform_ajax_action(self):
+        """Function to perform ajax action"""
+        # check if request method sia POST
+        if self.check_if_is_post():
+            # check if ajax action is valid
+            if self.check_if_action_is_valid():
+                # ajax action is valid
+                logger.debug("ajax_action: " + str(self.ajax_action))
+                code = compile("self." + self.ajax_action + "()", '<string>', 'exec')
+                exec(code)
+            else:
+                # return a JSON error response
+                self.set_json_response(json_response=json.dumps('{ "error": True, "msg": :"Invalid action"}'))
+                logger.error("ATTENZIONE: ajax action non valida (" + str(self.ajax_action) + ")")
+        else:
+            # return a JSON error response
+            self.set_json_response(json_response=json.dumps('{ "error": True, "msg": :"Please call this page via POST method"}'))
+            logger.error("ATTENZIONE: ajax action chiamata senza metodo POST (" + str(self.ajax_action) + ")")
+
+        return True
+
+    def get_json_response(self):
+        """Function to retrieve json response"""
+        return self.__json_response
+
+    def set_json_response(self, json_response=None):
+        """Function to set json response"""
+        if json_response:
+            self.__json_response = json_response
+
+        return True
+
+    def form_validation(self):
+        """Function to validate forms via AJAX"""
+        logger.debug("ajax_function: @@form_validation@@")
+
+        form_class = self.request.POST.get("form_class")
+        # check if form_class is a valid form class
+        FormCommonUtils_obj = FormCommonUtils()
+        if FormCommonUtils_obj.check_if_form_class_is_valid(form_class=form_class):
+            # create a form instance and populate it with data from the request:
+            code = compile("form = " + form_class + "(self.request.POST)", '<string>', 'exec')
+            exec(code)
+            # setting request data attribute
+            form.set_current_request(request=self.request)
+            # check if form is valid
+            form.is_valid()
+
+            # setting json response
+            self.set_json_response(json_response=form.get_validation_json_response())
+
+        return True

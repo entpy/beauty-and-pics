@@ -111,6 +111,7 @@ class RegisterForm(forms.Form, FormCommonUtils):
         password = self.form_validated_data["password"]
 
         try:
+            account_obj = Account()
             login_status = account_obj.create_login_session(email=email, password=password, request=self.request_data)
         except UserNotActiveError:
             # bad

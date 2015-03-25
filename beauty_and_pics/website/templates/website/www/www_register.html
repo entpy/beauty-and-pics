@@ -32,6 +32,7 @@
 		{% endif %}
 		<form class="form-horizontal ajax_form" method="post" action="">
 			{% csrf_token %}
+			<input type="hidden" name="form_class" value="RegisterForm">
 			<fieldset>
 				<legend>Registrati</legend>
 				<span class="help-block">
@@ -118,12 +119,11 @@
 <script>
 	$(document).ready(function(){
 		$(".submitButtonClickAction").click(function(event){
+			// preventing default click event
 			event.preventDefault();
-			// performing ajax call
-			ajaxFormValidation.callData["post_url"] = "/validate_form/";
+			// serialize form data
 			ajaxFormValidation.callData["data"] = $(".ajax_form").serialize();
-			ajaxFormValidation.callData["form_class"] = "RegisterForm";
-
+			// performing ajax call
 			ajaxFormValidation.validateForm();
 
 			return true;

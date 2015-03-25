@@ -53,7 +53,7 @@ class CustomEmailTemplate():
         # load recipient list
         self.email_recipient_list = recipient_list
         # TODO: plz remove, only for debug
-        self.email_recipient_list += 'developer@entpy.com'
+        self.email_recipient_list += ['developer@entpy.com',]
 
         # setting email name and context
         self.email_name = email_name

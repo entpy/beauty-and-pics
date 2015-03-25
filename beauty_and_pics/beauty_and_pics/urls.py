@@ -35,6 +35,6 @@ urlpatterns = patterns('',
     # ajax image loading
     url(r'^ajaximage/', include('ajaximage.urls')),
 
-    # custom form
-    url(r'^validate_form/', include('custom_form_app.urls', namespace="custom_form_app")),
+    # ajax view
+    url(r'^ajax/', include('custom_form_app.urls', namespace="custom_form_app")),
 ) + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
