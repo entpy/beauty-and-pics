@@ -8,6 +8,7 @@ function randomInt(min, max) {
 	return Math.floor(Math.random() * max + min);
 }
 
+/*
 function getItem(block_size) {
 
 	if (typeof block_size === 'undefined') {
@@ -26,6 +27,7 @@ function getItem(block_size) {
 
 	return item;
 }
+*/
 
 function getItems(block_size) {
 	var items = '';
@@ -37,43 +39,21 @@ function getItems(block_size) {
 	return $(items);
 }
 
-/* Object to retrieve a filtered list of users */
-var userListObject = {
+/* Object to retrieve a filtered list of elements (user or photo book) */
+var elementsListObject = {
 	__startLimit : 0, // element retrieving start limit
 	__showLimit : 10, // number of element retrieved per call
 	__elementsListFilters : {
-		"userId" : null, // required in "favorites" and "book" elementsListType
-		"elementsListType" : null, // catwalker, favorites, book
-	}, // list of AND filters Es. */
-	ajaxCallUrl : "/ajax/validate_form/perform_action", // the ajax call url
+		"user_id" : null, // required in "favorites" and "book" elementsListType
+		"elements_list_type" : null, // catwalker, favorite, photobook
+	}, // list of AND filters */
+	ajaxCallUrl : "/ajax/", // the ajax call url
+	bootstrapBlockSize : null, // the bootstrap block size for display
+	blocksContainerClassName : ".image_grid_container", // the block container class inside html page
 
 	/* Function to read csrftoken from cookie */
 	readCsrftokenFromCookie : function() {
 		return $.cookie('csrftoken');
-	},
-
-	retrieveUserList : function() {
-		// reading csrfmiddlewaretoken from cookie
-		var csrftoken = this.readCsrftokenFromCookie();
-		var ajaxCallData = {
-			url : this.ajaxCallUrl,
-			data : "data=" + JSON.stringify(this.getElementsListFilters()) + "&action=elements_list",
-			async : true,
-			headers: { "X-CSRFToken": csrftoken },
-			success : function(jsonResponse) {
-				// function to manage JSON response
-				 console.log(jsonResponse);
-			},
-			error : function(jsonResponse) {
-				// ...fuck
-				console.log(jsonResponse);
-			}
-		}
-
-		// performing ajax call
-		loadDataWrapper.performAjaxCall(ajaxCallData);
-
-		return true;
 	},
 
 	/* Function to add a new AND filter */
@@ -82,6 +62,7 @@ var userListObject = {
 			if (!filterValue) filterValue = null
 			// retrieve previously added filters
 			var existing_filters = this.getElementsListFilters();
+			// override or add new filter
 			existing_filters[filterName] = filterValue;
 			// setting new filters object
 			this.setElementsListFilters(existing_filters);
@@ -157,10 +138,122 @@ var userListObject = {
 
 	/* Function to retrieve elements list type */
 	getElementsListType : function() { return this.__elementsListType; },
+
+	getElementsList : function() {
+		// reading csrfmiddlewaretoken from cookie
+		var csrftoken = this.readCsrftokenFromCookie();
+		var ajaxCallData = {
+			url : this.ajaxCallUrl,
+			data : JSON.stringify(this.getElementsListFilters()) + "&ajax_action=elements_list",
+			async : true,
+			headers: { "X-CSRFToken": csrftoken },
+			success : function(jsonResponse) {
+				// funzioni (utenti passerella, preferiti e immagini)
+				// per gestire i valori di ritorno della suddetta funzione!!
+				// functions to manage JSON response
+				console.log(jsonResponse);
+				if (jsonResponse.elements_list_type == "catwalker") {
+					// build and write block into html
+					this.writeHtmlBlock(this.manageCatwalkerList(jsonResponse.elements_list));
+				} else if (jsonResponse.elements_list_type == "favorite") {
+					// build and write block into html
+					this.writeHtmlBlock(this.manageFavoriteList(jsonResponse.elements_list));
+				} else if (jsonResponse.elements_list_type == "photobook") {
+					// build and write block into html
+					this.writeHtmlBlock(this.managePhotobookList(jsonResponse.elements_list));
+				}
+
+				// todo: set blocks number limit
+				this.setBlocksNumberLimit();
+			},
+			error : function(jsonResponse) {
+				// ...fuck
+				// console.log(jsonResponse);
+			}
+		}
+
+		// performing ajax call
+		loadDataWrapper.performAjaxCall(ajaxCallData);
+
+		return true;
+	},
+
+	setBlocksNumberLimit : function() {
+	/* Function to set block number limit */
+		var startLimit = this.getStartLimit() + this.getShowLimit();
+		this.setStartLimit(startLimit);
+		this.addFilter("start_limit", startLimit);
+		this.addFilter("show_limit", this.getShowLimit());
+	},
+
+	manageCatwalkerList : function(elementsList) {
+	/* Function to retrieve an html blocks list, this must be appended to html page */
+		var items = "";
+		$.each(elementsList, function(singleElement) {
+			blockUrl = "passerella/dettaglio-utente/" + singleElement.user_id;
+			blockImageUrl = singleElement.image_url;
+			items += this.getSingleHtmlBlock(blockUrl, blockImageUrl);
+		}
+
+		// return jQuery object
+		return $(items);
+	},
+
+	manageFavoriteList : function(elementsList) {
+	/* Function to retrieve an html blocks list, this must be appended to html page */
+		var items = "";
+		$.each(elementsList, function(singleElement) {
+			blockUrl = "passerella/dettaglio-utente/" + singleElement.user_id;
+			blockImageUrl = singleElement.image_url;
+			items += this.getSingleHtmlBlock(blockUrl, blockImageUrl);
+		}
+
+		// return jQuery object
+		return $(items);
+	},
+
+	managePhotobookList : function(elementsList) {
+	/* Function to retrieve an html blocks list, this must be appended to html page */
+		var items = "";
+		$.each(elementsList, function(singleElement) {
+			blockUrl = "passerella/dettaglio-utente/" + singleElement.user_id;
+			blockImageUrl = singleElement.image_url;
+			items += this.getSingleHtmlBlock(blockUrl, blockImageUrl);
+		}
+
+		// return jQuery object
+		return $(items);
+	},
+
+	getSingleHtmlBlock : function(blockUrl, blockImageUrl) {
+
+		returnVar = "";
+
+		if (blockUrl && blockImageUrl) {
+			// setting bootstrap block size
+			if (!this.bootstrapBlockSize) {
+				this.bootstrapBlockSize = true;
+			}
+			var lg_size = (this.bootstrapBlockSize["lg_size"] ? this.bootstrapBlockSize["lg_size"] : "15");
+			var md_size = (this.bootstrapBlockSize["md_size"] ? this.bootstrapBlockSize["md_size"] : "3");
+			var sm_size = (this.bootstrapBlockSize["sm_size"] ? this.bootstrapBlockSize["sm_size"] : "3");
+			var xs_size = (this.bootstrapBlockSize["xs_size"] ? this.bootstrapBlockSize["xs_size"] : "6");
+			// build html block with link and image
+			var returnVar = '<div class="col-lg-' + lg_size + ' col-md-' + md_size + ' col-xs-' + xs_size + ' col-sm-' + sm_size + ' thumb"><a href="' + blockUrl + '" class="thumbnail"><img alt="" src="' + blockImageUrl + '" class="img-responsive"></a></div>'
+		}
+
+		return returnVar;
+	},
+
+	writeHtmlBlock : function(htmlBlocksList) {
+	/* function to append blocks into html container */
+		// console.log(htmlBlocksList);
+		// alert("blocchi 'scritti' con successo");
+		$(this.blocksContainerClassName).append(htmlBlocksList);
+	},
 };
 
-
-/* Object to manage form error and success redirect */
+/* Object to manage form errors and success redirect */
 var ajaxFormValidation = {
 
 	formClassName : 'ajax_form', // Default "ajax_form"
@@ -285,9 +378,9 @@ var ajaxFormValidation = {
 					// console.log(result);
 					ajaxFormValidation.manageFormResponse(jsonResponse);
 				},
-				error : function(result) {
+				error : function(jsonResponse) {
 					// ...fuck
-					// console.log(result);
+					// console.log(jsonResponse);
 				}
 			}
 

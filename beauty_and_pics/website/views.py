@@ -5,6 +5,7 @@ from django.http import HttpResponseRedirect
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import logout
+from django.views.decorators.csrf import ensure_csrf_cookie
 from account_app.models.accounts import *
 from contest_app.models.contests import *
 # loading forms
@@ -108,6 +109,7 @@ def www_register(request):
 # }}}
 
 # catwalk {{{
+@ensure_csrf_cookie
 def catwalk_index(request):
     return render(request, 'website/catwalk/catwalk_index.html', False)
 

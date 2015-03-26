@@ -5,6 +5,8 @@ from custom_form_app.forms.register_form import *
 from custom_form_app.forms.password_recover import *
 from custom_form_app.forms.account_edit_form import *
 from custom_form_app.forms.area51_form import *
+from beauty_and_pics.consts import project_constants
+from account_app.models import *
 import logging, json
 
 # Get an instance of a logger
@@ -18,6 +20,7 @@ class ajaxManager():
     def __init__(self, request=None):
         # list of valid methods
 	self.__valid_action_list += ('form_validation',)
+	self.__valid_action_list += ('elements_list',)
         # retrieve action to perform
         self.ajax_action = request.POST.get("ajax_action")
         # ajax request (POST data)
@@ -83,7 +86,51 @@ class ajaxManager():
             # check if form is valid
             form.is_valid()
 
-            # setting json response
+            # make a json response
             self.set_json_response(json_response=form.get_validation_json_response())
+
+        return True
+
+    def elements_list(self):
+        """Function to retrieve a filtered elements list (users or photo book)"""
+        # TODO: restituire la lista filtrata di utenti o di foto
+        logger.debug("ajax_function: @@elements_list@@")
+        logger.debug("parametri della chiamata: " + str(self.request.POST))
+
+        # catwalker, favorite, photobook
+        elements_list_type = self.request.POST.get("elements_list_type")
+        json_account_element = []
+        Account_obj = Account()
+
+        # catwalker section
+        if elements_list_type == "catwalker":
+            # TODO: creare funzione per elenco dei filtri nella chiamata AJAX
+            filter_list = []
+            filtered_elements = Account_obj.get_filtered_accounts_list(filters_list=filter_list)
+
+            for account in filtered_elements:
+                json_account_element += {
+                        "user_id": account.user.id,
+                        "user_email": account.user.email,
+                        "image_url": "http://lorempixel.com/150/150/nature",
+                        },
+
+        # TODO favorite section
+        # TODO photobook section
+        """
+        data = {
+                'success' : True,
+                'elements_list': [
+                    {"user_id": 1, "user_email": "email1@mail.com"},
+                    {"user_id": 2, "user_email": "email2@mail.com"},
+                    {"user_id": 3, "user_email": "email3@mail.com"},
+                    {"user_id": 4, "user_email": "email4@mail.com"},
+                ]
+                }
+        """
+
+        data = {'success' : True, 'elements_list_type': elements_list_type, 'elements_list': json_account_element, }
+        json_data_string = json.dumps(data)
+        self.set_json_response(json_response=json_data_string)
 
         return True

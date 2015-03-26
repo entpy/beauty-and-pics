@@ -279,3 +279,13 @@ class Account(models.Model):
 	    # logger.info("data about current logged in user: " + str(return_var))
 
         return return_var
+
+    # TODO: implement this function
+    def get_filtered_accounts_list(self, filters_list=None):
+        """Function to retrieve a list of filtere accounts"""
+        return_var = False
+        return_var = Account.objects.filter(
+                user__groups__name=project_constants.CATWALK_GROUP_NAME
+        )
+
+        return return_var
