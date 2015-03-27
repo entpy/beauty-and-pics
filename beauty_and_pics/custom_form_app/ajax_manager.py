@@ -98,9 +98,9 @@ class ajaxManager():
         logger.debug("parametri della chiamata: " + str(self.request.POST))
 
         # catwalker, favorite, photobook
+        Account_obj = Account()
         elements_list_type = self.request.POST.get("elements_list_type")
         json_account_element = []
-        Account_obj = Account()
 
         # catwalker section
         if elements_list_type == "catwalker":
