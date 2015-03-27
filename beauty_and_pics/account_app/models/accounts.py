@@ -59,6 +59,17 @@ class Account(models.Model):
 
 	return return_var
 
+    def get_user_about_id(self, user_id=None):
+        """Function to retrieve user about id"""
+	return_var = None
+	try:
+	    return_var = User.objects.get(pk=user_id)
+	except User.DoesNotExist:
+	    return_var = False
+            raise
+
+	return return_var
+
     def register_account(self, user_info=None):
         """Function to register a new account"""
 
@@ -258,25 +269,40 @@ class Account(models.Model):
         return_var = {}
 
         if request and request.user.is_authenticated():
+            return_var = self.put_user_data_obj_into_dictionary(user_obj=request.user)
+	    # logger.info("data about current logged in user: " + str(return_var))
+
+        return return_var
+
+    def custom_id_user_data(self, user_id=None):
+        """Function to retrieve user/account info about user id"""
+        return_var = {}
+        if user_id:
+            return_var = self.put_user_data_obj_into_dictionary(user_obj=self.get_user_about_id(user_id=user_id))
+
+        return return_var
+
+    def put_user_data_obj_into_dictionary(self, user_obj=None):
+        """Function to convert a user object into dictionary"""
+        return_var = {}
+        if user_obj:
             # from user model {{{
-	    return_var["first_name"] = request.user.first_name or ''
-	    return_var["last_name"] = request.user.last_name or ''
-	    return_var["email"] = request.user.email or ''
+            return_var["first_name"] = user_obj.first_name or ''
+            return_var["last_name"] = user_obj.last_name or ''
+            return_var["email"] = user_obj.email or ''
             # from user model }}}
             # from account model {{{
-	    return_var["city"] = request.user.account.city or ''
-	    return_var["country"] = request.user.account.country or ''
-	    return_var["gender"] = request.user.account.gender or ''
-	    return_var["birthday_date"] = request.user.account.birthday_date or ''
-	    return_var["birthday_day"] = str(request.user.account.birthday_date.day or '')
-	    return_var["birthday_month"] = str(request.user.account.birthday_date.month or '')
-	    return_var["birthday_year"] = str(request.user.account.birthday_date.year or '')
-	    return_var["hair"] = request.user.account.hair or ''
-	    return_var["eyes"] = request.user.account.eyes or ''
-	    return_var["height"] = request.user.account.height or ''
+            return_var["city"] = user_obj.account.city or ''
+            return_var["country"] = user_obj.account.country or ''
+            return_var["gender"] = user_obj.account.gender or ''
+            return_var["birthday_date"] = user_obj.account.birthday_date or ''
+            return_var["birthday_day"] = str(user_obj.account.birthday_date.day or '')
+            return_var["birthday_month"] = str(user_obj.account.birthday_date.month or '')
+            return_var["birthday_year"] = str(user_obj.account.birthday_date.year or '')
+            return_var["hair"] = user_obj.account.hair or ''
+            return_var["eyes"] = user_obj.account.eyes or ''
+            return_var["height"] = user_obj.account.height or ''
             # from account model }}}
-
-	    # logger.info("data about current logged in user: " + str(return_var))
 
         return return_var
 

@@ -109,11 +109,11 @@ class ajaxManager():
             filtered_elements = Account_obj.get_filtered_accounts_list(filters_list=filter_list)
 
             for account in filtered_elements:
-                json_account_element += {
+                json_account_element.append({
                         "user_id": account.user.id,
                         "user_email": account.user.email,
                         "image_url": "http://lorempixel.com/150/150/nature",
-                        },
+                        }),
 
         # TODO favorite section
         # TODO photobook section

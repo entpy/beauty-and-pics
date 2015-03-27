@@ -53,7 +53,7 @@ function getItem(block_size) {
 
 	return item;
 }
-*/
+
 
 function getItems(block_size) {
 	var items = '';
@@ -63,7 +63,7 @@ function getItems(block_size) {
 
 	// return jQuery object
 	return $(items);
-}
+}*/
 
 /* Object to retrieve a filtered list of elements (user or photo book) */
 var elementsListObject = {
@@ -145,7 +145,7 @@ var elementsListObject = {
 		if (elementsListType) {
 			// retrieve previously added filters
 			var existing_filters = this.getElementsListFilters();
-			existing_filters["elementsListType"] = elementsListType;
+			existing_filters["elements_list_type"] = elementsListType;
 			// setting new filters object
 			this.setElementsListFilters(existing_filters);
 		}
@@ -165,32 +165,40 @@ var elementsListObject = {
 	/* Function to retrieve elements list type */
 	getElementsListType : function() { return this.__elementsListType; },
 
+	/* Function to convert an object to string */
+	buildPostFilterString : function() {
+
+	},
+
 	getElementsList : function() {
 		// reading csrfmiddlewaretoken from cookie
 		var csrftoken = this.readCsrftokenFromCookie();
+		// todo: debug
+		// console.log(this.getElementsListFilters());
 		var ajaxCallData = {
 			url : this.ajaxCallUrl,
-			data : JSON.stringify(this.getElementsListFilters()) + "&ajax_action=elements_list",
+			data : $.param(this.getElementsListFilters()) + "&ajax_action=elements_list",
 			async : true,
 			headers: { "X-CSRFToken": csrftoken },
 			success : function(jsonResponse) {
 				// funzioni (utenti passerella, preferiti e immagini)
 				// per gestire i valori di ritorno della suddetta funzione!!
 				// functions to manage JSON response
+				console.log("==========risultato chiamata==========");
 				console.log(jsonResponse);
 				if (jsonResponse.elements_list_type == "catwalker") {
 					// build and write block into html
-					this.writeHtmlBlock(this.manageCatwalkerList(jsonResponse.elements_list));
+					elementsListObject.writeHtmlBlock(elementsListObject.manageCatwalkerList(jsonResponse.elements_list));
 				} else if (jsonResponse.elements_list_type == "favorite") {
 					// build and write block into html
-					this.writeHtmlBlock(this.manageFavoriteList(jsonResponse.elements_list));
+					elementsListObject.writeHtmlBlock(elementsListObject.manageFavoriteList(jsonResponse.elements_list));
 				} else if (jsonResponse.elements_list_type == "photobook") {
 					// build and write block into html
-					this.writeHtmlBlock(this.managePhotobookList(jsonResponse.elements_list));
+					elementsListObject.writeHtmlBlock(elementsListObject.managePhotobookList(jsonResponse.elements_list));
 				}
 
 				// set blocks number limit
-				this.setBlocksNumberLimit();
+				elementsListObject.setBlocksNumberLimit();
 			},
 			error : function(jsonResponse) {
 				// ...fuck
@@ -215,11 +223,11 @@ var elementsListObject = {
 	manageCatwalkerList : function(elementsList) {
 	/* Function to retrieve an html blocks list, this must be appended to html page */
 		var items = "";
-		$.each(elementsList, function(singleElement) {
-			blockUrl = "passerella/dettaglio-utente/" + singleElement.user_id;
+		$.each(elementsList, function(index, singleElement) {
+			blockUrl = "/passerella/dettaglio-utente/" + singleElement.user_id;
 			blockImageUrl = singleElement.image_url;
-			items += this.getSingleHtmlBlock(blockUrl, blockImageUrl);
-		}
+			items += elementsListObject.getSingleHtmlBlock(blockUrl, blockImageUrl);
+		});
 
 		// return jQuery object
 		return $(items);
@@ -231,8 +239,8 @@ var elementsListObject = {
 		$.each(elementsList, function(singleElement) {
 			blockUrl = "passerella/dettaglio-utente/" + singleElement.user_id;
 			blockImageUrl = singleElement.image_url;
-			items += this.getSingleHtmlBlock(blockUrl, blockImageUrl);
-		}
+			items += elementsListObject.getSingleHtmlBlock(blockUrl, blockImageUrl);
+		});
 
 		// return jQuery object
 		return $(items);
@@ -244,8 +252,8 @@ var elementsListObject = {
 		$.each(elementsList, function(singleElement) {
 			blockUrl = "passerella/dettaglio-utente/" + singleElement.user_id;
 			blockImageUrl = singleElement.image_url;
-			items += this.getSingleHtmlBlock(blockUrl, blockImageUrl);
-		}
+			items += elementsListObject.getSingleHtmlBlock(blockUrl, blockImageUrl);
+		});
 
 		// return jQuery object
 		return $(items);
@@ -274,7 +282,7 @@ var elementsListObject = {
 	writeHtmlBlock : function(htmlBlocksList) {
 	/* function to append blocks into html container */
 		// console.log(htmlBlocksList);
-		// alert("blocchi 'scritti' con successo");
+		// alert("blocchi 'scritti' con successo" + this.blocksContainerClassName);
 		$(this.blocksContainerClassName).append(htmlBlocksList);
 	},
 };

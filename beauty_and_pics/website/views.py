@@ -113,7 +113,12 @@ def www_register(request):
 def catwalk_index(request):
     return render(request, 'website/catwalk/catwalk_index.html', False)
 
-def catwalk_profile(request):
+def catwalk_profile(request, user_id):
+    # retrieve user_id info
+    # first_name, last_name, points, age, city, position
+    account_obj =  Account()
+    account_info = account_obj.custom_id_user_data(user_id=user_id)
+    logger.debug("info account(" + str(user_id) + "): " + str(account_info))
     return render(request, 'website/catwalk/catwalk_profile.html', False)
 
 def catwalk_help(request):
