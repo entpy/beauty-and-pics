@@ -310,8 +310,20 @@ class Account(models.Model):
     def get_filtered_accounts_list(self, filters_list=None):
         """Function to retrieve a list of filtere accounts"""
         return_var = False
-        return_var = Account.objects.filter(
-                user__groups__name=project_constants.CATWALK_GROUP_NAME
-        )
+	# logger.debug("NOME FILTRO: " + str(filters_list["filter_name"]))
+
+	# filter only catwalker users
+        return_var = Account.objects.filter(user__groups__name=project_constants.CATWALK_GROUP_NAME)
+
+	# order by "latest_registered" filter
+	if filters_list["filter_name"] == "latest_registered":
+        	return_var = return_var.order_by('-user__account__creation_date')
+
+	# limits filter
+	logger.debug("limite da: " + str(filters_list["start_limit"]))
+	logger.debug("limite numero elementi: " + str(filters_list["show_limit"]))
+	return_var = return_var[filters_list["start_limit"]:filters_list["show_limit"]]
+
+	logger.debug("@@@: " + str(return_var))
 
         return return_var

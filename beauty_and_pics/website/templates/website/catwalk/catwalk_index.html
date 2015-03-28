@@ -14,11 +14,11 @@
 <div class="row">
 	<div class="col-sm-12">
 		<ul class="nav nav-pills">
-			<li class="active"><a aria-expanded="false" href="#" data-toggle="tab">Le ultime registrate</a></li>
-			<li class=""><a aria-expanded="true" href="#" data-toggle="tab">La classifica</a></li>
-			<li class=""><a aria-expanded="true" href="#" data-toggle="tab">Le più visitate</a></li>
-			<li class=""><a aria-expanded="true" href="#" data-toggle="tab">Il sorriso più bello</a></li>
-			<li class=""><a aria-expanded="true" href="#" data-toggle="tab">Lo sguardo più bello</a></li>
+			<li class="active setFilterAction" data-filter-name="latest_registered"><a aria-expanded="false" href="#" data-toggle="tab">Le ultime registrate</a></li>
+			<li class="setFilterAction" data-filter-name="classification"><a aria-expanded="true" href="#" data-toggle="tab">La classifica</a></li>
+			<li class="setFilterAction" data-filter-name="most_visited"><a aria-expanded="true" href="#" data-toggle="tab">Le più visitate</a></li>
+			<li class="setFilterAction" data-filter-name="most_beautiful_smile"><a aria-expanded="true" href="#" data-toggle="tab">Il sorriso più bello</a></li>
+			<li class="setFilterAction" data-filter-name="look_more_beautiful"><a aria-expanded="true" href="#" data-toggle="tab">Lo sguardo più bello</a></li>
 		</ul>
 	</div>
 </div>
@@ -28,14 +28,15 @@
 </div>
 {# image grid block }}} #}
 <div class="text-center">
-	<a class="btn btn-success load_more_images" href="#">Carica altre</a>
+	<a class="btn btn-success loadMoreElementsAction" href="#">Carica altre</a>
 </div>
 {% endblock container4_content %}
 {% block custom_js %}
 <script>
 	$(document).ready(function(){
-		$(".load_more_images").click(function(){
+		$(".loadMoreElementsAction").click(function(){
 			elementsListObject.setElementsListType("catwalker");
+			elementsListObject.addFilter("filter_name", $(".setFilterAction.active").data("filterName"));
 			elementsListObject.getElementsList();
 
 			return false;

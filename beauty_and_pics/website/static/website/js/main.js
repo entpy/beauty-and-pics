@@ -67,15 +67,17 @@ function getItems(block_size) {
 
 /* Object to retrieve a filtered list of elements (user or photo book) */
 var elementsListObject = {
-	__startLimit : 0, // element retrieving start limit
-	__showLimit : 10, // number of element retrieved per call
 	__elementsListFilters : {
 		"user_id" : null, // required in "favorites" and "book" elementsListType
 		"elements_list_type" : null, // catwalker, favorite, photobook
+		"start_limit" : 0, // element retrieving start limit
+		"show_limit" : 1, // number of element retrieved per call
+		"filter_name" : null, // main filter (Es. latest_registered, classification, ecc...)
 	}, // list of AND filters */
 	ajaxCallUrl : "/ajax/", // the ajax call url
 	bootstrapBlockSize : null, // the bootstrap block size for display
 	blocksContainerClassName : ".image_grid_container", // the block container class inside html page
+	actionButtonClassName : ".loadMoreElementsAction", // load more button class name
 
 	/* Function to read csrftoken from cookie */
 	readCsrftokenFromCookie : function() {
@@ -112,7 +114,11 @@ var elementsListObject = {
 	/* Function to set element start limit */
 	setStartLimit : function(startLimit) {
 		if (startLimit) {
-			this.__startLimit = startLimit
+			// retrieve previously added filters
+			var existing_filters = this.getElementsListFilters();
+			existing_filters["start_limit"] = showLimit;
+			// setting new filters object
+			this.setElementsListFilters(existing_filters);
 		}
 
 		return true;
@@ -121,7 +127,11 @@ var elementsListObject = {
 	/* Function to set element show limit */
 	setShowLimit : function(showLimit) {
 		if (showLimit) {
-			this.__showLimit = showLimit
+			// retrieve previously added filters
+			var existing_filters = this.getElementsListFilters();
+			existing_filters["show_limit"] = showLimit;
+			// setting new filters object
+			this.setElementsListFilters(existing_filters);
 		}
 
 		return true;
@@ -132,7 +142,7 @@ var elementsListObject = {
 		if (userId) {
 			// retrieve previously added filters
 			var existing_filters = this.getElementsListFilters();
-			existing_filters["userId"] = userId;
+			existing_filters["user_id"] = userId;
 			// setting new filters object
 			this.setElementsListFilters(existing_filters);
 		}
@@ -153,39 +163,26 @@ var elementsListObject = {
 		return true;
 	},
 
-	/* Function to retrieve element start limit */
-	getStartLimit : function() { return this.__startLimit; },
-
-	/* Function to retrieve number of elements per call */
-	getShowLimit : function() { return this.__showLimit; },
-
-	/* Function to retrieve user id */
-	getUserId : function() { return this.__userId; },
-
-	/* Function to retrieve elements list type */
-	getElementsListType : function() { return this.__elementsListType; },
-
-	/* Function to convert an object to string */
-	buildPostFilterString : function() {
-
-	},
-
 	getElementsList : function() {
 		// reading csrfmiddlewaretoken from cookie
 		var csrftoken = this.readCsrftokenFromCookie();
-		// todo: debug
-		// console.log(this.getElementsListFilters());
 		var ajaxCallData = {
 			url : this.ajaxCallUrl,
 			data : $.param(this.getElementsListFilters()) + "&ajax_action=elements_list",
 			async : true,
 			headers: { "X-CSRFToken": csrftoken },
 			success : function(jsonResponse) {
-				// funzioni (utenti passerella, preferiti e immagini)
-				// per gestire i valori di ritorno della suddetta funzione!!
 				// functions to manage JSON response
 				console.log("==========risultato chiamata==========");
 				console.log(jsonResponse);
+
+				// hide show more elements button
+				if (jsonResponse.elements_list.length == 0) {
+					// TODO: in teoria il pulsante andrebbe nascosto al
+					//	 al giro prima!
+					elementsListObject.hideActionButton();
+				}
+
 				if (jsonResponse.elements_list_type == "catwalker") {
 					// build and write block into html
 					elementsListObject.writeHtmlBlock(elementsListObject.manageCatwalkerList(jsonResponse.elements_list));
@@ -212,12 +209,26 @@ var elementsListObject = {
 		return true;
 	},
 
+	hideActionButton : function() {
+	/* Function to hide action button */
+		$(this.actionButtonClassName).hide();
+	},
+
 	setBlocksNumberLimit : function() {
 	/* Function to set block number limit */
-		var startLimit = this.getStartLimit() + this.getShowLimit();
-		this.setStartLimit(startLimit);
-		this.addFilter("start_limit", startLimit);
-		this.addFilter("show_limit", this.getShowLimit());
+	/*
+	3....8
+	9....14
+	15....20
+	*/
+
+		// retrieve previously added filters
+		var existing_filters = this.getElementsListFilters();
+		var limit_metric = existing_filters["show_limit"] - existing_filters["start_limit"]
+		existing_filters["start_limit"] = existing_filters["show_limit"];
+		existing_filters["show_limit"] = existing_filters["start_limit"] + limit_metric;
+		// setting new filters object
+		this.setElementsListFilters(existing_filters);
 	},
 
 	manageCatwalkerList : function(elementsList) {

@@ -106,7 +106,7 @@ class ajaxManager():
         if elements_list_type == "catwalker":
             # TODO: creare funzione per elenco dei filtri nella chiamata AJAX
             filter_list = []
-            filtered_elements = Account_obj.get_filtered_accounts_list(filters_list=filter_list)
+            filtered_elements = Account_obj.get_filtered_accounts_list(filters_list=self.request.POST)
 
             for account in filtered_elements:
                 json_account_element.append({
