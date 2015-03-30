@@ -110,12 +110,12 @@
 						Globale
 					</div>
 					<div>
-						<ul class="pagination pagination-md">
-							<li class="active"><a href="#">1</a></li>
-							<li><a href="#">2</a></li>
-							<li><a href="#">3</a></li>
-							<li><a href="#">4</a></li>
-							<li><a href="#">5</a></li>
+						<ul class="pagination pagination-md global_vote">
+							<li class="voteTypeClick active" data-vote-type="global" data-vote-value="1"><a href="#">1</a></li>
+							<li class="voteTypeClick" data-vote-type="global" data-vote-value="2"><a href="#">2</a></li>
+							<li class="voteTypeClick" data-vote-type="global" data-vote-value="3"><a href="#">3</a></li>
+							<li class="voteTypeClick" data-vote-type="global" data-vote-value="4"><a href="#">4</a></li>
+							<li class="voteTypeClick" data-vote-type="global" data-vote-value="5"><a href="#">5</a></li>
 						</ul>
 					</div>
 				</div>
@@ -125,12 +125,12 @@
 						Viso
 					</div>
 					<div>
-						<ul class="pagination pagination-md">
-							<li class="active"><a href="#">1</a></li>
-							<li><a href="#">2</a></li>
-							<li><a href="#">3</a></li>
-							<li><a href="#">4</a></li>
-							<li><a href="#">5</a></li>
+						<ul class="pagination pagination-md face_vote">
+							<li class="voteTypeClick active" data-vote-type="face" data-vote-value="1"><a href="#">1</a></li>
+							<li class="voteTypeClick" data-vote-type="face" data-vote-value="2"><a href="#">2</a></li>
+							<li class="voteTypeClick" data-vote-type="face" data-vote-value="3"><a href="#">3</a></li>
+							<li class="voteTypeClick" data-vote-type="face" data-vote-value="4"><a href="#">4</a></li>
+							<li class="voteTypeClick" data-vote-type="face" data-vote-value="5"><a href="#">5</a></li>
 						</ul>
 					</div>
 				</div>
@@ -140,17 +140,17 @@
 						Sguardo
 					</div>
 					<div>
-						<ul class="pagination pagination-md">
-							<li class="active"><a href="#">1</a></li>
-							<li><a href="#">2</a></li>
-							<li><a href="#">3</a></li>
-							<li><a href="#">4</a></li>
-							<li><a href="#">5</a></li>
+						<ul class="pagination pagination-md look_vote">
+							<li class="voteTypeClick active" data-vote-type="look" data-vote-value="1"><a href="#">1</a></li>
+							<li class="voteTypeClick" data-vote-type="look" data-vote-value="2"><a href="#">2</a></li>
+							<li class="voteTypeClick" data-vote-type="look" data-vote-value="3"><a href="#">3</a></li>
+							<li class="voteTypeClick" data-vote-type="look" data-vote-value="4"><a href="#">4</a></li>
+							<li class="voteTypeClick" data-vote-type="look" data-vote-value="5"><a href="#">5</a></li>
 						</ul>
 					</div>
 				</div>
 				<div class="vote_user_button_container">
-					<a href="#" class="btn btn-success">Vota</a>
+					<a href="#" class="btn btn-success submitVoteButtonClickAction">Vota</a>
 				</div>
 			</div>
 		</div>
@@ -172,12 +172,38 @@
 		</div>
 	</div>
 </div>
+
+{# hidden form #}
+<form class="hide" method="post" action="">
+</form>
 {% endblock container4_content %}
 
 {% block custom_js %}
 <script>
 	$(document).ready(function(){
-		$(".load_more_images").click(function(){
+		// single vote type click
+		$(".voteTypeClick").click(function(){
+			if ($(this).data("voteType") == "global") {
+				voteUserObject.setGlobalVotePoints($(this).data("voteValue"));
+			}
+			if ($(this).data("voteType") == "face") {
+				voteUserObject.setFaceVotePoints($(this).data("voteValue"));
+			}
+			if ($(this).data("voteType") == "look") {
+				voteUserObject.lookVoteContainerClass($(this).data("voteValue"));
+			}
+
+			return false;
+		});
+
+		// performin vote action
+		$(".submitVoteButtonClickAction").click(function(){
+			voteUserObject.performVotingAction();
+
+			return false;
+		});
+
+		/*$(".load_more_images").click(function(){
 			var block_size = {
 				lg_size : 3,
 				md_size : 3,
@@ -188,7 +214,7 @@
 			$(".image_grid_container").append(elements);
 
 			return false;
-		});
+		});*/
 	});
 </script>
 {% endblock custom_js %}

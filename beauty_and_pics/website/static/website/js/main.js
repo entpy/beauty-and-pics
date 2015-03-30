@@ -30,6 +30,11 @@ $(document).ready(function(){
 	});
 });
 
+/* Function to read csrftoken from cookie */
+readCsrftokenFromCookie : function() {
+	return $.cookie('csrftoken');
+},
+
 function randomInt(min, max) {
 	return Math.floor(Math.random() * max + min);
 }
@@ -65,6 +70,101 @@ function getItems(block_size) {
 	return $(items);
 }*/
 
+/* Object to perform votes */
+var voteUserObject = {
+	__ajaxCallParams : {
+		"global_vote_points" : null, // point about global vote
+		"face_vote_points" : null, // point about face vote
+		"look_vote_points" : null, // point about look vote
+		"id_user" : null, // id account to vote
+	},
+	globalVoteContainerClass : ".global_vote",
+	faceVoteContainerClass : ".face_vote",
+	lookVoteContainerClass : ".look_vote",
+	votationBlockErrorClassName : "votation_block_error",
+	ajaxCallUrl : "/ajax/", // the ajax call url
+
+	// ajax call params setter
+	setGlobalVotePoints : function(points) { if (points) { this.__ajaxCallParams["global_vote_points"] = points; } },
+	setFaceVotePoints : function(points) { if (points) { this.__ajaxCallParams["face_vote_points"] = points; } },
+	setLookVotePoints : function(points) { if (points) { this.__ajaxCallParams["look_vote_points"] = points; } },
+	setIdUser : function(idUser) { if (idUser) { this.__ajaxCallParams["id_user"] = idUser; } },
+
+	// ajax call params getter
+	getGlobalVotePoints : function() { return this.__ajaxCallParams["global_vote_points"]; },
+	getFaceVotePoints : function() { return this.__ajaxCallParams["face_vote_points"]; },
+	getLookVotePoints : function() { return this.__ajaxCallParams["look_vote_points"]; },
+	getIdUser : function() { return this.__ajaxCallParams["id_user"]; },
+
+	/* function to check if all votes were done */
+	checkAllVoteAreSet : function() {
+		var returnVar = true;
+		// global votation check {{{
+		if (this.getGlobalVotePoints()) {
+			this.removeGlobalTypeError();
+		} else {
+			this.showGlobalTypeError();
+			returnVar = false;
+		}
+		// global votation check }}}
+		// face votation check {{{
+		if (this.getFaceVotePoints()) {
+			this.removeFaceTypeError();
+		} else {
+			this.showFaceTypeError();
+			returnVar = false;
+		}
+		// face votation check }}}
+		// look votation check {{{
+		if (this.getLookVotePoints()) {
+			this.removeLookTypeError();
+		} else {
+			this.showLookTypeError();
+			returnVar = false;
+		}
+		// look votation check }}}
+
+		return returnVar;
+	},
+
+	// function to add error class to votation block
+	showGlobalTypeError : function() { $(this.globalVoteContainerClass).addClass(this.votationBlockErrorClassName); },
+	showFaceTypeError : function() { $(this.faceVoteContainerClass).addClass(this.votationBlockErrorClassName); },
+	showLookTypeError : function() { $(this.getLookVotePoints).addClass(this.votationBlockErrorClassName); },
+
+	// function to remove error class to votation block
+	removeGlobalTypeError : function() { $(this.globalVoteContainerClass).removeClass(this.votationBlockErrorClassName); },
+	removeFaceTypeError : function() { $(this.faceVoteContainerClass).removeClass(this.votationBlockErrorClassName); },
+	removeLookTypeError : function() { $(this.getLookVotePoints).removeClass(this.votationBlockErrorClassName); },
+
+	/* function to perfor a votation */
+	performVotingAction : function() {
+		if (this.checkAllVoteAreSet()) {
+			// reading csrfmiddlewaretoken from cookie
+			var csrftoken = readCsrftokenFromCookie();
+			var ajaxCallData = {
+				url : this.ajaxCallUrl,
+				data : $.param(this.__ajaxCallParams()) + "&ajax_action=perform_voting",
+				async : true,
+				headers: { "X-CSRFToken": csrftoken },
+				success : function(jsonResponse) {
+					// functions to manage JSON response
+					console.log("==========risultato chiamata==========");
+					console.log(jsonResponse);
+				},
+				error : function(jsonResponse) {
+					// ...fuck
+					// console.log(jsonResponse);
+				}
+			}
+		}
+	},
+
+	errorVotingAction : function() { return true; },
+
+	successVotingAction : function() { return true; },
+};
+
 /* Object to retrieve a filtered list of elements (user or photo book) */
 var elementsListObject = {
 	__elementsListFilters : {
@@ -78,11 +178,6 @@ var elementsListObject = {
 	bootstrapBlockSize : null, // the bootstrap block size for display
 	blocksContainerClassName : ".image_grid_container", // the block container class inside html page
 	actionButtonClassName : ".loadMoreElementsAction", // load more button class name
-
-	/* Function to read csrftoken from cookie */
-	readCsrftokenFromCookie : function() {
-		return $.cookie('csrftoken');
-	},
 
 	/* Function to add a new AND filter */
 	addFilter : function(filterName, filterValue) {
@@ -165,7 +260,7 @@ var elementsListObject = {
 
 	getElementsList : function() {
 		// reading csrfmiddlewaretoken from cookie
-		var csrftoken = this.readCsrftokenFromCookie();
+		var csrftoken = readCsrftokenFromCookie();
 		var ajaxCallData = {
 			url : this.ajaxCallUrl,
 			data : $.param(this.getElementsListFilters()) + "&ajax_action=elements_list",
@@ -310,11 +405,6 @@ var ajaxFormValidation = {
 	ajaxCallUrl : "/ajax/", // the ajax call url
 	callData : Array(),
 
-	/* Function to read csrftoken from cookie */
-	readCsrftokenFromCookie : function() {
-		return $.cookie('csrftoken');
-	},
-
 	/* Function to manage Ajax form response */
 	manageFormResponse : function(jsonResponse) {
 		try {
@@ -412,7 +502,7 @@ var ajaxFormValidation = {
 		// check if ajax call can be performed
 		if (this.ajaxCallCanBePerformed()) {
 			// reading csrfmiddlewaretoken from cookie
-			var csrftoken = this.readCsrftokenFromCookie();
+			var csrftoken = readCsrftokenFromCookie();
 			var ajaxCallData = {
 				url : this.ajaxCallUrl,
 				data : this.callData["data"] + "&ajax_action=form_validation",
