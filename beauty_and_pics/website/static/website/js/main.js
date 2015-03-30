@@ -31,9 +31,9 @@ $(document).ready(function(){
 });
 
 /* Function to read csrftoken from cookie */
-readCsrftokenFromCookie : function() {
+function readCsrftokenFromCookie() {
 	return $.cookie('csrftoken');
-},
+}
 
 function randomInt(min, max) {
 	return Math.floor(Math.random() * max + min);
@@ -84,23 +84,40 @@ var voteUserObject = {
 	votationBlockErrorClassName : "votation_block_error",
 	ajaxCallUrl : "/ajax/", // the ajax call url
 
-	// ajax call params setter
-	setGlobalVotePoints : function(points) { if (points) { this.__ajaxCallParams["global_vote_points"] = points; } },
-	setFaceVotePoints : function(points) { if (points) { this.__ajaxCallParams["face_vote_points"] = points; } },
-	setLookVotePoints : function(points) { if (points) { this.__ajaxCallParams["look_vote_points"] = points; } },
-	setIdUser : function(idUser) { if (idUser) { this.__ajaxCallParams["id_user"] = idUser; } },
+	/* Function to add a new AND filter */
+	addParam : function(paramName, paramValue) {
+		if (paramName) {
+			if (!paramValue) paramValue = null
+			// retrieve previously added filters
+			var existing_params = this.getParamsList();
+			// override or add new filter
+			existing_params[paramName] = paramValue;
+			// setting new filters object
+			this.setParamsList(existing_params);
+		}
 
-	// ajax call params getter
-	getGlobalVotePoints : function() { return this.__ajaxCallParams["global_vote_points"]; },
-	getFaceVotePoints : function() { return this.__ajaxCallParams["face_vote_points"]; },
-	getLookVotePoints : function() { return this.__ajaxCallParams["look_vote_points"]; },
-	getIdUser : function() { return this.__ajaxCallParams["id_user"]; },
+		return true;
+	},
+
+	/* Function to set a list of ajax call params */
+	setParamsList : function(paramsList) {
+		if (paramsList) {
+			this.__ajaxCallParams = paramsList
+		}
+
+		return true;
+	},
+
+	/* Function to retrieve a list of ajax call params */
+	getParamsList : function() { return this.__ajaxCallParams; },
 
 	/* function to check if all votes were done */
-	checkAllVoteAreSet : function() {
+	checkVoteActionErrors : function() {
 		var returnVar = true;
+		var existing_params = this.getParamsList();
+
 		// global votation check {{{
-		if (this.getGlobalVotePoints()) {
+		if (existing_params["global_vote_points"]) {
 			this.removeGlobalTypeError();
 		} else {
 			this.showGlobalTypeError();
@@ -108,7 +125,7 @@ var voteUserObject = {
 		}
 		// global votation check }}}
 		// face votation check {{{
-		if (this.getFaceVotePoints()) {
+		if (existing_params["face_vote_points"]) {
 			this.removeFaceTypeError();
 		} else {
 			this.showFaceTypeError();
@@ -116,7 +133,7 @@ var voteUserObject = {
 		}
 		// face votation check }}}
 		// look votation check {{{
-		if (this.getLookVotePoints()) {
+		if (existing_params["look_vote_points"]) {
 			this.removeLookTypeError();
 		} else {
 			this.showLookTypeError();
@@ -124,27 +141,40 @@ var voteUserObject = {
 		}
 		// look votation check }}}
 
+		if (!returnVar) {
+			alert("Per poter votare devi esprimere un giudizio su ogni metrica!");
+		} else if (!confirm("Confermi il voto? Potrai ri-votare questa persona tra 48 ore!")) {
+				returnVar = false;
+		}
+
+		// id_user check {{{
+		if (!existing_params["id_user"]) {
+			console.log("errore inaspettato, id_user non settato, contattare l'amministratore.");
+			returnVar = false;
+		}
+		// id_user check }}}
+
 		return returnVar;
 	},
 
 	// function to add error class to votation block
 	showGlobalTypeError : function() { $(this.globalVoteContainerClass).addClass(this.votationBlockErrorClassName); },
 	showFaceTypeError : function() { $(this.faceVoteContainerClass).addClass(this.votationBlockErrorClassName); },
-	showLookTypeError : function() { $(this.getLookVotePoints).addClass(this.votationBlockErrorClassName); },
+	showLookTypeError : function() { $(this.lookVoteContainerClass).addClass(this.votationBlockErrorClassName); },
 
 	// function to remove error class to votation block
 	removeGlobalTypeError : function() { $(this.globalVoteContainerClass).removeClass(this.votationBlockErrorClassName); },
 	removeFaceTypeError : function() { $(this.faceVoteContainerClass).removeClass(this.votationBlockErrorClassName); },
-	removeLookTypeError : function() { $(this.getLookVotePoints).removeClass(this.votationBlockErrorClassName); },
+	removeLookTypeError : function() { $(this.lookVoteContainerClass).removeClass(this.votationBlockErrorClassName); },
 
 	/* function to perfor a votation */
 	performVotingAction : function() {
-		if (this.checkAllVoteAreSet()) {
+		if (this.checkVoteActionErrors()) {
 			// reading csrfmiddlewaretoken from cookie
 			var csrftoken = readCsrftokenFromCookie();
 			var ajaxCallData = {
 				url : this.ajaxCallUrl,
-				data : $.param(this.__ajaxCallParams()) + "&ajax_action=perform_voting",
+				data : $.param(this.getParamsList()) + "&ajax_action=perform_voting",
 				async : true,
 				headers: { "X-CSRFToken": csrftoken },
 				success : function(jsonResponse) {
@@ -157,7 +187,11 @@ var voteUserObject = {
 					// console.log(jsonResponse);
 				}
 			}
+			// performing ajax call
+			loadDataWrapper.performAjaxCall(ajaxCallData);
 		}
+
+		return true;
 	},
 
 	errorVotingAction : function() { return true; },

@@ -96,7 +96,9 @@ textarea { resize: none; }
 .vote_user_container .vote_user_block { display: inline-block; margin: 0 auto 11px; }
 .vote_user_container .vote_user_button_container { margin-top: 10px; }
 .vote_user_container .vote_user_block .vote_user_metric_name { margin-bottom: 5px; text-align: left; }
-.vote_user_container .vote_user_block ul { margin: 0px; }
+.vote_user_container .vote_user_block ul { background-color: #3498db; border: 2px solid #3498db; margin: 0; padding: 3px; }
+.vote_user_container .vote_user_block.votation_block_error ul { border: 2px solid red; }
+.vote_user_container .vote_user_block.votation_block_error .vote_user_metric_name { color: red; }
 
 /* image grids {{{ */
 ul.grid_container { list-style: none; font-size: 0px; padding: 0px; }

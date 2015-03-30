@@ -105,47 +105,47 @@
 		<div class="generic_container_content">
 			<div class="background_container1 vote_user_container">
 				<!-- vote user block -->
-				<div class="vote_user_block">
+				<div class="vote_user_block global_vote">
 					<div class="vote_user_metric_name">
 						Globale
 					</div>
 					<div>
-						<ul class="pagination pagination-md global_vote">
-							<li class="voteTypeClick active" data-vote-type="global" data-vote-value="1"><a href="#">1</a></li>
-							<li class="voteTypeClick" data-vote-type="global" data-vote-value="2"><a href="#">2</a></li>
-							<li class="voteTypeClick" data-vote-type="global" data-vote-value="3"><a href="#">3</a></li>
-							<li class="voteTypeClick" data-vote-type="global" data-vote-value="4"><a href="#">4</a></li>
-							<li class="voteTypeClick" data-vote-type="global" data-vote-value="5"><a href="#">5</a></li>
+						<ul class="pagination pagination-md">
+							<li class="voteTypeClick" data-vote-type="global_vote_points" data-vote-value="1"><a href="#">1</a></li>
+							<li class="voteTypeClick" data-vote-type="global_vote_points" data-vote-value="2"><a href="#">2</a></li>
+							<li class="voteTypeClick" data-vote-type="global_vote_points" data-vote-value="3"><a href="#">3</a></li>
+							<li class="voteTypeClick" data-vote-type="global_vote_points" data-vote-value="4"><a href="#">4</a></li>
+							<li class="voteTypeClick" data-vote-type="global_vote_points" data-vote-value="5"><a href="#">5</a></li>
 						</ul>
 					</div>
 				</div>
 				<!-- vote user block -->
-				<div class="vote_user_block">
+				<div class="vote_user_block face_vote">
 					<div class="vote_user_metric_name">
 						Viso
 					</div>
 					<div>
-						<ul class="pagination pagination-md face_vote">
-							<li class="voteTypeClick active" data-vote-type="face" data-vote-value="1"><a href="#">1</a></li>
-							<li class="voteTypeClick" data-vote-type="face" data-vote-value="2"><a href="#">2</a></li>
-							<li class="voteTypeClick" data-vote-type="face" data-vote-value="3"><a href="#">3</a></li>
-							<li class="voteTypeClick" data-vote-type="face" data-vote-value="4"><a href="#">4</a></li>
-							<li class="voteTypeClick" data-vote-type="face" data-vote-value="5"><a href="#">5</a></li>
+						<ul class="pagination pagination-md">
+							<li class="voteTypeClick" data-vote-type="face_vote_points" data-vote-value="1"><a href="#">1</a></li>
+							<li class="voteTypeClick" data-vote-type="face_vote_points" data-vote-value="2"><a href="#">2</a></li>
+							<li class="voteTypeClick" data-vote-type="face_vote_points" data-vote-value="3"><a href="#">3</a></li>
+							<li class="voteTypeClick" data-vote-type="face_vote_points" data-vote-value="4"><a href="#">4</a></li>
+							<li class="voteTypeClick" data-vote-type="face_vote_points" data-vote-value="5"><a href="#">5</a></li>
 						</ul>
 					</div>
 				</div>
 				<!-- vote user block -->
-				<div class="vote_user_block">
+				<div class="vote_user_block look_vote">
 					<div class="vote_user_metric_name">
 						Sguardo
 					</div>
 					<div>
-						<ul class="pagination pagination-md look_vote">
-							<li class="voteTypeClick active" data-vote-type="look" data-vote-value="1"><a href="#">1</a></li>
-							<li class="voteTypeClick" data-vote-type="look" data-vote-value="2"><a href="#">2</a></li>
-							<li class="voteTypeClick" data-vote-type="look" data-vote-value="3"><a href="#">3</a></li>
-							<li class="voteTypeClick" data-vote-type="look" data-vote-value="4"><a href="#">4</a></li>
-							<li class="voteTypeClick" data-vote-type="look" data-vote-value="5"><a href="#">5</a></li>
+						<ul class="pagination pagination-md">
+							<li class="voteTypeClick" data-vote-type="look_vote_points" data-vote-value="1"><a href="#">1</a></li>
+							<li class="voteTypeClick" data-vote-type="look_vote_points" data-vote-value="2"><a href="#">2</a></li>
+							<li class="voteTypeClick" data-vote-type="look_vote_points" data-vote-value="3"><a href="#">3</a></li>
+							<li class="voteTypeClick" data-vote-type="look_vote_points" data-vote-value="4"><a href="#">4</a></li>
+							<li class="voteTypeClick" data-vote-type="look_vote_points" data-vote-value="5"><a href="#">5</a></li>
 						</ul>
 					</div>
 				</div>
@@ -183,21 +183,17 @@
 	$(document).ready(function(){
 		// single vote type click
 		$(".voteTypeClick").click(function(){
-			if ($(this).data("voteType") == "global") {
-				voteUserObject.setGlobalVotePoints($(this).data("voteValue"));
-			}
-			if ($(this).data("voteType") == "face") {
-				voteUserObject.setFaceVotePoints($(this).data("voteValue"));
-			}
-			if ($(this).data("voteType") == "look") {
-				voteUserObject.lookVoteContainerClass($(this).data("voteValue"));
-			}
+			voteUserObject.addParam($(this).data("voteType"), $(this).data("voteValue"));
+			deactivateGroupVoteType($(this));
+			activateVoteType($(this));
 
 			return false;
 		});
 
 		// performin vote action
 		$(".submitVoteButtonClickAction").click(function(){
+			// TODO: add user_id to ajax call
+			voteUserObject.addParam("id_user", "{{ request.GET.user_id }}");
 			voteUserObject.performVotingAction();
 
 			return false;
@@ -216,5 +212,27 @@
 			return false;
 		});*/
 	});
+
+	/* function to remove "active" class to all vote type elements */
+	function deactivateGroupVoteType(voteTypeElement) {
+		if ($(voteTypeElement).length) {
+			$(voteTypeElement).siblings("li").removeClass("active");
+		}
+
+		return true;
+	}
+
+	/* function to add "active" class to a selected vote type element */
+	function activateVoteType(voteTypeElement) {
+		if ($(voteTypeElement).length) {
+			// remove error class
+			$(voteTypeElement).parents(".vote_user_block").removeClass(voteUserObject.votationBlockErrorClassName);
+
+			// add active class
+			$(voteTypeElement).addClass("active");
+		}
+
+		return true;
+	}
 </script>
 {% endblock custom_js %}
