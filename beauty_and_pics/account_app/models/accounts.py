@@ -287,6 +287,7 @@ class Account(models.Model):
         return_var = {}
         if user_obj:
             # from user model {{{
+            return_var["user_id"] = user_obj.id or ''
             return_var["first_name"] = user_obj.first_name or ''
             return_var["last_name"] = user_obj.last_name or ''
             return_var["email"] = user_obj.email or ''

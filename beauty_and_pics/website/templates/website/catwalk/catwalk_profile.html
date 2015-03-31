@@ -8,7 +8,7 @@
 {% block block0_1_title_h1 %}<b>123</b> giorni <b>6</b> ore <b>33</b> minuti{% endblock block0_1_title_h1 %}
 {% block block0_1_title_h4 %}alla scadenza del concorso{% endblock block0_1_title_h4 %}
 
-{% block container4_title %}Nome Cognome{% endblock container4_title %}
+{% block container4_title %}{{ user.first_name }} {{ user.last_name }}{% endblock container4_title %}
 
 {% block container4_content %}
 <div class="user_top_info_container">
@@ -167,7 +167,7 @@
 				<div class="col-sm-12 image_grid_container"></div>
 			</div>
 			<div class="text-center">
-				<a class="btn btn-success load_more_images" href="#">Carica altre</a>
+				<a class="btn btn-success load_more_images" href="#">{{ user.user_id }}Carica altre</a>
 			</div>
 		</div>
 	</div>
@@ -192,8 +192,7 @@
 
 		// performin vote action
 		$(".submitVoteButtonClickAction").click(function(){
-			// TODO: add user_id to ajax call
-			voteUserObject.addParam("id_user", "{{ request.GET.user_id }}");
+			voteUserObject.addParam("id_user", "{{ user.user_id }}");
 			voteUserObject.performVotingAction();
 
 			return false;

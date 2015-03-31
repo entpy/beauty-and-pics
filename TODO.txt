@@ -1,0 +1,2 @@
+- controllare che le metriche vengano create alla creazione del concorso ()
+- cambiare in class Point(models.Model): da id_account a id_user

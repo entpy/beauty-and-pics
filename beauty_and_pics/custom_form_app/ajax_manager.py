@@ -21,6 +21,8 @@ class ajaxManager():
         # list of valid methods
 	self.__valid_action_list += ('form_validation',)
 	self.__valid_action_list += ('elements_list',)
+	self.__valid_action_list += ('perform_voting',)
+
         # retrieve action to perform
         self.ajax_action = request.POST.get("ajax_action")
         # ajax request (POST data)
@@ -134,3 +136,10 @@ class ajaxManager():
         self.set_json_response(json_response=json_data_string)
 
         return True
+
+    def perform_voting(self):
+        """Function to vote a catwalker"""
+        logger.debug("ajax_function: @@perform_voting@@")
+        logger.debug("parametri della chiamata: " + str(self.request.POST))
+
+        elements_list_type = self.request.POST.get("elements_list_type")

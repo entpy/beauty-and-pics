@@ -29,3 +29,28 @@ class UserEmailPasswordUpdateError(Exception):
     """Error in update user email and password."""
     get_error_code = "006"
     pass
+
+class VoteMetricMissingError(Exception):
+    """Error in voting, vote metric missing."""
+    get_error_code = "007"
+    pass
+
+class VoteUserIdMissingError(Exception):
+    """Error in voting, vote user id."""
+    get_error_code = "008"
+    pass
+
+class VoteMetricWrongValueError(Exception):
+    """Error in voting, wrong vote metric value."""
+    get_error_code = "009"
+    pass
+
+class UserAlreadyVotedError(Exception):
+    """Error in voting, user already voted this account."""
+    get_error_code = "010"
+    pass
+
+class ContestNotActiveError(Exception):
+    """Exception in contest active checking."""
+    get_error_code = "011"
+    pass

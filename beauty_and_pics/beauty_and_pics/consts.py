@@ -28,3 +28,11 @@ class project_constants(object):
 
     # catwalk user group name
     CATWALK_GROUP_NAME = "catwalk_user"
+
+    # votations {{{
+    # vote seconds min limit
+    SECONDS_BETWEEN_VOTATION = 172800 # 172800 seconds = 2 days
+
+    VOTE_METRICS_LIST = ("global", "face", "look")
+
+    # votations }}}

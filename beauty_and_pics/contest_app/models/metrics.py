@@ -1,4 +1,5 @@
 from django.db import models
+from beauty_and_pics.consts import project_constants
 
 class Metric(models.Model):
     id_metric = models.AutoField(primary_key=True)
@@ -10,7 +11,35 @@ class Metric(models.Model):
     def __unicode__(self):
         return str(self.name)
 
-"""
-        * id_metric (PK)
-        * name
-"""
+    """
+            * id_metric (PK)
+            * name
+    """
+
+    def create_default_metrics(self):
+        """Function to create default metrics"""
+        for default_metric in project_constants.VOTE_METRICS_LIST:
+            metric_obj = Metric(name=default_metric)
+            metric_obj.save()
+
+        return True
+
+    def check_default_metrics_exist(self):
+        """Function to check if default metrics exist"""
+        return_var = False
+        if Metric.objects.count():
+            # default metrics exists
+            return_var = True
+
+        return return_var
+
+    def manage_default_metrics(self):
+        """Function to manage default metrics (create metrics if not already exist)"""
+        return_var = False
+        # check if default metrics already exist
+        if not self.check_default_metrics_exist():
+            # default metrics must be created
+            self.create_default_metrics()
+            return_var = True
+
+        return return_var

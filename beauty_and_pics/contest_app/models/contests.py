@@ -5,6 +5,7 @@ from django.db.models import Q
 from datetime import timedelta
 from django.utils import timezone
 from contest_app.models.contest_types import Contest_Type
+from account_app.models.accounts import Account
 from beauty_and_pics.consts import project_constants
 import logging
 
@@ -164,5 +165,17 @@ class Contest(models.Model):
         # debug info only
         for contest in Contest.objects.filter(status=project_constants.CONTEST_OPENING):
             logger.info(str(contest.id_contest_type.code) + " inizio:" + str(return_var[contest.id_contest_type.code]))
+
+        return return_var
+
+    def get_contests_type_status(self, contest_type=None):
+        """Function to retrieve contest about a contest_type"""
+        return_var = None
+        if contest_type:
+            contest_obj = Contest()
+            if Contest.objects.filter(status=project_constants.CONTEST_OPENING, id_contest_type__code=contest_type).count():
+                return_var = project_constants.CONTEST_OPENING
+            elif Contest.objects.filter(status=project_constants.CONTEST_ACTIVE, id_contest_type__code=contest_type).count():
+                return_var = project_constants.CONTEST_ACTIVE
 
         return return_var
