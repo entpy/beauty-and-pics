@@ -1,8 +1,9 @@
 from django.db import models
+from django.contrib.auth.models import User
 
 class Favorite(models.Model):
     id_favorite = models.AutoField(primary_key=True)
-    id_account = models.ForeignKey('Account')
+    user = models.ForeignKey(User)
     id_account_favorite = models.IntegerField()
 
     class Meta:
@@ -10,6 +11,6 @@ class Favorite(models.Model):
 
 """
         * id_favorite (PK)
-        * id_account (FK)
+        * user (FK)
         * id_account_favorite (FK)
 """

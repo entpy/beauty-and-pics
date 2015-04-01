@@ -76,7 +76,7 @@ var voteUserObject = {
 		"global_vote_points" : null, // point about global vote
 		"face_vote_points" : null, // point about face vote
 		"look_vote_points" : null, // point about look vote
-		"id_user" : null, // id account to vote
+		"user_id" : null, // id account to vote
 	},
 	globalVoteContainerClass : ".global_vote",
 	faceVoteContainerClass : ".face_vote",
@@ -147,12 +147,12 @@ var voteUserObject = {
 				returnVar = false;
 		}
 
-		// id_user check {{{
-		if (!existing_params["id_user"]) {
-			console.log("errore inaspettato, id_user non settato, contattare l'amministratore.");
+		// user_id check {{{
+		if (!existing_params["user_id"]) {
+			console.log("errore inaspettato, user_id non settato, contattare l'amministratore.");
 			returnVar = false;
 		}
-		// id_user check }}}
+		// user_id check }}}
 
 		return returnVar;
 	},

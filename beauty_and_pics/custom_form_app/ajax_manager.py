@@ -147,7 +147,7 @@ class ajaxManager():
 
 	# build votation dictionary
         votation_data = {}
-        votation_data["id_user"] = self.request.POST.get("id_user")
+        votation_data["user_id"] = self.request.POST.get("user_id")
         votation_data["global_vote_points"] = self.request.POST.get("global_vote_points")
         votation_data["face_vote_points"] = self.request.POST.get("face_vote_points")
         votation_data["look_vote_points"] = self.request.POST.get("look_vote_points")
@@ -155,7 +155,7 @@ class ajaxManager():
 
 	try:
 	    vote_obj = Vote()
-	    vote_obj.perform_votation(votation_data, self.request.POST.get("id_user"), self.request.META["REMOTE_ADDR"])
+	    vote_obj.perform_votation(votation_data, self.request.POST.get("user_id"), self.request.META["REMOTE_ADDR"])
 	except VoteUserIdMissingError:
 	    error_msg = "Non è stato possibile eseguire la votazione, sii gentile, contatta l'amministratore."
 	except VoteMetricMissingError:

@@ -5,7 +5,6 @@ from django.db.models import Q
 from datetime import timedelta
 from django.utils import timezone
 from contest_app.models.contest_types import Contest_Type
-from account_app.models.accounts import Account
 from beauty_and_pics.consts import project_constants
 import logging
 
@@ -14,7 +13,7 @@ logger = logging.getLogger(__name__)
 
 class Contest(models.Model):
     id_contest = models.AutoField(primary_key=True)
-    id_contest_type = models.ForeignKey('Contest_Type')
+    contest_type = models.ForeignKey('Contest_Type')
     start_date = models.DateTimeField(null=True)
     end_date = models.DateTimeField(null=True)
     status = models.CharField(max_length=25)
@@ -23,11 +22,11 @@ class Contest(models.Model):
         app_label = 'contest_app'
 
     def __unicode__(self):
-        return str(self.id_contest) + " " + str(self.id_contest_type.code)
+        return str(self.id_contest) + " " + str(self.contest_type.code)
 
     """
             * id_contest (PK)
-            * id_contest_type
+            * contest_type
             * start_date
             * end_date
             * status (0 in attesa di apertura, 1 attivo, 2 chiuso)
@@ -46,10 +45,10 @@ class Contest(models.Model):
                   aprirà il concorso
         """
         for contest_type in Contest_Type.objects.all():
-            if not Contest.objects.filter(Q(id_contest_type=contest_type.id_contest_type), Q(status=project_constants.CONTEST_OPENING) | Q(status=project_constants.CONTEST_ACTIVE)).count():
+            if not Contest.objects.filter(Q(contest_type=contest_type.id_contest_type), Q(status=project_constants.CONTEST_OPENING) | Q(status=project_constants.CONTEST_ACTIVE)).count():
                 # no active or opening contests, must be create a new one
                 Contest_obj = Contest(
-                    id_contest_type = contest_type,
+                    contest_type = contest_type,
                     start_date = timezone.now() + timedelta(days=project_constants.CONTEST_OPENING_DAYS),
                     status = project_constants.CONTEST_OPENING,
                 )
@@ -144,11 +143,11 @@ class Contest(models.Model):
         # list of all active contests
         for contest in Contest.objects.filter(status=project_constants.CONTEST_ACTIVE):
             contest_expiring = contest.end_date - timezone.now()
-            return_var[contest.id_contest_type.code] = self.format_contest_time(date=contest_expiring)
+            return_var[contest.contest_type.code] = self.format_contest_time(date=contest_expiring)
 
         # debug info only
         for contest in Contest.objects.filter(status=project_constants.CONTEST_ACTIVE):
-            logger.info(str(contest.id_contest_type.code) + " scadenza:" + str(return_var[contest.id_contest_type.code]))
+            logger.info(str(contest.contest_type.code) + " scadenza:" + str(return_var[contest.contest_type.code]))
 
         return return_var
 
@@ -160,11 +159,11 @@ class Contest(models.Model):
         # list of all opening contests
         for contest in Contest.objects.filter(status=project_constants.CONTEST_OPENING):
             contest_opening = contest.start_date - timezone.now()
-            return_var[contest.id_contest_type.code] = self.format_contest_time(date=contest_opening)
+            return_var[contest.contest_type.code] = self.format_contest_time(date=contest_opening)
 
         # debug info only
         for contest in Contest.objects.filter(status=project_constants.CONTEST_OPENING):
-            logger.info(str(contest.id_contest_type.code) + " inizio:" + str(return_var[contest.id_contest_type.code]))
+            logger.info(str(contest.contest_type.code) + " inizio:" + str(return_var[contest.contest_type.code]))
 
         return return_var
 
@@ -173,9 +172,9 @@ class Contest(models.Model):
         return_var = None
         if contest_type:
             contest_obj = Contest()
-            if Contest.objects.filter(status=project_constants.CONTEST_OPENING, id_contest_type__code=contest_type).count():
+            if Contest.objects.filter(status=project_constants.CONTEST_OPENING, contest_type__code=contest_type).count():
                 return_var = project_constants.CONTEST_OPENING
-            elif Contest.objects.filter(status=project_constants.CONTEST_ACTIVE, id_contest_type__code=contest_type).count():
+            elif Contest.objects.filter(status=project_constants.CONTEST_ACTIVE, contest_type__code=contest_type).count():
                 return_var = project_constants.CONTEST_ACTIVE
 
         return return_var

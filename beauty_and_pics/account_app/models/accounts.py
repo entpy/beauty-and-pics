@@ -275,7 +275,7 @@ class Account(models.Model):
 
         return return_var
 
-    def custom_id_user_data(self, user_id=None):
+    def custom_user_id_data(self, user_id=None):
         """Function to retrieve user/account info about user id"""
         return_var = {}
         if user_id:

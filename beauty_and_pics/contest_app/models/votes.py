@@ -15,7 +15,7 @@ logger = logging.getLogger(__name__)
 
 class Vote(models.Model):
     id_vote = models.AutoField(primary_key=True)
-    id_user = models.ForeignKey(User)
+    user = models.ForeignKey(User)
     ip_address = models.CharField(max_length=50)
     date = models.DateTimeField(auto_now=True)
 
@@ -24,15 +24,15 @@ class Vote(models.Model):
 
     """
             * id_vote (PK)
-            * id_account (FK)
+            * user (FK)
             * ip_address
             * date
     """
 
-    def __check_if_user_can_vote(self, id_user, ip_address):
+    def __check_if_user_can_vote(self, user_id, ip_address):
         """Function to check if a user can (re-)vote a catwalker"""
         try:
-            vote_obj = Vote.objects.get(id_user=id_user, ip_address=ip_address)
+            vote_obj = Vote.objects.get(user__id=user_id, ip_address=ip_address)
             # user already voted this catwalker, check if vote date is <
             # project_constants.SECONDS_BETWEEN_VOTATION user can't revote
             datediff = datetime.now() - vote_obj.date
@@ -51,7 +51,7 @@ class Vote(models.Model):
     def __check_if_votation_data_are_valid(self, votation_data=None):
         """Function to check if all votation data are valid"""
         if votation_data:
-            if not votation_data["id_user"]:
+            if not votation_data["user_id"]:
                 raise VoteUserIdMissingError
             if not votation_data["global_vote_points"]:
                 raise VoteMetricMissingError
@@ -68,37 +68,37 @@ class Vote(models.Model):
 
         return True
 
-    def __check_if_account_contest_is_active(self, id_user):
+    def __check_if_account_contest_is_active(self, user_id):
         """Function to check if contest about account is active"""
         # retrieving account contest code
         account_obj = Account()
-        account_data = account_obj.custom_id_user_data(user_id=id_user)
+        account_data = account_obj.custom_user_id_data(user_id=user_id)
         contest_obj = Contest()
+        # TODO invece di account_data["gender"] -> account_data["contest_type"]
         if contest_obj.get_contests_type_status(contest_type=account_data["gender"]) != project_constants.CONTEST_ACTIVE:
             raise ContestNotActiveError
 
         return True
 
-    def create_votation(self, id_user, ip_address):
+    def create_votation(self, user_id, ip_address):
         """Function to save if an account perform a votation"""
-        if id_user and ip_address:
+        if user_id and ip_address:
 	    account_obj = Account()
             vote_obj = Vote()
-            vote_obj.id_user = account_obj.get_user_about_id(user_id=id_user)
+            vote_obj.user = account_obj.get_user_about_id(user_id=user_id)
             vote_obj.ip_address = ip_address
             vote_obj.save()
 
         return True
 
-    # TODO
-    def perform_votation(self, votation_data, id_user, ip_address):
-        """Function to perform a votation"""
+    def perform_votation(self, votation_data, user_id, ip_address):
+        """Function to perform a votation after validity check"""
         return_var = False
         try:
             self.__check_if_votation_data_are_valid(votation_data=votation_data)
         except VoteUserIdMissingError:
             # send exception to parent try-except block
-            logger.error("Errore nella votazione, id_user non presente | error code: " + str(VoteUserIdMissingError.get_error_code))
+            logger.error("Errore nella votazione, user_id non presente | error code: " + str(VoteUserIdMissingError.get_error_code))
             raise
         except VoteMetricMissingError:
             # send exception to parent try-except block
@@ -111,7 +111,7 @@ class Vote(models.Model):
         else:
             # check if contest is active
             try:
-                self.__check_if_account_contest_is_active(id_user=id_user)
+                self.__check_if_account_contest_is_active(user_id=user_id)
             except ContestNotActiveError:
                 # send exception to parent try-except block
                 logger.error("Errore nella votazione, contest non attivo | error code: " + str(ContestNotActiveError.get_error_code))
@@ -119,7 +119,7 @@ class Vote(models.Model):
             else:
                 # check if user can vote
                 try:
-                    self.__check_if_user_can_vote(id_user=id_user, ip_address=ip_address)
+                    self.__check_if_user_can_vote(user_id=user_id, ip_address=ip_address)
                 except UserAlreadyVotedError:
                     # send exception to parent try-except block
                     logger.error("Errore nella votazione, utente già votato | error code: " + str(UserAlreadyVotedError.get_error_code))
@@ -128,7 +128,7 @@ class Vote(models.Model):
                     # TODO: all seem right, perform votation
 
                     # add points and "create_votation"
-		    self.create_votation(id_user=id_user, ip_address=ip_address)
+		    self.create_votation(user_id=user_id, ip_address=ip_address)
 		    logger.debug("VOTAZIONE IN CORSO")
                     pass
 
