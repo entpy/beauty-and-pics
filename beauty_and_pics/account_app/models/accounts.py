@@ -21,6 +21,7 @@ class Account(models.Model):
     # id_account = models.AutoField(primary_key=True)
     # Links Account to a User model instance.
     user = models.OneToOneField(User, primary_key=True)
+    contest_type = models.ForeignKey(Contest_Type)
     city = models.CharField(max_length=100, null=True)
     country = models.CharField(max_length=100, null=True)
     gender = models.CharField(max_length=100, null=True)
@@ -79,6 +80,13 @@ class Account(models.Model):
             account_obj = Account()
             # create new account
             new_user = account_obj.create_user_account(email=user_info["email"], password=user_info["password"])
+
+            # identify contest type
+            contest_type_obj = Contest_Type()
+            if user_info["gender"] == project_constants.WOMAN_GENDER:
+                user_info["contest_type"] = contest_type_obj.get_contest_type_by_code(code=project_constants.WOMAN_CONTEST)
+            elif user_info["gender"] == project_constants.MAN_GENDER:
+                user_info["contest_type"] = contest_type_obj.get_contest_type_by_code(code=project_constants.MAN_CONTEST)
 
             # insert addictional data inside User and Account models
             account_obj.update_data(save_data=user_info, user_obj=new_user)
@@ -174,6 +182,8 @@ class Account(models.Model):
                 user_obj.account.country = save_data["country"]
             if "gender" in save_data:
                 user_obj.account.gender = save_data["gender"]
+            if "contest_type" in save_data:
+                user_obj.account.contest_type = save_data["contest_type"]
             if "status" in save_data:
                 user_obj.account.status = save_data["status"]
             if "birthday_date" in save_data:
@@ -184,7 +194,7 @@ class Account(models.Model):
                 user_obj.account.eyes = save_data["eyes"]
             if "height" in save_data:
                 user_obj.account.height = save_data["height"]
-            # saving addictiona models data
+            # save addictiona models data
             user_obj.save()
             user_obj.account.save()
             return_var = user_obj

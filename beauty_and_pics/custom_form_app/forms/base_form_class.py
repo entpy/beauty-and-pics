@@ -253,7 +253,7 @@ class FormCommonUtils():
     def get_genders_select_choices(self):
         """Create a list of genders for select element"""
         select_choices = []
-        select_choices.append((project_constants.WOMAN_CONTEST, "Donna"))
+        select_choices.append((project_constants.WOMAN_GENDER, "Donna"))
         select_choices.append((project_constants.MAN_CONTEST, "Uomo"))
 
         return select_choices

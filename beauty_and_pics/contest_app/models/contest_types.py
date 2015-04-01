@@ -19,6 +19,17 @@ class Contest_Type(models.Model):
     def __unicode__(self):
         return self.code
 
+    def get_contest_type_by_code(self, code=None):
+        """Function to retrieve contest_types instance by code"""
+        return_var = None
+        if code:
+            try:
+                return_var = Contest_Type.objects.get(code=code)
+            except Contest_Type.DoesNotExist:
+                pass
+
+        return return_var
+
     def create_default(self):
         """Function to create default contest types"""
         # create man_contest, if not exists

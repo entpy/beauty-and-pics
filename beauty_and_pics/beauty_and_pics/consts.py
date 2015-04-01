@@ -18,6 +18,12 @@ class project_constants(object):
     WOMAN_CONTEST = "woman_contest"
     # contest types }}}
 
+    # account gender {{{
+    MAN_GENDER = "man"
+
+    WOMAN_GENDER = "woman"
+    # account gender }}}
+
     # contest details {{{
     # CONTEST_OPENING_DAYS = 35
     # XXX: debug, use this instead --^

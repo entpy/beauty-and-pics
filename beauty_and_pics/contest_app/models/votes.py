@@ -6,6 +6,7 @@ from website.exceptions import *
 from django.contrib.auth.models import User
 from contest_app.models.contests import Contest
 from contest_app.models.contest_types import Contest_Type
+from contest_app.models.points import Point
 from account_app.models.accounts import Account
 from beauty_and_pics.consts import project_constants
 import sys, logging
@@ -126,6 +127,8 @@ class Vote(models.Model):
                     raise
                 else:
                     # TODO: all seem right, perform votation
+                    point_obj = Point()
+                    # point_obj.add_points(points, metric_obj, user_obj, contest_obj)
 
                     # add points and "create_votation"
 		    self.create_votation(user_id=user_id, ip_address=ip_address)

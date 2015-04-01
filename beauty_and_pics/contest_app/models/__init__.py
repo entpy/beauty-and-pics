@@ -1,3 +1,4 @@
+"""
 from django.contrib import admin
 from contest_app.models.contest_types import Contest_Type
 from contest_app.models.contests import Contest
@@ -10,3 +11,4 @@ admin.site.register(Contest)
 admin.site.register(Metric)
 admin.site.register(Vote)
 admin.site.register(Point)
+"""
