@@ -5,13 +5,10 @@ from datetime import datetime
 from website.exceptions import *
 from django.contrib.auth.models import User
 from contest_app.models.contests import Contest
+from contest_app.models.contest_types import Contest_Type
 from account_app.models.accounts import Account
 from beauty_and_pics.consts import project_constants
 import sys, logging
-
-# force utf8 read data
-reload(sys)
-sys.setdefaultencoding("utf8")
 
 # Get an instance of a logger
 logger = logging.getLogger(__name__)
@@ -35,7 +32,7 @@ class Vote(models.Model):
     def __check_if_user_can_vote(self, id_user, ip_address):
         """Function to check if a user can (re-)vote a catwalker"""
         try:
-            vote_obj = Vote.objects.get(id_user=user_id, ip_address=ip_address)
+            vote_obj = Vote.objects.get(id_user=id_user, ip_address=ip_address)
             # user already voted this catwalker, check if vote date is <
             # project_constants.SECONDS_BETWEEN_VOTATION user can't revote
             datediff = datetime.now() - vote_obj.date
@@ -52,7 +49,7 @@ class Vote(models.Model):
         return True
 
     def __check_if_votation_data_are_valid(self, votation_data=None):
-        """Function to check if a votation can be performed"""
+        """Function to check if all votation data are valid"""
         if votation_data:
             if not votation_data["id_user"]:
                 raise VoteUserIdMissingError
@@ -62,14 +59,11 @@ class Vote(models.Model):
                 raise VoteMetricMissingError
             if not votation_data["look_vote_points"]:
                 raise VoteMetricMissingError
-
-            if votation_data["global_vote_points"] < 1 or votation_data["global_vote_points"] > 5:
+            if int(votation_data["global_vote_points"]) < 1 or int(votation_data["global_vote_points"]) > 5:
                 raise VoteMetricWrongValueError
-
-            if votation_data["face_vote_points"] < 1 or votation_data["face_vote_points"] > 5:
+            if int(votation_data["face_vote_points"]) < 1 or int(votation_data["face_vote_points"]) > 5:
                 raise VoteMetricWrongValueError
-
-            if votation_data["look_vote_points"] < 1 or votation_data["look_vote_points"] > 5:
+            if int(votation_data["look_vote_points"]) < 1 or int(votation_data["look_vote_points"]) > 5:
                 raise VoteMetricWrongValueError
 
         return True
@@ -87,9 +81,10 @@ class Vote(models.Model):
 
     def create_votation(self, id_user, ip_address):
         """Function to save if an account perform a votation"""
-        if user and ip_address:
+        if id_user and ip_address:
+	    account_obj = Account()
             vote_obj = Vote()
-            vote_obj.id_user = id_user
+            vote_obj.id_user = account_obj.get_user_about_id(user_id=id_user)
             vote_obj.ip_address = ip_address
             vote_obj.save()
 
@@ -100,7 +95,7 @@ class Vote(models.Model):
         """Function to perform a votation"""
         return_var = False
         try:
-            self.__votation_can_be_performed(votation_data=votation_data)
+            self.__check_if_votation_data_are_valid(votation_data=votation_data)
         except VoteUserIdMissingError:
             # send exception to parent try-except block
             logger.error("Errore nella votazione, id_user non presente | error code: " + str(VoteUserIdMissingError.get_error_code))
@@ -131,7 +126,10 @@ class Vote(models.Model):
                     raise
                 else:
                     # TODO: all seem right, perform votation
+
                     # add points and "create_votation"
+		    self.create_votation(id_user=id_user, ip_address=ip_address)
+		    logger.debug("VOTAZIONE IN CORSO")
                     pass
 
         return True

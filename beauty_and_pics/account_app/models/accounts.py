@@ -4,6 +4,7 @@ from django.db import models
 from datetime import date
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.models import User, Group
+from contest_app.models.contest_types import Contest_Type
 from website.exceptions import *
 from beauty_and_pics.consts import project_constants
 import sys, logging, base64, hashlib, string, random

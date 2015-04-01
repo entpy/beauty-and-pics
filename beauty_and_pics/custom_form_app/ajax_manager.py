@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 from django.shortcuts import render
 from django.http import HttpResponse
 from custom_form_app.forms.base_form_class import *
@@ -6,6 +8,7 @@ from custom_form_app.forms.password_recover import *
 from custom_form_app.forms.account_edit_form import *
 from custom_form_app.forms.area51_form import *
 from beauty_and_pics.consts import project_constants
+from contest_app.models.votes import Vote
 from account_app.models import *
 import logging, json
 
@@ -142,4 +145,38 @@ class ajaxManager():
         logger.debug("ajax_function: @@perform_voting@@")
         logger.debug("parametri della chiamata: " + str(self.request.POST))
 
-        elements_list_type = self.request.POST.get("elements_list_type")
+	# build votation dictionary
+        votation_data = {}
+        votation_data["id_user"] = self.request.POST.get("id_user")
+        votation_data["global_vote_points"] = self.request.POST.get("global_vote_points")
+        votation_data["face_vote_points"] = self.request.POST.get("face_vote_points")
+        votation_data["look_vote_points"] = self.request.POST.get("look_vote_points")
+	error_msg = ""
+
+	try:
+	    vote_obj = Vote()
+	    vote_obj.perform_votation(votation_data, self.request.POST.get("id_user"), self.request.META["REMOTE_ADDR"])
+	except VoteUserIdMissingError:
+	    error_msg = "Non è stato possibile eseguire la votazione, sii gentile, contatta l'amministratore."
+	except VoteMetricMissingError:
+	    error_msg = "Seleziona un valore per ogni metrica."
+	except VoteMetricWrongValueError:
+	    error_msg = "I valori per ogni metrica devono essere compresi tra 1 e 5."
+	except ContestNotActiveError:
+	    error_msg = "Non è possibile votare fino a che il contest non sarà aperto."
+	except UserAlreadyVotedError:
+	    error_msg = "Non puoi votare più volte lo stesso utente nell'arco di 48 ore."
+	else:
+	    # votation performing seems ok
+	    pass
+
+	if error_msg:
+	    data = {'error' : True, 'message': error_msg }
+	else:
+	    data = {'success' : True, 'message': 'Grazie per aver votato!' }
+
+	# build JSON response
+        json_data_string = json.dumps(data)
+        self.set_json_response(json_response=json_data_string)
+
+        return True
