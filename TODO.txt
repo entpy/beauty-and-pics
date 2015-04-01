@@ -1,2 +1,4 @@
 - controllare che le metriche vengano create alla creazione del concorso ()
 - cambiare in class Point(models.Model): da id_account a id_user
+		- inserire dentro agli init dei model gli importi dei modelli per farne creare i db,
+		  peccato che una referenza circolare (account_type) in account non faccia funzionare nulla
