@@ -168,7 +168,7 @@ class Contest(models.Model):
         return return_var
 
     def get_contests_type_status(self, contest_type=None):
-        """Function to retrieve contest about a contest_type"""
+        """Function to retrieve contest status about a contest_type"""
         return_var = None
         if contest_type:
             contest_obj = Contest()
@@ -176,5 +176,15 @@ class Contest(models.Model):
                 return_var = project_constants.CONTEST_OPENING
             elif Contest.objects.filter(status=project_constants.CONTEST_ACTIVE, contest_type__code=contest_type).count():
                 return_var = project_constants.CONTEST_ACTIVE
+
+        return return_var
+
+    def get_active_contests_by_type(self, contest_type):
+        """Function to retrieve active contest by contest_type"""
+        return_var = None
+	try:
+            return_var = Contest.objects.get(status=project_constants.CONTEST_ACTIVE, contest_type__code=contest_type)
+	except Metric.DoesNotExist:
+	    pass
 
         return return_var

@@ -16,10 +16,20 @@ class Metric(models.Model):
             * name
     """
 
+    def get_metric_by_name(self, name):
+	"""Function to retrieve a metric instance by name"""
+	return_var = None
+	try:
+	    return_var = Metric.objects.get(name=name)
+	except Metric.DoesNotExist:
+	    return_var = False
+
+	return return_var
+
     def create_default_metrics(self):
         """Function to create default metrics"""
         for default_metric in project_constants.VOTE_METRICS_LIST:
-            metric_obj = Metric(name=default_metric)
+            metric_obj = Metric(name=project_constants.VOTE_METRICS_LIST[default_metric])
             metric_obj.save()
 
         return True

@@ -4,10 +4,8 @@ from django.db import models
 from datetime import datetime
 from website.exceptions import *
 from django.contrib.auth.models import User
-from contest_app.models.contests import Contest
 from contest_app.models.contest_types import Contest_Type
 from contest_app.models.points import Point
-from account_app.models.accounts import Account
 from beauty_and_pics.consts import project_constants
 import sys, logging
 
@@ -71,18 +69,22 @@ class Vote(models.Model):
 
     def __check_if_account_contest_is_active(self, user_id):
         """Function to check if contest about account is active"""
+	from account_app.models.accounts import Account
+	from contest_app.models.contests import Contest
+
         # retrieving account contest code
         account_obj = Account()
         account_data = account_obj.custom_user_id_data(user_id=user_id)
         contest_obj = Contest()
-        # TODO invece di account_data["gender"] -> account_data["contest_type"]
-        if contest_obj.get_contests_type_status(contest_type=account_data["gender"]) != project_constants.CONTEST_ACTIVE:
+        if contest_obj.get_contests_type_status(contest_type=account_data["contest_type"]) != project_constants.CONTEST_ACTIVE:
             raise ContestNotActiveError
 
         return True
 
     def create_votation(self, user_id, ip_address):
         """Function to save if an account perform a votation"""
+	from account_app.models.accounts import Account
+
         if user_id and ip_address:
 	    account_obj = Account()
             vote_obj = Vote()
@@ -94,6 +96,10 @@ class Vote(models.Model):
 
     def perform_votation(self, votation_data, user_id, ip_address):
         """Function to perform a votation after validity check"""
+	from account_app.models.accounts import Account
+	from contest_app.models.contests import Contest
+	from contest_app.models.metrics import Metric
+
         return_var = False
         try:
             self.__check_if_votation_data_are_valid(votation_data=votation_data)
@@ -126,13 +132,32 @@ class Vote(models.Model):
                     logger.error("Errore nella votazione, utente già votato | error code: " + str(UserAlreadyVotedError.get_error_code))
                     raise
                 else:
-                    # TODO: all seem right, perform votation
-                    point_obj = Point()
-                    # point_obj.add_points(points, metric_obj, user_obj, contest_obj)
+                    # all seem right, perform votation
+		    account_obj = Account()
+		    contest_obj = Contest()
+		    metric_obj = Metric()
 
-                    # add points and "create_votation"
+		    # load vote data
+		    global_metric_instance = metric_obj.get_metric_by_name(name=project_constants.VOTE_METRICS_LIST["global_metric"])
+		    face_metric_instance = metric_obj.get_metric_by_name(name=project_constants.VOTE_METRICS_LIST["face_metric"])
+		    look_metric_instance = metric_obj.get_metric_by_name(name=project_constants.VOTE_METRICS_LIST["look_metric"])
+		    user_instance = account_obj.get_user_about_id(user_id=votation_data["user_id"])
+		    contest_instance = contest_obj.get_active_contests_by_type(contest_type=user_instance.account.contest_type)
+
+		    # TODO: uno di questi valori qua sopra è vuoto e non si riesce a votare, capire qual'è!
+
+		    # perform vote
+                    point_obj = Point()
+		    # global metric vote
+                    point_obj.add_points(points=votation_data["global_vote_points"], metric_obj=global_metric_instance, user_obj=user_instance, contest_obj=contest_instance)
+		    # face metric vote
+                    point_obj.add_points(points=votation_data["face_vote_points"], metric_obj=face_metric_instance, user_obj=user_instance, contest_obj=contest_instance)
+		    # look metric vote
+                    point_obj.add_points(points=votation_data["look_vote_points"], metric_obj=look_metric_instance, user_obj=user_instance, contest_obj=contest_instance)
+
+                    # saving that user voted this catwalker
 		    self.create_votation(user_id=user_id, ip_address=ip_address)
-		    logger.debug("VOTAZIONE IN CORSO")
+		    logger.debug("VOTAZIONE EFFETTUATA!")
                     pass
 
         return True

@@ -29,6 +29,11 @@ class Point(models.Model):
         """Function to add points to a metric"""
         return_var = False
         if points and metric_obj and user_obj and contest_obj:
+	    logger.debug("##inserimento punti##")
+	    logger.debug("points: " + str(points))
+	    logger.debug("metric_obj: " + str(metric_obj))
+	    logger.debug("user_obj: " + str(user_obj))
+	    logger.debug("contest_obj: " + str(contest_obj))
             # add points
             point_obj = Point()
             point_obj.contest = contest_obj

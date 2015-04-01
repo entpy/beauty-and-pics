@@ -21,7 +21,7 @@ class Account(models.Model):
     # id_account = models.AutoField(primary_key=True)
     # Links Account to a User model instance.
     user = models.OneToOneField(User, primary_key=True)
-    contest_type = models.ForeignKey(Contest_Type)
+    contest_type = models.ForeignKey(Contest_Type, null=True)
     city = models.CharField(max_length=100, null=True)
     country = models.CharField(max_length=100, null=True)
     gender = models.CharField(max_length=100, null=True)
@@ -87,6 +87,8 @@ class Account(models.Model):
                 user_info["contest_type"] = contest_type_obj.get_contest_type_by_code(code=project_constants.WOMAN_CONTEST)
             elif user_info["gender"] == project_constants.MAN_GENDER:
                 user_info["contest_type"] = contest_type_obj.get_contest_type_by_code(code=project_constants.MAN_CONTEST)
+
+	    logger.debug("tipo di contest rilevato: '" + str(user_info["contest_type"]) + "'")
 
             # insert addictional data inside User and Account models
             account_obj.update_data(save_data=user_info, user_obj=new_user)
@@ -293,6 +295,7 @@ class Account(models.Model):
 
         return return_var
 
+    # TODO rename in get_user_data_as_dictionary
     def put_user_data_obj_into_dictionary(self, user_obj=None):
         """Function to convert a user object into dictionary"""
         return_var = {}
@@ -307,6 +310,7 @@ class Account(models.Model):
             return_var["city"] = user_obj.account.city or ''
             return_var["country"] = user_obj.account.country or ''
             return_var["gender"] = user_obj.account.gender or ''
+            return_var["contest_type"] = user_obj.account.contest_type or ''
             return_var["birthday_date"] = user_obj.account.birthday_date or ''
             return_var["birthday_day"] = str(user_obj.account.birthday_date.day or '')
             return_var["birthday_month"] = str(user_obj.account.birthday_date.month or '')
