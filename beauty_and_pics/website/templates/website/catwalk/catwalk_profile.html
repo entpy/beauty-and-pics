@@ -13,13 +13,13 @@
 {% block container4_content %}
 <div class="user_top_info_container">
 	<div class="user_top_info_block">
-		<span class="user_info_label">Punti: </span>
-		<span class="user_info_value">321</span>
+		<span class="user_info_label">Età: </span>
+		<span class="user_info_value">{{ user.age }} anni</span>
 	</div>
 	<div class="user_top_info_space">&nbsp;</div>
 	<div class="user_top_info_block">
-		<span class="user_info_label">Età: </span>
-		<span class="user_info_value">25 anni</span>
+		<span class="user_info_label">Sesso: </span>
+		<span class="user_info_value">{% if user.gender = "man" %}uomo{% elif user.gender = "woman" %}donna{% endif %}</span>
 	</div>
 	<div class="user_top_info_space">&nbsp;</div>
 	<div class="user_top_info_block">
@@ -58,7 +58,7 @@
 			</div>
 			<div class="user_stats_space"></div>
 			<div class="user_stats_block">
-				<span class="points">327</span>
+				<span class="points">{{ user_contest_info }}</span>
 				<span>Punti</span>
 			</div>
 		</div>

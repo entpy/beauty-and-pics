@@ -2,6 +2,7 @@
 
 from django.db import models
 from datetime import date
+from dateutil.relativedelta import *
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.models import User, Group
 from contest_app.models.contest_types import Contest_Type
@@ -312,9 +313,10 @@ class Account(models.Model):
             return_var["gender"] = user_obj.account.gender or ''
             return_var["contest_type"] = user_obj.account.contest_type or ''
             return_var["birthday_date"] = user_obj.account.birthday_date or ''
-            return_var["birthday_day"] = str(user_obj.account.birthday_date.day or '')
-            return_var["birthday_month"] = str(user_obj.account.birthday_date.month or '')
-            return_var["birthday_year"] = str(user_obj.account.birthday_date.year or '')
+            return_var["birthday_day"] = str(user_obj.account.birthday_date.day) or ''
+            return_var["birthday_month"] = str(user_obj.account.birthday_date.month) or ''
+            return_var["birthday_year"] = str(user_obj.account.birthday_date.year) or ''
+            return_var["age"] = str(relativedelta(date.today(), user_obj.account.birthday_date).years) or ''
             return_var["hair"] = user_obj.account.hair or ''
             return_var["eyes"] = user_obj.account.eyes or ''
             return_var["height"] = user_obj.account.height or ''
@@ -324,8 +326,28 @@ class Account(models.Model):
 
     # TODO: work on this function
     def get_contest_account_info(self, user_id=None):
-        """Function to retrieve contest account info (points, position, ecc...)"""
-        return True
+        """Function to retrieve contest account info (points, ranking, ecc...)"""
+	from contest_app.models.contests import Contest
+	from contest_app.models.points import Point
+	from django.db.models import F
+	from django.db.models import Count
+
+	# user object
+	# user_obj = self.get_user_about_id(user_id=user_id):
+
+	# contest points
+	# contest_obj = Contest()
+	# user_contest_obj = contest_obj.get_active_contests_by_type(contest_type=user_obj.account.contest_type)
+
+	# sommo tutti i punti di un certo utente, del contest attivo dell'utente
+	# Points.objects.annotate(total_points=Count('points'))
+	total_points = Point.objects.filter(user__id=user_id, contest__contest_type=F('user__account__contest_type'), contest__status=project_constants.CONTEST_ACTIVE).aggregate(Count('points'))
+
+	# ranking
+	# percentage global metric
+	# percentage face metric
+	# percentage look metric
+        return total_points
 
     # TODO: implement this function
     def get_filtered_accounts_list(self, filters_list=None):

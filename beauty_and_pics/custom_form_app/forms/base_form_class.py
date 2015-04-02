@@ -191,6 +191,7 @@ class FormCommonUtils():
         birthday_date = account_obj.create_date(date_dictionary={"day" : birthday_dictionary.get("birthday_day"), "month" : birthday_dictionary.get("birthday_month"), "year" : birthday_dictionary.get("birthday_year")})
         if birthday_date:
             # date(yy/mm/dd)
+	    # TODO: in teoria funziona il date.today()
             today_date = date(year=date.today().year,month=date.today().month,day=date.today().day)
 
             # diff between two dates

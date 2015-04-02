@@ -20,7 +20,7 @@ class Point(models.Model):
         app_label = 'contest_app'
 
     def __unicode__(self):
-        return str(self.contest.id_contest_type.code) + " " + str(self.user.email)
+        return str(self.contest.contest_type.code) + " " + str(self.user.email)
 
     """
             * id_point (PK)
