@@ -102,7 +102,18 @@
 				<h3>Vota</h3>
 			</div>
 		</div>
-		<div class="generic_container_content">
+		{# messages block #}
+		<div class="msgContainerAction {% if not user_already_voted %}hide{% endif %}">
+			<div class="row">
+				<div class="col-md-12">
+					<div class="alert alert-warning">
+						<span class="msgTextAction">Potrai votare nuovamente questo partecipante quando saranno passate 48 ore dalla tua votazione.</span>
+					</div>
+				</div>
+			</div>
+		</div>
+		{% if not user_already_voted %}
+		<div class="voteFormContainerAction generic_container_content">
 			<div class="background_container1 vote_user_container">
 				<!-- vote user block -->
 				<div class="vote_user_block global_vote">
@@ -154,6 +165,7 @@
 				</div>
 			</div>
 		</div>
+		{% endif %}
 	</div>
 	<div class="generic_container user_details_right">
 		<div class="row">
@@ -167,7 +179,7 @@
 				<div class="col-sm-12 image_grid_container"></div>
 			</div>
 			<div class="text-center">
-				<a class="btn btn-success load_more_images" href="#">{{ user.user_id }}Carica altre</a>
+				<a class="btn btn-success load_more_images" href="#">Carica altre</a>
 			</div>
 		</div>
 	</div>

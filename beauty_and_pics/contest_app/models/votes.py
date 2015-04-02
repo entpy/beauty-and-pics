@@ -28,7 +28,7 @@ class Vote(models.Model):
             * date
     """
 
-    def __check_if_user_can_vote(self, user_id, ip_address):
+    def check_if_user_can_vote(self, user_id, ip_address):
         """Function to check if a user can (re-)vote a catwalker"""
         try:
             vote_obj = Vote.objects.get(user__id=user_id, ip_address=ip_address)
@@ -126,7 +126,7 @@ class Vote(models.Model):
             else:
                 # check if user can vote
                 try:
-                    self.__check_if_user_can_vote(user_id=user_id, ip_address=ip_address)
+                    self.check_if_user_can_vote(user_id=user_id, ip_address=ip_address)
                 except UserAlreadyVotedError:
                     # send exception to parent try-except block
                     logger.error("Errore nella votazione, utente già votato | error code: " + str(UserAlreadyVotedError.get_error_code))
@@ -144,7 +144,7 @@ class Vote(models.Model):
 		    user_instance = account_obj.get_user_about_id(user_id=votation_data["user_id"])
 		    contest_instance = contest_obj.get_active_contests_by_type(contest_type=user_instance.account.contest_type)
 
-		    # TODO: uno di questi valori qua sopra è vuoto e non si riesce a votare, capire qual'è!
+		    # TODO: ^---| uno di questi valori qua sopra è vuoto e non si riesce a votare, capire qual'è!
 
 		    # perform vote
                     point_obj = Point()

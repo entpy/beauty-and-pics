@@ -23,6 +23,7 @@ class Account(models.Model):
     user = models.OneToOneField(User, primary_key=True)
     contest_type = models.ForeignKey(Contest_Type, null=True)
     city = models.CharField(max_length=100, null=True)
+    # TODO: https://github.com/coderholic/django-cities
     country = models.CharField(max_length=100, null=True)
     gender = models.CharField(max_length=100, null=True)
     status = models.IntegerField(null=True)
@@ -282,7 +283,7 @@ class Account(models.Model):
         return_var = {}
 
         if request and request.user.is_authenticated():
-            return_var = self.put_user_data_obj_into_dictionary(user_obj=request.user)
+            return_var = self.get_user_data_as_dictionary(user_obj=request.user)
 	    # logger.info("data about current logged in user: " + str(return_var))
 
         return return_var
@@ -291,12 +292,11 @@ class Account(models.Model):
         """Function to retrieve user/account info about user id"""
         return_var = {}
         if user_id:
-            return_var = self.put_user_data_obj_into_dictionary(user_obj=self.get_user_about_id(user_id=user_id))
+            return_var = self.get_user_data_as_dictionary(user_obj=self.get_user_about_id(user_id=user_id))
 
         return return_var
 
-    # TODO rename in get_user_data_as_dictionary
-    def put_user_data_obj_into_dictionary(self, user_obj=None):
+    def get_user_data_as_dictionary(self, user_obj=None):
         """Function to convert a user object into dictionary"""
         return_var = {}
         if user_obj:
@@ -321,6 +321,11 @@ class Account(models.Model):
             # from account model }}}
 
         return return_var
+
+    # TODO: work on this function
+    def get_contest_account_info(self, user_id=None):
+        """Function to retrieve contest account info (points, position, ecc...)"""
+        return True
 
     # TODO: implement this function
     def get_filtered_accounts_list(self, filters_list=None):

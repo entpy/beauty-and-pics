@@ -5,6 +5,7 @@ from django.db.models import Q
 from datetime import timedelta
 from django.utils import timezone
 from contest_app.models.contest_types import Contest_Type
+from contest_app.models.metrics import Metric
 from beauty_and_pics.consts import project_constants
 import logging
 
@@ -106,6 +107,11 @@ class Contest(models.Model):
     def contest_manager(self):
         """Function to manage contests"""
         logger.info("gestore dei contest")
+        # create default metrics
+        metric_obj = Metric()
+        metric_obj.metrics_manager()
+
+        # create contests
         self.__create_default_types()
         self.__close_contests()
         self.__create_contests()
@@ -184,7 +190,7 @@ class Contest(models.Model):
         return_var = None
 	try:
             return_var = Contest.objects.get(status=project_constants.CONTEST_ACTIVE, contest_type__code=contest_type)
-	except Metric.DoesNotExist:
+	except Contest.DoesNotExist:
 	    pass
 
         return return_var

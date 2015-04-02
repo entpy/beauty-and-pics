@@ -16,6 +16,34 @@ class Metric(models.Model):
             * name
     """
 
+    def __create_default_metrics(self):
+        """Function to create default metrics"""
+        for default_metric in project_constants.VOTE_METRICS_LIST:
+            metric_obj = Metric(name=project_constants.VOTE_METRICS_LIST[default_metric])
+            metric_obj.save()
+
+        return True
+
+    def __check_default_metrics_exist(self):
+        """Function to check if default metrics exist"""
+        return_var = False
+        if Metric.objects.count():
+            # default metrics exists
+            return_var = True
+
+        return return_var
+
+    def metrics_manager(self):
+        """Function to manage default metrics (create metrics if not already exist)"""
+        return_var = False
+        # check if default metrics already exist
+        if not self.__check_default_metrics_exist():
+            # default metrics must be created
+            self.__create_default_metrics()
+            return_var = True
+
+        return return_var
+
     def get_metric_by_name(self, name):
 	"""Function to retrieve a metric instance by name"""
 	return_var = None
@@ -26,30 +54,3 @@ class Metric(models.Model):
 
 	return return_var
 
-    def create_default_metrics(self):
-        """Function to create default metrics"""
-        for default_metric in project_constants.VOTE_METRICS_LIST:
-            metric_obj = Metric(name=project_constants.VOTE_METRICS_LIST[default_metric])
-            metric_obj.save()
-
-        return True
-
-    def check_default_metrics_exist(self):
-        """Function to check if default metrics exist"""
-        return_var = False
-        if Metric.objects.count():
-            # default metrics exists
-            return_var = True
-
-        return return_var
-
-    def manage_default_metrics(self):
-        """Function to manage default metrics (create metrics if not already exist)"""
-        return_var = False
-        # check if default metrics already exist
-        if not self.check_default_metrics_exist():
-            # default metrics must be created
-            self.create_default_metrics()
-            return_var = True
-
-        return return_var

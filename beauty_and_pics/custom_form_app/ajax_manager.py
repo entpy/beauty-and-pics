@@ -173,7 +173,7 @@ class ajaxManager():
 	if error_msg:
 	    data = {'error' : True, 'message': error_msg }
 	else:
-	    data = {'success' : True, 'message': 'Grazie per aver votato!' }
+	    data = {'success' : True, 'message': "Grazie per aver votato. Tieni d'occhio la classifica!" }
 
 	# build JSON response
         json_data_string = json.dumps(data)

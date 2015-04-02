@@ -1,6 +1,12 @@
+# -*- coding: utf-8 -*-
+
 from django.db import models
 from django.contrib.auth.models import User
 from contest_app.models.contests import Contest
+import logging
+
+# Get an instance of a logger
+logger = logging.getLogger(__name__)
 
 class Point(models.Model):
     id_point = models.AutoField(primary_key=True)
@@ -29,11 +35,11 @@ class Point(models.Model):
         """Function to add points to a metric"""
         return_var = False
         if points and metric_obj and user_obj and contest_obj:
-	    logger.debug("##inserimento punti##")
-	    logger.debug("points: " + str(points))
-	    logger.debug("metric_obj: " + str(metric_obj))
-	    logger.debug("user_obj: " + str(user_obj))
-	    logger.debug("contest_obj: " + str(contest_obj))
+            logger.debug("##inserimento punti##")
+            logger.debug("points: " + str(points))
+            logger.debug("metric_obj: " + str(metric_obj))
+            logger.debug("user_obj: " + str(user_obj))
+            logger.debug("contest_obj: " + str(contest_obj))
             # add points
             point_obj = Point()
             point_obj.contest = contest_obj

@@ -82,6 +82,10 @@ var voteUserObject = {
 	faceVoteContainerClass : ".face_vote",
 	lookVoteContainerClass : ".look_vote",
 	votationBlockErrorClassName : "votation_block_error",
+	messageBlockText : "Potrai votare nuovamente questo partecipante quando saranno passate 48 ore dalla tua votazione.",
+	messageBlockClass : "msgTextAction",
+	messageContainerClass : ".msgContainerAction",
+	voteFormContainerClass : ".voteFormContainerAction",
 	ajaxCallUrl : "/ajax/", // the ajax call url
 
 	/* Function to add a new AND filter */
@@ -181,6 +185,11 @@ var voteUserObject = {
 					// functions to manage JSON response
 					console.log("==========risultato chiamata==========");
 					console.log(jsonResponse);
+					if (jsonResponse.success) {
+						voteUserObject.successVotingAction(jsonResponse.message)
+					} else if (jsonResponse.error) {
+						voteUserObject.errorVotingAction(jsonResponse.message)
+					}
 				},
 				error : function(jsonResponse) {
 					// ...fuck
@@ -194,9 +203,20 @@ var voteUserObject = {
 		return true;
 	},
 
-	errorVotingAction : function() { return true; },
+	errorVotingAction : function(message) {
+		// show error messages
+		alert(message);
+	},
 
-	successVotingAction : function() { return true; },
+	successVotingAction : function(message) {
+		// show success messages
+		alert(message);
+		$(this.messageBlockClass).html(this.messageBlockText);
+		$(this.messageContainerClass).removeClass("hide");
+
+		// hide vote form
+		$(this.voteFormContainerClass).addClass("hide");
+	},
 };
 
 /* Object to retrieve a filtered list of elements (user or photo book) */

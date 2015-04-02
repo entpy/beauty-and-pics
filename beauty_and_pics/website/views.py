@@ -8,6 +8,7 @@ from django.contrib.auth import logout
 from django.views.decorators.csrf import ensure_csrf_cookie
 from account_app.models.accounts import *
 from contest_app.models.contests import *
+from contest_app.models.votes import Vote
 # loading forms
 from custom_form_app.forms.register_form import *
 from custom_form_app.forms.login_form import *
@@ -115,14 +116,27 @@ def catwalk_index(request):
 
 @ensure_csrf_cookie
 def catwalk_profile(request, user_id):
-    # retrieve user_id info
-    # first_name, last_name, points, age, city, position
+    # retrieve user info
     account_obj =  Account()
     account_info = account_obj.custom_user_id_data(user_id=user_id)
+
+    # TODO: retrieve contest user info
+    contest_account_info = account_obj.get_contest_account_info(user_id=user_id)
+
+    # check if this catwalker can be voted
+    vote_obj = Vote()
+    user_already_voted = False
+    try:
+        vote_obj.check_if_user_can_vote(user_id=user_id, ip_address=request.META["REMOTE_ADDR"])
+    except UserAlreadyVotedError:
+        user_already_voted = True
+
     # logger.debug("info account(" + str(user_id) + "): " + str(account_info))
 
     context = {
         "user" : account_info,
+        "user_contest_info" : contest_account_info,
+        "user_already_voted" : user_already_voted
     }
 
     return render(request, 'website/catwalk/catwalk_profile.html', context)

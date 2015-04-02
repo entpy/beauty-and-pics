@@ -92,7 +92,7 @@ textarea { resize: none; }
 .user_top_info_container .user_top_info_space { min-width: 20px; width: 5%; }
 
 .user_details_container { display: inline-block; width: 100%; }
-.vote_user_container { display: inline-block; text-align: center; width: 95%; }
+.vote_user_container { display: inline-block; text-align: center; }
 .vote_user_container .vote_user_block { display: inline-block; margin: 0 auto 11px; }
 .vote_user_container .vote_user_button_container { margin-top: 10px; }
 .vote_user_container .vote_user_block .vote_user_metric_name { margin-bottom: 5px; text-align: left; }
