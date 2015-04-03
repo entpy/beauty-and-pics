@@ -21,11 +21,13 @@
 		<span class="user_info_label">Sesso: </span>
 		<span class="user_info_value">{% if user.gender = "man" %}uomo{% elif user.gender = "woman" %}donna{% endif %}</span>
 	</div>
+	<!--
 	<div class="user_top_info_space">&nbsp;</div>
 	<div class="user_top_info_block">
 		<span class="user_info_label">Città: </span>
 		<span class="user_info_value">Torino (TO)</span>
 	</div>
+	-->
 </div>
 <div class="background_container1 generic_container8">
 	<div class="left">
@@ -58,36 +60,33 @@
 			</div>
 			<div class="user_stats_space"></div>
 			<div class="user_stats_block">
-				<span class="points">{{ user_contest_info }}</span>
+				<span class="points">{{ user_contest_info.total_points }}</span>
 				<span>Punti</span>
 			</div>
 		</div>
 		<div class="bottom">
 			<div class="stats_bar_container">
 				<!-- stats block -->
-				<div class="stats_bar_label">Globale</div>
+				<div class="stats_bar_label">Globale: {{ user_contest_info.global.total_points }} punti ({{ user_contest_info.look.metric_rate_percentage }}%)</div>
 				<div class="stats_bar">
 					<div class="progress">
-						<div class="progress-bar progress-bar-warning" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 30%">
-							<span class="sr-only">60% Complete (warning)</span>
+						<div class="progress-bar progress-bar-warning" role="progressbar" aria-valuenow="{{ user_contest_info.global.metric_rate_percentage }}" aria-valuemin="0" aria-valuemax="100" style="width: {{ user_contest_info.global.metric_rate_percentage }}%">
 						</div>
 					</div>
 				</div>
 				<!-- stats block -->
-				<div class="stats_bar_label">Viso</div>
+				<div class="stats_bar_label">Viso: {{ user_contest_info.face.total_points }} punti ({{ user_contest_info.face.metric_rate_percentage }}%)</div>
 				<div class="stats_bar">
 					<div class="progress">
-						<div class="progress-bar progress-bar-warning" role="progressbar" aria-valuenow="30" aria-valuemin="0" aria-valuemax="100" style="width: 60%">
-							<span class="sr-only">60% Complete (warning)</span>
+						<div class="progress-bar progress-bar-warning" role="progressbar" aria-valuenow="{{ user_contest_info.look.metric_rate_percentage }}" aria-valuemin="0" aria-valuemax="100" style="width: {{ user_contest_info.look.metric_rate_percentage }}%">
 						</div>
 					</div>
 				</div>
 				<!-- stats block -->
-				<div class="stats_bar_label">Sguardo</div>
+				<div class="stats_bar_label">Sguardo: {{ user_contest_info.look.total_points }} punti ({{ user_contest_info.look.metric_rate_percentage }}%)</div>
 				<div class="stats_bar">
 					<div class="progress">
-						<div class="progress-bar progress-bar-warning" role="progressbar" aria-valuenow="90" aria-valuemin="0" aria-valuemax="100" style="width: 90%">
-							<span class="sr-only">60% Complete (warning)</span>
+						<div class="progress-bar progress-bar-warning" role="progressbar" aria-valuenow="{{ user_contest_info.face.metric_rate_percentage }}" aria-valuemin="0" aria-valuemax="100" style="width: {{ user_contest_info.face.metric_rate_percentage }}%">
 						</div>
 					</div>
 				</div>

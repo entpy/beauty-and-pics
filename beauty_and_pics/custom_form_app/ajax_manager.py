@@ -113,10 +113,12 @@ class ajaxManager():
             filter_list = []
             filtered_elements = Account_obj.get_filtered_accounts_list(filters_list=self.request.POST)
 
-            for account in filtered_elements:
+            for user_info in filtered_elements:
+                logger.debug("element list: " + str(user_info))
                 json_account_element.append({
-                        "user_id": account.user.id,
-                        "user_email": account.user.email,
+                        "user_id": user_info["user__id"],
+                        "user_email": user_info["user__email"],
+                        "total_points": user_info.get("total_points"),
                         "image_url": "http://lorempixel.com/150/150/nature",
                         }),
 

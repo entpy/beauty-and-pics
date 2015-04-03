@@ -6,8 +6,10 @@ from dateutil.relativedelta import *
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.models import User, Group
 from contest_app.models.contest_types import Contest_Type
+from contest_app.models.points import Point
 from website.exceptions import *
 from beauty_and_pics.consts import project_constants
+from django.db.models import F, Count, Sum
 import sys, logging, base64, hashlib, string, random
 
 # force utf8 read data
@@ -140,7 +142,7 @@ class Account(models.Model):
         converted = email.encode('utf8', 'ignore')
         return base64.urlsafe_b64encode(hashlib.sha256(converted).digest())[:30]
 
-    # TODO: try to manually raise error in this function
+    # TODO: try to manual raise error in this function
     def update_email_password(self, current_email=None, new_email=None, password=None):
         """Function to update email and password about a user"""
         return_var = False
@@ -325,29 +327,40 @@ class Account(models.Model):
         return return_var
 
     # TODO: work on this function
-    def get_contest_account_info(self, user_id=None):
-        """Function to retrieve contest account info (points, ranking, ecc...)"""
-	from contest_app.models.contests import Contest
-	from contest_app.models.points import Point
-	from django.db.models import F
-	from django.db.models import Count
+    def get_contest_account_info(self, user_id=None, contest_id=None):
+        """
+            Function to retrieve contest account info:
+            ranking
+            total points
+            percentage global metric
+            percentage face metric
+            percentage look metric
+        """
 
-	# user object
-	# user_obj = self.get_user_about_id(user_id=user_id):
+        point_obj = Point()
+        contest_account_info = {}
+        contest_account_info["total_points"] = 0
 
-	# contest points
-	# contest_obj = Contest()
-	# user_contest_obj = contest_obj.get_active_contests_by_type(contest_type=user_obj.account.contest_type)
+        # retrieve account contest info
+	user_metric_points = point_obj.get_single_user_contest_info(user_id=user_id)
 
-	# sommo tutti i punti di un certo utente, del contest attivo dell'utente
-	# Points.objects.annotate(total_points=Count('points'))
-	total_points = Point.objects.filter(user__id=user_id, contest__contest_type=F('user__account__contest_type'), contest__status=project_constants.CONTEST_ACTIVE).aggregate(Count('points'))
+        if user_metric_points:
+            for single_metric in user_metric_points:
+                contest_account_info[single_metric["metric__name"]] = {}
+                contest_account_info[single_metric["metric__name"]]["total_points"] = single_metric["total_points"]
+                contest_account_info[single_metric["metric__name"]]["total_votes"] = single_metric["total_votes"]
+                contest_account_info[single_metric["metric__name"]]["metric_rate_percentage"] = int((single_metric["total_points"] / (single_metric["total_votes"] * 5.0)) * 100)
+                contest_account_info["total_points"] += single_metric["total_points"]
 
-	# ranking
-	# percentage global metric
-	# percentage face metric
-	# percentage look metric
-        return total_points
+        logger.debug("contest account info retrieved: " + str(contest_account_info))
+
+        # totale punti per ogni utente -> QUESTA FUNZIONE NON VA QUI
+        """
+	total_points = Point.objects.values('user__id').filter(contest__contest_type=F('user__account__contest_type'),
+                contest__status=project_constants.CONTEST_ACTIVE).annotate(totale=Sum('points'))
+        """
+
+        return contest_account_info
 
     # TODO: implement this function
     def get_filtered_accounts_list(self, filters_list=None):
@@ -356,11 +369,16 @@ class Account(models.Model):
 	# logger.debug("NOME FILTRO: " + str(filters_list["filter_name"]))
 
 	# filter only catwalker users
-        return_var = Account.objects.filter(user__groups__name=project_constants.CATWALK_GROUP_NAME)
 
 	# order by "latest_registered" filter
 	if filters_list["filter_name"] == "latest_registered":
+                return_var = Account.objects.values('user__email', 'user__id').filter(user__groups__name=project_constants.CATWALK_GROUP_NAME)
         	return_var = return_var.order_by('-user__account__creation_date')
+
+	# order by "classification" filter
+	if filters_list["filter_name"] == "classification":
+                return_var = Point.objects.values('user__email', 'user__id').filter(user__groups__name=project_constants.CATWALK_GROUP_NAME, contest__status=project_constants.CONTEST_ACTIVE).annotate(total_points=Sum('points'))
+                return_var = return_var.order_by('-total_points')
 
 	# limits filter
 	logger.debug("limite da: " + str(filters_list["start_limit"]))

@@ -2,7 +2,9 @@
 
 from django.db import models
 from django.contrib.auth.models import User
+from django.db.models import F, Count, Sum
 from contest_app.models.contests import Contest
+from beauty_and_pics.consts import project_constants
 import logging
 
 # Get an instance of a logger
@@ -48,5 +50,25 @@ class Point(models.Model):
             point_obj.points = points
             point_obj.save()
             return_var = True
+
+        return return_var
+
+    def get_single_user_contest_info(self, user_id=None):
+        """Function to retrieve a dictionary with account contest info
+        {
+            'total_points': 39,
+            u'global': {'total_points': 9, 'total_votes': 5},
+            u'look': {'total_points': 13, 'total_votes': 5},
+            u'face': {'total_points': 17, 'total_votes': 5}
+        }
+        """
+
+        # retrieve info 
+	return Point.objects.values('metric__name').filter(user__id=user_id, contest__contest_type=F('user__account__contest_type'), contest__status=project_constants.CONTEST_ACTIVE).annotate(total_points=Sum('points'), total_votes = Count('points'))
+
+    # TODO: implement this
+    def get_user_position(self, user_id=None):
+        """Function to retrieve the current user ranking"""
+        return_var = False
 
         return return_var
