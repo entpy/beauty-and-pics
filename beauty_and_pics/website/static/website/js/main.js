@@ -74,12 +74,12 @@ function getItems(block_size) {
 var voteUserObject = {
 	__ajaxCallParams : {
 		"global_vote_points" : null, // point about global vote
-		"face_vote_points" : null, // point about face vote
+		"smile_vote_points" : null, // point about smile vote
 		"look_vote_points" : null, // point about look vote
 		"user_id" : null, // id account to vote
 	},
 	globalVoteContainerClass : ".global_vote",
-	faceVoteContainerClass : ".face_vote",
+	smileVoteContainerClass : ".smile_vote",
 	lookVoteContainerClass : ".look_vote",
 	votationBlockErrorClassName : "votation_block_error",
 	messageBlockText : "Potrai votare nuovamente questo partecipante quando saranno passate 48 ore dalla tua votazione.",
@@ -128,14 +128,14 @@ var voteUserObject = {
 			returnVar = false;
 		}
 		// global votation check }}}
-		// face votation check {{{
-		if (existing_params["face_vote_points"]) {
-			this.removeFaceTypeError();
+		// smile votation check {{{
+		if (existing_params["smile_vote_points"]) {
+			this.removeSmileTypeError();
 		} else {
-			this.showFaceTypeError();
+			this.showSmileTypeError();
 			returnVar = false;
 		}
-		// face votation check }}}
+		// smile votation check }}}
 		// look votation check {{{
 		if (existing_params["look_vote_points"]) {
 			this.removeLookTypeError();
@@ -163,12 +163,12 @@ var voteUserObject = {
 
 	// function to add error class to votation block
 	showGlobalTypeError : function() { $(this.globalVoteContainerClass).addClass(this.votationBlockErrorClassName); },
-	showFaceTypeError : function() { $(this.faceVoteContainerClass).addClass(this.votationBlockErrorClassName); },
+	showSmileTypeError : function() { $(this.smileVoteContainerClass).addClass(this.votationBlockErrorClassName); },
 	showLookTypeError : function() { $(this.lookVoteContainerClass).addClass(this.votationBlockErrorClassName); },
 
 	// function to remove error class to votation block
 	removeGlobalTypeError : function() { $(this.globalVoteContainerClass).removeClass(this.votationBlockErrorClassName); },
-	removeFaceTypeError : function() { $(this.faceVoteContainerClass).removeClass(this.votationBlockErrorClassName); },
+	removeSmileTypeError : function() { $(this.smileVoteContainerClass).removeClass(this.votationBlockErrorClassName); },
 	removeLookTypeError : function() { $(this.lookVoteContainerClass).removeClass(this.votationBlockErrorClassName); },
 
 	/* function to perfor a votation */

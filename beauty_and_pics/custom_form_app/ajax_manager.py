@@ -151,7 +151,7 @@ class ajaxManager():
         votation_data = {}
         votation_data["user_id"] = self.request.POST.get("user_id")
         votation_data["global_vote_points"] = self.request.POST.get("global_vote_points")
-        votation_data["face_vote_points"] = self.request.POST.get("face_vote_points")
+        votation_data["smile_vote_points"] = self.request.POST.get("smile_vote_points")
         votation_data["look_vote_points"] = self.request.POST.get("look_vote_points")
 	error_msg = ""
 

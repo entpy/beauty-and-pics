@@ -333,7 +333,7 @@ class Account(models.Model):
             ranking
             total points
             percentage global metric
-            percentage face metric
+            percentage smile metric
             percentage look metric
         """
 
@@ -377,14 +377,28 @@ class Account(models.Model):
 
 	# order by "classification" filter
 	if filters_list["filter_name"] == "classification":
-                return_var = Point.objects.values('user__email', 'user__id').filter(user__groups__name=project_constants.CATWALK_GROUP_NAME, contest__status=project_constants.CONTEST_ACTIVE).annotate(total_points=Sum('points'))
+		# "contest__status" to identify point about current contest
+                # return_var = Point.objects.values('user__email', 'user__id').filter(user__groups__name=project_constants.CATWALK_GROUP_NAME, contest__status=project_constants.CONTEST_ACTIVE).annotate(total_points=Sum('points'))
+                return_var = Account.objects.values('user__email', 'user__id').filter(user__groups__name=project_constants.CATWALK_GROUP_NAME, contest_type__contest__status=project_constants.CONTEST_ACTIVE).annotate(total_points=Sum('user__point'))
+                return_var = return_var.order_by('-total_points')
+
+	# order by "most_beautiful_smile" filter
+	if filters_list["filter_name"] == "most_beautiful_smile":
+		# "contest__status" to identify point about current contest
+                return_var = Point.objects.values('user__email', 'user__id').filter(user__groups__name=project_constants.CATWALK_GROUP_NAME, contest__status=project_constants.CONTEST_ACTIVE, metric__name=project_constants.VOTE_METRICS_LIST["smile_metric"]).annotate(total_points=Sum('points'))
+                return_var = return_var.order_by('-total_points')
+
+	# order by "look_more_beautiful" filter
+	if filters_list["filter_name"] == "look_more_beautiful":
+		# "contest__status" to identify point about current contest
+                return_var = Point.objects.values('user__email', 'user__id').filter(user__groups__name=project_constants.CATWALK_GROUP_NAME, contest__status=project_constants.CONTEST_ACTIVE, metric__name=project_constants.VOTE_METRICS_LIST["look_metric"]).annotate(total_points=Sum('points'))
                 return_var = return_var.order_by('-total_points')
 
 	# limits filter
-	logger.debug("limite da: " + str(filters_list["start_limit"]))
-	logger.debug("limite numero elementi: " + str(filters_list["show_limit"]))
+	#logger.debug("limite da: " + str(filters_list["start_limit"]))
+	#logger.debug("limite numero elementi: " + str(filters_list["show_limit"]))
 	return_var = return_var[filters_list["start_limit"]:filters_list["show_limit"]]
 
-	logger.debug("@@@: " + str(return_var))
+	#logger.debug("@@@: " + str(return_var))
 
         return return_var

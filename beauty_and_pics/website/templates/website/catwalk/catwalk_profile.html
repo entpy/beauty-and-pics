@@ -75,7 +75,7 @@
 					</div>
 				</div>
 				<!-- stats block -->
-				<div class="stats_bar_label">Viso: {{ user_contest_info.face.total_points }} punti ({{ user_contest_info.face.metric_rate_percentage }}%)</div>
+				<div class="stats_bar_label">Viso: {{ user_contest_info.smile.total_points }} punti ({{ user_contest_info.smile.metric_rate_percentage }}%)</div>
 				<div class="stats_bar">
 					<div class="progress">
 						<div class="progress-bar progress-bar-warning" role="progressbar" aria-valuenow="{{ user_contest_info.look.metric_rate_percentage }}" aria-valuemin="0" aria-valuemax="100" style="width: {{ user_contest_info.look.metric_rate_percentage }}%">
@@ -86,7 +86,7 @@
 				<div class="stats_bar_label">Sguardo: {{ user_contest_info.look.total_points }} punti ({{ user_contest_info.look.metric_rate_percentage }}%)</div>
 				<div class="stats_bar">
 					<div class="progress">
-						<div class="progress-bar progress-bar-warning" role="progressbar" aria-valuenow="{{ user_contest_info.face.metric_rate_percentage }}" aria-valuemin="0" aria-valuemax="100" style="width: {{ user_contest_info.face.metric_rate_percentage }}%">
+						<div class="progress-bar progress-bar-warning" role="progressbar" aria-valuenow="{{ user_contest_info.smile.metric_rate_percentage }}" aria-valuemin="0" aria-valuemax="100" style="width: {{ user_contest_info.smile.metric_rate_percentage }}%">
 						</div>
 					</div>
 				</div>
@@ -132,15 +132,15 @@
 				<!-- vote user block -->
 				<div class="vote_user_block face_vote">
 					<div class="vote_user_metric_name">
-						Viso
+						Sorriso
 					</div>
 					<div>
 						<ul class="pagination pagination-md">
-							<li class="voteTypeClick" data-vote-type="face_vote_points" data-vote-value="1"><a href="#">1</a></li>
-							<li class="voteTypeClick" data-vote-type="face_vote_points" data-vote-value="2"><a href="#">2</a></li>
-							<li class="voteTypeClick" data-vote-type="face_vote_points" data-vote-value="3"><a href="#">3</a></li>
-							<li class="voteTypeClick" data-vote-type="face_vote_points" data-vote-value="4"><a href="#">4</a></li>
-							<li class="voteTypeClick" data-vote-type="face_vote_points" data-vote-value="5"><a href="#">5</a></li>
+							<li class="voteTypeClick" data-vote-type="smile_vote_points" data-vote-value="1"><a href="#">1</a></li>
+							<li class="voteTypeClick" data-vote-type="smile_vote_points" data-vote-value="2"><a href="#">2</a></li>
+							<li class="voteTypeClick" data-vote-type="smile_vote_points" data-vote-value="3"><a href="#">3</a></li>
+							<li class="voteTypeClick" data-vote-type="smile_vote_points" data-vote-value="4"><a href="#">4</a></li>
+							<li class="voteTypeClick" data-vote-type="smile_vote_points" data-vote-value="5"><a href="#">5</a></li>
 						</ul>
 					</div>
 				</div>

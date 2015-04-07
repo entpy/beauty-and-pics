@@ -54,13 +54,13 @@ class Vote(models.Model):
                 raise VoteUserIdMissingError
             if not votation_data["global_vote_points"]:
                 raise VoteMetricMissingError
-            if not votation_data["face_vote_points"]:
+            if not votation_data["smile_vote_points"]:
                 raise VoteMetricMissingError
             if not votation_data["look_vote_points"]:
                 raise VoteMetricMissingError
             if int(votation_data["global_vote_points"]) < 1 or int(votation_data["global_vote_points"]) > 5:
                 raise VoteMetricWrongValueError
-            if int(votation_data["face_vote_points"]) < 1 or int(votation_data["face_vote_points"]) > 5:
+            if int(votation_data["smile_vote_points"]) < 1 or int(votation_data["smile_vote_points"]) > 5:
                 raise VoteMetricWrongValueError
             if int(votation_data["look_vote_points"]) < 1 or int(votation_data["look_vote_points"]) > 5:
                 raise VoteMetricWrongValueError
@@ -139,7 +139,7 @@ class Vote(models.Model):
 
 		    # load vote data
 		    global_metric_instance = metric_obj.get_metric_by_name(name=project_constants.VOTE_METRICS_LIST["global_metric"])
-		    face_metric_instance = metric_obj.get_metric_by_name(name=project_constants.VOTE_METRICS_LIST["face_metric"])
+		    smile_metric_instance = metric_obj.get_metric_by_name(name=project_constants.VOTE_METRICS_LIST["smile_metric"])
 		    look_metric_instance = metric_obj.get_metric_by_name(name=project_constants.VOTE_METRICS_LIST["look_metric"])
 		    user_instance = account_obj.get_user_about_id(user_id=votation_data["user_id"])
 		    contest_instance = contest_obj.get_active_contests_by_type(contest_type=user_instance.account.contest_type)
@@ -150,8 +150,8 @@ class Vote(models.Model):
                     point_obj = Point()
 		    # global metric vote
                     point_obj.add_points(points=votation_data["global_vote_points"], metric_obj=global_metric_instance, user_obj=user_instance, contest_obj=contest_instance)
-		    # face metric vote
-                    point_obj.add_points(points=votation_data["face_vote_points"], metric_obj=face_metric_instance, user_obj=user_instance, contest_obj=contest_instance)
+		    # smile metric vote
+                    point_obj.add_points(points=votation_data["smile_vote_points"], metric_obj=smile_metric_instance, user_obj=user_instance, contest_obj=contest_instance)
 		    # look metric vote
                     point_obj.add_points(points=votation_data["look_vote_points"], metric_obj=look_metric_instance, user_obj=user_instance, contest_obj=contest_instance)
 
