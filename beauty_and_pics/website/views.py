@@ -120,8 +120,11 @@ def catwalk_profile(request, user_id):
     account_obj =  Account()
     account_info = account_obj.custom_user_id_data(user_id=user_id)
 
-    # TODO: retrieve contest user info
+    # retrieve contest user info
     contest_account_info = account_obj.get_contest_account_info(user_id=user_id)
+
+    # TODO: put this inside a middleware
+    top_five_account = account_obj.get_top_five_contest_user()
 
     # check if this catwalker can be voted
     vote_obj = Vote()
@@ -136,7 +139,8 @@ def catwalk_profile(request, user_id):
     context = {
         "user" : account_info,
         "user_contest_info" : contest_account_info,
-        "user_already_voted" : user_already_voted
+        "user_already_voted" : user_already_voted,
+        "top_five_account" : top_five_account
     }
 
     return render(request, 'website/catwalk/catwalk_profile.html', context)

@@ -9,7 +9,7 @@ from contest_app.models.contest_types import Contest_Type
 from contest_app.models.points import Point
 from website.exceptions import *
 from beauty_and_pics.consts import project_constants
-from django.db.models import F, Count, Sum
+from django.db.models import Q, F, Count, Sum
 import sys, logging, base64, hashlib, string, random
 
 # force utf8 read data
@@ -362,6 +362,11 @@ class Account(models.Model):
 
         return contest_account_info
 
+    def get_top_five_contest_user(self):
+        """Function to retrieve the top five contest user"""
+        filters_list = {"filter_name": "classification", "start_limit": "0", "show_limit": "5"}
+        return self.get_filtered_accounts_list(filters_list=filters_list)
+
     # TODO: implement this function
     def get_filtered_accounts_list(self, filters_list=None):
         """Function to retrieve a list of filtere accounts"""
@@ -372,26 +377,31 @@ class Account(models.Model):
 
 	# order by "latest_registered" filter
 	if filters_list["filter_name"] == "latest_registered":
-                return_var = Account.objects.values('user__email', 'user__id').filter(user__groups__name=project_constants.CATWALK_GROUP_NAME)
+                return_var = Account.objects.values('user__first_name', 'user__last_name', 'user__email', 'user__id').filter(user__groups__name=project_constants.CATWALK_GROUP_NAME)
         	return_var = return_var.order_by('-user__account__creation_date')
 
 	# order by "classification" filter
 	if filters_list["filter_name"] == "classification":
 		# "contest__status" to identify point about current contest
+                # più leggera ma non mostra gli utenti che non hanno ancora punti
                 # return_var = Point.objects.values('user__email', 'user__id').filter(user__groups__name=project_constants.CATWALK_GROUP_NAME, contest__status=project_constants.CONTEST_ACTIVE).annotate(total_points=Sum('points'))
-                return_var = Account.objects.values('user__email', 'user__id').filter(user__groups__name=project_constants.CATWALK_GROUP_NAME, contest_type__contest__status=project_constants.CONTEST_ACTIVE).annotate(total_points=Sum('user__point'))
+                return_var = Account.objects.values('user__first_name', 'user__last_name', 'user__email', 'user__id').filter(user__groups__name=project_constants.CATWALK_GROUP_NAME, contest_type__contest__status=project_constants.CONTEST_ACTIVE).annotate(total_points=Sum('user__point'))
                 return_var = return_var.order_by('-total_points')
 
 	# order by "most_beautiful_smile" filter
 	if filters_list["filter_name"] == "most_beautiful_smile":
 		# "contest__status" to identify point about current contest
-                return_var = Point.objects.values('user__email', 'user__id').filter(user__groups__name=project_constants.CATWALK_GROUP_NAME, contest__status=project_constants.CONTEST_ACTIVE, metric__name=project_constants.VOTE_METRICS_LIST["smile_metric"]).annotate(total_points=Sum('points'))
+                # più leggera ma non mostra gli utenti che non hanno ancora punti
+                # return_var = Point.objects.values('user__email', 'user__id').filter(user__groups__name=project_constants.CATWALK_GROUP_NAME, contest__status=project_constants.CONTEST_ACTIVE, metric__name=project_constants.VOTE_METRICS_LIST["smile_metric"]).annotate(total_points=Sum('points'))
+                return_var = Account.objects.values('user__first_name', 'user__last_name', 'user__email', 'user__id').filter(Q(user__point__metric__name=project_constants.VOTE_METRICS_LIST["smile_metric"]) | Q(user__point__isnull=True), user__groups__name=project_constants.CATWALK_GROUP_NAME, contest_type__contest__status=project_constants.CONTEST_ACTIVE).annotate(total_points=Sum('user__point'))
                 return_var = return_var.order_by('-total_points')
 
 	# order by "look_more_beautiful" filter
 	if filters_list["filter_name"] == "look_more_beautiful":
 		# "contest__status" to identify point about current contest
-                return_var = Point.objects.values('user__email', 'user__id').filter(user__groups__name=project_constants.CATWALK_GROUP_NAME, contest__status=project_constants.CONTEST_ACTIVE, metric__name=project_constants.VOTE_METRICS_LIST["look_metric"]).annotate(total_points=Sum('points'))
+                # più leggera ma non mostra gli utenti che non hanno ancora punti
+                # return_var = Point.objects.values('user__email', 'user__id').filter(user__groups__name=project_constants.CATWALK_GROUP_NAME, contest__status=project_constants.CONTEST_ACTIVE, metric__name=project_constants.VOTE_METRICS_LIST["look_metric"]).annotate(total_points=Sum('points'))
+                return_var = Account.objects.values('user__first_name', 'user__last_name', 'user__email', 'user__id').filter(user__groups__name=project_constants.CATWALK_GROUP_NAME, contest_type__contest__status=project_constants.CONTEST_ACTIVE).filter(Q(user__point__metric__name=project_constants.VOTE_METRICS_LIST["look_metric"]) | Q(user__point__metric__isnull=True)).annotate(total_points=Sum('user__point'))
                 return_var = return_var.order_by('-total_points')
 
 	# limits filter
@@ -402,3 +412,7 @@ class Account(models.Model):
 	#logger.debug("@@@: " + str(return_var))
 
         return return_var
+
+    # TODO: function to retrieve user ranking
+    def get_user_contest_ranking(self, user_id=None):
+        """Function to retrieve current user contest ranking"""

@@ -223,6 +223,19 @@
 								<div class="title">
 									<h4>Top 5</h4>
 								</div>
+								{% for single_user in top_five_account %}
+									<a class="classification_block" href="/passerella/dettaglio-utente/{{ single_user.user__id }}/">
+										<div class="classification_block_wrapper">
+											<div class="left"><img alt="Classifica" src="http://placekitten.com/g/70/70"></div>
+											<div class="right">
+												<div class="classification_position">{{ forloop.counter }}°</div>
+												<div class="classification_name">{{ single_user.user__first_name }} {{ single_user.user__last_name }}</div>
+												<div class="classification_points">{{ single_user.total_points|default_if_none:"" }} punti</div>
+											</div>
+										</div>
+									</a>
+								{% endfor %}
+								<!--
 								<a class="classification_block" href="/passerella/dettaglio-utente/">
 									<div class="classification_block_wrapper">
 										<div class="left"><img alt="Classifica" src="http://placekitten.com/g/70/70"></div>
@@ -273,6 +286,7 @@
 										</div>
 									</div>
 								</a>
+								-->
 							</div>
 							{# right classification block }}} #}
 						</div>
