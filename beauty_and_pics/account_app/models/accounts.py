@@ -327,7 +327,6 @@ class Account(models.Model):
 
         return return_var
 
-    # TODO: work on this function
     def get_contest_account_info(self, user_id=None, contest_id=None):
         """
             Function to retrieve contest account info:
@@ -371,7 +370,6 @@ class Account(models.Model):
         filters_list = {"filter_name": "classification", "start_limit": "0", "show_limit": "5"}
         return self.get_filtered_accounts_list(filters_list=filters_list)
 
-    # TODO: implement this function
     def get_filtered_accounts_list(self, filters_list=None):
         """Function to retrieve a list of filtere accounts"""
         return_var = False
@@ -422,12 +420,16 @@ class Account(models.Model):
 
     def get_user_contest_ranking(self, user_id=None):
         """Function to retrieve current user contest ranking"""
-        # TODO: tentare di ottimizzarla
         cursor = connection.cursor()
-        cursor.execute("SET @row_number:=0;")
-        cursor.execute("SELECT `ranking_table`.`ranking` FROM (SELECT @row_number:=@row_number+1 AS `ranking`, `contest_app_point`.`user_id`, SUM(`contest_app_point`.`points`) AS `total_points` FROM `contest_app_point` INNER JOIN `auth_user` ON ( `contest_app_point`.`user_id` = `auth_user`.`id` ) INNER JOIN `auth_user_groups` ON ( `auth_user`.`id` = `auth_user_groups`.`user_id` ) INNER JOIN `auth_group` ON ( `auth_user_groups`.`group_id` = `auth_group`.`id` ) INNER JOIN `contest_app_contest` ON ( `contest_app_point`.`contest_id` = `contest_app_contest`.`id_contest` ) WHERE (`auth_group`.`name` = 'catwalk_user' AND `contest_app_contest`.`status` = 'active') GROUP BY `contest_app_point`.`user_id` ORDER BY `total_points` DESC, `contest_app_point`.`user_id` ASC) AS `ranking_table` WHERE `user_id` = %s", [user_id])
+	# questo potrebbe non piacere a molti -> http://stackoverflow.com/questions/18846174/django-detect-database-backend
+	if connection.vendor == "postgresql":
+		# PostgreSQL query
+		cursor.execute('SELECT "ranking_table"."ranking", "user_id" FROM( SELECT row_number() OVER (ORDER BY SUM("contest_app_point"."points") DESC) as "ranking", "contest_app_point"."user_id", SUM("contest_app_point"."points") AS "total_points" FROM "contest_app_point" INNER JOIN "auth_user" ON ( "contest_app_point"."user_id" = "auth_user"."id" ) INNER JOIN "auth_user_groups" ON ( "auth_user"."id" = "auth_user_groups"."user_id" ) INNER JOIN "auth_group" ON ( "auth_user_groups"."group_id" = "auth_group"."id" ) INNER JOIN "contest_app_contest" ON ( "contest_app_point"."contest_id" = "contest_app_contest"."id_contest" ) WHERE "auth_group"."name" = \'catwalk_user\' AND "contest_app_contest"."status" = \'active\' GROUP BY "contest_app_point"."user_id" ORDER BY "total_points" DESC, "contest_app_point"."user_id" ASC) AS "ranking_table" WHERE "user_id" = %s', [user_id])
+	else:
+		# MySQL query
+		cursor.execute("SET @row_number:=0;")
+		cursor.execute("SELECT `ranking_table`.`ranking` FROM (SELECT @row_number:=@row_number+1 AS `ranking`, `contest_app_point`.`user_id`, SUM(`contest_app_point`.`points`) AS `total_points` FROM `contest_app_point` INNER JOIN `auth_user` ON ( `contest_app_point`.`user_id` = `auth_user`.`id` ) INNER JOIN `auth_user_groups` ON ( `auth_user`.`id` = `auth_user_groups`.`user_id` ) INNER JOIN `auth_group` ON ( `auth_user_groups`.`group_id` = `auth_group`.`id` ) INNER JOIN `contest_app_contest` ON ( `contest_app_point`.`contest_id` = `contest_app_contest`.`id_contest` ) WHERE (`auth_group`.`name` = 'catwalk_user' AND `contest_app_contest`.`status` = 'active') GROUP BY `contest_app_point`.`user_id` ORDER BY `total_points` DESC, `contest_app_point`.`user_id` ASC) AS `ranking_table` WHERE `user_id` = %s", [user_id])
         row = cursor.fetchall()
-	# logger.debug("ROW: " + str(row[0]))
         return_var = row[0][0] if row else None
 
         return return_var
