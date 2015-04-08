@@ -215,10 +215,11 @@
 									<h4>Partecipa anche tu!</h4>
 								</div>
 								<div class="button_container">
-									<a class="btn btn-danger" href="#">Partecipa</a>
+									<a class="btn btn-danger" href="/registrati/">Partecipa</a>
 								</div>
 							</div>
 							{# right classification block {{{ #}
+							{% if top_five_account %}
 							<div class="text-center inline_block generic_container9">
 								<div class="title">
 									<h4>Top 5</h4>
@@ -230,64 +231,13 @@
 											<div class="right">
 												<div class="classification_position">{{ forloop.counter }}°</div>
 												<div class="classification_name">{{ single_user.user__first_name }} {{ single_user.user__last_name }}</div>
-												<div class="classification_points">{{ single_user.total_points|default_if_none:"" }} punti</div>
+												<div class="classification_points">{{ single_user.total_points|default_if_none:0 }} punti</div>
 											</div>
 										</div>
 									</a>
 								{% endfor %}
-								<!--
-								<a class="classification_block" href="/passerella/dettaglio-utente/">
-									<div class="classification_block_wrapper">
-										<div class="left"><img alt="Classifica" src="http://placekitten.com/g/70/70"></div>
-										<div class="right">
-											<div class="classification_position">1°</div>
-											<div class="classification_name">Nome Cognome</div>
-											<div class="classification_points">2453 punti</div>
-										</div>
-									</div>
-								</a>
-								<a class="classification_block" href="/passerella/dettaglio-utente/">
-									<div class="classification_block_wrapper">
-										<div class="left"><img alt="Classifica" src="http://placekitten.com/g/70/70"></div>
-										<div class="right">
-											<div class="classification_position">2°</div>
-											<div class="classification_name">Nome Cognome</div>
-											<div class="classification_points">1153 punti</div>
-										</div>
-									</div>
-								</a>
-								<a class="classification_block" href="/passerella/dettaglio-utente/">
-									<div class="classification_block_wrapper">
-										<div class="left"><img alt="Classifica" src="http://placekitten.com/g/70/70"></div>
-										<div class="right">
-											<div class="classification_position">3°</div>
-											<div class="classification_name">Nome Cognome</div>
-											<div class="classification_points">453 punti</div>
-										</div>
-									</div>
-								</a>
-								<a class="classification_block" href="/passerella/dettaglio-utente/">
-									<div class="classification_block_wrapper">
-										<div class="left"><img alt="Classifica" src="http://placekitten.com/g/70/70"></div>
-										<div class="right">
-											<div class="classification_position">4°</div>
-											<div class="classification_name">Nome Cognome</div>
-											<div class="classification_points">353 punti</div>
-										</div>
-									</div>
-								</a>
-								<a class="classification_block" href="/passerella/dettaglio-utente/">
-									<div class="classification_block_wrapper">
-										<div class="left"><img alt="Classifica" src="http://placekitten.com/g/70/70"></div>
-										<div class="right">
-											<div class="classification_position">5°</div>
-											<div class="classification_name">Nome Cognome</div>
-											<div class="classification_points">23 punti</div>
-										</div>
-									</div>
-								</a>
-								-->
 							</div>
+							{% endif %}
 							{# right classification block }}} #}
 						</div>
 					</div>

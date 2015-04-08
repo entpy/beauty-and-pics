@@ -146,7 +146,7 @@ var voteUserObject = {
 		// look votation check }}}
 
 		if (!returnVar) {
-			alert("Per poter votare devi esprimere un giudizio su ogni metrica!");
+			// alert("Per poter votare devi esprimere un giudizio su ogni metrica!");
 		} else if (!confirm("Confermi il voto? Potrai ri-votare questa persona tra 48 ore!")) {
 				returnVar = false;
 		}
@@ -232,6 +232,27 @@ var elementsListObject = {
 	bootstrapBlockSize : null, // the bootstrap block size for display
 	blocksContainerClassName : ".image_grid_container", // the block container class inside html page
 	actionButtonClassName : ".loadMoreElementsAction", // load more button class name
+
+	/* Function to reset all filters */
+	__resetFilters : function() {
+		this.__elementsListFilters["user_id"] = null;
+		this.__elementsListFilters["elements_list_type"] = null;
+		this.__elementsListFilters["start_limit"] = 0;
+		this.__elementsListFilters["show_limit"] = 1;
+		this.__elementsListFilters["filter_name"] = null;
+	},
+
+	/* Function to clear current loaded elements inside html */
+	__clearHtml : function() {
+		$(this.blocksContainerClassName).html("");
+	},
+
+	/* Function to clear current element list */
+	newElementList : function() {
+		this.__resetFilters();
+		this.__clearHtml();
+		this.showActionButton();
+	},
 
 	/* Function to add a new AND filter */
 	addFilter : function(filterName, filterValue) {
@@ -361,6 +382,11 @@ var elementsListObject = {
 	hideActionButton : function() {
 	/* Function to hide action button */
 		$(this.actionButtonClassName).hide();
+	},
+
+	showActionButton : function() {
+	/* Function to show action button */
+		$(this.actionButtonClassName).show();
 	},
 
 	setBlocksNumberLimit : function() {

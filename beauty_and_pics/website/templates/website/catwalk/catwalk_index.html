@@ -33,6 +33,10 @@
 {% block custom_js %}
 <script>
 	$(document).ready(function(){
+		$(".setFilterAction").click(function(){
+			elementsListObject.newElementList();
+		});
+
 		$(".loadMoreElementsAction").click(function(){
 			elementsListObject.setElementsListType("catwalker");
 			elementsListObject.addFilter("filter_name", $(".setFilterAction.active").data("filterName"));

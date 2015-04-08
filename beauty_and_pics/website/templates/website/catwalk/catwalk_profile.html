@@ -54,11 +54,13 @@
 	</div>
 	<div class="right">
 		<div class="top user_stats_container">
+			{% if user_contest_info.ranking %}
 			<div class="user_stats_block">
-				<span class="position">2°</span>
+				<span class="position">{{ user_contest_info.ranking }}°</span>
 				<span>Posizione</span>
 			</div>
 			<div class="user_stats_space"></div>
+			{% endif %}
 			<div class="user_stats_block">
 				<span class="points">{{ user_contest_info.total_points }}</span>
 				<span>Punti</span>
