@@ -26,9 +26,7 @@ TEMPLATE_DEBUG = True
 
 ALLOWED_HOSTS = []
 
-
 # Application definition
-
 INSTALLED_APPS = (
     'django.contrib.admin',
     'django.contrib.auth',
@@ -41,8 +39,6 @@ INSTALLED_APPS = (
     'website',
     'custom_form_app',
     'email_template',
-    'cicu',
-    'formexample',
 )
 
 MIDDLEWARE_CLASSES = (
