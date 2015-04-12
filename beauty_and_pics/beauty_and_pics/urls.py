@@ -34,4 +34,7 @@ urlpatterns = patterns('',
 
     # ajax view
     url(r'^ajax/', include('custom_form_app.urls', namespace="custom_form_app")),
+
+    # upload image
+    url(r'^upload_image/', include('upload_image_box.urls', namespace="upload_image_box")),
 ) + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

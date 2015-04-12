@@ -1,0 +1,6 @@
+<form enctype="multipart/form-data" method="post" action="">
+    {% csrf_token %}
+    {{ form }}
+    <br/>
+    <input type="submit" name="submit" value="Salva" >
+</form>
