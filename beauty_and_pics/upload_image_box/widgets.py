@@ -4,14 +4,15 @@ from django import forms
 from django.conf import settings
 from django.core.files import File
 from django.utils.safestring import mark_safe
+from django.utils.translation import ugettext_lazy
 
-class UibUploaderInput(forms.FileInput):
+class UibUploaderInput(forms.ClearableFileInput):
 
     def __init__(self, attrs=None):
         # qui dovrei passare delle opzioni al plugin, per esempio un qualcosa
         # che abiliti/disabiliti la funzionalità di crop o che ne definisca i
         # dettagli (es. area di crop fissa, ecc...)
-        super(UibUploaderInput , self).__init__(attrs)
+        super(UibUploaderInput , self).__init__(attrs=None)
         initial_text = ugettext_lazy('Currently')
         input_text = ugettext_lazy('Change')
         clear_checkbox_label = ugettext_lazy('Clear')
@@ -25,6 +26,9 @@ class UibUploaderInput(forms.FileInput):
 
     # metodo per scrivere nell'html il file input
     # questa funzione viene eseguita al rendering dell'html
+    #def render(self, name, value, attrs=None):
+    #    return = super(UibUploaderInput, self).render(name, value, attrs)
+    """
     def render(self, name, value, attrs=None):
         substitutions = {
             'initial_text': self.initial_text,
@@ -33,8 +37,9 @@ class UibUploaderInput(forms.FileInput):
             'clear_checkbox_label': self.clear_checkbox_label,
         }
         template = '%(input)s'
-        substitutions['input'] = super(ClearableFileInput, self).render(name, value, attrs)
+        substitutions['input'] = super(UibUploaderInput, self).render(name, value, attrs)
 
+        ""
         if self.is_initial(value):
             template = self.template_with_initial
             substitutions.update(self.get_template_substitution_values(value))
@@ -45,8 +50,10 @@ class UibUploaderInput(forms.FileInput):
                 substitutions['clear_checkbox_id'] = conditional_escape(checkbox_id)
                 substitutions['clear'] = CheckboxInput().render(checkbox_name, False, attrs={'id': checkbox_id})
                 substitutions['clear_template'] = self.template_with_clear % substitutions
+        ""
 
         return mark_safe(template % substitutions)
+    """
 
     """
     def value_from_datadict(self, data, files, name):
