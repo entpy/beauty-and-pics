@@ -1,0 +1,2 @@
+.uploader_button { border: 1px solid gray; cursor: pointer; text-align: center; width: 200px; }
+.uploader_button:hover { text-decoration: underline; }

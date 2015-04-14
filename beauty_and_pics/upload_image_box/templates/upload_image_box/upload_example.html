@@ -1,6 +1,23 @@
-<form enctype="multipart/form-data" method="post" action="">
-    {% csrf_token %}
-    {{ form }}
-    <br/>
-    <input type="submit" name="submit" value="Salva" >
-</form>
+{% load staticfiles %}
+<!DOCTYPE html>
+<html lang="it">
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<meta name="description" content="upload_image_box widget example">
+		<title>upload_image_box widget example</title>
+
+		<link rel="stylesheet" href="{% static "website/css/bootstrap.css" %}">
+		<link rel="stylesheet" href="{% static "website/css/bootstrap_custom.css" %}">
+		<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+		<script src="{% static "website/js/vendor/bootstrap.min.js" %}"></script>
+	</head>
+	<body>
+		{{ form.media }}
+		<form enctype="multipart/form-data" method="post" action="">
+			{% csrf_token %}
+			{{ form.image }}
+		</form>
+	</body>
+</html>
