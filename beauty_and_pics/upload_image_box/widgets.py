@@ -5,6 +5,10 @@ from django.conf import settings
 from django.core.files import File
 from django.utils.safestring import mark_safe
 from django.utils.translation import ugettext_lazy
+import logging
+
+# Get an instance of a logger
+logger = logging.getLogger(__name__)
 
 class UibUploaderInput(forms.ClearableFileInput):
 
@@ -40,6 +44,14 @@ class UibUploaderInput(forms.ClearableFileInput):
         template = self.template_with_initial
 
         return mark_safe(template % substitutions)
+
+    def value_from_datadict(self, data, files, name):
+        # if a file was uploaded
+        file = super(UibUploaderInput, self).value_from_datadict(data, files, name)
+        # logger.debug("parent file: " + str(file))
+        if file is not None:  # super class may return a file object, False, or None
+            return file  # Default behaviour
+        return None
 
     class Media:
         css = {
