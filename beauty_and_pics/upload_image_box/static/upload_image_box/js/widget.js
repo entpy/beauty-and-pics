@@ -4,10 +4,10 @@ var uploaderImageBox = {
 	modalWindow: false,
 	// modal window settings, like buttons, content, titles, ecc...
 	modalWindowSettings: {
-		"base_modal": {"hidden_form": {"url": "/upload_image/upload/"}, "body": {"html": function() { return uploaderImageBox.__buildBaseModalBodyHtml(); }}, "header": {"title": "Load an image"}, "footer": {"cancel": {"exists": true, "label": "Cancel"}}},
-		"upload_modal": {"hidden_form": {"url": "/upload_image/upload/"}, "body": {"html": function() { return uploaderImageBox.__buildUploadModalBodyHtml(); }}, "header": {"title": "Image upload..."}, "footer": {"cancel": {"exists": true, "label": "Cancel"}}},
-		"crop_modal": {"hidden_form": {"url": "/upload_image/upload/"}, "body": {"html": function() { return uploaderImageBox.__buildCropModalBodyHtml(); }}, "header": {"title": "Crop your image"}, "footer": {"cancel": {"exists": true, "label": "Cancel"}, "change_image": {"exists": true, "label": "Change image"}}},
-		"preview_modal": {"hidden_form": {"url": "/upload_image/upload/"}, "body": {"html": function() { return uploaderImageBox.__buildPreviewModalBodyHtml(); }}, "header": {"title": "Image preview"}, "footer": {"cancel": {"exists": true, "label": "Cancel"}, "change_image": {"exists": true, "label": "Change image"}}},
+		"base_modal": {"hidden_form": {"action": "/upload_image/upload/"}, "body": {"html": function() { return uploaderImageBox.__buildBaseModalBodyHtml("base_modal"); }}, "header": {"title": "Load an image"}, "footer": {"cancel": {"exists": true, "label": "Cancel"}}},
+		"upload_modal": {"hidden_form": {"action": "/upload_image/upload/"}, "body": {"html": function() { return uploaderImageBox.__buildUploadModalBodyHtml("upload_modal"); }}, "header": {"title": "Image upload..."}, "footer": {"cancel": {"exists": true, "label": "Cancel"}}},
+		"crop_modal": {"hidden_form": {"action": "/upload_image/crop/"}, "body": {"html": function() { return uploaderImageBox.__buildCropModalBodyHtml("crop_modal"); }, "crop_image_url": false, "crop_image_id": false}, "header": {"title": "Crop your image"}, "footer": {"cancel": {"exists": true, "label": "Cancel"}, "change_image": {"exists": true, "label": "Change image"}}},
+		"preview_modal": {"hidden_form": {"action": "/upload_image/upload/"}, "body": {"html": function() { return uploaderImageBox.__buildPreviewModalBodyHtml("preview_modal"); }}, "header": {"title": "Image preview"}, "footer": {"cancel": {"exists": true, "label": "Cancel"}, "change_image": {"exists": true, "label": "Change image"}}},
 	},
 
 	/* Function to read options and write modal html inside "modal_container" container */
@@ -25,7 +25,7 @@ var uploaderImageBox = {
 	/* function to write an hidden form */
 	__writeHiddenForm: function() {
 		var hiddenForm = '';
-		hiddenForm += '<form class="upload_image_box_form" name="upload_image_box_form" action="" method="POST" style="display: none;">';
+		hiddenForm += '<form class="upload_image_box_form" name="upload_image_box_form" enctype="multipart/form-data" action="" method="POST" style="display: none;">';
 		hiddenForm += '<input type="hidden" value="' + this.getCookie('csrftoken') + '" name="csrfmiddlewaretoken">';
 		hiddenForm += '<input class="select_image_input" type="file" name="image" />';
 		hiddenForm += '</form>';
@@ -50,8 +50,7 @@ var uploaderImageBox = {
 	},
 
 	/* Functions to build modal windows body {{{ */
-	__buildBaseModalBodyHtml: function() {
-
+	__buildBaseModalBodyHtml: function(modalType) {
 		var modalTemplate = '';
 		modalTemplate += '<div class="row">';
 		modalTemplate += '<div class="col-md-12 text-center">';
@@ -59,12 +58,27 @@ var uploaderImageBox = {
 		modalTemplate += '</div>';
 		modalTemplate += '</div>';
 
-		// TODO: setting hidden form url
+		// setting hidden form action url
+		$(".upload_image_box_form").attr("action", this.modalWindowSettings[modalType]["hidden_form"]["action"])
 
 		return modalTemplate;
 	},
 	__buildUploadModalBodyHtml: function() {},
-	__buildCropModalBodyHtml: function() {},
+
+	__buildCropModalBodyHtml: function(modalType) {
+		var modalTemplate = '';
+		modalTemplate += '<div class="row">';
+		modalTemplate += '<div class="col-md-12 text-center">';
+		modalTemplate += '<div class="cropper_container">';
+		modalTemplate += '<img style="max-width: 450px; max-height: 400px;" class="crop_image_tag" data-file-id="' + this.modalWindowSettings[modalType]["body"]["crop_image_id"] + '" src="' + this.modalWindowSettings[modalType]["body"]["crop_image_url"] + '">';
+		modalTemplate += '</div><br />';
+		modalTemplate += '<button type="button" class="btn btn-success cropImageClickAction">Ritaglia</button>';
+		modalTemplate += '</div>';
+		modalTemplate += '</div>';
+
+		return modalTemplate;
+	},
+
 	__buildPreviewModalBodyHtml: function() {},
 	/* Functions to build modal windows body }}} */
 
@@ -132,14 +146,29 @@ var uploaderImageBox = {
 		}
 		return cookieValue;
 	},
+
+	/* Function to init crop library */
+	cropperInit: function() {
+		// crop library -> http://fengyuanchen.github.io/cropper/
+		$('.crop_image_tag').cropper({
+			aspectRatio: 1 / 1,
+			autoCropArea: 0.65,
+			strict: false,
+			guides: false,
+			highlight: true,
+			dragCrop: true,
+			movable: true,
+			resizable: false
+		});
+	},
 };
 
+/* Object to manage image crop */
 var fileManager = {
-
 	/* function to send a file via AJAX == submitting hidden form */
 	sendFile: function() {
 		var options = {
-			//beforeSubmit:  showRequest,  // pre-submit callback 
+			//beforeSubmit:  showRequest,  // TODO: show "upload_modal" with loader
 			success:       this.loadUploadedImage  // post-submit callback 
 
 			// other available options: 
@@ -162,26 +191,85 @@ var fileManager = {
 	},
 
 	/* Function to load uploaded image inside modal window body */
-	loadUploadedImage: function(responseText, statusText, xhr, $form)  { 
-		alert('status: ' + statusText + '\n\nresponseText: \n' + responseText + '\n\nThe output div should have already been updated with the responseText.');
-	}
-}
+	loadUploadedImage: function(responseText, statusText, xhr, $form) { 
+		// console.log('status: ' + statusText + '\n\nresponseText: \n');
+		console.log(responseText);
+		// load uploaded image via AJAX inside "crop_modal" or "preview_modal" window
+		uploaderImageBox.modalWindowSettings["crop_modal"]["body"]["crop_image_url"] = responseText.file_url
+		uploaderImageBox.modalWindowSettings["crop_modal"]["body"]["crop_image_id"] = responseText.file_id
+		uploaderImageBox.openModalWindow("crop_modal");
+		// crop library init
+		uploaderImageBox.cropperInit();
+	},
+
+	/* Function to perform an ajax call */
+	performAjaxCall: function(ajaxCallData) {
+		var request = $.ajax({
+			headers: { "X-CSRFToken": uploaderImageBox.getCookie('csrftoken') },
+			url: ajaxCallData["url"],
+			method: "POST",
+			data: ajaxCallData["data"], // { id : menuId },
+			dataType: "json"
+		});
+
+		request.done(function(msg) {
+			// ajax call success
+			alert(msg)
+		});
+
+		request.fail(function(jqXHR, textStatus) {
+			// ajax call error
+			alert("Request failed: " + textStatus);
+		});
+	},
+
+	/* Function to save cropped image */
+	saveCroppedImage: function(ajaxCallData) {
+		this.performAjaxCall(ajaxCallData);
+	},
+};
 
 // Function to open modal window
 $(document).on("click", ".uploaderButtonClickAction", function(){
+	// open modal window
 	uploaderImageBox.openModalWindow("base_modal");
 
 	return false;
 });
 
-// function to select an upload file
+// Function to select an upload file
 $(document).on("click", ".fileSelectClickAction", function(){
-	console.log("Select a file to upload");
 	// open file chooser
 	$(".select_image_input").click();
 
 	return false;
 });
+
+// Function to save upload cropped area
+$(document).on("click", ".cropImageClickAction", function(){
+	var cropData = $(".crop_image_tag").cropper('getData')
+	var fileId = $(".crop_image_tag").data('fileId');
+	var ajaxCallData = {
+		"url": uploaderImageBox.modalWindowSettings["crop_modal"]["hidden_form"]["action"],
+		"data": {
+			"file_id": fileId,
+			"x": cropData["x"],
+			"y": cropData["y"],
+			"width": cropData["width"],
+			"height": cropData["height"],
+			"rotate": cropData["rotate"],
+		}
+	};
+
+	// ajax call with image id and crop data
+	fileManager.saveCroppedImage(ajaxCallData);
+
+	// TODO: close modal window
+
+	return false;
+});
+
+
 
 // function to send a file on "onChange" event
 $(document).on("change", ".select_image_input", function(){
