@@ -6,6 +6,7 @@ from upload_image_box.models import uploadedImages
 from django.conf import settings
 from .settings import *
 from django.http import HttpResponse
+from PIL import Image
 import os, logging, json
 
 # Get an instance of a logger
@@ -43,21 +44,32 @@ def crop(request):
     # if this is a POST request we need to process the form data
     if request.method == 'POST':
         file_id = request.POST.get("file_id")
-        height = request.POST.get("height")
-        width = request.POST.get("width")
-        x = request.POST.get("x")
-        y = request.POST.get("y")
+        height = int(str(request.POST.get("height")))
+        width = int(str(request.POST.get("width")))
+        x = int(str(request.POST.get("x")))
+        y = int(str(request.POST.get("y")))
         rotate = request.POST.get("rotate")
         # use PIL to resize and save new image
         # create a form instance and populate it with data from the request:
 	try:
-	    uploadedImages.objects.get(pk=file_id)
+	    uploaded_image = uploadedImages.objects.get(pk=file_id)
 	    return_var = True
 	except uploadedImages.DoesNotExist:
             # plz manage this exception
 	    pass
         else:
-            # TODO: resize uploaded image
+            # TODO: crop uploaded image
+	    image_path = settings.MEDIA_ROOT + "/" + str(uploaded_image.image)
+            logger.debug("opening image: " + str(image_path))
+	    image = Image.open(image_path)
+	    width, height = image.size   # Get dimensions
+            logger.debug("width: " + str(width) + " | height: " + str(height))
+	    image.crop([x, y, width, height])
+	    image.save(image_path)
+
+	    # controllare i valori del crop che danno errori strani tipo -> invalid literal for int() with base 10: '345.8'
+            # TODO: change 'is_temp_image' flag to '0'
+            # TODO: move image to another directory
 
     return HttpResponse(json.dumps(data), content_type="application/json")
 
