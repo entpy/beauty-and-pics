@@ -70,7 +70,7 @@ var uploaderImageBox = {
 		modalTemplate += '<div class="row">';
 		modalTemplate += '<div class="col-md-12 text-center">';
 		modalTemplate += '<div class="cropper_container">';
-		modalTemplate += '<img style="max-width: 450px; max-height: 400px;" class="crop_image_tag" data-file-id="' + this.modalWindowSettings[modalType]["body"]["crop_image_id"] + '" src="' + this.modalWindowSettings[modalType]["body"]["crop_image_url"] + '">';
+		modalTemplate += '<img style="max-width: 450px; max-height: 450px;" class="crop_image_tag" data-file-id="' + this.modalWindowSettings[modalType]["body"]["crop_image_id"] + '" src="' + this.modalWindowSettings[modalType]["body"]["crop_image_url"] + '">';
 		modalTemplate += '</div><br />';
 		modalTemplate += '<button type="button" class="btn btn-success cropImageClickAction">Ritaglia</button>';
 		modalTemplate += '</div>';
@@ -152,12 +152,18 @@ var uploaderImageBox = {
 		// crop library -> http://fengyuanchen.github.io/cropper/
 		$('.crop_image_tag').cropper({
 			aspectRatio: 1 / 1,
-			autoCropArea: 0.65,
+			autoCropArea: 0.9,
+			minCropBoxWidth: 200,
+			minCropBoxHeight: 200,
+			checkImageOrigin: false,
+			touchDragZoom: false,
 			strict: false,
-			guides: false,
+			guides: true,
 			highlight: true,
 			dragCrop: true,
 			movable: true,
+			zoomable: false,
+			rotatable: false,
 			resizable: false
 		});
 	},
@@ -214,12 +220,12 @@ var fileManager = {
 
 		request.done(function(msg) {
 			// ajax call success
-			alert(msg)
+			// console.log(msg)
 		});
 
 		request.fail(function(jqXHR, textStatus) {
 			// ajax call error
-			alert("Request failed: " + textStatus);
+			console.log("Request failed: " + textStatus);
 		});
 	},
 
