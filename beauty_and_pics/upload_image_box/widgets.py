@@ -40,7 +40,7 @@ class UibUploaderInput(forms.ClearableFileInput):
 	}
         if attrs:
             self.default_attrs.update(attrs)
-        self.uploader_button = '<div class="uploader_button uploaderButtonClickAction">Click me!</div>'
+        self.uploader_button = '<div class="uploader_button uploaderButtonClickAction">Click me!</div>' # TODO: use custom html
         self.modal_window_scheleton = '<div class="modal_container"></div>'
         self.uploader_script = '<script type="text/javascript">$(function(){uploaderImageBox.init();});</script>'
         self.uploader_options = '<div class="uploader_image_box_options" data-custom-upload-dir-name="%(custom_upload_dir_name)s" data-base-modal-title-text="%(base_modal_title_text)s" data-upload-modal-title-text="%(upload_modal_title_text)s" data-crop-modal-title-text="%(crop_modal_title_text)s" data-preview-modal-title-text="%(preview_modal_title_text)s" data-crop-action-button-text="%(crop_action_button_text)s" data-preview-action-button-text="%(preview_action_button_text)s" data-cancel-button-text="%(cancel_button_text)s" data-change-image-button-text="%(change_image_button_text)s" data-enable-crop="%(enable_crop)s" data-select-image-action-button-text="%(select_image_action_button_text)s" style="display: none!important"></div>'
