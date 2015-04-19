@@ -41,8 +41,6 @@ def crop(request):
     # if this is a POST request we need to process the form data
     if request.method == 'POST':
 	try:
-	    # tmp_uploaded_images_obj = tmpUploadedImages()
-            # load uploaded image instance
 	    tmp_uploaded_image = tmpUploadedImages.objects.get(pk=request.POST.get("file_id")) # BAD: another image can be loaded
 	except tmpUploadedImages.DoesNotExist:
             data = {'error': True, "msg": "Uploaded image doesn't exists"}
@@ -52,7 +50,7 @@ def crop(request):
             # retrieve crop info
 	    crop_info = crop_uploaded_images_obj.retrieve_crop_info(request)
 	    # check if custom crop directory name is valid
-	    if crop_uploaded_images_obj.custom_crop_directory_valid(request, crop_info["custom_crop_dir_name"]):
+	    if crop_uploaded_images_obj.check_custom_crop_directory_valid(request, crop_info["custom_crop_dir_name"]):
                 # crop uploaded image
 	        if crop_uploaded_images_obj.crop_image(tmp_uploaded_image, crop_info, crop_info["custom_crop_dir_name"]):
 	 	    data = {'success' : True}

@@ -13,5 +13,5 @@ class uploadedImagesForm(ModelForm):
         model = tmpUploadedImages
 	fields = ("image",)
         widgets = {
-            'image': UibUploaderInput(attrs={}),
+            'image': UibUploaderInput(attrs={'custom_upload_dir_name': "", "enable_crop": True, "upload_modal_title_text": "Attendi mentre carichiamo l'immagine..."}),
         }

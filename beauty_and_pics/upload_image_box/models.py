@@ -27,12 +27,13 @@ class cropUploadedImages(models.Model):
 
 	if request:
             crop_info["file_id"] = request.POST.get("file_id") # BAD
-            crop_info["height"] = int(float(request.POST.get("height")))
-            crop_info["width"] = int(float(request.POST.get("width")))
-            crop_info["x"] = int(float(request.POST.get("x")))
-            crop_info["y"] = int(float(request.POST.get("y")))
-            crop_info["rotate"] = request.POST.get("rotate")
+            crop_info["height"] = int(float(request.POST.get("height", 0)))
+            crop_info["width"] = int(float(request.POST.get("width", 0)))
+            crop_info["x"] = int(float(request.POST.get("x", 0)))
+            crop_info["y"] = int(float(request.POST.get("y", 0)))
+            crop_info["rotate"] = int(float(request.POST.get("rotate", 0)))
             crop_info["custom_crop_dir_name"] = request.POST.get("custom_crop_dir_name") + "/"
+            crop_info["enable_crop"] = request.POST.get("enable_crop")
 
 	    """
 	    logger.debug("=== crop info START ===")
@@ -62,16 +63,22 @@ class cropUploadedImages(models.Model):
 	if uploaded_image and crop_info:
             uploaded_image_path = str(uploaded_image.image.path)
             image = Image.open(uploaded_image_path)
-            cropped_image = image.crop(self.get_crop_box(crop_info))
-            cropped_width, cropped_height = cropped_image.size   # get dimensions about cropped image
+	    # check if image must be cropped or not
+	    if crop_info["enable_crop"]:
+                cropped_image = image.crop(self.get_crop_box(crop_info))
+	    else:
+                cropped_image = image
+            cropped_width, cropped_height = cropped_image.size   # get dimensions about image
+            logger.debug("enable crop: " + str(crop_info["enable_crop"]))
+            logger.debug("cropped width: " + str(cropped_width) + " cropped height: " + str(cropped_height))
             if cropped_width >= CROPPED_IMG_MIN_WIDTH and cropped_height >= CROPPED_IMG_MIN_HEIGHT:
-		# TODO: move image to another directory (custom directory)
-		self.move_cropped_image(uploaded_image, cropped_image, custom_crop_directory_name)
+		# save cropped image
+		self.save_cropped_image(uploaded_image, cropped_image, custom_crop_directory_name)
 	        return_var = True
 
         return return_var
 
-    def move_cropped_image(self, uploaded_image, cropped_image, custom_crop_directory_name=None):
+    def save_cropped_image(self, uploaded_image, cropped_image, custom_crop_directory_name=None):
         """Function to save cropped image into CROPPED_IMG_DIRECTORY directory"""
 	tmp_uploaded_image_full_path = uploaded_image.image.path
 	# retrieve image name from tmp_uploaded_image_full_path
@@ -136,11 +143,14 @@ class cropUploadedImages(models.Model):
 
 	return True
 
-    def custom_crop_directory_valid(self, request, custom_directory_name):
+    def check_custom_crop_directory_valid(self, request, custom_directory_name):
 	"""Function to check if a custom crop directory is valid"""
 	return_var = False
 	logger.debug("valore in sessione: " + str(request.session.get('directory_name', False)))
+	logger.debug("valore passata via ajax: " + str(custom_directory_name))
 	if request.session['CUSTOM_CROPPED_IMG_DIRECTORY'] == custom_directory_name:
+	    return_var = True
+	elif custom_directory_name == "/":
 	    return_var = True
 
 	return return_var

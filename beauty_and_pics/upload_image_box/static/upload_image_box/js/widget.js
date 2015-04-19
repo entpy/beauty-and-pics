@@ -4,10 +4,11 @@ var uploaderImageBox = {
 	modalWindow: false,
 	// modal window settings, like buttons, content, titles, ecc...
 	modalWindowSettings: {
-		"base_modal": {"hidden_form": {"action": "/upload_image/upload/"}, "body": {"html": function() { return uploaderImageBox.__buildBaseModalBodyHtml("base_modal"); }}, "header": {"title": "Load an image"}, "footer": {"cancel": {"exists": true, "label": "Cancel"}}},
-		"upload_modal": {"hidden_form": {"action": "/upload_image/upload/"}, "body": {"html": function() { return uploaderImageBox.__buildUploadModalBodyHtml("upload_modal"); }}, "header": {"title": "Image upload..."}, "footer": {"cancel": {"exists": true, "label": "Cancel"}}},
-		"crop_modal": {"hidden_form": {"action": "/upload_image/crop/"}, "body": {"html": function() { return uploaderImageBox.__buildCropModalBodyHtml("crop_modal"); }, "crop_image_url": false, "crop_image_id": false}, "header": {"title": "Crop your image"}, "footer": {"cancel": {"exists": true, "label": "Cancel"}, "change_image": {"exists": true, "label": "Change image"}}},
-		"preview_modal": {"hidden_form": {"action": "/upload_image/upload/"}, "body": {"html": function() { return uploaderImageBox.__buildPreviewModalBodyHtml("preview_modal"); }}, "header": {"title": "Image preview"}, "footer": {"cancel": {"exists": true, "label": "Cancel"}, "change_image": {"exists": true, "label": "Change image"}}},
+		"base_modal": {"hidden_form": {"action": "/upload_image/upload/"}, "body": {"html": function() { return uploaderImageBox.__buildBaseModalBodyHtml("base_modal"); }}, "header": {"title": function() { return uploaderImageBox.getOptionValue("baseModalTitleText"); }}, "footer": {"cancel": {"exists": true, "label": function() { return uploaderImageBox.getOptionValue("cancelButtonText");}}, "action_button": {"exists": true, "label": function() { return uploaderImageBox.getOptionValue("selectImageActionButtonText"); }}}},
+		"upload_modal": {"hidden_form": {"action": "/upload_image/upload/"}, "body": {"html": function() { return uploaderImageBox.__buildUploadModalBodyHtml("upload_modal"); }}, "header": {"title": function() { return uploaderImageBox.getOptionValue("uploadModalTitleText"); }}, "footer": {"cancel": {"exists": true, "label": function() { return uploaderImageBox.getOptionValue("cancelButtonText"); }}}},
+		"crop_modal": {"hidden_form": {"action": "/upload_image/crop/"}, "body": {"html": function() { return uploaderImageBox.__buildCropModalBodyHtml("crop_modal"); }, "crop_image_url": false, "crop_image_id": false}, "header": {"title": function() { return uploaderImageBox.getOptionValue("cropModalTitleText"); }}, "footer": {"cancel": {"exists": true, "label": function() { return uploaderImageBox.getOptionValue("cancelButtonText"); }}, "change_image": {"exists": true, "label": function() { return uploaderImageBox.getOptionValue("changeImageButtonText"); }}, "action_button": {"exists": true, "label": function() { return uploaderImageBox.getOptionValue("cropActionButtonText"); }}}},
+		"preview_modal": {"hidden_form": {"action": "/upload_image/crop/"}, "body": {"html": function() { return uploaderImageBox.__buildPreviewModalBodyHtml("preview_modal"); }, "crop_image_url": false, "crop_image_id": false}, "header": {"title": function() { return uploaderImageBox.getOptionValue("previewModalTitleText"); }}, "footer": {"cancel": {"exists": true, "label": function() { return uploaderImageBox.getOptionValue("cancelButtonText"); }}, "change_image": {"exists": true, "label": function() { return uploaderImageBox.getOptionValue("changeImageButtonText"); }}, "action_button": {"exists": true, "label": function() { return uploaderImageBox.getOptionValue("previewActionButtonText"); }}}},
+		"global_options" : { "enable_crop": function() { return uploaderImageBox.getOptionValue("enableCrop"); }, "custom_upload_dir_name": function() { return uploaderImageBox.getOptionValue("customUploadDirName"); }}
 	},
 
 	/* Function to read options and write modal html inside "modal_container" container */
@@ -54,7 +55,7 @@ var uploaderImageBox = {
 		var modalTemplate = '';
 		modalTemplate += '<div class="row">';
 		modalTemplate += '<div class="col-md-12 text-center">';
-		modalTemplate += '<button type="button" class="btn btn-success fileSelectClickAction">Select image</button>';
+		modalTemplate += '<button type="button" class="btn btn-success fileSelectClickAction">' + this.modalWindowSettings[modalType]["footer"]["action_button"]["label"].call() + '</button>';
 		modalTemplate += '</div>';
 		modalTemplate += '</div>';
 
@@ -63,7 +64,22 @@ var uploaderImageBox = {
 
 		return modalTemplate;
 	},
-	__buildUploadModalBodyHtml: function() {},
+
+	__buildUploadModalBodyHtml: function(modalType) {
+		var modalTemplate = '';
+		modalTemplate += '<div class="row">';
+		modalTemplate += '<div class="col-md-12 text-center">';
+		modalTemplate += '<div id="movingBallG">';
+		modalTemplate += '<div class="movingBallLineG">';
+		modalTemplate += '</div>';
+		modalTemplate += '<div id="movingBallG_1" class="movingBallG">';
+		modalTemplate += '</div>';
+		modalTemplate += '</div>';
+		modalTemplate += '</div>';
+		modalTemplate += '</div>';
+
+		return modalTemplate;
+	},
 
 	__buildCropModalBodyHtml: function(modalType) {
 		var modalTemplate = '';
@@ -72,14 +88,30 @@ var uploaderImageBox = {
 		modalTemplate += '<div class="cropper_container">';
 		modalTemplate += '<img style="max-width: 450px; max-height: 450px;" class="crop_image_tag" data-file-id="' + this.modalWindowSettings[modalType]["body"]["crop_image_id"] + '" src="' + this.modalWindowSettings[modalType]["body"]["crop_image_url"] + '">';
 		modalTemplate += '</div><br />';
-		modalTemplate += '<button type="button" class="btn btn-success cropImageClickAction">Ritaglia</button>';
+		if (this.modalWindowSettings[modalType]["footer"].hasOwnProperty("action_button")) {
+			modalTemplate += '<button type="button" class="btn btn-success cropImageClickAction">' + this.modalWindowSettings[modalType]["footer"]["action_button"]["label"].call() + '</button>';
+		}
 		modalTemplate += '</div>';
 		modalTemplate += '</div>';
 
 		return modalTemplate;
 	},
 
-	__buildPreviewModalBodyHtml: function() {},
+	__buildPreviewModalBodyHtml: function(modalType) {
+		var modalTemplate = '';
+		modalTemplate += '<div class="row">';
+		modalTemplate += '<div class="col-md-12 text-center">';
+		modalTemplate += '<div class="cropper_container">';
+		modalTemplate += '<img style="max-width: 450px; max-height: 450px;" class="crop_image_tag" data-file-id="' + this.modalWindowSettings[modalType]["body"]["crop_image_id"] + '" src="' + this.modalWindowSettings[modalType]["body"]["crop_image_url"] + '">';
+		modalTemplate += '</div><br />';
+		if (this.modalWindowSettings[modalType]["footer"].hasOwnProperty("action_button")) {
+			modalTemplate += '<button type="button" class="btn btn-success confirmImageClickAction">' + this.modalWindowSettings[modalType]["footer"]["action_button"]["label"].call() + '</button>';
+		}
+		modalTemplate += '</div>';
+		modalTemplate += '</div>';
+
+		return modalTemplate;
+	},
 	/* Functions to build modal windows body }}} */
 
 	/* Function to write modal window header */
@@ -95,10 +127,10 @@ var uploaderImageBox = {
 	__getModalTemplateFooterHtml: function(modalType) {
 		var modalTemplate = '';
 		if (this.modalWindowSettings[modalType]["footer"].hasOwnProperty("cancel")) {
-			modalTemplate += '<button type="button" class="btn btn-default" data-dismiss="modal">' + this.modalWindowSettings[modalType]["footer"]["cancel"]["label"] + '</button>';
+			modalTemplate += '<button type="button" class="btn btn-default" data-dismiss="modal">' + this.modalWindowSettings[modalType]["footer"]["cancel"]["label"].call() + '</button>';
 		}
 		if (this.modalWindowSettings[modalType]["footer"].hasOwnProperty("change_image")) {
-			modalTemplate += '<button type="button" class="btn btn-primary fileSelectClickAction">' + this.modalWindowSettings[modalType]["footer"]["change_image"]["label"] + '</button>';
+			modalTemplate += '<button type="button" class="btn btn-primary fileSelectClickAction">' + this.modalWindowSettings[modalType]["footer"]["change_image"]["label"].call() + '</button>';
 		}
 
 		return modalTemplate;
@@ -211,11 +243,20 @@ var fileManager = {
 		// console.log('status: ' + statusText + '\n\nresponseText: \n');
 		console.log(responseText);
 		// load uploaded image via AJAX inside "crop_modal" or "preview_modal" window
-		uploaderImageBox.modalWindowSettings["crop_modal"]["body"]["crop_image_url"] = responseText.file_url
-		uploaderImageBox.modalWindowSettings["crop_modal"]["body"]["crop_image_id"] = responseText.file_id
-		uploaderImageBox.openModalWindow("crop_modal");
-		// crop library init
-		uploaderImageBox.cropperInit();
+		if (uploaderImageBox.getOptionValue("enableCrop")) {
+			uploaderImageBox.modalWindowSettings["crop_modal"]["body"]["crop_image_url"] = responseText.file_url;
+			uploaderImageBox.modalWindowSettings["crop_modal"]["body"]["crop_image_id"] = responseText.file_id;
+			uploaderImageBox.openModalWindow("crop_modal");
+			// crop library init
+			uploaderImageBox.cropperInit();
+		} else {
+			// TODO: alcune volte al caricamento di una nuova immagine la precedente non viene rimossa
+			// sembrerebbe un problema di tempistiche
+			// alert(responseText.file_url);
+			uploaderImageBox.modalWindowSettings["preview_modal"]["body"]["crop_image_url"] = responseText.file_url;
+			uploaderImageBox.modalWindowSettings["preview_modal"]["body"]["crop_image_id"] = responseText.file_id;
+			uploaderImageBox.openModalWindow("preview_modal");
+		}
 	},
 
 	/* Function to perform an ajax call */
@@ -224,13 +265,17 @@ var fileManager = {
 			headers: { "X-CSRFToken": uploaderImageBox.getCookie('csrftoken') },
 			url: ajaxCallData["url"],
 			method: "POST",
-			data: ajaxCallData["data"], // { id : menuId },
+			data: ajaxCallData["data"],
 			dataType: "json"
 		});
 
-		request.done(function(msg) {
+		request.done(function(textStatus) {
 			// ajax call success
-			// console.log(msg)
+			if (textStatus.success) {
+				// TODO: perform a callback function
+				// close bootstrap modal window
+				$('#upload_image_box_modal').modal('hide');
+			}
 		});
 
 		request.fail(function(jqXHR, textStatus) {
@@ -274,6 +319,7 @@ $(document).on("click", ".cropImageClickAction", function(){
 			"width": cropData["width"],
 			"height": cropData["height"],
 			"rotate": cropData["rotate"],
+			"enable_crop" : true,
 			"custom_crop_dir_name": uploaderImageBox.getOptionValue("customUploadDirName"),
 		}
 	};
@@ -281,20 +327,33 @@ $(document).on("click", ".cropImageClickAction", function(){
 	// ajax call with image id and crop data
 	fileManager.saveCroppedImage(ajaxCallData);
 
-	// TODO: close modal window
+	return false;
+});
+
+// Function to save uploaded image without crop
+$(document).on("click", ".confirmImageClickAction", function(){
+	var fileId = $(".crop_image_tag").data('fileId');
+	var ajaxCallData = {
+		"url": uploaderImageBox.modalWindowSettings["crop_modal"]["hidden_form"]["action"],
+		"data": {
+			"file_id": fileId,
+			"enable_crop" : "",
+			"custom_crop_dir_name": uploaderImageBox.getOptionValue("customUploadDirName"),
+		}
+	};
+
+	// ajax call with image id and crop data
+	fileManager.saveCroppedImage(ajaxCallData);
 
 	return false;
 });
 
-
-
 // function to send a file on "onChange" event
 $(document).on("change", ".select_image_input", function(){
-	// submit hidden form
-	fileManager.sendFile();
-	// TODO
 	// show upload modal to show upload status bar
-	// show uploaded image into crop view
+	uploaderImageBox.openModalWindow("upload_modal");
+	// show uploaded image
+	setTimeout(function() { fileManager.sendFile(); }, 2000);
 
 	return false;
 });
