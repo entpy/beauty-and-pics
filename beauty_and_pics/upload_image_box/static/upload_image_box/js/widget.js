@@ -167,6 +167,16 @@ var uploaderImageBox = {
 			resizable: false
 		});
 	},
+
+	/* Function to retrieve an option value */
+	getOptionValue: function(optionName) {
+		var return_var = false;
+		if (optionName) {
+			return_var = $(".uploader_image_box_options").data(optionName);
+		}
+
+		return return_var;
+	},
 };
 
 /* Object to manage image crop */
@@ -264,6 +274,7 @@ $(document).on("click", ".cropImageClickAction", function(){
 			"width": cropData["width"],
 			"height": cropData["height"],
 			"rotate": cropData["rotate"],
+			"custom_crop_dir_name": uploaderImageBox.getOptionValue("customUploadDirName"),
 		}
 	};
 

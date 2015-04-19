@@ -166,6 +166,7 @@ LOGGING = {
 
 MEDIA_ROOT = '/tmp/images'
 MEDIA_URL = '/tmp/'
+CUSTOM_CROPPED_IMG_DIRECTORY = 'green/'
 
 # email settings
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend' # this backend is only for development debug

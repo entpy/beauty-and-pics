@@ -19,7 +19,7 @@ class UibUploaderInput(forms.ClearableFileInput):
     template_with_clear = '' # '%(clear)s <label for="%(clear_checkbox_id)s">%(clear_checkbox_label)s</label>'
 
     # default template is a simple div
-    template_with_initial = '%(uploader_button)s%(modal_window_scheleton)s%(uploader_script)s'
+    template_with_initial = '%(uploader_button)s%(modal_window_scheleton)s%(uploader_script)s%(uploader_options)s'
             
     def __init__(self, attrs=None):
         # TODO qui dovrei passare delle opzioni al plugin, per esempio un qualcosa
@@ -31,6 +31,7 @@ class UibUploaderInput(forms.ClearableFileInput):
         self.uploader_button = '<div class="uploader_button uploaderButtonClickAction">Click me!</div>'
         self.modal_window_scheleton = '<div class="modal_container"></div>'
         self.uploader_script = '<script type="text/javascript">$(function(){uploaderImageBox.init();});</script>'
+        self.uploader_options = '<div class="uploader_image_box_options" data-custom-upload-dir-name="blu" style="display: none!important"></div>'
         super(UibUploaderInput , self).__init__(attrs=None)
 
     # metodo per scrivere nell'html il file input
@@ -40,6 +41,7 @@ class UibUploaderInput(forms.ClearableFileInput):
             'uploader_button': self.uploader_button,
             'modal_window_scheleton': self.modal_window_scheleton,
             'uploader_script': self.uploader_script,
+            'uploader_options': self.uploader_options,
         }
         template = self.template_with_initial
 
