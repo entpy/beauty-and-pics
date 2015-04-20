@@ -19,7 +19,7 @@ class UibUploaderInput(forms.ClearableFileInput):
     template_with_clear = '' # '%(clear)s <label for="%(clear_checkbox_id)s">%(clear_checkbox_label)s</label>'
 
     # default template is a simple div
-    template_with_initial = '%(uploader_button)s%(modal_window_scheleton)s%(uploader_script)s%(uploader_options)s'
+    template_with_initial = '%(uploader_button)s%(modal_window_scheleton)s%(uploader_script)s'
 
     def __init__(self, attrs=None):
         # TODO qui dovrei passare delle opzioni al plugin, per esempio un qualcosa
@@ -37,13 +37,14 @@ class UibUploaderInput(forms.ClearableFileInput):
 		'cancel_button_text': 'Cancel',
 		'change_image_button_text': 'Change image',
 		'enable_crop': True,
+                'widget_id': 'test_id', # only required field
 	}
         if attrs:
             self.default_attrs.update(attrs)
         self.uploader_button = '<div class="uploader_button uploaderButtonClickAction">Click me!</div>' # TODO: use custom html
-        self.modal_window_scheleton = '<div class="modal_container"></div>'
-        self.uploader_script = '<script type="text/javascript">$(function(){uploaderImageBox.init();});</script>'
-        self.uploader_options = '<div class="uploader_image_box_options" data-custom-upload-dir-name="%(custom_upload_dir_name)s" data-base-modal-title-text="%(base_modal_title_text)s" data-upload-modal-title-text="%(upload_modal_title_text)s" data-crop-modal-title-text="%(crop_modal_title_text)s" data-preview-modal-title-text="%(preview_modal_title_text)s" data-crop-action-button-text="%(crop_action_button_text)s" data-preview-action-button-text="%(preview_action_button_text)s" data-cancel-button-text="%(cancel_button_text)s" data-change-image-button-text="%(change_image_button_text)s" data-enable-crop="%(enable_crop)s" data-select-image-action-button-text="%(select_image_action_button_text)s" style="display: none!important"></div>'
+        self.modal_window_scheleton = '<div id="%(widget_id)s" class="modal_container" data-custom-upload-dir-name="%(custom_upload_dir_name)s" data-base-modal-title-text="%(base_modal_title_text)s" data-upload-modal-title-text="%(upload_modal_title_text)s" data-crop-modal-title-text="%(crop_modal_title_text)s" data-preview-modal-title-text="%(preview_modal_title_text)s" data-crop-action-button-text="%(crop_action_button_text)s" data-preview-action-button-text="%(preview_action_button_text)s" data-cancel-button-text="%(cancel_button_text)s" data-change-image-button-text="%(change_image_button_text)s" data-enable-crop="%(enable_crop)s" data-select-image-action-button-text="%(select_image_action_button_text)s"></div>'
+        self.uploader_script = '<script type="text/javascript">$(function(){uploaderImageBox.init("%(widget_id)s");});</script>'
+        # self.uploader_options = '<div class="' + str(self.default_attrs["widget_id"]) '_options" style="display: none!important"></div>'
         super(UibUploaderInput , self).__init__(attrs=None)
 
     # metodo per scrivere nell'html il file input
@@ -52,9 +53,9 @@ class UibUploaderInput(forms.ClearableFileInput):
 	logger.debug("attrs list: " + str(self.default_attrs))
         substitutions = {
             'uploader_button': self.uploader_button,
-            'modal_window_scheleton': self.modal_window_scheleton,
-            'uploader_script': self.uploader_script,
-            'uploader_options': (self.uploader_options % self.default_attrs),
+            'modal_window_scheleton': (self.modal_window_scheleton % self.default_attrs),
+            'uploader_script': (self.uploader_script % self.default_attrs),
+            # 'uploader_options': (self.uploader_options % self.default_attrs),
         }
         template = self.template_with_initial
 

@@ -8,10 +8,18 @@ import logging
 # Get an instance of a logger
 logger = logging.getLogger(__name__)
 
-class uploadedImagesForm(ModelForm):
+class uploadedImagesNoCropForm(ModelForm):
     class Meta:
         model = tmpUploadedImages
 	fields = ("image",)
         widgets = {
-            'image': UibUploaderInput(attrs={'custom_upload_dir_name': "", "enable_crop": True, "upload_modal_title_text": "Attendi mentre carichiamo l'immagine..."}),
+            'image': UibUploaderInput(attrs={'widget_id': 'uploader_no_crop', 'custom_upload_dir_name': "", "enable_crop": "", "upload_modal_title_text": "Attendi mentre carichiamo l'immagine..."}),
+        }
+
+class uploadedImagesCropForm(ModelForm):
+    class Meta:
+        model = tmpUploadedImages
+	fields = ("image",)
+        widgets = {
+            'image': UibUploaderInput(attrs={'widget_id': 'uploader_crop', 'custom_upload_dir_name': "", "enable_crop": True, "upload_modal_title_text": "Attendi mentre carichiamo l'immagine..."}),
         }

@@ -2,7 +2,7 @@
 
 from django.shortcuts import render
 from django.views.decorators.http import require_POST
-from upload_image_box.forms import uploadedImagesForm
+from upload_image_box.forms import *
 from upload_image_box.models import tmpUploadedImages, cropUploadedImages
 from django.conf import settings
 from .settings import *
@@ -68,21 +68,23 @@ def upload_example(request):
     # if this is a POST request we need to process the form data
     if request.method == 'POST':
         # create a form instance and populate it with data from the request:
-        form = uploadedImagesForm(request.POST, request.FILES)
+        form_no_crop = uploadedImagesNoCropForm(request.POST, request.FILES)
         # check whether it's valid:
-        if form.is_valid():
-	    form.save()
+        if form_no_crop.is_valid():
+	    form_no_crop.save()
         else:
-            logger.debug("form NON valido: " + str(form.errors))
+            logger.debug("form NON valido: " + str(form_no_crop.errors))
 	    pass
 
     # if a GET (or any other method) we'll create a blank form
     else:
-        form = uploadedImagesForm()
+        form_no_crop = uploadedImagesNoCropForm()
+        form_crop = uploadedImagesCropForm()
 
     context = {
         "post" : request.POST,
-        "form": form,
+        "form_no_crop": form_no_crop,
+        "form_crop": form_crop,
     }
 
     return render(request, 'upload_image_box/upload_example.html', context)
