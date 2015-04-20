@@ -2,6 +2,8 @@
 var uploaderImageBox = {
 	// current opened modal window instance
 	modalWindow: false,
+	// widgetId
+	widgetId: false,
 	// modal window settings, like buttons, content, titles, ecc...
 	modalWindowSettings: {
 		"base_modal": {"hidden_form": {"action": "/upload_image/upload/"}, "body": {"html": function() { return uploaderImageBox.__buildBaseModalBodyHtml("base_modal"); }}, "header": {"title": function() { return uploaderImageBox.getOptionValue("baseModalTitleText"); }}, "footer": {"cancel": {"exists": true, "label": function() { return uploaderImageBox.getOptionValue("cancelButtonText");}}, "action_button": {"exists": true, "label": function() { return uploaderImageBox.getOptionValue("selectImageActionButtonText"); }}}},
@@ -12,31 +14,37 @@ var uploaderImageBox = {
 	},
 
 	/* Function to read options and write modal html inside "modal_container" container */
-	init: function() {
-		console.log("upload_image_box widget init...");
-		this.__writeModalTemplateInsideHtml();
-		this.__writeHiddenForm();
+	init: function(widgetId) {
+		console.log("(" + widgetId + ") upload_image_box widget init...");
+		this.__writeModalTemplateInsideHtml(widgetId);
+		this.__writeHiddenForm(widgetId);
 	},
 
 	/* Function to retrieve modal window html code */
-	__writeModalTemplateInsideHtml: function() {
-		$(".modal_container").html(this.__getModalTemplateHtml());
+	__writeModalTemplateInsideHtml: function(widgetId) {
+		// write html inside current widget id
+		$("#" + widgetId).html(this.__getModalTemplateHtml(widgetId));
 	},
 
 	/* function to write an hidden form */
-	__writeHiddenForm: function() {
-		var hiddenForm = '';
-		hiddenForm += '<form class="upload_image_box_form" name="upload_image_box_form" enctype="multipart/form-data" action="" method="POST" style="display: none;">';
-		hiddenForm += '<input type="hidden" value="' + this.getCookie('csrftoken') + '" name="csrfmiddlewaretoken">';
-		hiddenForm += '<input class="select_image_input" type="file" name="image" />';
-		hiddenForm += '</form>';
-		$(".modal_container").parents("form").after(hiddenForm);
+	__writeHiddenForm: function(widgetId) {
+		// write hidden form only if not already exists
+		if (!$(".upload_image_box_form").length) {
+			var hiddenForm = '';
+			hiddenForm += '<form class="upload_image_box_form" name="upload_image_box_form" enctype="multipart/form-data" action="" method="POST" style="display: none;">';
+			hiddenForm += '<input type="hidden" value="' + this.getCookie('csrftoken') + '" name="csrfmiddlewaretoken">';
+			// hiddenForm += '<input class="hiddenFormWidgetIdAction" type="hidden" value="" name="widget_id">';
+			hiddenForm += '<input class="select_image_input" type="file" name="image" />';
+			hiddenForm += '</form>';
+
+			$("#" + widgetId).parents("form").after(hiddenForm);
+		}
 	},
 
 	/* Function to write modal window scheleton */
-	__getModalTemplateHtml: function() {
+	__getModalTemplateHtml: function(widgetId) {
 		var modalTemplate = '';
-		modalTemplate += '<div id="upload_image_box_modal" class="modal fade bs-example-modal-md" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">';
+		modalTemplate += '<div id="' + widgetId + '_modal" class="modal fade bs-example-modal-md" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">';
 		modalTemplate += '<div class="modal-dialog modal-md">';
 		modalTemplate += '<div class="modal-content">';
 		modalTemplate += '<div class="modal-header"></div>';
@@ -156,7 +164,7 @@ var uploaderImageBox = {
 
 	/* Function to open a modal window by type */
 	openModalWindow: function(modalType) {
-		this.modalWindow = $('#upload_image_box_modal').modal();
+		this.modalWindow = $("#" + this.widgetId + "_modal").modal();
 		this.buildModalWindow(modalType);
 
 		return true;
@@ -182,7 +190,7 @@ var uploaderImageBox = {
 	/* Function to init crop library */
 	cropperInit: function() {
 		// crop library -> http://fengyuanchen.github.io/cropper/
-		$('.crop_image_tag').cropper({
+		$("#" + this.widgetId).contents().find('.crop_image_tag').cropper({
 			aspectRatio: 1 / 1,
 			autoCropArea: 0.9,
 			minCropBoxWidth: 200,
@@ -204,10 +212,31 @@ var uploaderImageBox = {
 	getOptionValue: function(optionName) {
 		var return_var = false;
 		if (optionName) {
-			return_var = $(".uploader_image_box_options").data(optionName);
+			return_var = $("#" + this.widgetId).data(optionName);
 		}
 
 		return return_var;
+	},
+
+	/* Function to auto set current widget id */
+	autoSetWidgetId: function(thisVar) {
+		return_var = false;
+		if ($(thisVar).length) {
+			console.log($(thisVar));
+			this.widgetId = $(thisVar).parents(".modal_container").attr("id");
+			// setting widget id in hidden form
+			// $(".hiddenFormWidgetIdAction").val(this.widgetId);
+		}
+	},
+
+	/* Function to set current widget id */
+	setWidgetId: function(widgetId) {
+		return_var = false;
+		if (widgetId) {
+			this.widgetId = widgetId;
+			// setting widget id in hidden form
+			// $(".hiddenFormWidgetIdAction").val(this.widgetId);
+		}
 	},
 };
 
@@ -215,6 +244,7 @@ var uploaderImageBox = {
 var fileManager = {
 	/* function to send a file via AJAX == submitting hidden form */
 	sendFile: function() {
+		// setting widgetId to use it in callback function
 		var options = {
 			//beforeSubmit:  showRequest,  // TODO: show "upload_modal" with loader
 			success:       this.loadUploadedImage  // post-submit callback 
@@ -272,9 +302,11 @@ var fileManager = {
 		request.done(function(textStatus) {
 			// ajax call success
 			if (textStatus.success) {
-				// TODO: perform a callback function
-				// close bootstrap modal window
-				$('#upload_image_box_modal').modal('hide');
+				// TODO: perform a custom callback function
+				// 	 Ex. to update a parent contenitor
+
+				// TODO: close bootstrap modal window
+				// $("#" + uploaderImageBox.widgetId + "_modal").modal('hide');
 			}
 		});
 
@@ -292,6 +324,8 @@ var fileManager = {
 
 // Function to open modal window
 $(document).on("click", ".uploaderButtonClickAction", function(){
+	// set current widget id
+	uploaderImageBox.setWidgetId($(this).data("widgetId"));
 	// open modal window
 	uploaderImageBox.openModalWindow("base_modal");
 
@@ -300,6 +334,8 @@ $(document).on("click", ".uploaderButtonClickAction", function(){
 
 // Function to select an upload file
 $(document).on("click", ".fileSelectClickAction", function(){
+	// set current widget id
+	uploaderImageBox.autoSetWidgetId($(this));
 	// open file chooser
 	$(".select_image_input").click();
 
@@ -308,8 +344,10 @@ $(document).on("click", ".fileSelectClickAction", function(){
 
 // Function to save upload cropped area
 $(document).on("click", ".cropImageClickAction", function(){
-	var cropData = $(".crop_image_tag").cropper('getData')
-	var fileId = $(".crop_image_tag").data('fileId');
+	// set current widget id
+	uploaderImageBox.autoSetWidgetId($(this));
+	var cropData = $("#" + uploaderImageBox.widgetId).contents().find(".crop_image_tag").cropper('getData')
+	var fileId = $("#" + uploaderImageBox.widgetId).contents().find(".crop_image_tag").data('fileId');
 	var ajaxCallData = {
 		"url": uploaderImageBox.modalWindowSettings["crop_modal"]["hidden_form"]["action"],
 		"data": {
@@ -332,7 +370,9 @@ $(document).on("click", ".cropImageClickAction", function(){
 
 // Function to save uploaded image without crop
 $(document).on("click", ".confirmImageClickAction", function(){
-	var fileId = $(".crop_image_tag").data('fileId');
+	// set current widget id
+	uploaderImageBox.autoSetWidgetId($(this));
+	var fileId = $("#" + uploaderImageBox.widgetId).contents().find(".crop_image_tag").data('fileId');
 	var ajaxCallData = {
 		"url": uploaderImageBox.modalWindowSettings["crop_modal"]["hidden_form"]["action"],
 		"data": {

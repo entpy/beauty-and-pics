@@ -17,11 +17,13 @@
 		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropper/0.9.1/cropper.min.css">
 	</head>
 	<body>
+		<h3>Upload image box example:</h3>
 		{{ form_no_crop.media }}
 		<form enctype="multipart/form-data" method="post" action="">
 			{% csrf_token %}
 			{{ form_no_crop.image }}
 		</form>
+		<br />
 		<form enctype="multipart/form-data" method="post" action="">
 			{% csrf_token %}
 			{{ form_crop.image }}

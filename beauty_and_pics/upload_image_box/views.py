@@ -19,7 +19,7 @@ def upload(request):
     # if this is a POST request we need to process the form data
     if request.method == 'POST':
         # create a form instance and populate it with data from the request:
-        form = uploadedImagesForm(request.POST, request.FILES)
+        form = tmpUploadImagesCropForm(request.POST, request.FILES)
         # check whether it's valid:
         if form.is_valid():
             image_form = form.save(commit=False)
@@ -65,21 +65,10 @@ def crop(request):
 # Example view
 def upload_example(request):
     request.session['CUSTOM_CROPPED_IMG_DIRECTORY'] = CUSTOM_CROPPED_IMG_DIRECTORY
-    # if this is a POST request we need to process the form data
-    if request.method == 'POST':
-        # create a form instance and populate it with data from the request:
-        form_no_crop = uploadedImagesNoCropForm(request.POST, request.FILES)
-        # check whether it's valid:
-        if form_no_crop.is_valid():
-	    form_no_crop.save()
-        else:
-            logger.debug("form NON valido: " + str(form_no_crop.errors))
-	    pass
 
     # if a GET (or any other method) we'll create a blank form
-    else:
-        form_no_crop = uploadedImagesNoCropForm()
-        form_crop = uploadedImagesCropForm()
+    form_no_crop = uploadedImagesNoCropForm()
+    form_crop = uploadedImagesCropForm()
 
     context = {
         "post" : request.POST,
