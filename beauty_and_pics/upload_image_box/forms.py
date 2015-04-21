@@ -15,21 +15,3 @@ class tmpUploadImagesCropForm(ModelForm):
         widgets = {
             'image': UibUploaderInput(attrs={'widget_id': 'tmp_uploader_image',}),
         }
-
-# example forms {{{
-class uploadedImagesNoCropForm(ModelForm):
-    class Meta:
-        model = tmpUploadedImages
-	fields = ("image",)
-        widgets = {
-            'image': UibUploaderInput(attrs={'widget_id': 'uploader_no_crop', 'custom_upload_dir_name': "", "enable_crop": "", "widget_button_text": "No crop load"}),
-        }
-
-class uploadedImagesCropForm(ModelForm):
-    class Meta:
-        model = tmpUploadedImages
-	fields = ("image",)
-        widgets = {
-            'image': UibUploaderInput(attrs={'widget_id': 'uploader_crop', 'custom_upload_dir_name': "", "enable_crop": True, "widget_button_text": "Crop load"}),
-        }
-# example forms }}}

@@ -5,6 +5,9 @@ from django.conf import settings
 from django.core.files import File
 from django.utils.safestring import mark_safe
 from django.utils.translation import ugettext_lazy
+from django.core.files.images import get_image_dimensions
+from upload_image_box.exceptions import *
+
 import logging
 
 # Get an instance of a logger
@@ -22,6 +25,11 @@ class UibUploaderInput(forms.ClearableFileInput):
     template_with_initial = '%(uploader_button)s%(modal_window_scheleton)s%(uploader_script)s'
 
     def __init__(self, attrs=None):
+        # set valid checks
+        self.max_file_size = 4*1024*1024 # 4MB
+        self.min_file_width = 200
+        self.min_file_height = 200
+        self.file_extensions_allowed = []
         # TODO qui dovrei passare delle opzioni al plugin, per esempio un qualcosa
         # che abiliti/disabiliti la funzionalità di crop o che ne definisca i
         # dettagli (es. area di crop fissa, ecc...)
@@ -62,13 +70,25 @@ class UibUploaderInput(forms.ClearableFileInput):
 
         return mark_safe(template % substitutions)
 
+    # Function to validate widget, called on form.is_valid()
     def value_from_datadict(self, data, files, name):
         # if a file was uploaded
-        file = super(UibUploaderInput, self).value_from_datadict(data, files, name)
-        # logger.debug("parent file: " + str(file))
-        if file is not None:  # super class may return a file object, False, or None
-            return file  # Default behaviour
-        return None
+        parent_validation = super(UibUploaderInput, self).value_from_datadict(data, files, name)
+        logger.debug("files retrieved: " + str(files))
+        file_object = files.get('image', None)
+        logger.debug("file object: " + str(file_object))
+        if parent_validation is not None and file_object is not None:
+            # retrieve image info
+            file_size = file_object.size
+            file_w, file_h = get_image_dimensions(file_object)
+            # set valid check
+            max_file_size = 4*1024*1024 # 4MB
+            logger.debug("Image size: " + str(file_size))
+            logger.debug("Image w: " + str(file_w)+ " image h: " + str(file_h))
+            return file_object  # Return valid file object
+        else:
+            # raise corrupted file error
+            raise CorruptedImageUIBError
 
     class Media:
         css = {

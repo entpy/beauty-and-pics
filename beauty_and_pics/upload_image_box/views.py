@@ -2,11 +2,12 @@
 
 from django.shortcuts import render
 from django.views.decorators.http import require_POST
+from django.http import HttpResponse
+from django.conf import settings
+from upload_image_box.settings import *
 from upload_image_box.forms import *
 from upload_image_box.models import tmpUploadedImages, cropUploadedImages
-from django.conf import settings
-from .settings import *
-from django.http import HttpResponse
+from upload_image_box.exceptions import *
 import logging, json
 
 # Get an instance of a logger
@@ -21,14 +22,28 @@ def upload(request):
         # create a form instance and populate it with data from the request:
         form = tmpUploadImagesCropForm(request.POST, request.FILES)
         # check whether it's valid:
-        if form.is_valid():
+        try:
+            form.is_valid()
+        except CorruptedImageUIBError:
+            data = {'error': True, "msg": "Corrupted file", "error_code": CorruptedImageUIBError.get_error_code}
+            pass
+        except ImageSizeUIBError:
+            data = {'error': True, "msg": "Please check your image size (max allowed = 4MB)", "error_code": CorruptedImageUIBError.get_error_code}
+            pass
+        except ImageDimensionsUIBError:
+            data = {'error': True, "msg": "Please check your image dimensions (min allowed = 200x200)", "error_code": CorruptedImageUIBError.get_error_code}
+            pass
+        except ImageExtensionUIBError:
+            data = {'error': True, "msg": "Please check your image extension (only: '.png', '.jpg', and '.jpeg' are valid)", "error_code": CorruptedImageUIBError.get_error_code}
+            pass
+        else:
             image_form = form.save(commit=False)
             image_form.upload_to = UPLOADED_IMG_TMP_DIRECTORY
             image_form.save()
             # file_path = save_file(file=request.FILES['image'], path="tmp_upload/")
             data = {'success': True, "file_id": image_form.id, "file_url": "http://" + str(request.get_host()) + str(settings.MEDIA_URL) + str(image_form.image)}
             # logger.debug("immagine salvata: " + str(settings.MEDIA_URL) + str(image_form.image))
-        else:
+            # file size error or corrupted image (Ex. wrong file ext)
             logger.debug("form NON valido: " + str(form.errors))
 	    pass
 
@@ -61,19 +76,3 @@ def crop(request):
 	        pass
 
     return HttpResponse(json.dumps(data), content_type="application/json")
-
-# Example view
-def upload_example(request):
-    request.session['CUSTOM_CROPPED_IMG_DIRECTORY'] = CUSTOM_CROPPED_IMG_DIRECTORY
-
-    # if a GET (or any other method) we'll create a blank form
-    form_no_crop = uploadedImagesNoCropForm()
-    form_crop = uploadedImagesCropForm()
-
-    context = {
-        "post" : request.POST,
-        "form_no_crop": form_no_crop,
-        "form_crop": form_crop,
-    }
-
-    return render(request, 'upload_image_box/upload_example.html', context)
