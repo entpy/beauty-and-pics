@@ -14,7 +14,7 @@ class uploadedImagesNoCropForm(ModelForm):
         model = tmpUploadedImages
 	fields = ("image",)
         widgets = {
-            'image': UibUploaderInput(attrs={'widget_id': 'uploader_no_crop', 'custom_upload_dir_name': "", "enable_crop": "", "widget_button_text": "No crop load"}),
+            'image': UibUploaderInput(attrs={'widget_id': 'uploader_no_crop', 'custom_upload_dir_name': "", "enable_crop": "", "widget_button_text": "No crop load", "crop_modal_description_text": "Seleziona la porzione dell'immagine per il tuo profilo"}),
         }
 
 class uploadedImagesCropForm(ModelForm):
@@ -22,6 +22,6 @@ class uploadedImagesCropForm(ModelForm):
         model = tmpUploadedImages
 	fields = ("image",)
         widgets = {
-            'image': UibUploaderInput(attrs={'widget_id': 'uploader_crop', 'custom_upload_dir_name': "", "enable_crop": True, "widget_button_text": "Crop load"}),
+            'image': UibUploaderInput(attrs={'widget_id': 'uploader_crop', 'custom_upload_dir_name': "", "enable_crop": True, "widget_button_text": "Crop load", "crop_modal_description_text": "Seleziona la porzione dell'immagine per il tuo profilo"}),
         }
 # example forms }}}

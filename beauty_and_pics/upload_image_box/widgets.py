@@ -45,13 +45,17 @@ class UibUploaderInput(forms.ClearableFileInput):
 		'preview_action_button_text': 'Confirm image',
 		'cancel_button_text': 'Cancel',
 		'change_image_button_text': 'Change image',
+                'crop_modal_description_text': "Crop your image!",
 		'enable_crop': True,
                 'widget_id': 'test_id', # only required field
 	}
+
+        # overriding defaul attributes
         if attrs:
             self.default_attrs.update(attrs)
+
         self.uploader_button = '<div data-widget-id="%(widget_id)s" class="uploader_button uploaderButtonClickAction">%(widget_button_text)s</div>' # TODO: use custom html
-        self.modal_window_scheleton = '<div id="%(widget_id)s" class="modal_container" data-custom-upload-dir-name="%(custom_upload_dir_name)s" data-base-modal-title-text="%(base_modal_title_text)s" data-upload-modal-title-text="%(upload_modal_title_text)s" data-crop-modal-title-text="%(crop_modal_title_text)s" data-preview-modal-title-text="%(preview_modal_title_text)s" data-crop-action-button-text="%(crop_action_button_text)s" data-preview-action-button-text="%(preview_action_button_text)s" data-cancel-button-text="%(cancel_button_text)s" data-change-image-button-text="%(change_image_button_text)s" data-enable-crop="%(enable_crop)s" data-select-image-action-button-text="%(select_image_action_button_text)s"></div>'
+        self.modal_window_scheleton = '<div id="%(widget_id)s" class="modal_container" data-custom-upload-dir-name="%(custom_upload_dir_name)s" data-base-modal-title-text="%(base_modal_title_text)s" data-upload-modal-title-text="%(upload_modal_title_text)s" data-crop-modal-title-text="%(crop_modal_title_text)s" data-preview-modal-title-text="%(preview_modal_title_text)s" data-crop-action-button-text="%(crop_action_button_text)s" data-preview-action-button-text="%(preview_action_button_text)s" data-cancel-button-text="%(cancel_button_text)s" data-change-image-button-text="%(change_image_button_text)s" data-enable-crop="%(enable_crop)s" data-select-image-action-button-text="%(select_image_action_button_text)s" data-crop-modal-description-text="%(crop_modal_description_text)s"></div>'
         self.uploader_script = '<script type="text/javascript">$(function(){uploaderImageBox.init("%(widget_id)s");});</script>'
         # self.uploader_options = '<div class="' + str(self.default_attrs["widget_id"]) '_options" style="display: none!important"></div>'
         super(UibUploaderInput , self).__init__(attrs=None)
@@ -74,17 +78,22 @@ class UibUploaderInput(forms.ClearableFileInput):
     def value_from_datadict(self, data, files, name):
         # if a file was uploaded
         parent_validation = super(UibUploaderInput, self).value_from_datadict(data, files, name)
-        logger.debug("files retrieved: " + str(files))
+        # logger.debug("files retrieved: " + str(files))
         file_object = files.get('image', None)
         logger.debug("file object: " + str(file_object))
         if parent_validation is not None and file_object is not None:
             # retrieve image info
             file_size = file_object.size
             file_w, file_h = get_image_dimensions(file_object)
-            # set valid check
-            max_file_size = 4*1024*1024 # 4MB
-            logger.debug("Image size: " + str(file_size))
+            # TODO: check image MIME/Type
+            # image size check
+            logger.debug("Image size: " + str(file_size) + " massima: " + str(self.max_file_size))
+            if file_size > self.max_file_size:
+                raise ImageSizeUIBError
+            # image dimensions check
             logger.debug("Image w: " + str(file_w)+ " image h: " + str(file_h))
+            if file_w < self.min_file_width or file_h < self.min_file_height:
+                raise ImageDimensionsUIBError
             return file_object  # Return valid file object
         else:
             # raise corrupted file error
