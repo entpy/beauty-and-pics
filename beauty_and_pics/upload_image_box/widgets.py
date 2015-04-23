@@ -30,11 +30,9 @@ class UibUploaderInput(forms.ClearableFileInput):
         self.min_file_width = 200
         self.min_file_height = 200
         self.file_extensions_allowed = []
-        # TODO qui dovrei passare delle opzioni al plugin, per esempio un qualcosa
-        # che abiliti/disabiliti la funzionalità di crop o che ne definisca i
-        # dettagli (es. area di crop fissa, ecc...)
+
+        # widget settings
 	self.default_attrs = {
-		'custom_upload_dir_name': '',
 		'base_modal_title_text': 'Load an image',
 		'upload_modal_title_text': 'Image upload...',
 		'crop_modal_title_text': 'Crop your image',
@@ -46,6 +44,8 @@ class UibUploaderInput(forms.ClearableFileInput):
 		'cancel_button_text': 'Cancel',
 		'change_image_button_text': 'Change image',
                 'crop_modal_description_text': "Crop your image!",
+                'default_uploader_button': '<div data-widget-id="%(widget_id)s" class="uploader_button uploaderButtonClickAction">%(widget_button_text)s</div>', # default upload button
+                'callback_function': '', # custom callback function
 		'enable_crop': True,
                 'widget_id': 'test_id', # only required field
 	}
@@ -54,8 +54,8 @@ class UibUploaderInput(forms.ClearableFileInput):
         if attrs:
             self.default_attrs.update(attrs)
 
-        self.uploader_button = '<div data-widget-id="%(widget_id)s" class="uploader_button uploaderButtonClickAction">%(widget_button_text)s</div>' # TODO: use custom html
-        self.modal_window_scheleton = '<div id="%(widget_id)s" class="modal_container" data-custom-upload-dir-name="%(custom_upload_dir_name)s" data-base-modal-title-text="%(base_modal_title_text)s" data-upload-modal-title-text="%(upload_modal_title_text)s" data-crop-modal-title-text="%(crop_modal_title_text)s" data-preview-modal-title-text="%(preview_modal_title_text)s" data-crop-action-button-text="%(crop_action_button_text)s" data-preview-action-button-text="%(preview_action_button_text)s" data-cancel-button-text="%(cancel_button_text)s" data-change-image-button-text="%(change_image_button_text)s" data-enable-crop="%(enable_crop)s" data-select-image-action-button-text="%(select_image_action_button_text)s" data-crop-modal-description-text="%(crop_modal_description_text)s"></div>'
+        self.uploader_button = self.default_attrs["default_uploader_button"]
+        self.modal_window_scheleton = '<div id="%(widget_id)s" class="modal_container" data-base-modal-title-text="%(base_modal_title_text)s" data-upload-modal-title-text="%(upload_modal_title_text)s" data-crop-modal-title-text="%(crop_modal_title_text)s" data-preview-modal-title-text="%(preview_modal_title_text)s" data-crop-action-button-text="%(crop_action_button_text)s" data-preview-action-button-text="%(preview_action_button_text)s" data-cancel-button-text="%(cancel_button_text)s" data-change-image-button-text="%(change_image_button_text)s" data-enable-crop="%(enable_crop)s" data-select-image-action-button-text="%(select_image_action_button_text)s" data-crop-modal-description-text="%(crop_modal_description_text)s" data-callback-function="%(callback_function)s"></div>'
         self.uploader_script = '<script type="text/javascript">$(function(){uploaderImageBox.init("%(widget_id)s");});</script>'
         # self.uploader_options = '<div class="' + str(self.default_attrs["widget_id"]) '_options" style="display: none!important"></div>'
         super(UibUploaderInput , self).__init__(attrs=None)

@@ -13,6 +13,16 @@
 {# navigation tabs active element #}
 {% block container4_navigation_profile_index %}active{% endblock %}
 
+{% block custom_js %}
+<script src="{% static "website/js/vendor/jquery.form.js" %}"></script>
+<script src="{% static "website/js/vendor/cropper.min.js" %}"></script>
+{{ profile_image_form.media }}
+{% endblock %}
+
+{% block custom_css %}
+<link rel="stylesheet" href="{% static "website/css/cropper.min.css" %}">
+{% endblock %}
+
 {% block container4_content %}
 <div class="row">
 	<div class="col-sm-12">
@@ -26,11 +36,16 @@
 				<p>Best check yo self, you're not looking too good. Nulla vitae elit libero, a pharetra augue. Praesent commodo cursus magna, <a href="#" class="alert-link">vel scelerisque nisl consectetur et</a>.</p>
 			</div>
 			<div class="upload_image_button main_image_upload_button">
+				<form enctype="multipart/form-data" method="post" action="">
+					{% csrf_token %}
+					{{ profile_image_form.uploaded_image }}
+				</form>
+				<!--
 				<div class="upload_image_label">Clicca qui per caricare la foto principale</div>
 				<div class="upload_image_img">
-					<img class="img_not_active" alt="Upload image" src="{% static "website/img/upload_image.png" %}">
-					<img class="img_active" alt="Upload image" src="{% static "website/img/upload_image_active.png" %}">
-				</div>
+					<img class="img_not_active" alt="Upload image" src="{ static "website/img/upload_image.png" %}">
+					<img class="img_active" alt="Upload image" src="{ static "website/img/upload_image_active.png" %}">
+				</div>-->
 			</div>
 		</div>
 		<div class="right">
@@ -51,10 +66,14 @@
 	</div>
 </div>
 <div class="upload_image_button book_images_upload_button">
-	<div class="upload_image_label">Clicca qui per aggiungere una foto al book fotografico</div>
+	<form enctype="multipart/form-data" method="post" action="">
+		{% csrf_token %}
+		{{ book_images_form.uploaded_image }}
+	</form>
+	<!--<div class="upload_image_label">Clicca qui per aggiungere una foto al book fotografico</div>
 	<div class="upload_image_img">
-		<img class="img_not_active" alt="Upload image" src="{% static "website/img/upload_image.png" %}">
-		<img class="img_active" alt="Upload image" src="{% static "website/img/upload_image_active.png" %}">
-	</div>
+		<img class="img_not_active" alt="Upload image" src="{ static "website/img/upload_image.png" %}">
+		<img class="img_active" alt="Upload image" src="{ static "website/img/upload_image_active.png" %}">
+	</div>-->
 </div>
 {% endblock container4_content %}

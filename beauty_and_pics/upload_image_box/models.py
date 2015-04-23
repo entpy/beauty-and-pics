@@ -14,6 +14,10 @@ def get_image_path(self, filename):
 
 class cropUploadedImages(models.Model):
     image = models.ImageField(max_length=500, upload_to=get_image_path)
+    """
+    image_type = models.IntegerField(null=True)
+    image_group_id = models.CharField(max_length=100, null=True)
+    """
 
     upload_to_base_path = APP_BASE_DIRECTORY # default file upload base dir
     upload_to = '' # default file upload custom dir TODO: forse questo non serve
@@ -32,7 +36,6 @@ class cropUploadedImages(models.Model):
             crop_info["x"] = int(float(request.POST.get("x", 0)))
             crop_info["y"] = int(float(request.POST.get("y", 0)))
             crop_info["rotate"] = int(float(request.POST.get("rotate", 0)))
-            crop_info["custom_crop_dir_name"] = request.POST.get("custom_crop_dir_name") + "/"
             crop_info["enable_crop"] = request.POST.get("enable_crop")
 
 	    """
@@ -43,7 +46,6 @@ class cropUploadedImages(models.Model):
 	    logger.debug("x: " + str(crop_info["x"]))
 	    logger.debug("y: " + str(crop_info["y"]))
 	    logger.debug("rotate" + str(crop_info["rotate"]))
-	    logger.debug("custom_crop_dir_name" + str(crop_info["custom_crop_dir_name"]))
 	    logger.debug("=== crop info END ===")
 	    """
 
@@ -80,29 +82,46 @@ class cropUploadedImages(models.Model):
 
     def save_cropped_image(self, uploaded_image, cropped_image, custom_crop_directory_name=None):
         """Function to save cropped image into CROPPED_IMG_DIRECTORY directory"""
-	tmp_uploaded_image_full_path = uploaded_image.image.path
 	# retrieve image name from tmp_uploaded_image_full_path
-	tmp_uploaded_image_name = self.get_image_name(tmp_uploaded_image_full_path)
-	# retrieve crop image directory
-	crop_image_directory = self.get_crop_image_directory(custom_crop_directory_name)
+	# tmp_uploaded_image_name = self.get_image_name(tmp_uploaded_image_full_path)
+        """
 	# build crop image full path (crop_image_directory + tmp_uploaded_image_name)
-	crop_image_full_path = crop_image_directory + tmp_uploaded_image_name
+	# crop_image_full_path = crop_image_directory + tmp_uploaded_image_name
 
 	# debug info
-        logger.debug("tmp_uploaded_image_full_path: " + str(tmp_uploaded_image_full_path))
-        logger.debug("crop_image_full_path: " + str(crop_image_full_path))
+        # logger.debug("tmp_uploaded_image_full_path: " + str(tmp_uploaded_image_full_path))
+        # logger.debug("crop_image_full_path: " + str(crop_image_full_path))
 
 	# create cropped image directory if not exists
 	self.create_cropped_image_directory(crop_image_directory)
 	# copy tmp uploaded file into new position
 	shutil.copy2(tmp_uploaded_image_full_path, crop_image_full_path)
+        """
+	tmp_uploaded_image_full_path = uploaded_image.image.path
+	# retrieve crop image directory
+	crop_image_directory = self.build_crop_image_directory(custom_crop_directory_name)
+        tmp_uploaded_image_name = self.copy_file_to_crop_directory(tmp_uploaded_image_full_path, crop_image_directory)
 	# crop file moved into new position
-	cropped_image.save(crop_image_full_path)
+	cropped_image.save(crop_image_directory + tmp_uploaded_image_name)
 
 	# save cropped image info into database
-	self.save_image_info(APP_BASE_DIRECTORY + CROPPED_IMG_DIRECTORY + self.get_custom_crop_directory(custom_crop_directory_name) + tmp_uploaded_image_name)
+	self.save_image_info(APP_BASE_DIRECTORY + CROPPED_IMG_DIRECTORY + custom_crop_directory_name + "/" + tmp_uploaded_image_name)
 
 	return True
+
+    # TODO: work on this function
+    def copy_file_to_crop_directory(self, tmp_uploaded_image_full_path, crop_image_directory):
+        """Function to copy an uploaded file to crop directory"""
+	# create cropped image directory if not exists
+	self.create_cropped_image_directory(crop_image_directory)
+	# retrieve image name from tmp_uploaded_image_full_path
+	tmp_uploaded_image_name = self.get_image_name(tmp_uploaded_image_full_path)
+	# build crop image full path (crop_image_directory + tmp_uploaded_image_name)
+	crop_image_full_path = crop_image_directory + tmp_uploaded_image_name
+	# copy tmp uploaded file into new position
+	shutil.copy2(tmp_uploaded_image_full_path, crop_image_full_path)
+
+        return tmp_uploaded_image_name
 
     def create_cropped_image_directory(self, directory):
         """Function to create crop image directory if not exists"""
@@ -116,24 +135,25 @@ class cropUploadedImages(models.Model):
 	# low risk of file name collision (if file exists generate a new name)
 	new_file_name = str(uuid.uuid4()) + file_extension
 
+        # TODO: controllo se il file esiste:
+        #       - se esiste lancio ancora la stessa funzione in modo ricorsivo
+
 	return new_file_name
 
-    def get_crop_image_directory(self, custom_crop_directory_name=None):
+    def build_crop_image_directory(self, custom_crop_directory_name=None):
 	"""Function to build crop image directory"""
-	crop_image_directory = settings.MEDIA_ROOT + "/" + APP_BASE_DIRECTORY + CROPPED_IMG_DIRECTORY + self.get_custom_crop_directory(custom_crop_directory_name)
+	crop_image_directory = settings.MEDIA_ROOT + "/" + APP_BASE_DIRECTORY + CROPPED_IMG_DIRECTORY + custom_crop_directory_name + "/"
         logger.debug("crop_image_directory: " + str(crop_image_directory))
 
 	return crop_image_directory
 
-    def get_custom_crop_directory(self, custom_crop_directory_name=None):
-	"""Function to retrieve default custom crop directory name"""
-	return_var = False
-	if custom_crop_directory_name:
-	    return_var = custom_crop_directory_name
-	else:
-	    return_var = CUSTOM_CROPPED_IMG_DIRECTORY
+    def get_custom_crop_directory(self, request):
+        """Function to retrieve crop directory name"""
+        return_var = ""
+        if request.session.get('CUSTOM_CROPPED_IMG_DIRECTORY'):
+            return_var = str(request.session.get('CUSTOM_CROPPED_IMG_DIRECTORY'))
 
-	return return_var
+        return return_var
 
     def save_image_info(self, image_url):
 	"""Function to save image into database"""
@@ -142,18 +162,6 @@ class cropUploadedImages(models.Model):
 	crop_uploaded_images_obj.save()
 
 	return True
-
-    def check_custom_crop_directory_valid(self, request, custom_directory_name):
-	"""Function to check if a custom crop directory is valid"""
-	return_var = False
-	logger.debug("valore in sessione: " + str(request.session.get('directory_name', False)))
-	logger.debug("valore passata via ajax: " + str(custom_directory_name))
-	if request.session['CUSTOM_CROPPED_IMG_DIRECTORY'] == custom_directory_name:
-	    return_var = True
-	elif custom_directory_name == "/":
-	    return_var = True
-
-	return return_var
 
 class tmpUploadedImages(models.Model):
     image = models.ImageField(max_length=500, upload_to=get_image_path)
@@ -166,7 +174,7 @@ class tmpUploadedImages(models.Model):
     def __unicode__(self):
         return self.image
 
-    # TODO
+    # TODO: cancellare le immagini più vecchie di 5 minuti
     def delete_tmp_images(self):
         """Function to delete old tmp uploaded images"""
 	return True

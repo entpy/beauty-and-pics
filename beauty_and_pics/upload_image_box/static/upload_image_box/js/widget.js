@@ -10,7 +10,7 @@ var uploaderImageBox = {
 		"upload_modal": {"hidden_form": {"action": "/upload_image/upload/"}, "body": {"html": function() { return uploaderImageBox.__buildUploadModalBodyHtml("upload_modal"); }}, "header": {"title": function() { return uploaderImageBox.getOptionValue("uploadModalTitleText"); }}, "footer": {"cancel": {"exists": true, "label": function() { return uploaderImageBox.getOptionValue("cancelButtonText"); }}}},
 		"crop_modal": {"hidden_form": {"action": "/upload_image/crop/"}, "body": {"html": function() { return uploaderImageBox.__buildCropModalBodyHtml("crop_modal"); }, "crop_image_url": false, "crop_image_id": false, "modal_description_text": function() { return uploaderImageBox.getOptionValue("cropModalDescriptionText"); }}, "header": {"title": function() { return uploaderImageBox.getOptionValue("cropModalTitleText"); }}, "footer": {"cancel": {"exists": true, "label": function() { return uploaderImageBox.getOptionValue("cancelButtonText"); }}, "change_image": {"exists": true, "label": function() { return uploaderImageBox.getOptionValue("changeImageButtonText"); }}, "action_button": {"exists": true, "label": function() { return uploaderImageBox.getOptionValue("cropActionButtonText"); }}}},
 		"preview_modal": {"hidden_form": {"action": "/upload_image/crop/"}, "body": {"html": function() { return uploaderImageBox.__buildPreviewModalBodyHtml("preview_modal"); }, "crop_image_url": false, "crop_image_id": false}, "header": {"title": function() { return uploaderImageBox.getOptionValue("previewModalTitleText"); }}, "footer": {"cancel": {"exists": true, "label": function() { return uploaderImageBox.getOptionValue("cancelButtonText"); }}, "change_image": {"exists": true, "label": function() { return uploaderImageBox.getOptionValue("changeImageButtonText"); }}, "action_button": {"exists": true, "label": function() { return uploaderImageBox.getOptionValue("previewActionButtonText"); }}}},
-		"global_options" : { "enable_crop": function() { return uploaderImageBox.getOptionValue("enableCrop"); }, "custom_upload_dir_name": function() { return uploaderImageBox.getOptionValue("customUploadDirName"); }, "error_msg_container_class": "error_msg_container", "generic_msg_container_class": "generic_msg_container"}
+		"global_options" : { "enable_crop": function() { return uploaderImageBox.getOptionValue("enableCrop"); }, "error_msg_container_class": "error_msg_container", "generic_msg_container_class": "generic_msg_container", "callback_function": function() { return uploaderImageBox.getOptionValue("callbackFunction"); }}
 	},
 
 	/* Function to read options and write modal html inside "modal_container" container */
@@ -348,11 +348,13 @@ var fileManager = {
 		request.done(function(textStatus) {
 			// ajax call success
 			if (textStatus.success) {
-				// TODO: perform a custom callback function
-				// 	 Ex. to update a parent contenitor
-
 				// TODO: close bootstrap modal window
 				// $("#" + uploaderImageBox.widgetId + "_modal").modal('hide');
+
+				// if exists performimg a custom callback function (ie. to update a parent contenitor)
+				if (uploaderImageBox.modalWindowSettings["global_options"]["callback_function"].call()) {
+					eval(uploaderImageBox.modalWindowSettings["global_options"]["callback_function"].call() + "();");
+				}
 			}
 		});
 
@@ -404,7 +406,6 @@ $(document).on("click", ".cropImageClickAction", function(){
 			"height": cropData["height"],
 			"rotate": cropData["rotate"],
 			"enable_crop" : true,
-			"custom_crop_dir_name": uploaderImageBox.getOptionValue("customUploadDirName"),
 		}
 	};
 
@@ -424,7 +425,6 @@ $(document).on("click", ".confirmImageClickAction", function(){
 		"data": {
 			"file_id": fileId,
 			"enable_crop" : "",
-			"custom_crop_dir_name": uploaderImageBox.getOptionValue("customUploadDirName"),
 		}
 	};
 

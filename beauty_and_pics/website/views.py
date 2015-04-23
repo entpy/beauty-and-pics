@@ -16,6 +16,7 @@ from custom_form_app.forms.password_recover import *
 from custom_form_app.forms.account_edit_form import *
 from custom_form_app.forms.area51_form import *
 from custom_form_app.forms.help_request_form import *
+from custom_form_app.forms.upload_book_form import *
 import logging
 
 # Get an instance of a logger
@@ -179,7 +180,21 @@ def catwalk_report_user(request):
 # private profile {{{
 @login_required
 def profile_index(request):
-    return render(request, 'website/profile/profile_index.html', False)
+    profile_image_form = profileImageForm()
+    book_images_form = bookImagesForm()
+
+    # setting a custom cropped images directory
+    account_obj =  Account()
+    autenticated_user_data = account_obj.get_autenticated_user_data(request=request)
+    request.session['CUSTOM_CROPPED_IMG_DIRECTORY'] = autenticated_user_data["user_id"]
+
+    context = {
+        "post" : request.POST,
+        "profile_image_form": profile_image_form,
+        "book_images_form": book_images_form,
+    }
+
+    return render(request, 'website/profile/profile_index.html', context)
 
 @login_required
 def profile_data(request):

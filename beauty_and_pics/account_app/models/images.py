@@ -2,13 +2,10 @@
 
 from django.db import models
 from django.contrib.auth.models import User
+from upload_image_box.models import cropUploadedImages 
 
-class Image(models.Model):
-    id_image = models.AutoField(primary_key=True)
+class Book(cropUploadedImages):
     user = models.ForeignKey(User)
-    # image_url = models.ImageField(upload_to='book_img/')
-    image_url = models.ImageField(upload_to='book_img/')
-    image_type = models.IntegerField()
 
     class Meta:
         app_label = 'account_app'

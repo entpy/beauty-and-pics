@@ -64,15 +64,12 @@ def crop(request):
 	    crop_uploaded_images_obj = cropUploadedImages()
             # retrieve crop info
 	    crop_info = crop_uploaded_images_obj.retrieve_crop_info(request)
-	    # check if custom crop directory name is valid
-	    if crop_uploaded_images_obj.check_custom_crop_directory_valid(request, crop_info["custom_crop_dir_name"]):
-                # crop uploaded image
-	        if crop_uploaded_images_obj.crop_image(tmp_uploaded_image, crop_info, crop_info["custom_crop_dir_name"]):
-	 	    data = {'success' : True}
-	        else:
-	            data = {'error': True, "msg": "Please check your crop selection!"}
-	    else:
-	        data = {'error': True, "msg": "Please check your custom crop directory name"}
-	        pass
+            # retrieve custom crop directory name (could be found in session if exists)
+            custom_crop_directory_name = crop_uploaded_images_obj.get_custom_crop_directory(request)
+            # crop uploaded image
+            if crop_uploaded_images_obj.crop_image(tmp_uploaded_image, crop_info, custom_crop_directory_name):
+                data = {'success' : True}
+            else:
+                data = {'error': True, "msg": "Please check your crop selection!"}
 
     return HttpResponse(json.dumps(data), content_type="application/json")

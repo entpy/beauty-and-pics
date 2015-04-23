@@ -17,7 +17,6 @@ BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 APP_BASE_DIRECTORY = 'upload_image_box/'
 UPLOADED_IMG_TMP_DIRECTORY = 'tmp_upload/'
 CROPPED_IMG_DIRECTORY = 'cropped_upload/'
-CUSTOM_CROPPED_IMG_DIRECTORY = '' # ex. "user_12/"
 CROPPED_IMG_MIN_WIDTH = 200
 CROPPED_IMG_MIN_HEIGHT = 200
 
