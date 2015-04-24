@@ -342,7 +342,8 @@ var fileManager = {
 			url: ajaxCallData["url"],
 			method: "POST",
 			data: ajaxCallData["data"],
-			dataType: "json"
+			dataType: "json",
+			async: false
 		});
 
 		request.done(function(textStatus) {
@@ -353,7 +354,9 @@ var fileManager = {
 
 				// if exists performimg a custom callback function (ie. to update a parent contenitor)
 				if (uploaderImageBox.modalWindowSettings["global_options"]["callback_function"].call()) {
-					eval(uploaderImageBox.modalWindowSettings["global_options"]["callback_function"].call() + "();");
+					if (textStatus.hasOwnProperty("image_id")) {
+						eval(uploaderImageBox.modalWindowSettings["global_options"]["callback_function"].call() + "('" + textStatus.image_id + "');");
+					}
 				}
 			}
 		});

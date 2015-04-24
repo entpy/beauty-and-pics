@@ -30,10 +30,9 @@
 				<p>Best check yo self, you're not looking too good. Nulla vitae elit libero, a pharetra augue. Praesent commodo cursus magna, <a href="#" class="alert-link">vel scelerisque nisl consectetur et</a>.</p>
 			</div>
 			<div class="upload_image_button main_image_upload_button">
-				<form enctype="multipart/form-data" method="post" action="">
+				<form class="profile_image_form" method="post" action="">
 					{% csrf_token %}
-					{{ profile_image_form.image_id }}
-					{{ profile_image_form.image_type }}
+					<input class="profile_image_id" name="{{ profile_image_form.image_id.name }}" value="" type="hidden">
 					{{ profile_image_form.uploaded_image }}
 				</form>
 				<!--
@@ -62,10 +61,9 @@
 	</div>
 </div>
 <div class="upload_image_button book_images_upload_button">
-	<form enctype="multipart/form-data" method="post" action="">
+	<form class="book_image_form" method="post" action="">
 		{% csrf_token %}
-		{{ book_images_form.image_id }}
-		{{ book_images_form.image_type }}
+		<input class="book_image_id" name="{{ book_images_form.image_id.name }}" value="" type="hidden">
 		{{ book_images_form.uploaded_image }}
 	</form>
 	<!--<div class="upload_image_label">Clicca qui per aggiungere una foto al book fotografico</div>
@@ -83,15 +81,27 @@
 
 <script>
 	// TODO: precompilare il form relativo con questa funzione, salvare i dati e aggiornare la visualizzazione
-	// function saveProfileImage(image_id) {
-	function saveProfileImage() {
-		alert("salvo immagine profilo!");
+	function saveProfileImage(imageId) {
+		// save image id
+		$(".profile_image_id").val(imageId);
+		// serialize form
+		customAjaxAction.setAjaxCallParams($(".profile_image_form").serialize());
+		// setting action name
+		customAjaxAction.setActionName("save_profile_image");
+		// perform ajax call to save a new profile image
+		customAjaxAction.performAjaxAction();
 	}
 
 	// TODO: precompilare il form relativo con questa funzione, salvare i dati e aggiornare la visualizzazione
-	//function saveBookImage(image_id) {
-	function saveBookImage() {
-		alert("salvo immagine book!");
+	function saveBookImage(imageId) {
+		// save image id
+		$(".book_image_id").val(imageId);
+		// serialize form
+		customAjaxAction.setAjaxCallParams($(".book_image_form").serialize());
+		// setting action name
+		customAjaxAction.setActionName("save_book_image");
+		// perform ajax call to save a new book image
+		customAjaxAction.performAjaxAction();
 	}
 </script>
 {% endblock custom_js %}

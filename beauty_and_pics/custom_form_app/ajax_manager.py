@@ -10,6 +10,7 @@ from custom_form_app.forms.area51_form import *
 from beauty_and_pics.consts import project_constants
 from contest_app.models.votes import Vote
 from account_app.models import *
+from upload_image_box.models import cropUploadedImages
 import logging, json
 
 # Get an instance of a logger
@@ -25,6 +26,8 @@ class ajaxManager():
 	self.__valid_action_list += ('form_validation',)
 	self.__valid_action_list += ('elements_list',)
 	self.__valid_action_list += ('perform_voting',)
+	self.__valid_action_list += ('save_profile_image',)
+	self.__valid_action_list += ('save_book_image',)
 
         # retrieve action to perform
         self.ajax_action = request.POST.get("ajax_action")
@@ -176,6 +179,45 @@ class ajaxManager():
 	    data = {'error' : True, 'message': error_msg }
 	else:
 	    data = {'success' : True, 'message': "Grazie per aver votato. Tieni d'occhio la classifica!" }
+
+	# build JSON response
+        json_data_string = json.dumps(data)
+        self.set_json_response(json_response=json_data_string)
+
+        return True
+
+    def save_profile_image(self):
+        """Function to save a new profile image"""
+        logger.debug("ajax_function: @@save_profile_image@@")
+        logger.debug("parametri della chiamata: " + str(self.request.POST))
+
+        book_obj = Book()
+
+        # retrieve uploaded image data
+        image_data = {}
+        image_data["image_id"] = self.request.POST.get("image_id")
+        image_data["image_type"] = "profile_image"
+        image_data["user"] = self.request.user
+
+        try:
+            saved_image_url = book_obj.save_book_image(image_data=image_data)
+        except cropUploadedImages.DoesNotExist:
+            logger.error("Errore nell'upload dell'immagine profilo, l'immagine richiesta non esiste nella tabella cropUploadedImages: " + str(self.request))
+        else:
+            data = {'success' : True, 'image_url': saved_image_url, 'message': "salvato immagine profilo!" }
+
+	# build JSON response
+        json_data_string = json.dumps(data)
+        self.set_json_response(json_response=json_data_string)
+
+        return True
+
+    def save_book_image(self):
+        """Function to save a new book image"""
+        logger.debug("ajax_function: @@save_book_image@@")
+        logger.debug("parametri della chiamata: " + str(self.request.POST))
+
+        data = {'success' : True, 'message': "salvato immagine profilo!" }
 
 	# build JSON response
         json_data_string = json.dumps(data)

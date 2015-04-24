@@ -69,7 +69,7 @@ def crop(request):
             # crop uploaded image
             crop_return = crop_uploaded_images_obj.crop_image(tmp_uploaded_image, crop_info, custom_crop_directory_name)
             if crop_return:
-                data = {'success' : True, 'id_image': crop_return}
+                data = {'success' : True, 'image_id': crop_return}
             else:
                 data = {'error': True, "msg": "Please check your crop selection!"}
 

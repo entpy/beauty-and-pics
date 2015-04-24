@@ -70,6 +70,93 @@ function getItems(block_size) {
 	return $(items);
 }*/
 
+/* Object to perform custom ajax action */
+var customAjaxAction = {
+	__ajaxCallParams : false,
+	__ajaxCallActionName : false,
+	__ajaxSuccessCallbackFunction : function() { alert("callback success"); },
+	__ajaxErrorCallbackFunction : function() { alert("callback error"); },
+	ajaxCallUrl : "/ajax/", // the ajax call url
+
+	/* Function to set action name */
+	setActionName : function(actionName) {
+		if (actionName) {
+			this.__ajaxCallActionName = actionName;
+		}
+	},
+
+	/* Function to retrieve action name */
+	getActionName : function() {
+		return this.__ajaxCallActionName;
+	},
+
+	/* Function to set a success callback function */
+	setAjaxSuccessCallbackFunction : function(callbackFunction) {
+		if (callbackFunction) {
+			this.__ajaxSuccessCallbackFunction = callbackFunction;
+		}
+	},
+
+	/* Function to retrieve a success callback function */
+	getAjaxSuccessCallbackFunction : function() {
+		return this.__ajaxSuccessCallbackFunction.call();
+	},
+
+	/* Function to set an error callback function */
+	setAjaxErrorCallbackFunction : function(callbackFunction) {
+		if (callbackFunction) {
+			this.__ajaxErrorCallbackFunction = callbackFunction;
+		}
+	},
+
+	/* Function to retrieve an error callback function */
+	getAjaxErrorCallbackFunction : function() {
+		return this.__ajaxErrorCallbackFunction.call();
+	},
+
+	/* Function to set ajax call params */
+	setAjaxCallParams : function(paramsList) {
+		if (paramsList) {
+			this.__ajaxCallParams = paramsList;
+		}
+	},
+
+	/* Function to retrieve ajax call params */
+	getAjaxCallParams : function() {
+		return this.__ajaxCallParams;
+	},
+
+	/* Function to perform an action */
+	performAjaxAction : function() {
+		// reading csrfmiddlewaretoken from cookie
+		var csrftoken = readCsrftokenFromCookie();
+		var ajaxCallData = {
+			url : this.ajaxCallUrl,
+			data : this.getAjaxCallParams() + "&ajax_action=" + this.getActionName(),
+			async : true,
+			headers: { "X-CSRFToken": csrftoken },
+			success : function(jsonResponse) {
+				// functions to manage JSON response
+				console.log("==========risultato chiamata==========");
+				console.log(jsonResponse);
+				if (jsonResponse.success) {
+					customAjaxAction.getAjaxSuccessCallbackFunction();
+				} else if (jsonResponse.error) {
+					customAjaxAction.getAjaxErrorCallbackFunction();
+				}
+			},
+			error : function(jsonResponse) {
+				// ...fuck
+				// console.log(jsonResponse);
+			}
+		}
+		// performing ajax call
+		loadDataWrapper.performAjaxCall(ajaxCallData);
+
+		return true;
+	},
+};
+
 /* Object to perform votes */
 var voteUserObject = {
 	__ajaxCallParams : {
@@ -115,7 +202,7 @@ var voteUserObject = {
 	/* Function to retrieve a list of ajax call params */
 	getParamsList : function() { return this.__ajaxCallParams; },
 
-	/* function to check if all votes were done */
+	/* Function to check if all votes were done */
 	checkVoteActionErrors : function() {
 		var returnVar = true;
 		var existing_params = this.getParamsList();
@@ -161,17 +248,17 @@ var voteUserObject = {
 		return returnVar;
 	},
 
-	// function to add error class to votation block
+	// Function to add error class to votation block
 	showGlobalTypeError : function() { $(this.globalVoteContainerClass).addClass(this.votationBlockErrorClassName); },
 	showSmileTypeError : function() { $(this.smileVoteContainerClass).addClass(this.votationBlockErrorClassName); },
 	showLookTypeError : function() { $(this.lookVoteContainerClass).addClass(this.votationBlockErrorClassName); },
 
-	// function to remove error class to votation block
+	// Function to remove error class to votation block
 	removeGlobalTypeError : function() { $(this.globalVoteContainerClass).removeClass(this.votationBlockErrorClassName); },
 	removeSmileTypeError : function() { $(this.smileVoteContainerClass).removeClass(this.votationBlockErrorClassName); },
 	removeLookTypeError : function() { $(this.lookVoteContainerClass).removeClass(this.votationBlockErrorClassName); },
 
-	/* function to perfor a votation */
+	/* Function to perform a votation */
 	performVotingAction : function() {
 		if (this.checkVoteActionErrors()) {
 			// reading csrfmiddlewaretoken from cookie
