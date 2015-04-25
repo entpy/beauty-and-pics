@@ -19,7 +19,7 @@ class cropUploadedImages(models.Model):
     upload_to = '' # default file upload custom dir TODO: forse questo non serve
 
     def __unicode__(self):
-        return self.image
+        return self.image.name
 
     def retrieve_crop_info(self, request):
         """Function to retrieve info about javascript crop plugin"""
@@ -156,7 +156,7 @@ class tmpUploadedImages(models.Model):
     upload_to = '' # default file upload custom dir TODO: forse questo non serve
 
     def __unicode__(self):
-        return self.image
+        return self.image.name
 
     # TODO: cancellare le immagini più vecchie di 5 minuti
     def delete_tmp_images(self):

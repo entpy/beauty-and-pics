@@ -26,8 +26,7 @@ class ajaxManager():
 	self.__valid_action_list += ('form_validation',)
 	self.__valid_action_list += ('elements_list',)
 	self.__valid_action_list += ('perform_voting',)
-	self.__valid_action_list += ('save_profile_image',)
-	self.__valid_action_list += ('save_book_image',)
+	self.__valid_action_list += ('save_image',)
 
         # retrieve action to perform
         self.ajax_action = request.POST.get("ajax_action")
@@ -186,9 +185,9 @@ class ajaxManager():
 
         return True
 
-    def save_profile_image(self):
-        """Function to save a new profile image"""
-        logger.debug("ajax_function: @@save_profile_image@@")
+    def save_image(self):
+        """Function to save a new image"""
+        logger.debug("ajax_function: @@save_image@@")
         logger.debug("parametri della chiamata: " + str(self.request.POST))
 
         book_obj = Book()
@@ -196,28 +195,20 @@ class ajaxManager():
         # retrieve uploaded image data
         image_data = {}
         image_data["image_id"] = self.request.POST.get("image_id")
-        image_data["image_type"] = "profile_image"
+        image_data["image_type"] = self.request.POST.get("image_type")
         image_data["user"] = self.request.user
 
+	# TODO: proseguire con i controlli (forse, è tardi per pensarci)
         try:
             saved_image_url = book_obj.save_book_image(image_data=image_data)
-        except cropUploadedImages.DoesNotExist:
-            logger.error("Errore nell'upload dell'immagine profilo, l'immagine richiesta non esiste nella tabella cropUploadedImages: " + str(self.request))
+        except croppedImageDoesNotExistError:
+            logger.error("Errore nell'upload dell'immagine profilo, l'immagine richiesta non esiste nella tabella cropUploadedImages: " + str(self.request) + " | error code: " + str(croppedImageDoesNotExistError.get_error_code))
+            data = {'error' : True, 'message': "Errore inaspettato (codice=" + str(croppedImageDoesNotExistError.get_error_code) + "), sii gentile contatta l'amministratore!" }
+	except imageTypeWrongError:
+            logger.error("Image type inserito non valido: " + str(self.request) + " | error code: " + str(imageTypeWrongError.get_error_code))
+            data = {'error' : True, 'message': "Errore inaspettato (codice=" + str(imageTypeWrongError.get_error_code) + "), sii gentile contatta l'amministratore!" }
         else:
             data = {'success' : True, 'image_url': saved_image_url, 'message': "salvato immagine profilo!" }
-
-	# build JSON response
-        json_data_string = json.dumps(data)
-        self.set_json_response(json_response=json_data_string)
-
-        return True
-
-    def save_book_image(self):
-        """Function to save a new book image"""
-        logger.debug("ajax_function: @@save_book_image@@")
-        logger.debug("parametri della chiamata: " + str(self.request.POST))
-
-        data = {'success' : True, 'message': "salvato immagine profilo!" }
 
 	# build JSON response
         json_data_string = json.dumps(data)

@@ -51,6 +51,16 @@ class UserAlreadyVotedError(Exception):
     pass
 
 class ContestNotActiveError(Exception):
-    """Exception in contest active checking."""
+    """Exception in contest active check."""
     get_error_code = "011"
+    pass
+
+class imageTypeWrongError(Exception):
+    """Exception image type check."""
+    get_error_code = "012"
+    pass
+
+class croppedImageDoesNotExistError(Exception):
+    """Exception cropped image does not exist."""
+    get_error_code = "013"
     pass
