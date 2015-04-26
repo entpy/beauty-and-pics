@@ -29,19 +29,21 @@
 			<div class="alert alert-info display_only_small">
 				<p>Best check yo self, you're not looking too good. Nulla vitae elit libero, a pharetra augue. Praesent commodo cursus magna, <a href="#" class="alert-link">vel scelerisque nisl consectetur et</a>.</p>
 			</div>
-			<div class="{#upload_image_button main_image_upload_button#}">
+			<div class="profile_first_uplad">
 				<form class="profile_image_form" method="post" action="">
 					{% csrf_token %}
 					<input class="profile_image_id" name="{{ profile_image_form.image_id.name }}" value="" type="hidden">
 					<input name="{{ profile_image_form.image_type.name }}" value="profile_image" type="hidden">
 					{{ profile_image_form.uploaded_image }}
 				</form>
-				<!--
-				<div class="upload_image_label">Clicca qui per caricare la foto principale</div>
-				<div class="upload_image_img">
-					<img class="img_not_active" alt="Upload image" src="{ static "website/img/upload_image.png" %}">
-					<img class="img_active" alt="Upload image" src="{ static "website/img/upload_image_active.png" %}">
-				</div>-->
+			</div>
+			<div class="profile_change_image">
+				<div style="text-align: right;">
+					<a href="#" class="upload_profile_image">Cambia immagine</a>
+				</div>
+				<div>
+					<img src="http://placekitten.com/g/250/250" class="profile_image" style="width: 250px;">
+				</div>
 			</div>
 		</div>
 		<div class="right">
@@ -61,18 +63,13 @@
 		</div>
 	</div>
 </div>
-<div class="{#upload_image_button book_images_upload_button#}">
+<div>
 	<form class="book_image_form" method="post" action="">
 		{% csrf_token %}
 		<input class="book_image_id" name="{{ book_images_form.image_id.name }}" value="" type="hidden">
 		<input name="{{ book_images_form.image_type.name }}" value="book_image" type="hidden">
 		{{ book_images_form.uploaded_image }}
 	</form>
-	<!--<div class="upload_image_label">Clicca qui per aggiungere una foto al book fotografico</div>
-	<div class="upload_image_img">
-		<img class="img_not_active" alt="Upload image" src="{ static "website/img/upload_image.png" %}">
-		<img class="img_active" alt="Upload image" src="{ static "website/img/upload_image_active.png" %}">
-	</div>-->
 </div>
 {% endblock container4_content %}
 {% block custom_js %}
@@ -90,6 +87,11 @@
 		customAjaxAction.setAjaxCallParams($(".profile_image_form").serialize());
 		// setting action name
 		customAjaxAction.setActionName("save_image");
+		// success callback function
+		var successCallback = function(jsonResponse) {
+			$(".profile_image").attr("src", jsonResponse.image_url);
+		};
+		customAjaxAction.setAjaxSuccessCallbackFunction(successCallback);
 		// perform ajax call to save a new profile image
 		customAjaxAction.performAjaxAction();
 	}

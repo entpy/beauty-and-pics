@@ -98,8 +98,8 @@ var customAjaxAction = {
 	},
 
 	/* Function to retrieve a success callback function */
-	getAjaxSuccessCallbackFunction : function() {
-		return this.__ajaxSuccessCallbackFunction.call();
+	getAjaxSuccessCallbackFunction : function(jsonResponse) {
+		return this.__ajaxSuccessCallbackFunction(jsonResponse);
 	},
 
 	/* Function to set an error callback function */
@@ -110,8 +110,8 @@ var customAjaxAction = {
 	},
 
 	/* Function to retrieve an error callback function */
-	getAjaxErrorCallbackFunction : function() {
-		return this.__ajaxErrorCallbackFunction.call();
+	getAjaxErrorCallbackFunction : function(jsonResponse) {
+		return this.__ajaxErrorCallbackFunction(jsonResponse);
 	},
 
 	/* Function to set ajax call params */
@@ -140,9 +140,9 @@ var customAjaxAction = {
 				console.log("==========risultato chiamata==========");
 				console.log(jsonResponse);
 				if (jsonResponse.success) {
-					customAjaxAction.getAjaxSuccessCallbackFunction();
+					customAjaxAction.getAjaxSuccessCallbackFunction(jsonResponse);
 				} else if (jsonResponse.error) {
-					customAjaxAction.getAjaxErrorCallbackFunction();
+					customAjaxAction.getAjaxErrorCallbackFunction(jsonResponse);
 				}
 			},
 			error : function(jsonResponse) {
