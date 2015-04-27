@@ -65,6 +65,8 @@
 .upload_image_button { width: 100%; max-width: 220px; }
 .manage_buttons_container .manage_buttons_block3 { margin-top: 25px; }
 .classification_block { width: 100%; }
+
+.profile_image_container .profile_image { width: 100%; max-width: 250px; margin: 0 auto; }
 /* profile section }}} */
 
 .generic_container8 .left { margin-bottom: 25px; text-align: center; }

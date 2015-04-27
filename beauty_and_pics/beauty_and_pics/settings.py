@@ -40,6 +40,7 @@ INSTALLED_APPS = (
     'custom_form_app',
     'email_template',
     'upload_image_box',
+    'easy_thumbnails',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -171,8 +172,14 @@ CUSTOM_CROPPED_IMG_DIRECTORY = 'green/'
 # email settings
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend' # this backend is only for development debug
 
+THUMBNAIL_ALIASES = {
+    '': {
+        'avatar': {'size': (250, 250), 'crop': True},
+    },
+}
+
 # AJAX image Settings
-AJAXIMAGE_AUTH_TEST = lambda u: True
+# AJAXIMAGE_AUTH_TEST = lambda u: True
 
 # loading local settings
 try:

@@ -188,10 +188,16 @@ def profile_index(request):
     autenticated_user_data = account_obj.get_autenticated_user_data(request=request)
     request.session['CUSTOM_CROPPED_IMG_DIRECTORY'] = autenticated_user_data["user_id"]
 
+    # TODO: - prelevare l'url dell'immagine profilo
+    #       - prelevare x immagini del book e visualizzare il pulsante "mostra
+    #         altre" al fondo
+    
+    profile_url = "upload_image_box/cropped_upload/2/64d88cb7-2f72-40e8-9745-9be8f9303cff.jpg"
     context = {
         "post" : request.POST,
         "profile_image_form": profile_image_form,
         "book_images_form": book_images_form,
+        "profile_url": profile_url,
     }
 
     return render(request, 'website/profile/profile_index.html', context)

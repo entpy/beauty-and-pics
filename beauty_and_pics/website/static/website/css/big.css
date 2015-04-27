@@ -83,11 +83,10 @@ ul.grid_container_three li { width: 30.84% }
 .manage_buttons_container .manage_buttons_block1 { padding-right: 10px; }
 .manage_buttons_container .manage_buttons_block2 { padding-right: 25px; }
 
-.main_photo_edit_container_wrapper { display: table; }
-.main_photo_edit_container_wrapper > div { display: table-cell; vertical-align: middle; }
-.main_photo_edit_container_wrapper > .left { padding-right: 80px; }
-.main_photo_edit_container_wrapper > .right .alert { margin-bottom: 0px; }
+.main_photo_edit_container_wrapper > .right .alert { margin-bottom: 0; margin-left: auto; width: 90%; }
 .upload_image_button { height: 150px; padding: 20px 0; width: 150px; }
+
+.profile_image_container .profile_image { width: 250px; }
 /* profile section }}} */
 
 /* classification block style {{{ */

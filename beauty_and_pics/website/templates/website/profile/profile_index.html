@@ -1,5 +1,6 @@
 {% extends "website/inc/base_profile.html" %}
 {% load staticfiles %}
+{% load thumbnail %}
 
 {% block title %}Beauty and Pics | profilo index{% endblock %}
 
@@ -24,12 +25,12 @@
 	</div>
 </div>
 <div class="background_container1 styled_container1 main_photo_edit_container">
+	<div class="alert alert-info visible-xs visible-sm">
+		<p>Best check yo self, you're not looking too good. Nulla vitae elit libero, a pharetra augue. Praesent commodo cursus magna, <a href="#" class="alert-link">vel scelerisque nisl consectetur et</a>.</p>
+	</div>
 	<div class="main_photo_edit_container_wrapper">
 		<div class="left">
-			<div class="alert alert-info display_only_small">
-				<p>Best check yo self, you're not looking too good. Nulla vitae elit libero, a pharetra augue. Praesent commodo cursus magna, <a href="#" class="alert-link">vel scelerisque nisl consectetur et</a>.</p>
-			</div>
-			<div class="profile_first_uplad">
+			<div class="profile_uplad_button">
 				<form class="profile_image_form" method="post" action="">
 					{% csrf_token %}
 					<input class="profile_image_id" name="{{ profile_image_form.image_id.name }}" value="" type="hidden">
@@ -37,17 +38,13 @@
 					{{ profile_image_form.uploaded_image }}
 				</form>
 			</div>
-			<div class="profile_change_image">
-				<div style="text-align: right;">
-					<a href="#" class="upload_profile_image">Cambia immagine</a>
-				</div>
-				<div>
-					<img src="http://placekitten.com/g/250/250" class="profile_image" style="width: 250px;">
-				</div>
+			<div class="profile_image_container">
+				{#<img src="{% static "website/img/catwalk/default_profile_image.jpg" %}" class="profile_image">#}
+				<img src="{{ profile_url|thumbnail_url:'avatar' }}" class="profile_image">
 			</div>
 		</div>
 		<div class="right">
-			<div class="alert alert-info display_only_big">
+			<div class="alert alert-info hidden-xs hidden-sm">
 				<p>Best check yo self, you're not looking too good. Nulla vitae elit libero, a pharetra augue. Praesent commodo cursus magna, <a href="#" class="alert-link">vel scelerisque nisl consectetur et</a>.</p>
 			</div>
 		</div>
@@ -71,6 +68,14 @@
 		{{ book_images_form.uploaded_image }}
 	</form>
 </div>
+{# image grid block {{{ #}
+<div class="row">
+	<div class="col-sm-12 margin_top_15 image_grid_container"></div>
+</div>
+<div class="text-center">
+	<a class="btn btn-success loadMoreElementsAction" href="#">Carica altre</a>
+</div>
+{# image grid block }}} #}
 {% endblock container4_content %}
 {% block custom_js %}
 {# addictional page script #}
@@ -79,7 +84,16 @@
 {{ profile_image_form.media }}
 
 <script>
-	// TODO: precompilare il form relativo con questa funzione, salvare i dati e aggiornare la visualizzazione
+	$(document).ready(function(){
+		$(".loadMoreElementsAction").click(function(){
+			elementsListObject.setElementsListType("photobook");
+			elementsListObject.getElementsList();
+
+			return false;
+		});
+	});
+
+	/* Function to update profile image */
 	function saveProfileImage(imageId) {
 		// save image id
 		$(".profile_image_id").val(imageId);
@@ -89,6 +103,7 @@
 		customAjaxAction.setActionName("save_image");
 		// success callback function
 		var successCallback = function(jsonResponse) {
+			// update profile image
 			$(".profile_image").attr("src", jsonResponse.image_url);
 		};
 		customAjaxAction.setAjaxSuccessCallbackFunction(successCallback);
@@ -96,7 +111,7 @@
 		customAjaxAction.performAjaxAction();
 	}
 
-	// TODO: precompilare il form relativo con questa funzione, salvare i dati e aggiornare la visualizzazione
+	/* Function to append a new book image */
 	function saveBookImage(imageId) {
 		// save image id
 		$(".book_image_id").val(imageId);
@@ -104,6 +119,19 @@
 		customAjaxAction.setAjaxCallParams($(".book_image_form").serialize());
 		// setting action name
 		customAjaxAction.setActionName("save_image");
+		// success callback function
+		var successCallback = function(jsonResponse) {
+			// append uploaded image to image list
+			var lg_size = "15";
+			var md_size = "3";
+			var sm_size = "3";
+			var xs_size = "6";
+			// build html block with link and image
+			var returnVar = '<div class="col-lg-' + lg_size + ' col-md-' + md_size + ' col-xs-' + xs_size + ' col-sm-' + sm_size + ' thumb"><a href="#" class="book_thumbnail"><img alt="" src="' + jsonResponse.image_url + '" class="img-responsive"></a></div>'
+
+			$(".image_grid_container").append(returnVar);
+		};
+		customAjaxAction.setAjaxSuccessCallbackFunction(successCallback);
 		// perform ajax call to save a new book image
 		customAjaxAction.performAjaxAction();
 	}

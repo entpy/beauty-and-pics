@@ -11,7 +11,7 @@ logger = logging.getLogger(__name__)
 
 class profileImageForm(forms.Form, FormCommonUtils):
     # custom upload button template
-    custom_upload_button = '<div style="background-color: cyan; display: inline-block; text-align: center; cursor: pointer; color: #666; padding: 10px; margin: 10px; width: 200px; border-radius: 5px;" data-widget-id="%(widget_id)s" class="uploaderButtonClickAction">%(widget_button_text)s</div>'
+    custom_upload_button = '<div data-widget-id="%(widget_id)s" class="uploaderButtonClickAction upload_profile_image_button btn btn-success">%(widget_button_text)s</div>'
     # form fields
     uploaded_image = forms.CharField(widget=UibUploaderInput(attrs={'widget_id': 'uploader_no_crop', "enable_crop": True, "widget_button_text": "Crop load", "crop_modal_description_text": "Seleziona la porzione dell'immagine per il tuo profilo", "default_uploader_button": custom_upload_button, 'callback_function': 'saveProfileImage'}))
     image_id = forms.CharField(widget=forms.HiddenInput())
@@ -19,8 +19,8 @@ class profileImageForm(forms.Form, FormCommonUtils):
 
 class bookImagesForm(forms.Form, FormCommonUtils):
     # custom upload button template
-    custom_upload_button = '<div style="background-color: cyan; display: inline-block; text-align: center; cursor: pointer; color: #666; padding: 10px; margin: 10px; width: 200px; border-radius: 5px;" data-widget-id="%(widget_id)s" class="uploaderButtonClickAction">%(widget_button_text)s</div>'
+    custom_upload_button = '<div data-widget-id="%(widget_id)s" class="uploaderButtonClickAction upload_book_image_button btn btn-success">%(widget_button_text)s</div>'
     # form fields
-    uploaded_image = forms.CharField(widget=UibUploaderInput(attrs={'widget_id': 'uploader_crop', "enable_crop": "", "widget_button_text": "No crop load", "crop_modal_description_text": "Seleziona la porzione dell'immagine per il tuo profilo", 'callback_function': 'saveBookImage'}))
+    uploaded_image = forms.CharField(widget=UibUploaderInput(attrs={'widget_id': 'uploader_crop', "enable_crop": "", "widget_button_text": "No crop load", "crop_modal_description_text": "Seleziona la porzione dell'immagine per il tuo profilo", "default_uploader_button": custom_upload_button, 'callback_function': 'saveBookImage'}))
     image_id = forms.CharField(widget=forms.HiddenInput())
     image_type = forms.CharField(widget=forms.HiddenInput())
