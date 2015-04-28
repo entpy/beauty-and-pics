@@ -40,7 +40,6 @@ INSTALLED_APPS = (
     'custom_form_app',
     'email_template',
     'upload_image_box',
-    'easy_thumbnails',
 )
 
 MIDDLEWARE_CLASSES = (
