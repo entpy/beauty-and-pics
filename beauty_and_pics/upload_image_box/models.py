@@ -14,7 +14,7 @@ def get_image_path(self, filename):
 
 class cropUploadedImages(models.Model):
     image = models.ImageField(max_length=500, upload_to=get_image_path)
-
+    thumbnail_image = models.ForeignKey('self', null=True)
     upload_to_base_path = APP_BASE_DIRECTORY # default file upload base dir
     upload_to = '' # default file upload custom dir TODO: forse questo non serve
 
@@ -55,8 +55,113 @@ class cropUploadedImages(models.Model):
 
         return return_var
 
+    # TODO: plz rewrite this stuff!
+    def save_image(self, tmp_uploaded_image_obj, crop_info, custom_crop_directory_name=None):
+        """Function to (crop and) save uploaded image"""
+        if tmp_uploaded_image_obj:
+            # retrieve images save path directory name
+            images_save_path = self.build_crop_image_directory(custom_crop_directory_name)
+            # create images save path directory name
+            self.create_cropped_image_directory(images_save_path)
+            # retrieve a valid image with or without crop
+            valid_image = self.create_valid_image(tmp_uploaded_image_obj=tmp_uploaded_image_obj, crop_info=crop_info)
+            # get dimensions about image
+            cropped_width, cropped_height = valid_image.size
+            if cropped_width >= CROPPED_IMG_MIN_WIDTH and cropped_height >= CROPPED_IMG_MIN_HEIGHT:
+                # create thumbnail from valid image
+                cropped_image_thumbnail = self.create_image_thumbnail(image=valid_image)
+                # todo create cropped (or not) image name
+                valid_image_name = self.get_image_name(tmp_uploaded_image_obj.image.path)
+                # todo create thumbnail image name append "_thumb" postfix to valid_image_name
+                thumbnail_image_name = self.get_image_thumbnail_name(valid_image_name)
+
+                logger.debug("valid image name: " + str(valid_image_name))
+                logger.debug("valid image: " + str(valid_image))
+                logger.debug("thumbnail image name: " + str(thumbnail_image_name))
+                logger.debug("thumbnail image: " + str(cropped_image_thumbnail))
+		# save valid cropped (or not) image and thumbnail image into filesystem
+                valid_image_saved = self.write_image_into_fs(image_obj=valid_image, save_full_path=images_save_path + valid_image_name)
+                thumbnail_image_saved = self.write_image_into_fs(image_obj=cropped_image_thumbnail, save_full_path=images_save_path + thumbnail_image_name)
+		# TODO save valid cropped (or not) image and thumbnail image into database
+                # work on this => self.write_image_into_db(image_path=APP_BASE_DIRECTORY + CROPPED_IMG_DIRECTORY + custom_crop_directory_name + "/" + tmp_uploaded_image_name, thumbnail_image=None)
+
+        return True
+
+    def write_image_into_fs(self, image_obj, save_full_path):
+        """Function to write an image obj to fs"""
+        if image_obj and save_full_path:
+            image_obj.save(save_full_path)
+            logger.debug("image: " + str(image_obj) + " saved on fs")
+
+        return image_obj
+
+    def create_image_thumbnail(self, image):
+        """Function to create an image thumbnail"""
+        thumb = None
+        if image:
+            thumb = image.copy()
+            size = [200,200]
+            thumb.thumbnail(size, Image.ANTIALIAS)
+            # logger.debug("thumbnail image: " + str(image))
+
+        return thumb
+
+    """
+    def save_cropped_image(self, uploaded_image, cropped_image, cropped_image_thumbnail=None, custom_crop_directory_name=None):
+        ""Function to save cropped image into CROPPED_IMG_DIRECTORY directory""
+	return_var = False
+	tmp_uploaded_image_full_path = uploaded_image.image.path
+	# retrieve crop image directory
+	crop_image_directory = self.build_crop_image_directory(custom_crop_directory_name)
+        tmp_uploaded_image_name = self.copy_file_to_crop_directory(tmp_uploaded_image_full_path, crop_image_directory)
+	# crop file moved into new position
+	cropped_image.save(crop_image_directory + tmp_uploaded_image_name)
+        # retrieve thumbnail image name
+        # TODO: non deve essere il path completo, ma senza media_root
+        thumbnail_image_name = self.get_image_thumbnail_name(tmp_uploaded_image_name)
+        logger.debug("thumbnail full file path: " + str(thumbnail_image_name))
+        logger.debug("thumbnail image: " + str(cropped_image_thumbnail))
+        # save thumbnail image
+        cropped_image_thumbnail.save(crop_image_directory + thumbnail_image_name)
+
+	# save cropped image thumbnail info into database
+	thumbnail_image_obj = self.save_image_info(APP_BASE_DIRECTORY + CROPPED_IMG_DIRECTORY + custom_crop_directory_name + "/" + thumbnail_image_name)
+	# save cropped image info into database
+	return_var = self.save_image_info(APP_BASE_DIRECTORY + CROPPED_IMG_DIRECTORY + custom_crop_directory_name + "/" + tmp_uploaded_image_name, thumbnail_image=thumbnail_image_obj)
+
+	return return_var.id
+    """
+
+    """
+    def copy_file_to_crop_directory(self, tmp_uploaded_image_full_path, crop_image_directory):
+        ""Function to copy an uploaded file to crop directory""
+	# create cropped image directory if not exists
+	self.create_cropped_image_directory(crop_image_directory)
+	# retrieve image name from tmp_uploaded_image_full_path
+	tmp_uploaded_image_name = self.get_image_name(tmp_uploaded_image_full_path)
+	# build crop image full path (crop_image_directory + tmp_uploaded_image_name)
+	crop_image_full_path = crop_image_directory + tmp_uploaded_image_name
+	# copy tmp uploaded file into new position
+	shutil.copy2(tmp_uploaded_image_full_path, crop_image_full_path)
+
+        return tmp_uploaded_image_name
+    """
+
+    def create_valid_image(self, tmp_uploaded_image_obj, crop_info=False):
+        """Function to retrieve a valid image with or without crop"""
+        # open tmp uploaded image
+        image = Image.open(tmp_uploaded_image_obj.image.path)
+        # check if image must be cropped or not
+        if crop_info["enable_crop"]:
+            cropped_image = image.crop(self.get_crop_box(crop_info))
+        else:
+            cropped_image = image
+
+        return cropped_image
+
+    """
     def crop_image(self, uploaded_image, crop_info, custom_crop_directory_name=None):
-        """Function to crop an image"""
+        ""Function to crop an image""
 	return_var = False
 	if uploaded_image and crop_info:
             uploaded_image_path = str(uploaded_image.image.path)
@@ -70,39 +175,14 @@ class cropUploadedImages(models.Model):
             logger.debug("enable crop: " + str(crop_info["enable_crop"]))
             logger.debug("cropped width: " + str(cropped_width) + " cropped height: " + str(cropped_height))
             if cropped_width >= CROPPED_IMG_MIN_WIDTH and cropped_height >= CROPPED_IMG_MIN_HEIGHT:
+                # create cropped thumbnail image
+                cropped_image_thumbnail = self.create_image_thumbnail(image=cropped_image)
 		# save cropped image
-		return_var = self.save_cropped_image(uploaded_image, cropped_image, custom_crop_directory_name)
+		return_var = self.save_cropped_image(uploaded_image=uploaded_image, cropped_image=cropped_image, cropped_image_thumbnail=cropped_image_thumbnail, custom_crop_directory_name=custom_crop_directory_name)
 
         return return_var
+    """
 
-    def save_cropped_image(self, uploaded_image, cropped_image, custom_crop_directory_name=None):
-        """Function to save cropped image into CROPPED_IMG_DIRECTORY directory"""
-	return_var = False
-	tmp_uploaded_image_full_path = uploaded_image.image.path
-	# retrieve crop image directory
-	crop_image_directory = self.build_crop_image_directory(custom_crop_directory_name)
-        tmp_uploaded_image_name = self.copy_file_to_crop_directory(tmp_uploaded_image_full_path, crop_image_directory)
-	# crop file moved into new position
-	cropped_image.save(crop_image_directory + tmp_uploaded_image_name)
-
-	# save cropped image info into database
-	return_var = self.save_image_info(APP_BASE_DIRECTORY + CROPPED_IMG_DIRECTORY + custom_crop_directory_name + "/" + tmp_uploaded_image_name)
-
-	return return_var
-
-    # TODO: work on this function
-    def copy_file_to_crop_directory(self, tmp_uploaded_image_full_path, crop_image_directory):
-        """Function to copy an uploaded file to crop directory"""
-	# create cropped image directory if not exists
-	self.create_cropped_image_directory(crop_image_directory)
-	# retrieve image name from tmp_uploaded_image_full_path
-	tmp_uploaded_image_name = self.get_image_name(tmp_uploaded_image_full_path)
-	# build crop image full path (crop_image_directory + tmp_uploaded_image_name)
-	crop_image_full_path = crop_image_directory + tmp_uploaded_image_name
-	# copy tmp uploaded file into new position
-	shutil.copy2(tmp_uploaded_image_full_path, crop_image_full_path)
-
-        return tmp_uploaded_image_name
 
     def create_cropped_image_directory(self, directory):
         """Function to create crop image directory if not exists"""
@@ -122,6 +202,14 @@ class cropUploadedImages(models.Model):
 
 	return new_file_name
 
+    def get_image_thumbnail_name(self, valid_image_name):
+	"""Function to retrieve thumbnail image name about a full image path, ie. '/tmp/image/file1.png' -> must return 'file1.png' """
+	file_name, file_extension = os.path.splitext(valid_image_name)
+	# low risk of file name collision (if file exists generate a new name)
+	new_file_name = str(file_name) + "_thumb" + str(file_extension)
+
+	return new_file_name
+
     def build_crop_image_directory(self, custom_crop_directory_name=None):
 	"""Function to build crop image directory"""
 	crop_image_directory = settings.MEDIA_ROOT + "/" + APP_BASE_DIRECTORY + CROPPED_IMG_DIRECTORY + custom_crop_directory_name + "/"
@@ -137,13 +225,16 @@ class cropUploadedImages(models.Model):
 
         return return_var
 
-    def save_image_info(self, image_url):
+    def write_image_into_db(self, image_path, thumbnail_image=None):
 	"""Function to save image into database"""
 	return_var = False
         crop_uploaded_images_obj = cropUploadedImages()
         crop_uploaded_images_obj.image = image_url
+        # saving thumbnail image if exists
+        if thumbnail_image:
+            crop_uploaded_images_obj.thumbnail_image = thumbnail_image
 	crop_uploaded_images_obj.save()
-	return_var = crop_uploaded_images_obj.id
+	return_var = crop_uploaded_images_obj
 
 	return return_var
 

@@ -362,7 +362,7 @@ class Account(models.Model):
 	total_points = Point.objects.values('user__id').filter(contest__contest_type=F('user__account__contest_type'),
                 contest__status=project_constants.CONTEST_ACTIVE).annotate(totale=Sum('points'))
         """
- 
+
         return contest_account_info
 
     def get_top_five_contest_user(self):

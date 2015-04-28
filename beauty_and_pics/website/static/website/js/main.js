@@ -509,7 +509,7 @@ var elementsListObject = {
 	manageFavoriteList : function(elementsList) {
 	/* Function to retrieve an html blocks list, this must be appended to html page */
 		var items = "";
-		$.each(elementsList, function(singleElement) {
+		$.each(elementsList, function(index, singleElement) {
 			blockUrl = "passerella/dettaglio-utente/" + singleElement.user_id;
 			blockImageUrl = singleElement.image_url;
 			items += elementsListObject.getSingleHtmlBlock(blockUrl, blockImageUrl);
@@ -522,8 +522,9 @@ var elementsListObject = {
 	managePhotobookList : function(elementsList) {
 	/* Function to retrieve an html blocks list, this must be appended to html page */
 		var items = "";
-		$.each(elementsList, function(singleElement) {
-			blockUrl = "passerella/dettaglio-utente/" + singleElement.user_id;
+		$.each(elementsList, function(index, singleElement) {
+			blockUrl = "#";
+			// alert(singleElement.image_url);
 			blockImageUrl = singleElement.image_url;
 			items += elementsListObject.getSingleHtmlBlock(blockUrl, blockImageUrl);
 		});

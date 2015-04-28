@@ -67,7 +67,8 @@ def crop(request):
             # retrieve custom crop directory name (could be found in session if exists)
             custom_crop_directory_name = crop_uploaded_images_obj.get_custom_crop_directory(request)
             # crop uploaded image
-            crop_return = crop_uploaded_images_obj.crop_image(tmp_uploaded_image, crop_info, custom_crop_directory_name)
+            # crop_return = crop_uploaded_images_obj.crop_image(tmp_uploaded_image, crop_info, custom_crop_directory_name)
+            crop_return = crop_uploaded_images_obj.save_image(tmp_uploaded_image, crop_info, custom_crop_directory_name)
             if crop_return:
                 data = {'success' : True, 'image_id': crop_return}
             else:

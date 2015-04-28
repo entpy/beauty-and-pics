@@ -2,6 +2,7 @@
 
 from django.shortcuts import render
 from django.http import HttpResponse
+from django.conf import settings
 from custom_form_app.forms.base_form_class import *
 from custom_form_app.forms.register_form import *
 from custom_form_app.forms.password_recover import *
@@ -100,7 +101,6 @@ class ajaxManager():
 
     def elements_list(self):
         """Function to retrieve a filtered elements list (users or photo book)"""
-        # TODO: restituire la lista filtrata di utenti o di foto
         logger.debug("ajax_function: @@elements_list@@")
         logger.debug("parametri della chiamata: " + str(self.request.POST))
 
@@ -111,7 +111,6 @@ class ajaxManager():
 
         # catwalker section
         if elements_list_type == "catwalker":
-            # TODO: creare funzione per elenco dei filtri nella chiamata AJAX
             filter_list = []
             filtered_elements = Account_obj.get_filtered_accounts_list(filters_list=self.request.POST)
 
@@ -124,8 +123,21 @@ class ajaxManager():
                         "image_url": "http://lorempixel.com/150/150/nature",
                         }),
 
-        # TODO favorite section
         # TODO photobook section
+        if elements_list_type == "photobook":
+            Book_obj = Book()
+            autenticated_user_data = Account_obj.get_autenticated_user_data(request=self.request)
+            filter_list = []
+            filtered_elements = Book_obj.get_photobook_list(user_id=autenticated_user_data["user_id"], filters_list=self.request.POST)
+
+            for image in filtered_elements:
+                logger.debug("element list: " + str(image))
+                json_account_element.append({
+                        "image_id": image["image_id__id"],
+                        "image_url": settings.MEDIA_URL + image["image_id__image"],
+                        }),
+
+        # TODO favorite section
         """
         data = {
                 'success' : True,

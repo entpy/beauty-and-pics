@@ -41,4 +41,6 @@ class project_constants(object):
 
     VOTE_METRICS_LIST = {"global_metric": "global", "smile_metric": "smile", "look_metric": "look"}
 
+    IMAGE_TYPE = {"profile": "profile_image", "book": "book_image"}
+
     # votations }}}
