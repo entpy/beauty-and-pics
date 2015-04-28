@@ -134,7 +134,7 @@ class ajaxManager():
                 logger.debug("element list: " + str(image))
                 json_account_element.append({
                         "image_id": image["image_id__id"],
-                        "image_url": settings.MEDIA_URL + image["image_id__image"],
+                        "image_url": settings.MEDIA_URL + image["image_id__thumbnail_image__image"],
                         }),
 
         # TODO favorite section

@@ -192,12 +192,12 @@ def profile_index(request):
     #       - prelevare x immagini del book e visualizzare il pulsante "mostra
     #         altre" al fondo
     
-    profile_url = "upload_image_box/cropped_upload/2/64d88cb7-2f72-40e8-9745-9be8f9303cff.jpg"
+    profile_image_url = "upload_image_box/cropped_upload/2/64d88cb7-2f72-40e8-9745-9be8f9303cff.jpg"
     context = {
         "post" : request.POST,
         "profile_image_form": profile_image_form,
         "book_images_form": book_images_form,
-        "profile_url": profile_url,
+        "profile_image_url": profile_image_url,
     }
 
     return render(request, 'website/profile/profile_index.html', context)

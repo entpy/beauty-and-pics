@@ -66,7 +66,7 @@ class Book(models.Model):
         """Function to retrieve a list of photobook about a user"""
         return_var = False
         if user_id:
-            return_var = Book.objects.values('image_id__id', 'image_id__image').filter(user__id=user_id, image_type=project_constants.IMAGE_TYPE["book"])
+            return_var = Book.objects.values('image_id__id', 'image_id__thumbnail_image__image').filter(user__id=user_id, image_type=project_constants.IMAGE_TYPE["book"])
             # list orders
             return_var = return_var.order_by('-image_id__id')
             # list limits
@@ -77,7 +77,11 @@ class Book(models.Model):
     # TODO
     def get_profile_image(self, user_id):
         """Function to retrieve profile image"""
-        return True
+        return_var = None
+	if user_id:
+            return_var = Book.objects.values('image_id__id', 'image_id__thumbnail_image__image').filter(user__id=user_id, image_type=project_constants.IMAGE_TYPE["book"])
+
+        return return_var
 
 """
 	* id_image (PK)

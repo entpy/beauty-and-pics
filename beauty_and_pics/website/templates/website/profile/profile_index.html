@@ -59,13 +59,15 @@
 		</div>
 	</div>
 </div>
-<div>
-	<form class="book_image_form" method="post" action="">
-		{% csrf_token %}
-		<input class="book_image_id" name="{{ book_images_form.image_id.name }}" value="" type="hidden">
-		<input name="{{ book_images_form.image_type.name }}" value="book_image" type="hidden">
-		{{ book_images_form.uploaded_image }}
-	</form>
+<div class="row">
+	<div class="col-sm-12">
+		<form class="book_image_form" method="post" action="">
+			{% csrf_token %}
+			<input class="book_image_id" name="{{ book_images_form.image_id.name }}" value="" type="hidden">
+			<input name="{{ book_images_form.image_type.name }}" value="book_image" type="hidden">
+			{{ book_images_form.uploaded_image }}
+		</form>
+	</div>
 </div>
 {# image grid block {{{ #}
 <div class="row">
@@ -86,12 +88,15 @@
 
 <script>
 	$(document).ready(function(){
-		$(".loadMoreElementsAction").click(function(){
+		$(".loadMoreElementsAction").on("click", function(){
 			elementsListObject.setElementsListType("photobook");
+			elementsListObject.addFilter("show_limit", 10);
 			elementsListObject.getElementsList();
 
 			return false;
 		});
+
+		$(".loadMoreElementsAction").click();
 	});
 
 	/* Function to update profile image */
