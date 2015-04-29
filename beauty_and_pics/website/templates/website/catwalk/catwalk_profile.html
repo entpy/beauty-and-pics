@@ -32,7 +32,7 @@
 <div class="background_container1 generic_container8">
 	<div class="left">
 		<div class="top">
-			<img class="catwalk_user_main_image" src="http://placekitten.com/g/250/250">
+			<img class="catwalk_user_main_image" src="{{ profile_image_url }}">
 		</div>
 		<div class="bottom user_action_link_container">
 			<span>
@@ -175,13 +175,14 @@
 			</div>
 		</div>
 		<div class="generic_container_content">
-			{# image grid #}
+			{# image grid block {{{ #}
 			<div class="row">
 				<div class="col-sm-12 image_grid_container"></div>
 			</div>
 			<div class="text-center">
-				<a class="btn btn-success load_more_images" href="#">Carica altre</a>
+				<a class="btn btn-success loadMoreElementsAction" href="#">Carica altre</a>
 			</div>
+			{# image grid block }}} #}
 		</div>
 	</div>
 </div>
@@ -193,6 +194,8 @@
 
 {% block custom_js %}
 <script>
+	elementsListObject.addFilter("show_limit", 5);
+
 	$(document).ready(function(){
 		// single vote type click
 		$(".voteTypeClick").click(function(){
@@ -203,7 +206,7 @@
 			return false;
 		});
 
-		// performin vote action
+		// perform vote action
 		$(".submitVoteButtonClickAction").click(function(){
 			voteUserObject.addParam("user_id", "{{ user.user_id }}");
 			voteUserObject.performVotingAction();
@@ -211,18 +214,15 @@
 			return false;
 		});
 
-		/*$(".load_more_images").click(function(){
-			var block_size = {
-				lg_size : 3,
-				md_size : 3,
-				sm_size : 4,
-				xs_size : 6
-			};
-			var elements = getItems(block_size);
-			$(".image_grid_container").append(elements);
+		$(".loadMoreElementsAction").on("click", function(){
+			elementsListObject.setElementsListType("photobook");
+			elementsListObject.addFilter("user_id", "{{ user.user_id }}");
+			elementsListObject.getElementsList();
 
 			return false;
-		});*/
+		});
+
+		$(".loadMoreElementsAction").click();
 	});
 
 	/* function to remove "active" class to all vote type elements */

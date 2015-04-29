@@ -24,10 +24,6 @@ logger = logging.getLogger(__name__)
 
 # www {{{
 def www_index(request):
-    # TODO: debug only, plz remove
-    Contest_obj = Contest()
-    Contest_obj.get_active_contests_end_time()
-    Contest_obj.get_opening_contests_start_time()
     return render(request, 'website/www/www_index.html', False)
 
 def www_how_it_works(request):
@@ -124,8 +120,9 @@ def catwalk_profile(request, user_id):
     # retrieve contest user info
     contest_account_info = account_obj.get_contest_account_info(user_id=user_id)
 
-    # TODO: put this inside a middleware
-    top_five_account = account_obj.get_top_five_contest_user()
+    # retrieve profile image url
+    book_obj = Book()
+    profile_image_url = book_obj.get_profile_image_url(user_id=user_id)
 
     # check if this catwalker can be voted
     vote_obj = Vote()
@@ -141,7 +138,7 @@ def catwalk_profile(request, user_id):
         "user" : account_info,
         "user_contest_info" : contest_account_info,
         "user_already_voted" : user_already_voted,
-        "top_five_account" : top_five_account
+        "profile_image_url" : profile_image_url,
     }
 
     return render(request, 'website/catwalk/catwalk_profile.html', context)
@@ -188,16 +185,16 @@ def profile_index(request):
     autenticated_user_data = account_obj.get_autenticated_user_data(request=request)
     request.session['CUSTOM_CROPPED_IMG_DIRECTORY'] = autenticated_user_data["user_id"]
 
-    # TODO: - prelevare l'url dell'immagine profilo
-    #       - prelevare x immagini del book e visualizzare il pulsante "mostra
-    #         altre" al fondo
-    
-    profile_image_url = "upload_image_box/cropped_upload/2/64d88cb7-2f72-40e8-9745-9be8f9303cff.jpg"
+    # retrieve profile image url
+    book_obj = Book()
+    profile_image_url = book_obj.get_profile_image_url(user_id=autenticated_user_data["user_id"])
+
     context = {
         "post" : request.POST,
         "profile_image_form": profile_image_form,
         "book_images_form": book_images_form,
         "profile_image_url": profile_image_url,
+        "user_id": autenticated_user_data["user_id"],
     }
 
     return render(request, 'website/profile/profile_index.html', context)

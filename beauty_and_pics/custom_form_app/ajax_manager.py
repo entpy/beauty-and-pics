@@ -111,8 +111,8 @@ class ajaxManager():
 
         # catwalker section
         if elements_list_type == "catwalker":
-            filter_list = []
             filtered_elements = Account_obj.get_filtered_accounts_list(filters_list=self.request.POST)
+            Book_obj = Book()
 
             for user_info in filtered_elements:
                 logger.debug("element list: " + str(user_info))
@@ -120,22 +120,24 @@ class ajaxManager():
                         "user_id": user_info["user__id"],
                         "user_email": user_info["user__email"],
                         "total_points": user_info.get("total_points"),
-                        "image_url": "http://lorempixel.com/150/150/nature",
-                        }),
+                        "image_url": Book_obj.get_profile_thumbnail_image_url(user_id=user_info["user__id"]),
+                }),
 
-        # TODO photobook section
+        # photobook section
         if elements_list_type == "photobook":
             Book_obj = Book()
-            autenticated_user_data = Account_obj.get_autenticated_user_data(request=self.request)
-            filter_list = []
-            filtered_elements = Book_obj.get_photobook_list(user_id=autenticated_user_data["user_id"], filters_list=self.request.POST)
+            user_id = self.request.POST.get("user_id")
+            # autenticated_user_data = Account_obj.get_autenticated_user_data(request=self.request)
+            # TODO: se sono nella pagina profilo del catwalk devo vedere l'id
+            # in GET e non quello settato in sessione..mmmh
+            filtered_elements = Book_obj.get_photobook_list(user_id=user_id, filters_list=self.request.POST)
 
             for image in filtered_elements:
                 logger.debug("element list: " + str(image))
                 json_account_element.append({
                         "image_id": image["image_id__id"],
                         "image_url": settings.MEDIA_URL + image["image_id__thumbnail_image__image"],
-                        }),
+                }),
 
         # TODO favorite section
         """

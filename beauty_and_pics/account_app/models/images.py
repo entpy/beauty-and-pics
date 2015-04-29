@@ -1,11 +1,13 @@
 # -*- coding: utf-8 -*-
 
 from django.db import models
+from django.conf import settings
 from django.contrib.auth.models import User
+from django.templatetags.static import static
 from upload_image_box.models import cropUploadedImages 
 from website.exceptions import *
 from beauty_and_pics.consts import project_constants
-import logging
+import logging, datetime
 
 # Get an instance of a logger
 logger = logging.getLogger(__name__)
@@ -15,6 +17,7 @@ class Book(models.Model):
     image_id = models.OneToOneField(cropUploadedImages, primary_key=True)
     user = models.ForeignKey(User)
     image_type = models.CharField(max_length=100)
+    upload_date = models.DateTimeField(auto_now=True)
 
     class Meta:
         app_label = 'account_app'
@@ -65,8 +68,14 @@ class Book(models.Model):
     def get_photobook_list(self, user_id, filters_list=None):
         """Function to retrieve a list of photobook about a user"""
         return_var = False
+        page_load_datetime = False
+        if filters_list.get("page_loaded_timestamp"):
+            page_load_datetime = datetime.datetime.fromtimestamp(float(filters_list["page_loaded_timestamp"]))
         if user_id:
-            return_var = Book.objects.values('image_id__id', 'image_id__thumbnail_image__image').filter(user__id=user_id, image_type=project_constants.IMAGE_TYPE["book"])
+            if page_load_datetime:
+                return_var = Book.objects.values('image_id__id', 'image_id__thumbnail_image__image').filter(user__id=user_id, image_type=project_constants.IMAGE_TYPE["book"], upload_date__lt=page_load_datetime)
+            else:
+                return_var = Book.objects.values('image_id__id', 'image_id__thumbnail_image__image').filter(user__id=user_id, image_type=project_constants.IMAGE_TYPE["book"])
             # list orders
             return_var = return_var.order_by('-image_id__id')
             # list limits
@@ -74,12 +83,43 @@ class Book(models.Model):
 
         return return_var
 
-    # TODO
-    def get_profile_image(self, user_id):
-        """Function to retrieve profile image"""
+    def get_profile_image(self, user_id, thumbnail=False):
+        """Function to retrieve profile image, if exists more profile image than take only last"""
         return_var = None
 	if user_id:
-            return_var = Book.objects.values('image_id__id', 'image_id__thumbnail_image__image').filter(user__id=user_id, image_type=project_constants.IMAGE_TYPE["book"])
+            if thumbnail:
+                return_var = Book.objects.values('image_id__id', 'image_id__thumbnail_image__image').filter(user__id=user_id, image_type=project_constants.IMAGE_TYPE["profile"])
+            else:
+                return_var = Book.objects.values('image_id__id', 'image_id__image').filter(user__id=user_id, image_type=project_constants.IMAGE_TYPE["profile"])
+            return_var = return_var.order_by('-image_id__id')
+            if (return_var):
+                return_var = return_var[0]
+
+        return return_var
+
+    def get_profile_image_url(self, user_id, return_default=True):
+        """Function to retrieve profile image url"""
+        return_var = None
+        profile_image = self.get_profile_image(user_id=user_id)
+	if profile_image and profile_image["image_id__image"]:
+            return_var = settings.MEDIA_URL + profile_image["image_id__image"]
+
+        # default profile image
+        if not return_var and return_default:
+            return_var = static('website/img/catwalk/default_profile_image.jpg')
+
+        return return_var
+
+    def get_profile_thumbnail_image_url(self, user_id, return_default=True):
+        """Function to retrieve profile image url"""
+        return_var = None
+        profile_image = self.get_profile_image(user_id=user_id, thumbnail=True)
+	if profile_image and profile_image["image_id__thumbnail_image__image"]:
+            return_var = settings.MEDIA_URL + profile_image["image_id__thumbnail_image__image"]
+
+        # default profile image
+        if not return_var and return_default:
+            return_var = static('website/img/catwalk/default_profile_image.jpg')
 
         return return_var
 

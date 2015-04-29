@@ -31,7 +31,7 @@
 /* how it works page }}} */
 
 /* catwalk user details style {{{ */
-.user_details_container .user_details_left { width: 100%; }
+.user_details_container .user_details_left { width: 100%; margin-right: 0%; }
 .user_details_container .user_details_right { width: 100%; }
 .vote_user_container { width: 100%; }
 /* catwalk user details style }}} */

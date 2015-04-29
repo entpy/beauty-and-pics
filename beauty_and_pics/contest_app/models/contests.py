@@ -142,7 +142,7 @@ class Contest(models.Model):
         return return_var
 
     def get_active_contests_end_time(self):
-        """Function to retrieve endd time info about all active constests"""
+        """Function to retrieve end time info about all active constests"""
         return_var = {}
         # update contests
         self.contest_manager()

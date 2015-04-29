@@ -388,6 +388,7 @@ $(document).on("click", ".fileSelectClickAction", function(){
 	// set current widget id
 	uploaderImageBox.autoSetWidgetId($(this));
 	// open file chooser
+	// TODO: su chrome se il form è display none non funziona
 	$(".select_image_input").click();
 
 	return false;

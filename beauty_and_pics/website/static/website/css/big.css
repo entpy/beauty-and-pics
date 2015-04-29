@@ -67,7 +67,7 @@
 .generic_container8 > .right > .bottom { margin-left: auto; width: 90%; }
 
 .user_details_container > div { float: left }
-.user_details_container .user_details_left { width: 40%; }
+.user_details_container .user_details_left { width: 38%; margin-right: 2%; }
 .user_details_container .user_details_right { width: 60%; }
 
 /* image grids {{{ */

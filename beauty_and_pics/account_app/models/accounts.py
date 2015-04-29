@@ -365,6 +365,7 @@ class Account(models.Model):
 
         return contest_account_info
 
+    # TODO: qui devo fornire anche l'immagine del profilo
     def get_top_five_contest_user(self):
         """Function to retrieve the top five contest user"""
         filters_list = {"filter_name": "classification", "start_limit": "0", "show_limit": "5"}

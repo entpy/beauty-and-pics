@@ -50,6 +50,7 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.auth.middleware.SessionAuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'beauty_and_pics.contest_middleware.ContestMiddleware',
 )
 
 # login with username and password
@@ -64,6 +65,17 @@ ROOT_URLCONF = 'beauty_and_pics.urls'
 
 WSGI_APPLICATION = 'beauty_and_pics.wsgi.application'
 
+# TODO: invece di ridefinire tutto appendere all'esitente il nuovo context
+TEMPLATE_CONTEXT_PROCESSORS = (
+    "django.contrib.auth.context_processors.auth",
+    "django.core.context_processors.debug",
+    "django.core.context_processors.i18n",
+    "django.core.context_processors.media",
+    "django.core.context_processors.static",
+    "django.core.context_processors.tz",
+    "django.contrib.messages.context_processors.messages",
+    "beauty_and_pics.contest_processors.common_contest_processors" # <= il nuovo context
+)
 
 # Database
 # https://docs.djangoproject.com/en/1.7/ref/settings/#databases
@@ -95,6 +107,10 @@ USE_TZ = False
 # https://docs.djangoproject.com/en/1.7/howto/static-files/
 
 STATIC_URL = '/static/'
+
+STATICFILES_DIRS = (
+    os.path.join(BASE_DIR, "static"),
+)
 
 """
 HOW TO SUL LOGGING

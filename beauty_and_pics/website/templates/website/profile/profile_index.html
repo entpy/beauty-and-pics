@@ -39,7 +39,7 @@
 				</form>
 			</div>
 			<div class="profile_image_container">
-				<img src="{% static "website/img/catwalk/default_profile_image.jpg" %}" class="profile_image">
+				<img src="{{ profile_image_url }}" class="profile_image">
 			</div>
 		</div>
 		<div class="right">
@@ -87,16 +87,20 @@
 {{ profile_image_form.media }}
 
 <script>
+	var page_loaded_timestamp = getCurrentTimestamp();
+	elementsListObject.addFilter("show_limit", 5);
+
 	$(document).ready(function(){
 		$(".loadMoreElementsAction").on("click", function(){
 			elementsListObject.setElementsListType("photobook");
-			elementsListObject.addFilter("show_limit", 10);
+			elementsListObject.addFilter("user_id", "{{ user_id }}");
+			elementsListObject.addFilter("page_loaded_timestamp", page_loaded_timestamp);
 			elementsListObject.getElementsList();
 
 			return false;
 		});
 
-		$(".loadMoreElementsAction").click();
+		//$(".loadMoreElementsAction").click();
 	});
 
 	/* Function to update profile image */
