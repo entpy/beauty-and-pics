@@ -120,7 +120,7 @@ class ajaxManager():
                         "user_id": user_info["user__id"],
                         "user_email": user_info["user__email"],
                         "total_points": user_info.get("total_points"),
-                        "image_url": Book_obj.get_profile_thumbnail_image_url(user_id=user_info["user__id"]),
+                        "thumbnail_image_url": Book_obj.get_profile_thumbnail_image_url(user_id=user_info["user__id"]),
                 }),
 
         # photobook section
@@ -136,7 +136,8 @@ class ajaxManager():
                 logger.debug("element list: " + str(image))
                 json_account_element.append({
                         "image_id": image["image_id__id"],
-                        "image_url": settings.MEDIA_URL + image["image_id__thumbnail_image__image"],
+                        "thumbnail_image_url": settings.MEDIA_URL + image["image_id__thumbnail_image__image"],
+                        "image_url": settings.MEDIA_URL + image["image_id__image"],
                 }),
 
         # TODO favorite section

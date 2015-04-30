@@ -8,18 +8,18 @@
 {% block block0_1_title_h1 %}<b>123</b> giorni <b>6</b> ore <b>33</b> minuti{% endblock block0_1_title_h1 %}
 {% block block0_1_title_h4 %}alla scadenza del concorso{% endblock block0_1_title_h4 %}
 
-{% block container4_title %}{{ user.first_name }} {{ user.last_name }}{% endblock container4_title %}
+{% block container4_title %}{{ user_info.first_name }} {{ user_info.last_name }}{% endblock container4_title %}
 
 {% block container4_content %}
 <div class="user_top_info_container">
 	<div class="user_top_info_block">
 		<span class="user_info_label">Età: </span>
-		<span class="user_info_value">{{ user.age }} anni</span>
+		<span class="user_info_value">{{ user_info.age }} anni</span>
 	</div>
 	<div class="user_top_info_space">&nbsp;</div>
 	<div class="user_top_info_block">
 		<span class="user_info_label">Sesso: </span>
-		<span class="user_info_value">{% if user.gender = "man" %}uomo{% elif user.gender = "woman" %}donna{% endif %}</span>
+		<span class="user_info_value">{% if user_info.gender = "man" %}uomo{% elif user_info.gender = "woman" %}donna{% endif %}</span>
 	</div>
 	<!--
 	<div class="user_top_info_space">&nbsp;</div>
@@ -197,6 +197,9 @@
 	elementsListObject.addFilter("show_limit", 5);
 
 	$(document).ready(function(){
+		// write bootstrap modal inside body tag
+		write_modal_inside_body_tag();
+
 		// single vote type click
 		$(".voteTypeClick").click(function(){
 			voteUserObject.addParam($(this).data("voteType"), $(this).data("voteValue"));
@@ -208,7 +211,7 @@
 
 		// perform vote action
 		$(".submitVoteButtonClickAction").click(function(){
-			voteUserObject.addParam("user_id", "{{ user.user_id }}");
+			voteUserObject.addParam("user_id", "{{ user_info.user_id }}");
 			voteUserObject.performVotingAction();
 
 			return false;
@@ -216,7 +219,7 @@
 
 		$(".loadMoreElementsAction").on("click", function(){
 			elementsListObject.setElementsListType("photobook");
-			elementsListObject.addFilter("user_id", "{{ user.user_id }}");
+			elementsListObject.addFilter("user_id", "{{ user_info.user_id }}");
 			elementsListObject.getElementsList();
 
 			return false;

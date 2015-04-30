@@ -135,7 +135,7 @@ def catwalk_profile(request, user_id):
     # logger.debug("info account(" + str(user_id) + "): " + str(account_info))
 
     context = {
-        "user" : account_info,
+        "user_info" : account_info,
         "user_contest_info" : contest_account_info,
         "user_already_voted" : user_already_voted,
         "profile_image_url" : profile_image_url,

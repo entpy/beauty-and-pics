@@ -8,6 +8,7 @@ from django.contrib.auth import authenticate, login
 from django.contrib.auth.models import User, Group
 from contest_app.models.contest_types import Contest_Type
 from contest_app.models.points import Point
+from account_app.models.images import Book
 from website.exceptions import *
 from beauty_and_pics.consts import project_constants
 from django.db.models import Q, F, Count, Sum
@@ -365,11 +366,24 @@ class Account(models.Model):
 
         return contest_account_info
 
-    # TODO: qui devo fornire anche l'immagine del profilo
     def get_top_five_contest_user(self):
         """Function to retrieve the top five contest user"""
+	book_obj = Book()
+	top_five_account = []
         filters_list = {"filter_name": "classification", "start_limit": "0", "show_limit": "5"}
-        return self.get_filtered_accounts_list(filters_list=filters_list)
+	filtered_elements = self.get_filtered_accounts_list(filters_list=filters_list)
+	for user_info in filtered_elements:
+	    # logger.debug("element list: " + str(user_info))
+	    top_five_account.append({
+	        "user_id": user_info["user__id"],
+	        "user_first_name": user_info["user__first_name"],
+		"user_last_name": user_info["user__last_name"],
+		"user_email": user_info.get("user__email"),
+		"user_profile_thumbnail_image_url": book_obj.get_profile_thumbnail_image_url(user_id=user_info["user__id"]),
+		"user_total_points": user_info.get("total_points"),
+	    }),
+
+        return top_five_account
 
     def get_filtered_accounts_list(self, filters_list=None):
         """Function to retrieve a list of filtere accounts"""

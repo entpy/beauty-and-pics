@@ -25,8 +25,19 @@
  */
 
 $(document).ready(function(){
-	$(".navbar-toggle").on("click", function(){
+	$("body").on("click",".navbar-toggle", function(){
 		$(".toggle_navigation").toggle();
+	});
+
+	$("body").on("click",".zoom-image", function(){
+		var imageUrl = $(this).data("fullimageUrl");
+		var bootstrapModal = $("#image_modal").modal();
+		bootstrapModal.find('.modal-body').html(getImageTemplateHtml(imageUrl));
+		// bootstrapModal.find('.modal-body').html("test");
+		// TODO far funzionare le immagini zoom nella pagina profilo privato,
+		//	controllare che tutte le immagini siano della giusta dimensione
+
+		return false;
 	});
 });
 
@@ -40,6 +51,15 @@ function randomInt(min, max) {
 	return Math.floor(Math.random() * max + min);
 }
 
+function getImageTemplateHtml(imageUrl) {
+	var imageTemplate = false;
+	if (imageUrl) {
+		imageTemplate = '<img style="width: 100%;" alt="Image preview" src="' + imageUrl + '">';
+	}
+
+	return imageTemplate
+}
+
 /* Function to retrieve current timestamp in seconds */
 function getCurrentTimestamp() {
 	var dateObj = new Date();
@@ -48,6 +68,33 @@ function getCurrentTimestamp() {
 
 	// return timestam in seconds
 	return Math.floor(current_timestamp / 1000);
+}
+
+/* Function to retrieve bootstrap modal html template */
+function get_bootstrap_modal_html() {
+	var bootstrapModal = "";
+	bootstrapModal += '<div id="image_modal" class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">';
+	bootstrapModal += '<div class="modal-dialog">';
+	bootstrapModal += '<div class="modal-content">';
+	bootstrapModal += '<div class="modal-header">';
+	bootstrapModal += '<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>';
+	bootstrapModal += '<h4 class="modal-title">&nbsp;</h4>';
+	bootstrapModal += '</div>';
+	bootstrapModal += '<div class="modal-body">';
+	bootstrapModal += '</div>';
+	bootstrapModal += '</div><!-- /.modal-content -->';
+	bootstrapModal += '</div><!-- /.modal-dialog -->';
+	bootstrapModal += '</div>';
+
+	return bootstrapModal;
+}
+
+/* Function to write bootstrap modal inside body tag */
+function write_modal_inside_body_tag() {
+	bootstrapModal = get_bootstrap_modal_html();
+	$("body").prepend(bootstrapModal);
+
+	return true;
 }
 
 /* Object to perform custom ajax action */
@@ -478,8 +525,8 @@ var elementsListObject = {
 		var items = "";
 		$.each(elementsList, function(index, singleElement) {
 			blockUrl = "/passerella/dettaglio-utente/" + singleElement.user_id;
-			blockImageUrl = singleElement.image_url;
-			items += elementsListObject.getSingleHtmlBlock(blockUrl, blockImageUrl);
+			blockThumbnailImageUrl = singleElement.thumbnail_image_url;
+			items += elementsListObject.getSingleHtmlBlock(blockUrl, blockThumbnailImageUrl);
 		});
 
 		// return jQuery object
@@ -505,19 +552,23 @@ var elementsListObject = {
 		$.each(elementsList, function(index, singleElement) {
 			blockUrl = "#";
 			// alert(singleElement.image_url);
+			blockThumbnailImageUrl = singleElement.thumbnail_image_url;
 			blockImageUrl = singleElement.image_url;
-			items += elementsListObject.getSingleHtmlBlock(blockUrl, blockImageUrl);
+			items += elementsListObject.getSingleHtmlBlock(blockUrl, blockThumbnailImageUrl, blockImageUrl, "zoom-image");
 		});
 
 		// return jQuery object
 		return $(items);
 	},
 
-	getSingleHtmlBlock : function(blockUrl, blockImageUrl) {
+	getSingleHtmlBlock : function(blockUrl, blockThumbnailImageUrl, blockImageUrl, imgTagClass) {
 
 		returnVar = "";
+		if (!imgTagClass) {
+			imgTagClass = "";
+		}
 
-		if (blockUrl && blockImageUrl) {
+		if (blockUrl && blockThumbnailImageUrl) {
 			// setting bootstrap block size
 			if (!this.bootstrapBlockSize) {
 				this.bootstrapBlockSize = true;
@@ -527,7 +578,7 @@ var elementsListObject = {
 			var sm_size = (this.bootstrapBlockSize["sm_size"] ? this.bootstrapBlockSize["sm_size"] : "3");
 			var xs_size = (this.bootstrapBlockSize["xs_size"] ? this.bootstrapBlockSize["xs_size"] : "6");
 			// build html block with link and image
-			var returnVar = '<div class="col-lg-' + lg_size + ' col-md-' + md_size + ' col-xs-' + xs_size + ' col-sm-' + sm_size + ' thumb"><a href="' + blockUrl + '" class="thumbnail"><img alt="" src="' + blockImageUrl + '" class="img-responsive"></a></div>'
+			var returnVar = '<div class="col-lg-' + lg_size + ' col-md-' + md_size + ' col-xs-' + xs_size + ' col-sm-' + sm_size + ' thumb"><a href="' + blockUrl + '" class="thumbnail"><img alt="" src="' + blockThumbnailImageUrl + '" data-fullimage-url="' + blockImageUrl + '" class="img-responsive ' + imgTagClass + '"></a></div>'
 		}
 
 		return returnVar;
