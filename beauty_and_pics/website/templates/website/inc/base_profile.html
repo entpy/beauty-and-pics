@@ -38,3 +38,10 @@
 
 {# custom page css #}
 {% block custom_css %}{% endblock %}
+
+{# contest info block #}
+{% block contest_info_block %}
+{% if contest_info %}
+<span class="contest_info_block display_none" data-contest-status="{{ contest_info.status }}" data-contest-time-delta="{{ contest_info.timedelta.total_seconds }}"></span>
+{% endif %}
+{% endblock %}

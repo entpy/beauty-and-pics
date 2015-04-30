@@ -33,13 +33,36 @@ $(document).ready(function(){
 		var imageUrl = $(this).data("fullimageUrl");
 		var bootstrapModal = $("#image_modal").modal();
 		bootstrapModal.find('.modal-body').html(getImageTemplateHtml(imageUrl));
-		// bootstrapModal.find('.modal-body').html("test");
-		// TODO far funzionare le immagini zoom nella pagina profilo privato,
-		//	controllare che tutte le immagini siano della giusta dimensione
 
 		return false;
 	});
+
+	// TODO: call every second
+	manageContestTimedelta();
 });
+
+// Avoid `console` errors in browsers that lack a console.
+(function() {
+    var method;
+    var noop = function () {};
+    var methods = [
+        'assert', 'clear', 'count', 'debug', 'dir', 'dirxml', 'error',
+        'exception', 'group', 'groupCollapsed', 'groupEnd', 'info', 'log',
+        'markTimeline', 'profile', 'profileEnd', 'table', 'time', 'timeEnd',
+        'timeStamp', 'trace', 'warn'
+    ];
+    var length = methods.length;
+    var console = (window.console = window.console || {});
+
+    while (length--) {
+        method = methods[length];
+
+        // Only stub undefined methods.
+        if (!console[method]) {
+            console[method] = noop;
+        }
+    }
+}());
 
 /* Function to read csrftoken from cookie */
 function readCsrftokenFromCookie() {
@@ -97,12 +120,46 @@ function write_modal_inside_body_tag() {
 	return true;
 }
 
+/* Function to manage contest timedelta (run this function every second)*/
+function manageContestTimedelta() {
+	// se esiste l'elemento con il timedelta lo calcolo e lo mostro,
+	// altimenti non sono in una pagina che richiede la visualizzazione
+	// del timedelta del contest
+	if ($(".contest_info_block").length) {
+		// retrieve timedelta string
+		var timedeltaString = buildContestTimedeltaString();
+		// write timedelta string inside container
+		writeContestTimedelta(timedeltaString);
+	}
+}
+
+/* Function to build contest expiring/start date string */
+function buildContestTimedeltaString() {
+	returnVar = false;
+	if ($(".contest_info_block").length) {
+		var contestStatus = $(".contest_info_block").data("contestStatus");
+		var timedelta = $(".contest_info_block").data("contestTimeDelta");
+
+		returnVar = timedelta;
+	}
+
+	return returnVar;
+}
+
+/* Function to write contest timedelta string inside html container*/
+function writeContestTimedelta(timedeltaString) {
+	var dateObj = new Date(timedeltaString);
+	// alert(dateObj);
+	// alert(timedeltaString*1);
+	// alert("timedelta: " + countdown(null, timedeltaString*1));
+}
+
 /* Object to perform custom ajax action */
 var customAjaxAction = {
 	__ajaxCallParams : false,
 	__ajaxCallActionName : false,
-	__ajaxSuccessCallbackFunction : function() { alert("callback success"); },
-	__ajaxErrorCallbackFunction : function() { alert("callback error"); },
+	__ajaxSuccessCallbackFunction : function() { },
+	__ajaxErrorCallbackFunction : function() { },
 	ajaxCallUrl : "/ajax/", // the ajax call url
 
 	/* Function to set action name */

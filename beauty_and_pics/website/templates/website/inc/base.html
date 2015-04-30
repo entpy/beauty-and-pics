@@ -269,12 +269,10 @@
 		{% endblock footer %}
 
 		<script src="{% static "website/js/vendor/bootstrap.min.js" %}"></script>
-		<script src="{% static "website/js/plugins.js" %}"></script>
-		<script src="{% static "website/js/vendor/masonry.pkgd.min.js" %}"></script>
-		<script src="{% static "website/js/vendor/imagesloaded.pkgd.min.js" %}"></script>
 		<script src="{% static "website/js/vendor/ajax_wrapper.js" %}"></script>
 		<script src="{% static "website/js/vendor/jquery.cookie.js" %}"></script>
 		<script src="{% static "website/js/vendor/json2.js" %}"></script>
+		<script src="{% static "website/js/vendor/countdown.min.js" %}"></script>
 		<script src="{% static "website/js/main.js" %}"></script>
 
 		{# Custom page script block #}
@@ -290,5 +288,6 @@
 			r.parentNode.insertBefore(e,r)}(window,document,'script','ga'));
 			ga('create','UA-XXXXX-X');ga('send','pageview');
 		</script>
+		{% block contest_info_block %}{% endblock %}
 	</body>
 </html>

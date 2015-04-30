@@ -7,7 +7,7 @@ from django.utils import timezone
 from contest_app.models.contest_types import Contest_Type
 from contest_app.models.metrics import Metric
 from beauty_and_pics.consts import project_constants
-import logging
+import logging, time
 
 # Get an instance of a logger
 logger = logging.getLogger(__name__)
@@ -136,20 +136,23 @@ class Contest(models.Model):
                 "hours": date.seconds // 3600, # 3600 = 60 min * 60 sec (sec in 1 hour)
                 "minutes": date.seconds // 60 % 60,
                 "seconds": date.seconds % 60,
-                "total_seconds": date.seconds,
+                "total_seconds": int(date.total_seconds()),
             }
 
         return return_var
 
-    def get_active_contests_end_time(self):
+    def get_active_contests_end_time(self, update_contests=False):
         """Function to retrieve end time info about all active constests"""
         return_var = {}
         # update contests
-        self.contest_manager()
+        if update_contests:
+            self.contest_manager()
         # list of all active contests
         for contest in Contest.objects.filter(status=project_constants.CONTEST_ACTIVE):
-            contest_expiring = contest.end_date - timezone.now()
-            return_var[contest.contest_type.code] = self.format_contest_time(date=contest_expiring)
+            # contest_expiring = contest.end_date - timezone.now()
+            # return_var[contest.contest_type.code] = self.format_contest_time(date=contest_expiring)
+            contest_expiring = contest.end_date.timetuple()
+            return_var[contest.contest_type.code] = int(time.mktime(contest_expiring) * 1000)
 
         # debug info only
         for contest in Contest.objects.filter(status=project_constants.CONTEST_ACTIVE):
@@ -157,15 +160,18 @@ class Contest(models.Model):
 
         return return_var
 
-    def get_opening_contests_start_time(self):
+    def get_opening_contests_start_time(self, update_contests=False):
         """Function to retrieve start time info about all opening constests"""
         return_var = {}
         # update contests
-        self.contest_manager()
+        if update_contests:
+            self.contest_manager()
         # list of all opening contests
         for contest in Contest.objects.filter(status=project_constants.CONTEST_OPENING):
-            contest_opening = contest.start_date - timezone.now()
-            return_var[contest.contest_type.code] = self.format_contest_time(date=contest_opening)
+            # contest_opening = contest.start_date - timezone.now()
+            # return_var[contest.contest_type.code] = self.format_contest_time(date=contest_opening)
+            contest_opening = contest.start_date
+            return_var[contest.contest_type.code] = int(time.mktime(contest_opening) * 1000)
 
         # debug info only
         for contest in Contest.objects.filter(status=project_constants.CONTEST_OPENING):
@@ -192,5 +198,25 @@ class Contest(models.Model):
             return_var = Contest.objects.get(status=project_constants.CONTEST_ACTIVE, contest_type__code=contest_type)
 	except Contest.DoesNotExist:
 	    pass
+
+        return return_var
+
+    def get_contest_info_about_type(self, contest_type):
+        """Function to retrieve contest info about contest_type"""
+        return_var = {}
+        if contest_type:
+            contest_status = self.get_contests_type_status(contest_type=contest_type)
+            if contest_status == project_constants.CONTEST_OPENING:
+                # return opening contest start_time
+                opening_contests = self.get_opening_contests_start_time()
+                if opening_contests.get(contest_type):
+                    return_var["timedelta"] = opening_contests[contest_type]
+                    return_var["status"] = project_constants.CONTEST_OPENING
+            elif contest_status == project_constants.CONTEST_ACTIVE:
+                # return active contest end_time
+                active_contests = self.get_active_contests_end_time()
+                if active_contests.get(contest_type):
+                    return_var["timedelta"] = active_contests[contest_type]
+                    return_var["status"] = project_constants.CONTEST_ACTIVE
 
         return return_var

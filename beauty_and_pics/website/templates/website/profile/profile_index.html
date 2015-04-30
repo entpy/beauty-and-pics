@@ -91,6 +91,9 @@
 	elementsListObject.addFilter("show_limit", 5);
 
 	$(document).ready(function(){
+		// write bootstrap modal inside body tag
+		write_modal_inside_body_tag();
+
 		$(".loadMoreElementsAction").on("click", function(){
 			elementsListObject.setElementsListType("photobook");
 			elementsListObject.addFilter("user_id", "{{ user_id }}");
@@ -100,7 +103,7 @@
 			return false;
 		});
 
-		//$(".loadMoreElementsAction").click();
+		$(".loadMoreElementsAction").click();
 	});
 
 	/* Function to update profile image */
