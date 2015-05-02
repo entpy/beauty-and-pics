@@ -17,8 +17,8 @@
 {% block custom_page_script %}{% endblock %}
 
 {# title block text #}
-{% block block0_1_title_h1 %}{% endblock %}
-{% block block0_1_title_h4 %}{% endblock %}
+{% block block0_1_title_h1 %}<span class="contest_timedelta_string_container"></span>{% endblock block0_1_title_h1 %}
+{% block block0_1_title_h4 %}<span class="contest_status_container"></span>{% endblock block0_1_title_h4 %}
 
 {# container title block #}
 {% block container4_title_block %}{% endblock %}
@@ -42,6 +42,6 @@
 {# contest info block #}
 {% block contest_info_block %}
 {% if contest_info %}
-<span class="contest_info_block display_none" data-contest-status="{{ contest_info.status }}" data-contest-time-delta="{{ contest_info.timedelta.total_seconds }}"></span>
+<span class="contest_info_block display_none" data-contest-status="{{ contest_info.status }}" data-contest-time-delta="{{ contest_info.timedelta }}"></span>
 {% endif %}
 {% endblock %}

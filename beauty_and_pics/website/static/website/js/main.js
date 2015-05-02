@@ -122,36 +122,63 @@ function write_modal_inside_body_tag() {
 
 /* Function to manage contest timedelta (run this function every second)*/
 function manageContestTimedelta() {
-	// se esiste l'elemento con il timedelta lo calcolo e lo mostro,
-	// altimenti non sono in una pagina che richiede la visualizzazione
-	// del timedelta del contest
 	if ($(".contest_info_block").length) {
-		// retrieve timedelta string
-		var timedeltaString = buildContestTimedeltaString();
-		// write timedelta string inside container
-		writeContestTimedelta(timedeltaString);
+		// buld and write timedelta string inside container
+		buildAndWriteContestTimedeltaString();
 	}
 }
 
 /* Function to build contest expiring/start date string */
-function buildContestTimedeltaString() {
-	returnVar = false;
-	if ($(".contest_info_block").length) {
-		var contestStatus = $(".contest_info_block").data("contestStatus");
-		var timedelta = $(".contest_info_block").data("contestTimeDelta");
+function buildAndWriteContestTimedeltaString() {
+	var contestStatus = $(".contest_info_block").data("contestStatus");
+	var timedelta = $(".contest_info_block").data("contestTimeDelta");
 
-		returnVar = timedelta;
-	}
+	countdown.setLabels(
+		' millisecondo| secondo| minuto| ora| giorno| settimana| mese| anno| decennio| secolo| millennio',
+		' millisecondi| secondi| minuti| ore| giorni| settimane| mesi| anni| decenni| secoli| millenni',
+		' e ',
+		'  '
+	);
 
-	return returnVar;
+	// countdown launch
+	runCountdown(timedelta, contestStatus)
+
+	// print contest status string
+	writeCountdownContestStatusString(contestStatus);
 }
 
-/* Function to write contest timedelta string inside html container*/
-function writeContestTimedelta(timedeltaString) {
-	var dateObj = new Date(timedeltaString);
-	// alert(dateObj);
-	// alert(timedeltaString*1);
-	// alert("timedelta: " + countdown(null, timedeltaString*1));
+/* Function to launch a countdown */
+function runCountdown(timedelta, contestStatus) {
+	if (timedelta && contestStatus) {
+		var timerId = countdown(timedelta * 1, function(ts) {
+			if (!ts.days && !ts.hours && !ts.minutes && !ts.seconds) {
+				// countdown finish
+				window.clearInterval(timerId);
+				setTimeout(function() { writeCountdownEndString(contestStatus); }, 1100);
+			}
+			$('.contest_timedelta_string_container').html(ts.toHTML());
+		}, countdown.DAYS|countdown.HOURS|countdown.MINUTES|countdown.SECONDS).toString();
+	}
+}
+
+/* Function to write contest status string */
+function writeCountdownContestStatusString(contestStatus) {
+	if (contestStatus == "active") {
+		$('.contest_status_container').html("alla chiusura del concorso");
+	} else if (contestStatus == "opening") {
+		$('.contest_status_container').html("all'apertura del concorso");
+	}
+}
+
+/* Function to write string at the countdown finish */
+function writeCountdownEndString(contestStatus) {
+	if (contestStatus == "active") {
+		$('.contest_timedelta_string_container').html("Il contest è stato appena chiuso!");
+		$('.contest_status_container').html("");
+	} else if (contestStatus == "opening") {
+		$('.contest_timedelta_string_container').html("Il contest è stato appena aperto!");
+		$('.contest_status_container').html("");
+	}
 }
 
 /* Object to perform custom ajax action */

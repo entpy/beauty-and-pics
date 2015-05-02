@@ -170,7 +170,7 @@ class Contest(models.Model):
         for contest in Contest.objects.filter(status=project_constants.CONTEST_OPENING):
             # contest_opening = contest.start_date - timezone.now()
             # return_var[contest.contest_type.code] = self.format_contest_time(date=contest_opening)
-            contest_opening = contest.start_date
+            contest_opening = contest.start_date.timetuple()
             return_var[contest.contest_type.code] = int(time.mktime(contest_opening) * 1000)
 
         # debug info only
@@ -212,6 +212,7 @@ class Contest(models.Model):
                 if opening_contests.get(contest_type):
                     return_var["timedelta"] = opening_contests[contest_type]
                     return_var["status"] = project_constants.CONTEST_OPENING
+		    logger.debug("apertura del contest[" + str(contest_type) + "]: " + str(return_var["timedelta"]))
             elif contest_status == project_constants.CONTEST_ACTIVE:
                 # return active contest end_time
                 active_contests = self.get_active_contests_end_time()

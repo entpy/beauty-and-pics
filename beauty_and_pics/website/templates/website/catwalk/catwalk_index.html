@@ -5,9 +5,6 @@
 
 {% block description %}Beauty and Pics: pagina index passerella{% endblock description %}
 
-{% block block0_1_title_h1 %}<b>123</b> giorni <b>6</b> ore <b>33</b> minuti{% endblock block0_1_title_h1 %}
-{% block block0_1_title_h4 %}alla scadenza del concorso{% endblock block0_1_title_h4 %}
-
 {% block container4_title %}La passerella{% endblock container4_title %}
 
 {% block container4_content %}
@@ -32,9 +29,14 @@
 {% endblock container4_content %}
 {% block custom_js %}
 <script>
+	elementsListObject.addFilter("show_limit", 10);
 	$(document).ready(function(){
 		$(".setFilterAction").click(function(){
 			elementsListObject.newElementList();
+			elementsListObject.addFilter("show_limit", 10);
+			$(".loadMoreElementsAction").click();
+
+			return false;
 		});
 
 		$(".loadMoreElementsAction").click(function(){
@@ -44,6 +46,8 @@
 
 			return false;
 		});
+
+		$(".loadMoreElementsAction").click();
 	});
 </script>
 {% endblock custom_js %}
