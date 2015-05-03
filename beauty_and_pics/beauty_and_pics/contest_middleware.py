@@ -7,19 +7,6 @@ logger = logging.getLogger(__name__)
 
 class ContestMiddleware(object):
     def process_request(self, request):
-        """
-        request.say_hi = "Hi!!"
-        logger.debug("saluto")
-
-        """
-        Contest_obj = Contest()
-        Contest_obj.contest_manager()
-        request.say_hi = "Hi!!"
-
-    """
-    def process_view(self, request, view_func, view_args, view_kwargs):
-        #request = response = view_func(request, *view_args, **view_kwargs)
-        request.session["say_hi"] = "Hi!!"
-
-        return request
-    """
+        contest_obj = Contest()
+        # contest manager function
+        contest_obj.contest_manager()

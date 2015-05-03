@@ -30,6 +30,19 @@ class Contest_Type(models.Model):
 
         return return_var
 
+    def get_contest_type_code_by_id(self, contest_type_id=None):
+        """Function to retrieve contest type code form contest type id"""
+        return_var = None
+        if contest_type_id:
+            try:
+                contest_obj = Contest_Type.objects.get(pk=contest_type_id)
+            except Contest_Type.DoesNotExist:
+                pass
+            else:
+                return_var = contest_obj["code"]
+
+        return return_var
+
     def create_default(self):
         """Function to create default contest types"""
         # create man_contest, if not exists

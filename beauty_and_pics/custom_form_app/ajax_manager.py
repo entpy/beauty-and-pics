@@ -11,6 +11,7 @@ from custom_form_app.forms.area51_form import *
 from beauty_and_pics.consts import project_constants
 from contest_app.models.votes import Vote
 from account_app.models import *
+from contest_app.models import Contest
 from upload_image_box.models import cropUploadedImages
 import logging, json
 
@@ -24,10 +25,10 @@ class ajaxManager():
 
     def __init__(self, request=None):
         # list of valid methods
-	self.__valid_action_list += ('form_validation',)
-	self.__valid_action_list += ('elements_list',)
-	self.__valid_action_list += ('perform_voting',)
-	self.__valid_action_list += ('save_image',)
+        self.__valid_action_list += ('form_validation',)
+        self.__valid_action_list += ('elements_list',)
+        self.__valid_action_list += ('perform_voting',)
+        self.__valid_action_list += ('save_image',)
 
         # retrieve action to perform
         self.ajax_action = request.POST.get("ajax_action")
@@ -111,7 +112,9 @@ class ajaxManager():
 
         # catwalker section
         if elements_list_type == "catwalker":
-            filtered_elements = Account_obj.get_filtered_accounts_list(filters_list=self.request.POST)
+            # retrieve current contest_type
+            contest_obj = Contest()
+            filtered_elements = Account_obj.get_filtered_accounts_list(filters_list=self.request.POST, contest_type=contest_obj.get_contest_type_from_session(request=self.request))
             Book_obj = Book()
 
             for user_info in filtered_elements:
@@ -127,9 +130,6 @@ class ajaxManager():
         if elements_list_type == "photobook":
             Book_obj = Book()
             user_id = self.request.POST.get("user_id")
-            # autenticated_user_data = Account_obj.get_autenticated_user_data(request=self.request)
-            # TODO: se sono nella pagina profilo del catwalk devo vedere l'id
-            # in GET e non quello settato in sessione..mmmh
             filtered_elements = Book_obj.get_photobook_list(user_id=user_id, filters_list=self.request.POST)
 
             for image in filtered_elements:
@@ -164,37 +164,37 @@ class ajaxManager():
         logger.debug("ajax_function: @@perform_voting@@")
         logger.debug("parametri della chiamata: " + str(self.request.POST))
 
-	# build votation dictionary
+        # build votation dictionary
         votation_data = {}
         votation_data["user_id"] = self.request.POST.get("user_id")
         votation_data["global_vote_points"] = self.request.POST.get("global_vote_points")
         votation_data["smile_vote_points"] = self.request.POST.get("smile_vote_points")
         votation_data["look_vote_points"] = self.request.POST.get("look_vote_points")
-	error_msg = ""
+        error_msg = ""
 
-	try:
-	    vote_obj = Vote()
-	    vote_obj.perform_votation(votation_data, self.request.POST.get("user_id"), self.request.META["REMOTE_ADDR"])
-	except VoteUserIdMissingError:
-	    error_msg = "Non è stato possibile eseguire la votazione, sii gentile, contatta l'amministratore."
-	except VoteMetricMissingError:
-	    error_msg = "Seleziona un valore per ogni metrica."
-	except VoteMetricWrongValueError:
-	    error_msg = "I valori per ogni metrica devono essere compresi tra 1 e 5."
-	except ContestNotActiveError:
-	    error_msg = "Non è possibile votare fino a che il contest non sarà aperto."
-	except UserAlreadyVotedError:
-	    error_msg = "Non puoi votare più volte lo stesso utente nell'arco di 48 ore."
-	else:
-	    # votation performing seems ok
-	    pass
+        try:
+            vote_obj = Vote()
+            vote_obj.perform_votation(votation_data, self.request.POST.get("user_id"), self.request.META["REMOTE_ADDR"])
+        except VoteUserIdMissingError:
+            error_msg = "Non è stato possibile eseguire la votazione, sii gentile, contatta l'amministratore."
+        except VoteMetricMissingError:
+            error_msg = "Seleziona un valore per ogni metrica."
+        except VoteMetricWrongValueError:
+            error_msg = "I valori per ogni metrica devono essere compresi tra 1 e 5."
+        except ContestNotActiveError:
+            error_msg = "Non è possibile votare fino a che il contest non sarà aperto."
+        except UserAlreadyVotedError:
+            error_msg = "Non puoi votare più volte lo stesso utente nell'arco di 48 ore."
+        else:
+            # votation performing seems ok
+            pass
 
-	if error_msg:
-	    data = {'error' : True, 'message': error_msg }
-	else:
-	    data = {'success' : True, 'message': "Grazie per aver votato. Tieni d'occhio la classifica!" }
+        if error_msg:
+            data = {'error' : True, 'message': error_msg }
+        else:
+            data = {'success' : True, 'message': "Grazie per aver votato. Tieni d'occhio la classifica!" }
 
-	# build JSON response
+        # build JSON response
         json_data_string = json.dumps(data)
         self.set_json_response(json_response=json_data_string)
 
@@ -213,19 +213,19 @@ class ajaxManager():
         image_data["image_type"] = self.request.POST.get("image_type")
         image_data["user"] = self.request.user
 
-	# TODO: proseguire con i controlli (forse, è tardi per pensarci)
+        # TODO: proseguire con i controlli (forse, è tardi per pensarci)
         try:
             saved_image_url = book_obj.save_book_image(image_data=image_data)
         except croppedImageDoesNotExistError:
             logger.error("Errore nell'upload dell'immagine profilo, l'immagine richiesta non esiste nella tabella cropUploadedImages: " + str(self.request) + " | error code: " + str(croppedImageDoesNotExistError.get_error_code))
             data = {'error' : True, 'message': "Errore inaspettato (codice=" + str(croppedImageDoesNotExistError.get_error_code) + "), sii gentile contatta l'amministratore!" }
-	except imageTypeWrongError:
+        except imageTypeWrongError:
             logger.error("Image type inserito non valido: " + str(self.request) + " | error code: " + str(imageTypeWrongError.get_error_code))
             data = {'error' : True, 'message': "Errore inaspettato (codice=" + str(imageTypeWrongError.get_error_code) + "), sii gentile contatta l'amministratore!" }
         else:
             data = {'success' : True, 'image_url': saved_image_url, 'message': "salvato immagine profilo!" }
 
-	# build JSON response
+        # build JSON response
         json_data_string = json.dumps(data)
         self.set_json_response(json_response=json_data_string)
 

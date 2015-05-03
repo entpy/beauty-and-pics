@@ -13,15 +13,15 @@ def common_contest_processors(request):
     account_obj =  Account()
     book_obj = Book()
     contest_obj = Contest()
+    logger.info("@@@current contest_type: " + str(contest_obj.get_contest_type_from_session(request=request)))
 
     ### template context vars {{{ ###
     # top five user ranking
-    top_five_account = account_obj.get_top_five_contest_user()
+    top_five_account = account_obj.get_top_five_contest_user(contest_type=contest_obj.get_contest_type_from_session(request=request))
     # profile thumbnail image url
     profile_thumbnail_image_url = None
     # current contest start_time
-    # TODO: fare una funzione che restituisca il contest_type corrente
-    contest_info = contest_obj.get_contest_info_about_type(contest_type=project_constants.MAN_CONTEST)
+    contest_info = contest_obj.get_contest_info_about_type(contest_type=contest_obj.get_contest_type_from_session(request=request))
     ### template context vars }}} ###
 
     autenticated_user_data = account_obj.get_autenticated_user_data(request=request)

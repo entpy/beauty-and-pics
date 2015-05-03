@@ -1,28 +1,26 @@
-/**
- * 	Author: Entpy Software <developer at entpy dot com>
- * 	Version: 0.1.0
- *
- * 	License: GPL_v3 {Link: http://gplv3.fsf.org/}
- *
- *	Permission is hereby granted, free of charge, to any person obtaining
- *	a copy of this software and associated documentation files (the
- *	"Software"), to deal in the Software without restriction, including
- *	without limitation the rights to use, copy, modify, merge, publish,
- *	distribute, sublicense, and/or sell copies of the Software, and to
- *	permit persons to whom the Software is furnished to do so, subject to
- *	the following conditions:
- *
- *	The above copyright notice and this permission notice shall be
- *	included in all copies or substantial portions of the Software.
- *
- *	THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
- *	EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
- *	MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
- *      NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
- *      LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
- *      OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
- *      WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
- */
+/*
+	The MIT License (MIT)
+
+	Copyright (c) 2015 entpy software
+
+	Permission is hereby granted, free of charge, to any person obtaining a copy
+	of this software and associated documentation files (the "Software"), to deal
+	in the Software without restriction, including without limitation the rights
+	to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+	copies of the Software, and to permit persons to whom the Software is
+	furnished to do so, subject to the following conditions:
+
+	The above copyright notice and this permission notice shall be included in all
+	copies or substantial portions of the Software.
+
+	THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+	IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+	FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+	AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+	LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+	OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+	SOFTWARE.
+*/
 
 $(document).ready(function(){
 	$("body").on("click",".navbar-toggle", function(){
@@ -31,13 +29,13 @@ $(document).ready(function(){
 
 	$("body").on("click",".zoom-image", function(){
 		var imageUrl = $(this).data("fullimageUrl");
-		var bootstrapModal = $("#image_modal").modal();
+		var bootstrapModal = $(".bootstrap_modal").modal();
 		bootstrapModal.find('.modal-body').html(getImageTemplateHtml(imageUrl));
 
 		return false;
 	});
 
-	// TODO: call every second
+	// calculate contest start/expiring date
 	manageContestTimedelta();
 });
 
@@ -96,7 +94,7 @@ function getCurrentTimestamp() {
 /* Function to retrieve bootstrap modal html template */
 function get_bootstrap_modal_html() {
 	var bootstrapModal = "";
-	bootstrapModal += '<div id="image_modal" class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">';
+	bootstrapModal += '<div class="bootstrap_modal modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">';
 	bootstrapModal += '<div class="modal-dialog">';
 	bootstrapModal += '<div class="modal-content">';
 	bootstrapModal += '<div class="modal-header">';
@@ -112,10 +110,12 @@ function get_bootstrap_modal_html() {
 	return bootstrapModal;
 }
 
-/* Function to write bootstrap modal inside body tag */
+/* Function to write bootstrap modal inside body tag, only if not exists */
 function write_modal_inside_body_tag() {
-	bootstrapModal = get_bootstrap_modal_html();
-	$("body").prepend(bootstrapModal);
+    if (!$(".bootstrap_modal").length) {
+        bootstrapModal = get_bootstrap_modal_html();
+        $("body").prepend(bootstrapModal);
+    }
 
 	return true;
 }

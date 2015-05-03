@@ -47,36 +47,36 @@ class Account(models.Model):
 
     def check_if_email_exists(self, email_to_check=None):
         """Function to check if an email already exists"""
-	return_var = None
-	try:
-	    User.objects.get(email=email_to_check)
-	    return_var = True
-	except User.DoesNotExist:
-	    return_var = False
+        return_var = None
+        try:
+            User.objects.get(email=email_to_check)
+            return_var = True
+        except User.DoesNotExist:
+            return_var = False
 
 	return return_var
 
     def get_user_about_email(self, email=None):
         """Function to retrieve user about an email"""
-	return_var = None
-	try:
-	    return_var = User.objects.get(email=email)
-	except User.DoesNotExist:
-	    return_var = False
+        return_var = None
+        try:
+            return_var = User.objects.get(email=email)
+        except User.DoesNotExist:
+            return_var = False
             raise
 
-	return return_var
+        return return_var
 
     def get_user_about_id(self, user_id=None):
         """Function to retrieve user about id"""
-	return_var = None
-	try:
-	    return_var = User.objects.get(pk=user_id)
-	except User.DoesNotExist:
-	    return_var = False
+        return_var = None
+        try:
+            return_var = User.objects.get(pk=user_id)
+        except User.DoesNotExist:
+            return_var = False
             raise
 
-	return return_var
+        return return_var
 
     def register_account(self, user_info=None):
         """Function to register a new account"""
@@ -96,16 +96,16 @@ class Account(models.Model):
 
 	    logger.debug("tipo di contest rilevato: '" + str(user_info["contest_type"]) + "'")
 
-            # insert addictional data inside User and Account models
-            account_obj.update_data(save_data=user_info, user_obj=new_user)
-            return_var = True
+        # insert addictional data inside User and Account models
+        account_obj.update_data(save_data=user_info, user_obj=new_user)
+        return_var = True
 
         return return_var
 
     def create_user_account(self, email=None, password=None):
         """Function to create user and related account"""
-	return_var = False
-	account_obj = Account()
+        return_var = False
+        account_obj = Account()
         if email and password:
             if not self.check_if_email_exists(email_to_check=email):
                 account_obj.user = User.objects.create_user(username=self.__email_to_username(email), email=email, password=password)
@@ -123,9 +123,9 @@ class Account(models.Model):
     def __create_defaul_user_group(self):
         """Function to [create if not exists and] retrieve catwalk_user group"""
         return_var = None
-	try:
-	    return_var = Group.objects.get(name=project_constants.CATWALK_GROUP_NAME)
-	except Group.DoesNotExist:
+        try:
+            return_var = Group.objects.get(name=project_constants.CATWALK_GROUP_NAME)
+        except Group.DoesNotExist:
             # group must be created
             group = Group(name=project_constants.CATWALK_GROUP_NAME)
             group.save()
@@ -175,7 +175,7 @@ class Account(models.Model):
 
     def update_data(self, save_data=None, user_obj=None):
         """Function to save data inside db"""
-	return_var = False
+        return_var = False
 
         if save_data and user_obj:
             # save User model addictional informations
@@ -214,7 +214,7 @@ class Account(models.Model):
 
     def create_date(self, date_dictionary=None, get_isoformat=False):
         """Function to create birthday date starting from dd, mm, yyyy"""
-	return_var = False
+        return_var = False
 
         if date_dictionary:
             day = date_dictionary.get("day")
@@ -222,7 +222,7 @@ class Account(models.Model):
             year = date_dictionary.get("year")
 
             # building birthday date
-	    if (day and month and year):
+            if (day and month and year):
                 if get_isoformat:
                     return_var = date(year=int(year), month=int(month), day=int(day)).isoformat()
                 else:
@@ -232,7 +232,7 @@ class Account(models.Model):
 
     def create_login_session(self, email=None, password=None, request=None):
         """Function to create a login session (logging user inside website)"""
-	return_var = False
+        return_var = False
 
         if (email and password and request):
             # Use custom email-password backend to check if the email/password
@@ -276,8 +276,8 @@ class Account(models.Model):
         """Function to retrieve the email address about current logged in user"""
         return_var = False
         if request and request.user.is_authenticated():
-	    return_var = request.user.email
-	    logger.info("email of current logged in user: " + str(return_var))
+            return_var = request.user.email
+            logger.info("email of current logged in user: " + str(return_var))
 
         return return_var
 
@@ -289,7 +289,7 @@ class Account(models.Model):
 
         if request and request.user.is_authenticated():
             return_var = self.get_user_data_as_dictionary(user_obj=request.user)
-	    # logger.info("data about current logged in user: " + str(return_var))
+            # logger.info("data about current logged in user: " + str(return_var))
 
         return return_var
 
@@ -343,7 +343,7 @@ class Account(models.Model):
         contest_account_info["total_points"] = 0
 
         # retrieve account contest info
-	user_metric_points = point_obj.get_single_user_contest_info(user_id=user_id)
+        user_metric_points = point_obj.get_single_user_contest_info(user_id=user_id)
 
         if user_metric_points:
             for single_metric in user_metric_points:
@@ -360,91 +360,93 @@ class Account(models.Model):
 
         # totale punti per ogni utente -> QUESTA FUNZIONE NON VA QUI
         """
-	total_points = Point.objects.values('user__id').filter(contest__contest_type=F('user__account__contest_type'),
+        total_points = Point.objects.values('user__id').filter(contest__contest_type=F('user__account__contest_type'),
                 contest__status=project_constants.CONTEST_ACTIVE).annotate(totale=Sum('points'))
         """
 
         return contest_account_info
 
-    def get_top_five_contest_user(self):
+    def get_top_five_contest_user(self, contest_type=None):
         """Function to retrieve the top five contest user"""
-	book_obj = Book()
-	top_five_account = []
+        book_obj = Book()
+        top_five_account = []
         filters_list = {"filter_name": "classification", "start_limit": "0", "show_limit": "5"}
-	filtered_elements = self.get_filtered_accounts_list(filters_list=filters_list)
-	for user_info in filtered_elements:
-	    # logger.debug("element list: " + str(user_info))
-	    top_five_account.append({
-	        "user_id": user_info["user__id"],
-	        "user_first_name": user_info["user__first_name"],
-		"user_last_name": user_info["user__last_name"],
-		"user_email": user_info.get("user__email"),
-		"user_profile_thumbnail_image_url": book_obj.get_profile_thumbnail_image_url(user_id=user_info["user__id"]),
-		"user_total_points": user_info.get("total_points"),
-	    }),
+        filtered_elements = self.get_filtered_accounts_list(filters_list=filters_list, contest_type=contest_type)
+        for user_info in filtered_elements:
+            # logger.debug("element list: " + str(user_info))
+            top_five_account.append({
+                "user_id": user_info["user__id"],
+                "user_first_name": user_info["user__first_name"],
+                "user_last_name": user_info["user__last_name"],
+                "user_email": user_info.get("user__email"),
+                "user_profile_thumbnail_image_url": book_obj.get_profile_thumbnail_image_url(user_id=user_info["user__id"]),
+                "user_total_points": user_info.get("total_points"),
+            }),
 
         return top_five_account
 
-    def get_filtered_accounts_list(self, filters_list=None):
+    def get_filtered_accounts_list(self, filters_list=None, contest_type=None):
         """Function to retrieve a list of filtere accounts"""
         return_var = False
-	# logger.debug("NOME FILTRO: " + str(filters_list["filter_name"]))
+        # logger.debug("NOME FILTRO: " + str(filters_list["filter_name"]))
 
-	# filter only catwalker users
+        # filter only catwalker users
 
-	# order by "latest_registered" filter
-	if filters_list["filter_name"] == "latest_registered":
-                return_var = Account.objects.values('user__first_name', 'user__last_name', 'user__email', 'user__id').filter(user__groups__name=project_constants.CATWALK_GROUP_NAME)
-        	return_var = return_var.order_by('-user__account__creation_date')
+        # order by "latest_registered" filter
+        if filters_list["filter_name"] == "latest_registered":
+            return_var = Account.objects.values('user__first_name', 'user__last_name', 'user__email', 'user__id').filter(user__groups__name=project_constants.CATWALK_GROUP_NAME, contest_type__code=contest_type)
+            return_var = return_var.order_by('-user__account__creation_date')
 
-	# order by "classification" filter
-	if filters_list["filter_name"] == "classification":
-		# "contest__status" to identify point about current contest
-                # più leggera ma non mostra gli utenti che non hanno ancora punti
-                return_var = Point.objects.values('user__first_name', 'user__last_name', 'user__email', 'user__id').filter(user__groups__name=project_constants.CATWALK_GROUP_NAME, contest__status=project_constants.CONTEST_ACTIVE).annotate(total_points=Sum('points'))
-                # più pesante e mostra anche gli utenti che non hanno ancora punti
-                # return_var = Account.objects.values('user__first_name', 'user__last_name', 'user__email', 'user__id').filter(user__groups__name=project_constants.CATWALK_GROUP_NAME, contest_type__contest__status=project_constants.CONTEST_ACTIVE).annotate(total_points=Sum('user__point__points'))
-                return_var = return_var.order_by('-total_points', 'user__id')
+        # order by "classification" filter
+        if filters_list["filter_name"] == "classification":
+            # "contest__status" to identify point about current contest
+            # più leggera ma non mostra gli utenti che non hanno ancora punti
+            return_var = Point.objects.values('user__first_name', 'user__last_name', 'user__email', 'user__id').filter(user__groups__name=project_constants.CATWALK_GROUP_NAME, contest__status=project_constants.CONTEST_ACTIVE, contest__contest_type__code=contest_type).annotate(total_points=Sum('points'))
+            # più pesante e mostra anche gli utenti che non hanno ancora punti
+            # return_var = Account.objects.values('user__first_name', 'user__last_name', 'user__email', 'user__id').filter(user__groups__name=project_constants.CATWALK_GROUP_NAME, contest_type__contest__status=project_constants.CONTEST_ACTIVE).annotate(total_points=Sum('user__point__points'))
+            return_var = return_var.order_by('-total_points', 'user__id')
 
-	# order by "most_beautiful_smile" filter
-	if filters_list["filter_name"] == "most_beautiful_smile":
-		# "contest__status" to identify point about current contest
-                # più leggera ma non mostra gli utenti che non hanno ancora punti
-                return_var = Point.objects.values('user__first_name', 'user__last_name', 'user__email', 'user__id').filter(user__groups__name=project_constants.CATWALK_GROUP_NAME, contest__status=project_constants.CONTEST_ACTIVE, metric__name=project_constants.VOTE_METRICS_LIST["smile_metric"]).annotate(total_points=Sum('points'))
-                # più pesante e mostra anche gli utenti che non hanno ancora punti
-                # return_var = Account.objects.values('user__first_name', 'user__last_name', 'user__email', 'user__id').filter(Q(user__point__metric__name=project_constants.VOTE_METRICS_LIST["smile_metric"]) | Q(user__point__isnull=True), user__groups__name=project_constants.CATWALK_GROUP_NAME, contest_type__contest__status=project_constants.CONTEST_ACTIVE).annotate(total_points=Sum('user__point__points'))
-                return_var = return_var.order_by('-total_points', 'user__id')
+        # order by "most_beautiful_smile" filter
+        if filters_list["filter_name"] == "most_beautiful_smile":
+            # "contest__status" to identify point about current contest
+            # più leggera ma non mostra gli utenti che non hanno ancora punti
+            return_var = Point.objects.values('user__first_name', 'user__last_name', 'user__email', 'user__id').filter(user__groups__name=project_constants.CATWALK_GROUP_NAME, contest__status=project_constants.CONTEST_ACTIVE, contest__contest_type=contest_type__code, metric__name=project_constants.VOTE_METRICS_LIST["smile_metric"]).annotate(total_points=Sum('points'))
+            # più pesante e mostra anche gli utenti che non hanno ancora punti
+            # return_var = Account.objects.values('user__first_name', 'user__last_name', 'user__email', 'user__id').filter(Q(user__point__metric__name=project_constants.VOTE_METRICS_LIST["smile_metric"]) | Q(user__point__isnull=True), user__groups__name=project_constants.CATWALK_GROUP_NAME, contest_type__contest__status=project_constants.CONTEST_ACTIVE).annotate(total_points=Sum('user__point__points'))
+            return_var = return_var.order_by('-total_points', 'user__id')
 
-	# order by "look_more_beautiful" filter
-	if filters_list["filter_name"] == "look_more_beautiful":
-		# "contest__status" to identify point about current contest
-                # più leggera ma non mostra gli utenti che non hanno ancora punti
-                return_var = Point.objects.values('user__first_name', 'user__last_name', 'user__email', 'user__id').filter(user__groups__name=project_constants.CATWALK_GROUP_NAME, contest__status=project_constants.CONTEST_ACTIVE, metric__name=project_constants.VOTE_METRICS_LIST["look_metric"]).annotate(total_points=Sum('points'))
-                # più pesante e mostra anche gli utenti che non hanno ancora punti
-                # return_var = Account.objects.values('user__first_name', 'user__last_name', 'user__email', 'user__id').filter(user__groups__name=project_constants.CATWALK_GROUP_NAME, contest_type__contest__status=project_constants.CONTEST_ACTIVE).filter(Q(user__point__metric__name=project_constants.VOTE_METRICS_LIST["look_metric"]) | Q(user__point__metric__isnull=True)).annotate(total_points=Sum('user__point__points'))
-                return_var = return_var.order_by('-total_points', 'user__id')
+        # order by "look_more_beautiful" filter
+        if filters_list["filter_name"] == "look_more_beautiful":
+            # "contest__status" to identify point about current contest
+            # più leggera ma non mostra gli utenti che non hanno ancora punti
+            return_var = Point.objects.values('user__first_name', 'user__last_name', 'user__email', 'user__id').filter(user__groups__name=project_constants.CATWALK_GROUP_NAME, contest__status=project_constants.CONTEST_ACTIVE, contest__contest_type=contest_type__code, metric__name=project_constants.VOTE_METRICS_LIST["look_metric"]).annotate(total_points=Sum('points'))
+            # più pesante e mostra anche gli utenti che non hanno ancora punti
+            # return_var = Account.objects.values('user__first_name', 'user__last_name', 'user__email', 'user__id').filter(user__groups__name=project_constants.CATWALK_GROUP_NAME, contest_type__contest__status=project_constants.CONTEST_ACTIVE).filter(Q(user__point__metric__name=project_constants.VOTE_METRICS_LIST["look_metric"]) | Q(user__point__metric__isnull=True)).annotate(total_points=Sum('user__point__points'))
+            return_var = return_var.order_by('-total_points', 'user__id')
 
-	# limits filter
-	#logger.debug("limite da: " + str(filters_list["start_limit"]))
-	#logger.debug("limite numero elementi: " + str(filters_list["show_limit"]))
-	return_var = return_var[filters_list["start_limit"]:filters_list["show_limit"]]
+        # limits filter
+        #logger.debug("limite da: " + str(filters_list["start_limit"]))
+        #logger.debug("limite numero elementi: " + str(filters_list["show_limit"]))
+        return_var = return_var[filters_list["start_limit"]:filters_list["show_limit"]]
 
-	#logger.debug("@@@: " + str(return_var))
+        #logger.debug("@@@: " + str(return_var))
 
         return return_var
 
+    # TODO: filtrare il contest type
     def get_user_contest_ranking(self, user_id=None):
         """Function to retrieve current user contest ranking"""
         cursor = connection.cursor()
-	# questo potrebbe non piacere a molti -> http://stackoverflow.com/questions/18846174/django-detect-database-backend
-	if connection.vendor == "postgresql":
-		# PostgreSQL query
-		cursor.execute('SELECT "ranking_table"."ranking", "user_id" FROM( SELECT row_number() OVER (ORDER BY SUM("contest_app_point"."points") DESC) as "ranking", "contest_app_point"."user_id", SUM("contest_app_point"."points") AS "total_points" FROM "contest_app_point" INNER JOIN "auth_user" ON ( "contest_app_point"."user_id" = "auth_user"."id" ) INNER JOIN "auth_user_groups" ON ( "auth_user"."id" = "auth_user_groups"."user_id" ) INNER JOIN "auth_group" ON ( "auth_user_groups"."group_id" = "auth_group"."id" ) INNER JOIN "contest_app_contest" ON ( "contest_app_point"."contest_id" = "contest_app_contest"."id_contest" ) WHERE "auth_group"."name" = \'catwalk_user\' AND "contest_app_contest"."status" = \'active\' GROUP BY "contest_app_point"."user_id" ORDER BY "total_points" DESC, "contest_app_point"."user_id" ASC) AS "ranking_table" WHERE "user_id" = %s', [user_id])
-	else:
-		# MySQL query
-		cursor.execute("SET @row_number:=0;")
-		# cursor.execute("SELECT `ranking_table`.`ranking` FROM (SELECT @row_number:=@row_number+1 AS `ranking`, `contest_app_point`.`user_id`, SUM(`contest_app_point`.`points`) AS `total_points` FROM `contest_app_point` INNER JOIN `auth_user` ON ( `contest_app_point`.`user_id` = `auth_user`.`id` ) INNER JOIN `auth_user_groups` ON ( `auth_user`.`id` = `auth_user_groups`.`user_id` ) INNER JOIN `auth_group` ON ( `auth_user_groups`.`group_id` = `auth_group`.`id` ) INNER JOIN `contest_app_contest` ON ( `contest_app_point`.`contest_id` = `contest_app_contest`.`id_contest` ) WHERE (`auth_group`.`name` = 'catwalk_user' AND `contest_app_contest`.`status` = 'active') GROUP BY `contest_app_point`.`user_id` ORDER BY `total_points` DESC, `contest_app_point`.`user_id` ASC) AS `ranking_table` WHERE `user_id` = %s", [user_id])
-                cursor.execute("SELECT `ranking` FROM (SELECT @row_number:=@row_number+1 AS `ranking`, `user_id`, `total_points` FROM (SELECT `contest_app_point`.`user_id`, SUM(`contest_app_point`.`points`) AS `total_points` FROM `contest_app_point` INNER JOIN `auth_user` ON ( `contest_app_point`.`user_id` = `auth_user`.`id` ) INNER JOIN `auth_user_groups` ON ( `auth_user`.`id` = `auth_user_groups`.`user_id` ) INNER JOIN `auth_group` ON ( `auth_user_groups`.`group_id` = `auth_group`.`id` ) INNER JOIN `contest_app_contest` ON ( `contest_app_point`.`contest_id` = `contest_app_contest`.`id_contest` ) WHERE (`auth_group`.`name` = 'catwalk_user' AND `contest_app_contest`.`status` = 'active') GROUP BY `contest_app_point`.`user_id` ORDER BY `total_points` DESC, `contest_app_point`.`user_id` ASC) AS `ranking_table`) AS `user_ranking` WHERE `user_id` = %s", [user_id])
+        # questo potrebbe non piacere a molti -> http://stackoverflow.com/questions/18846174/django-detect-database-backend
+        if connection.vendor == "postgresql":
+            # PostgreSQL query
+            cursor.execute('SELECT "ranking_table"."ranking", "user_id" FROM( SELECT row_number() OVER (ORDER BY SUM("contest_app_point"."points") DESC) as "ranking", "contest_app_point"."user_id", SUM("contest_app_point"."points") AS "total_points" FROM "contest_app_point" INNER JOIN "auth_user" ON ( "contest_app_point"."user_id" = "auth_user"."id" ) INNER JOIN "auth_user_groups" ON ( "auth_user"."id" = "auth_user_groups"."user_id" ) INNER JOIN "auth_group" ON ( "auth_user_groups"."group_id" = "auth_group"."id" ) INNER JOIN "contest_app_contest" ON ( "contest_app_point"."contest_id" = "contest_app_contest"."id_contest" ) WHERE "auth_group"."name" = \'catwalk_user\' AND "contest_app_contest"."status" = \'active\' GROUP BY "contest_app_point"."user_id" ORDER BY "total_points" DESC, "contest_app_point"."user_id" ASC) AS "ranking_table" WHERE "user_id" = %s', [user_id])
+        else:
+            # MySQL query
+            cursor.execute("SET @row_number:=0;")
+            # cursor.execute("SELECT `ranking_table`.`ranking` FROM (SELECT @row_number:=@row_number+1 AS `ranking`, `contest_app_point`.`user_id`, SUM(`contest_app_point`.`points`) AS `total_points` FROM `contest_app_point` INNER JOIN `auth_user` ON ( `contest_app_point`.`user_id` = `auth_user`.`id` ) INNER JOIN `auth_user_groups` ON ( `auth_user`.`id` = `auth_user_groups`.`user_id` ) INNER JOIN `auth_group` ON ( `auth_user_groups`.`group_id` = `auth_group`.`id` ) INNER JOIN `contest_app_contest` ON ( `contest_app_point`.`contest_id` = `contest_app_contest`.`id_contest` ) WHERE (`auth_group`.`name` = 'catwalk_user' AND `contest_app_contest`.`status` = 'active') GROUP BY `contest_app_point`.`user_id` ORDER BY `total_points` DESC, `contest_app_point`.`user_id` ASC) AS `ranking_table` WHERE `user_id` = %s", [user_id])
+            cursor.execute("SELECT `ranking` FROM (SELECT @row_number:=@row_number+1 AS `ranking`, `user_id`, `total_points` FROM (SELECT `contest_app_point`.`user_id`, SUM(`contest_app_point`.`points`) AS `total_points` FROM `contest_app_point` INNER JOIN `auth_user` ON ( `contest_app_point`.`user_id` = `auth_user`.`id` ) INNER JOIN `auth_user_groups` ON ( `auth_user`.`id` = `auth_user_groups`.`user_id` ) INNER JOIN `auth_group` ON ( `auth_user_groups`.`group_id` = `auth_group`.`id` ) INNER JOIN `contest_app_contest` ON ( `contest_app_point`.`contest_id` = `contest_app_contest`.`id_contest` ) WHERE (`auth_group`.`name` = 'catwalk_user' AND `contest_app_contest`.`status` = 'active') GROUP BY `contest_app_point`.`user_id` ORDER BY `total_points` DESC, `contest_app_point`.`user_id` ASC) AS `ranking_table`) AS `user_ranking` WHERE `user_id` = %s", [user_id])
+
         row = cursor.fetchall()
         return_var = row[0][0] if row else None
 

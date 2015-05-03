@@ -17,7 +17,7 @@ urlpatterns = patterns('',
     url(r'^registrati/$', 'website.views.www_register', name='www_register'),
 
     # catwalk
-    url(r'^passerella/$', 'website.views.catwalk_index', name='catwalk_index'),
+    url(r'^passerella/(?:(?P<contest_type>\w+)/)?$', 'website.views.catwalk_index', name='catwalk_index'),
     url(r'^passerella/dettaglio-utente/(?P<user_id>\d+)/$', 'website.views.catwalk_profile', name='catwalk_profile'),
     url(r'^passerella/richiesta-aiuto/$', 'website.views.catwalk_help', name='catwalk_help'),
     url(r'^passerella/segnalazione-utente/$', 'website.views.catwalk_report_user', name='catwalk_report_user'),
