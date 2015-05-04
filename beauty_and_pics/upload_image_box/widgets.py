@@ -7,6 +7,7 @@ from django.utils.safestring import mark_safe
 from django.utils.translation import ugettext_lazy
 from django.core.files.images import get_image_dimensions
 from upload_image_box.exceptions import *
+import imghdr
 
 import logging
 
@@ -29,7 +30,7 @@ class UibUploaderInput(forms.ClearableFileInput):
         self.max_file_size = 4*1024*1024 # 4MB
         self.min_file_width = 200
         self.min_file_height = 200
-        self.file_extensions_allowed = []
+        self.mimetypes_allowed = ['jpeg', 'png',]
 
         # widget settings
 	self.default_attrs = {
@@ -82,14 +83,21 @@ class UibUploaderInput(forms.ClearableFileInput):
         file_object = files.get('image', None)
         logger.debug("file object: " + str(file_object))
         if parent_validation is not None and file_object is not None:
+            # check image MIME/Type
+            image_type = imghdr.what(file_object)
+            if not image_type or image_type not in self.mimetypes_allowed:
+                logger.info("imghdr wrong type: " + str(image_type))
+                raise ImageExtensionUIBError
+
             # retrieve image info
             file_size = file_object.size
             file_w, file_h = get_image_dimensions(file_object)
-            # TODO: check image MIME/Type
+
             # image size check
             logger.debug("Image size: " + str(file_size) + " massima: " + str(self.max_file_size))
             if file_size > self.max_file_size:
                 raise ImageSizeUIBError
+
             # image dimensions check
             logger.debug("Image w: " + str(file_w)+ " image h: " + str(file_h))
             if file_w < self.min_file_width or file_h < self.min_file_height:
@@ -116,3 +124,4 @@ class UibUploaderInput(forms.ClearableFileInput):
     #   un'altra (si riparte dallo step 3), oppure confermare il crop
     # 5 alla conferma del crop salvare l'immagine croppata su disco, meglio ancora se su S3
     # come fare tutto ciò come un Django widget? :o
+    # Terminerei con una sufficienza (6): wow fortuna che l'ho fatto...

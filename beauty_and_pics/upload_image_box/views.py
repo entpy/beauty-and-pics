@@ -28,24 +28,26 @@ def upload(request):
             data = {'error': True, "msg": "Corrupted file", "error_code": CorruptedImageUIBError.get_error_code}
             pass
         except ImageSizeUIBError:
-            data = {'error': True, "msg": "Please check your image size (max allowed = 4MB)", "error_code": CorruptedImageUIBError.get_error_code}
+            data = {'error': True, "msg": "Please check your image size (max allowed = 4MB)", "error_code": ImageSizeUIBError.get_error_code}
             pass
         except ImageDimensionsUIBError:
-            data = {'error': True, "msg": "Please check your image dimensions (min allowed = 200x200)", "error_code": CorruptedImageUIBError.get_error_code}
+            data = {'error': True, "msg": "Please check your image dimensions (min allowed = 200x200)", "error_code": ImageDimensionsUIBError.get_error_code}
             pass
         except ImageExtensionUIBError:
-            data = {'error': True, "msg": "Please check your image extension (only: '.png', '.jpg', and '.jpeg' are valid)", "error_code": CorruptedImageUIBError.get_error_code}
+            data = {'error': True, "msg": "Please check your image extension (only: '.png', '.jpg', and '.jpeg' are valid)", "error_code": ImageExtensionUIBError.get_error_code}
             pass
         else:
+            # delete old temporary images
+            tmpUploadedImages_obj = tmpUploadedImages()
+            tmpUploadedImages_obj.delete_old_tmp_images()
+
+            # upload tmp image
             image_form = form.save(commit=False)
             image_form.upload_to = UPLOADED_IMG_TMP_DIRECTORY
             image_form.save()
-            # file_path = save_file(file=request.FILES['image'], path="tmp_upload/")
+            # build JSON success response
             data = {'success': True, "file_id": image_form.id, "file_url": "http://" + str(request.get_host()) + str(settings.MEDIA_URL) + str(image_form.image)}
             # logger.debug("immagine salvata: " + str(settings.MEDIA_URL) + str(image_form.image))
-            # file size error or corrupted image (Ex. wrong file ext)
-            logger.debug("form NON valido: " + str(form.errors))
-	    pass
 
     return HttpResponse(json.dumps(data), content_type="application/json")
 

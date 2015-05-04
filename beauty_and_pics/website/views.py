@@ -81,6 +81,7 @@ def www_forgot_password(request):
         "post" : request.POST,
         "form": form,
     }
+
     return render(request, 'website/www/www_forgot_password.html', context)
 
 def www_register(request):
@@ -219,7 +220,6 @@ def profile_index(request):
 
 @login_required
 def profile_data(request):
-
     # set current contest_type
     account_obj =  Account()
     autenticated_user_data = account_obj.get_autenticated_user_data(request=request)
@@ -254,7 +254,6 @@ def profile_data(request):
 
 @login_required
 def profile_favorites(request):
-
     # set current contest_type
     account_obj =  Account()
     autenticated_user_data = account_obj.get_autenticated_user_data(request=request)
@@ -265,7 +264,6 @@ def profile_favorites(request):
 
 @login_required
 def profile_stats(request):
-
     # set current contest_type
     account_obj =  Account()
     autenticated_user_data = account_obj.get_autenticated_user_data(request=request)
@@ -276,7 +274,6 @@ def profile_stats(request):
 
 @login_required
 def profile_area51(request):
-
     # set current contest_type
     account_obj =  Account()
     autenticated_user_data = account_obj.get_autenticated_user_data(request=request)

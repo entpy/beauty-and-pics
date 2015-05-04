@@ -222,33 +222,9 @@ class Contest(models.Model):
 
         return return_var
 
-    """
-    def identify_contest_type(self, request):
-        ""Function to identify current contest_type""
-        from account_app.models.accounts import *
-        return_var = None
-        if request:
-            if request.user.is_authenticated():
-                # retrieve contest_type from authenticated user
-                account_obj =  Account()
-                autenticated_user_data = account_obj.get_autenticated_user_data(request=request)
-                # logger.debug("contest_type utente autenticato: " + str(autenticated_user_data["contest_type"]))
-                # contest_types = Contest_Type()
-                return_var = str(autenticated_user_data["contest_type"])
-
-        if not return_var:
-            # DEFAULT: wrong or none contest type set (ie. after session clean)
-            # use "woman contest" as default
-            return_var = self.get_default_contest_type()
-
-        # logger.debug("identify_contest_type: " + str(request.GET.get("contest_type")))
-
-        return return_var
-    """
-
     def get_contest_type_from_user_id(self, user_id=None):
         """Function to retrieve contest_type from user id"""
-        from account_app.models.accounts import *
+        from account_app.models.accounts import Account
         return_var = False
         account_obj = Account()
 
@@ -265,6 +241,16 @@ class Contest(models.Model):
     def get_default_contest_type(self):
         """Function to retrieve default contest_type"""
         return project_constants.WOMAN_CONTEST
+
+    def get_contest_type_from_session(self, request):
+        """Function to retrieve contest type from session"""
+        return_var = None
+        if request.session.get("contest_type"):
+            return_var = request.session.get("contest_type")
+        else:
+            return_var = self.get_default_contest_type()
+
+        return return_var
 
     def contest_type_exists_check(self, contest_type=None):
         """Function to check if a contest_type name is valid"""
@@ -283,13 +269,3 @@ class Contest(models.Model):
                 request.session['contest_type'] = str(contest_type)
 
         return True
-
-    def get_contest_type_from_session(self, request):
-        """Function to retrieve contest type from session"""
-        return_var = None
-        if request.session.get("contest_type"):
-            return_var = request.session.get("contest_type")
-        else:
-            return_var = self.get_default_contest_type()
-
-        return return_var

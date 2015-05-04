@@ -2,6 +2,8 @@
 
 from django.db import models
 from django.conf import settings
+from datetime import timedelta
+from django.utils import timezone
 from .settings import *
 from PIL import Image
 import os, logging, shutil, uuid
@@ -16,7 +18,7 @@ class cropUploadedImages(models.Model):
     image = models.ImageField(max_length=500, upload_to=get_image_path)
     thumbnail_image = models.ForeignKey('self', null=True)
     upload_to_base_path = APP_BASE_DIRECTORY # default file upload base dir
-    upload_to = '' # default file upload custom dir TODO: forse questo non serve
+    upload_to = '' # default file upload custom dir
 
     def __unicode__(self):
         return self.image.name
@@ -178,12 +180,21 @@ class tmpUploadedImages(models.Model):
 
     # upload file attributes
     upload_to_base_path = APP_BASE_DIRECTORY # default file upload base dir
-    upload_to = '' # default file upload custom dir TODO: forse questo non serve
+    upload_to = '' # default file upload custom dir
 
     def __unicode__(self):
         return self.image.name
 
     # TODO: cancellare le immagini più vecchie di 5 minuti
-    def delete_tmp_images(self):
-        """Function to delete old tmp uploaded images"""
+    def delete_old_tmp_images(self):
+        """Function to delete tmp uploaded images older than 5 minutes (as default)"""
+        # if upload_date < (now - timedelta 5) -> delete tmp image
+        max_validity_datetime = timezone.now() - timedelta(seconds=UPLOADED_IMG_TMP_MAX_LIFETIME) # older than 5 minutes
+        old_tmp_images = tmpUploadedImages.objects.filter(upload_date__lte=max_validity_datetime)
+        # loop over old images
+        if old_tmp_images:
+            for old_image in old_tmp_images:
+                old_image.delete()
+                logger.info("elimino-> tmp image: " + str(old_image.image) + " | upload date: " + str(old_image.upload_date))
+
 	return True

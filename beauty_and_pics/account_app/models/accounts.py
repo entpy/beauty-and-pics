@@ -96,9 +96,9 @@ class Account(models.Model):
 
 	    logger.debug("tipo di contest rilevato: '" + str(user_info["contest_type"]) + "'")
 
-        # insert addictional data inside User and Account models
-        account_obj.update_data(save_data=user_info, user_obj=new_user)
-        return_var = True
+            # insert addictional data inside User and Account models
+            account_obj.update_data(save_data=user_info, user_obj=new_user)
+            return_var = True
 
         return return_var
 
