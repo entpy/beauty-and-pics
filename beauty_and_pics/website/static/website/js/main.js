@@ -103,6 +103,7 @@ function get_bootstrap_modal_html() {
 	bootstrapModal += '</div>';
 	bootstrapModal += '<div class="modal-body">';
 	bootstrapModal += '</div>';
+	bootstrapModal += '<div class="modal-footer"></div>';
 	bootstrapModal += '</div><!-- /.modal-content -->';
 	bootstrapModal += '</div><!-- /.modal-dialog -->';
 	bootstrapModal += '</div>';
@@ -185,6 +186,7 @@ function writeCountdownEndString(contestStatus) {
 var customAjaxAction = {
 	__ajaxCallParams : false,
 	__ajaxCallActionName : false,
+	__ajaxCallAsync : true,
 	__ajaxSuccessCallbackFunction : function() { },
 	__ajaxErrorCallbackFunction : function() { },
 	ajaxCallUrl : "/ajax/", // the ajax call url
@@ -199,6 +201,16 @@ var customAjaxAction = {
 	/* Function to retrieve action name */
 	getActionName : function() {
 		return this.__ajaxCallActionName;
+	},
+
+	/* Function to set async flag */
+	setAsyncFlag : function(asyncFlag) {
+		this.__ajaxCallAsync = asyncFlag;
+	},
+
+	/* Function to retrieve async flag */
+	getAsyncFlag : function() {
+		return this.__ajaxCallAsync;
 	},
 
 	/* Function to set a success callback function */
@@ -244,7 +256,7 @@ var customAjaxAction = {
 		var ajaxCallData = {
 			url : this.ajaxCallUrl,
 			data : this.getAjaxCallParams() + "&ajax_action=" + this.getActionName(),
-			async : true,
+			async : this.getAsyncFlag(),
 			headers: { "X-CSRFToken": csrftoken },
 			success : function(jsonResponse) {
 				// functions to manage JSON response
@@ -638,18 +650,23 @@ var elementsListObject = {
 			// alert(singleElement.image_url);
 			blockThumbnailImageUrl = singleElement.thumbnail_image_url;
 			blockImageUrl = singleElement.image_url;
-			items += elementsListObject.getSingleHtmlBlock(blockUrl, blockThumbnailImageUrl, blockImageUrl, "zoom-image");
+			blockImageId = singleElement.image_id;
+			items += elementsListObject.getSingleHtmlBlock(blockUrl, blockThumbnailImageUrl, blockImageUrl, "zoom-image", blockImageId);
 		});
 
 		// return jQuery object
 		return $(items);
 	},
 
-	getSingleHtmlBlock : function(blockUrl, blockThumbnailImageUrl, blockImageUrl, imgTagClass) {
+	getSingleHtmlBlock : function(blockUrl, blockThumbnailImageUrl, blockImageUrl, imgTagClass, imgId) {
 
 		returnVar = "";
 		if (!imgTagClass) {
 			imgTagClass = "";
+		}
+
+		if (!imgId) {
+			imgId = "";
 		}
 
 		if (blockUrl && blockThumbnailImageUrl) {
@@ -662,7 +679,7 @@ var elementsListObject = {
 			var sm_size = (this.bootstrapBlockSize["sm_size"] ? this.bootstrapBlockSize["sm_size"] : "3");
 			var xs_size = (this.bootstrapBlockSize["xs_size"] ? this.bootstrapBlockSize["xs_size"] : "6");
 			// build html block with link and image
-			var returnVar = '<div class="col-lg-' + lg_size + ' col-md-' + md_size + ' col-xs-' + xs_size + ' col-sm-' + sm_size + ' thumb"><a href="' + blockUrl + '" class="thumbnail"><img alt="" src="' + blockThumbnailImageUrl + '" data-fullimage-url="' + blockImageUrl + '" class="img-responsive ' + imgTagClass + '"></a></div>'
+			var returnVar = '<div class="col-lg-' + lg_size + ' col-md-' + md_size + ' col-xs-' + xs_size + ' col-sm-' + sm_size + ' thumb imgBlockContainer_' + imgId + '"><a href="' + blockUrl + '" class="thumbnail"><img alt="" src="' + blockThumbnailImageUrl + '" data-fullimage-url="' + blockImageUrl + '" data-image-id="' + imgId + '" class="img-responsive ' + imgTagClass + '"></a></div>'
 		}
 
 		return returnVar;

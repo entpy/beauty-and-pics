@@ -23,6 +23,18 @@ class cropUploadedImages(models.Model):
     def __unicode__(self):
         return self.image.name
 
+    def delete(self, *args, **kwargs):
+        # delete thumbnail image first
+        if self.thumbnail_image:
+            self.thumbnail_image.delete()
+        # You have to prepare what you need before delete the model
+        storage, path = self.image.storage, self.image.path
+        # Delete the model before the file
+        super(cropUploadedImages, self).delete(*args, **kwargs)
+        # Delete the file after the model
+        storage.delete(path)
+        logger.info("cropUploadedImages DELETE -> storage: " + str(storage) + " | path: " + str(path))
+
     def retrieve_crop_info(self, request):
         """Function to retrieve info about javascript crop plugin"""
         crop_info = {}
@@ -185,7 +197,15 @@ class tmpUploadedImages(models.Model):
     def __unicode__(self):
         return self.image.name
 
-    # TODO: cancellare le immagini più vecchie di 5 minuti
+    def delete(self, *args, **kwargs):
+        # You have to prepare what you need before delete the model
+        storage, path = self.image.storage, self.image.path
+        # Delete the model before the file
+        super(tmpUploadedImages, self).delete(*args, **kwargs)
+        # Delete the file after the model
+        storage.delete(path)
+        logger.info("tmpUploadedImages DELETE -> storage: " + str(storage) + " | path: " + str(path))
+
     def delete_old_tmp_images(self):
         """Function to delete tmp uploaded images older than 5 minutes (as default)"""
         # if upload_date < (now - timedelta 5) -> delete tmp image
@@ -195,6 +215,6 @@ class tmpUploadedImages(models.Model):
         if old_tmp_images:
             for old_image in old_tmp_images:
                 old_image.delete()
-                logger.info("elimino-> tmp image: " + str(old_image.image) + " | upload date: " + str(old_image.upload_date))
+                # logger.info("elimino-> tmp image: " + str(old_image.image.path) + " | upload date: " + str(old_image.upload_date))
 
 	return True

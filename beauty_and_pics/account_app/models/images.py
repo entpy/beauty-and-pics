@@ -23,7 +23,7 @@ class Book(models.Model):
         app_label = 'account_app'
 
     def __unicode__(self):
-        return self.image_id.url
+        return self.image_id.image.url
 
     # TODO: save an uploaded image:
     #       - se questo image_id non è associato ancora a nessun utente lo
@@ -43,7 +43,36 @@ class Book(models.Model):
                 book_obj.user = image_data["user"]
                 book_obj.image_type = image_data["image_type"]
                 book_obj.save()
-                return_var = book_obj.image_id.image.url
+                return_var = book_obj
+
+        return return_var
+
+    def delete_book_image(self, image_id=None, user_id=None):
+        """Function to delete an image (profile image or book image)"""
+        return_var = None
+        if image_id and user_id:
+            try:
+                # retrieve image
+                book_image = Book.objects.get(pk=image_id)
+            except Book.DoesNotExist:
+                raise bookImageDoesNotExistError
+            else:
+                if user_id == book_image.user.id:
+                    # if the user_id of the image match with session user id, the
+                    # image can be deleted
+                    logger.debug("<<image can be deleted>>")
+                    try:
+                        cropped_image = self.get_crop_uploaded_image_obj(image_id=image_id)
+                    except cropUploadedImages.DoesNotExist:
+                        raise croppedImageDoesNotExistError
+                    else:
+                        # delete row from crop table (this delete also row in book
+                        # tables) and related thumb image and full image
+                        logger.debug("DELETE book image -> user_id: " + str(user_id) + " | book_image_user_id: " + str(book_image.user.id))
+                        cropped_image.delete()
+                        return_var = True
+                else:
+                    raise deleteImageReferenceError
 
         return return_var
 

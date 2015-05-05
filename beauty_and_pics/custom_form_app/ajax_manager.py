@@ -29,6 +29,7 @@ class ajaxManager():
         self.__valid_action_list += ('elements_list',)
         self.__valid_action_list += ('perform_voting',)
         self.__valid_action_list += ('save_image',)
+        self.__valid_action_list += ('delete_image',)
 
         # retrieve action to perform
         self.ajax_action = request.POST.get("ajax_action")
@@ -215,7 +216,9 @@ class ajaxManager():
 
         # TODO: proseguire con i controlli (forse, è tardi per pensarci)
         try:
-            saved_image_url = book_obj.save_book_image(image_data=image_data)
+            saved_image_obj = book_obj.save_book_image(image_data=image_data)
+            saved_image_url = saved_image_obj.image_id.image.url
+            saved_image_id = saved_image_obj.image_id.id
         except croppedImageDoesNotExistError:
             logger.error("Errore nell'upload dell'immagine profilo, l'immagine richiesta non esiste nella tabella cropUploadedImages: " + str(self.request) + " | error code: " + str(croppedImageDoesNotExistError.get_error_code))
             data = {'error' : True, 'message': "Errore inaspettato (codice=" + str(croppedImageDoesNotExistError.get_error_code) + "), sii gentile contatta l'amministratore!" }
@@ -223,7 +226,40 @@ class ajaxManager():
             logger.error("Image type inserito non valido: " + str(self.request) + " | error code: " + str(imageTypeWrongError.get_error_code))
             data = {'error' : True, 'message': "Errore inaspettato (codice=" + str(imageTypeWrongError.get_error_code) + "), sii gentile contatta l'amministratore!" }
         else:
-            data = {'success' : True, 'image_url': saved_image_url, 'message': "salvato immagine profilo!" }
+            data = {'success' : True, 'image_url': saved_image_url, 'image_id': saved_image_id, 'message': "immagine salvata correttamente!" }
+
+        # build JSON response
+        json_data_string = json.dumps(data)
+        self.set_json_response(json_response=json_data_string)
+
+        return True
+
+    def delete_image(self):
+        """Function to delete an image"""
+        logger.debug("ajax_function: @@delete_image@@")
+        logger.debug("parametri della chiamata: " + str(self.request.POST))
+
+        book_obj = Book()
+
+        # retrieve uploaded image data
+        data = {'error' : True, 'message': "Controllare i parametri della chiamata" }
+        image_id = self.request.POST.get("image_id")
+        user_id = self.request.user.id
+
+        try:
+            image_delete_status = book_obj.delete_book_image(image_id=image_id, user_id=user_id)
+        except bookImageDoesNotExistError:
+            logger.error("Errore nell'eliminazione dell'immagine, l'immagine richiesta non esiste nella tabella Book: " + str(self.request) + " | error code: " + str(bookImageDoesNotExistError.get_error_code))
+            data = {'error' : True, 'message': "Errore inaspettato (codice=" + str(bookImageDoesNotExistError.get_error_code) + "), sii gentile contatta l'amministratore!" }
+        except croppedImageDoesNotExistError:
+            logger.error("Errore nell'eliminazione dell'immagine, l'immagine richiesta non esiste nella tabella cropUploadedImages: " + str(self.request) + " | error code: " + str(croppedImageDoesNotExistError.get_error_code))
+            data = {'error' : True, 'message': "Errore inaspettato (codice=" + str(croppedImageDoesNotExistError.get_error_code) + "), sii gentile contatta l'amministratore!" }
+        except deleteImageReferenceError:
+            logger.error("Errore nell'eliminazione dell'immagine, gli id utenti non coincidono: " + str(self.request) + " | error code: " + str(deleteImageReferenceError.get_error_code))
+            data = {'error' : True, 'message': "Errore inaspettato (codice=" + str(deleteImageReferenceError.get_error_code) + "), sii gentile contatta l'amministratore!" }
+        else:
+            if image_delete_status:
+                data = {'success' : True, 'image_id': image_id, 'message': "Immagine eliminata correttamente!" }
 
         # build JSON response
         json_data_string = json.dumps(data)

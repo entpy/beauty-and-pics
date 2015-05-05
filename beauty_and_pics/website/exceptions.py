@@ -64,3 +64,13 @@ class croppedImageDoesNotExistError(Exception):
     """Exception cropped image does not exist."""
     get_error_code = "013"
     pass
+
+class bookImageDoesNotExistError(Exception):
+    """Exception book image does not exist."""
+    get_error_code = "014"
+    pass
+
+class deleteImageReferenceError(Exception):
+    """Exception on book image delete when user id and image user id are !=."""
+    get_error_code = "015"
+    pass

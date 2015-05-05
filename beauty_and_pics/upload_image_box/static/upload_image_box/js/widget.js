@@ -349,10 +349,10 @@ var fileManager = {
 		request.done(function(textStatus) {
 			// ajax call success
 			if (textStatus.success) {
-				// TODO: close bootstrap modal window
-				// $("#" + uploaderImageBox.widgetId + "_modal").modal('hide');
+				// close bootstrap modal window
+				$("#" + uploaderImageBox.widgetId + "_modal").modal('hide');
 
-				// if exists performimg a custom callback function (ie. to update a parent contenitor)
+				// if exists perform a custom callback function (ie. to update a parent contenitor)
 				if (uploaderImageBox.modalWindowSettings["global_options"]["callback_function"].call()) {
 					if (textStatus.hasOwnProperty("image_id")) {
 						eval(uploaderImageBox.modalWindowSettings["global_options"]["callback_function"].call() + "('" + textStatus.image_id + "');");
