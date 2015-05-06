@@ -27,16 +27,11 @@ $(document).ready(function(){
 		$(".toggle_navigation").toggle();
 	});
 
-	$("body").on("click",".zoom-image", function(){
-		var imageUrl = $(this).data("fullimageUrl");
-		var bootstrapModal = $(".bootstrap_modal").modal();
-		bootstrapModal.find('.modal-body').html(getImageTemplateHtml(imageUrl));
-
-		return false;
-	});
-
 	// calculate contest start/expiring date
 	manageContestTimedelta();
+
+	// write bootstrap modal inside body tag
+	bootstrapModalsObect.writeModalInsideBodyTag();
 });
 
 // Avoid `console` errors in browsers that lack a console.
@@ -89,36 +84,6 @@ function getCurrentTimestamp() {
 
 	// return timestam in seconds
 	return Math.floor(current_timestamp / 1000);
-}
-
-/* Function to retrieve bootstrap modal html template */
-function get_bootstrap_modal_html() {
-	var bootstrapModal = "";
-	bootstrapModal += '<div class="bootstrap_modal modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">';
-	bootstrapModal += '<div class="modal-dialog">';
-	bootstrapModal += '<div class="modal-content">';
-	bootstrapModal += '<div class="modal-header">';
-	bootstrapModal += '<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>';
-	bootstrapModal += '<h4 class="modal-title">&nbsp;</h4>';
-	bootstrapModal += '</div>';
-	bootstrapModal += '<div class="modal-body">';
-	bootstrapModal += '</div>';
-	bootstrapModal += '<div class="modal-footer"></div>';
-	bootstrapModal += '</div><!-- /.modal-content -->';
-	bootstrapModal += '</div><!-- /.modal-dialog -->';
-	bootstrapModal += '</div>';
-
-	return bootstrapModal;
-}
-
-/* Function to write bootstrap modal inside body tag, only if not exists */
-function write_modal_inside_body_tag() {
-    if (!$(".bootstrap_modal").length) {
-        bootstrapModal = get_bootstrap_modal_html();
-        $("body").prepend(bootstrapModal);
-    }
-
-	return true;
 }
 
 /* Function to manage contest timedelta (run this function every second)*/
@@ -181,6 +146,108 @@ function writeCountdownEndString(contestStatus) {
 		$('.contest_status_container').html("");
 	}
 }
+
+/* Object to manage bootstrap modals */
+var bootstrapModalsObect = {
+
+	/* Function to write bootstrap modal inside body tag, only if not already exists */
+	writeModalInsideBodyTag: function() {
+		if (!$(".bootstrap_modal").length) {
+			var bootstrapModal = '';
+			bootstrapModal += '<div class="bootstrap_modal modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">';
+			bootstrapModal += this.getBootstrapModalHtmlTemplate();
+			bootstrapModal += '</div>';
+			$("body").prepend(bootstrapModal);
+		}
+
+		return true;
+	},
+
+	/* Function to retrieve bootstrap modal html template */
+	getBootstrapModalHtmlTemplate: function() {
+		var bootstrapModal = '';
+		bootstrapModal += '<div class="modal-dialog">';
+		bootstrapModal += '<div class="modal-content">';
+		bootstrapModal += '<div class="modal-header">';
+		bootstrapModal += '<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>';
+		bootstrapModal += '<h4 class="modal-title">&nbsp;</h4>';
+		bootstrapModal += '</div>';
+		bootstrapModal += '<div class="modal-body">';
+		bootstrapModal += '</div>';
+		bootstrapModal += '<div class="modal-footer"></div>';
+		bootstrapModal += '</div><!-- /.modal-content -->';
+		bootstrapModal += '</div><!-- /.modal-dialog -->';
+
+		return bootstrapModal;
+	},
+
+	/* Function to reset bootstrap modal */
+	resetBootstrapModal: function() {
+		$(".bootstrap_modal").html(this.getBootstrapModalHtmlTemplate());
+	},
+
+	/* Function to show bootstrap modal */
+	showBootstrapModal: function() {
+		$(".bootstrap_modal").modal();
+	},
+
+	/* Function to hide bootstrap modal */
+	hideBootstrapModal: function() {
+		$(".bootstrap_modal").hide();
+	},
+
+	/* custom bootstrap modal functions {{{ */
+	/* Function to build and show image zoom bootstrap modal */
+	showZoomImageModal: function(imageUrl) {
+		if (imageUrl) {
+			this.resetBootstrapModal();
+			$(".bootstrap_modal").find('.modal-body').html(this.getImageHtmlBlock(imageUrl));
+			this.showBootstrapModal();
+		}
+
+		return false;
+	},
+
+	/* Function to build and show delete image bootstrap modal */
+	showDeleteImageModal: function(imageUrl, imageId) {
+		if (imageUrl && imageId) {
+			this.resetBootstrapModal();
+			$(".bootstrap_modal").find('.modal-body').html(this.getImageHtmlBlock(imageUrl));
+			$(".bootstrap_modal").find('.modal-footer').html(this.deleteImageButtonHtmlBlock(imageId));
+			this.showBootstrapModal();
+		}
+
+		return false;
+	},
+
+	/* Function to build and show perform login bootstrap modal */
+	showPerformLoginModal: function() {
+		this.resetBootstrapModal();
+		$(".bootstrap_modal").find('.modal-body').html("Effettua il login per continuare");
+		this.showBootstrapModal();
+
+		return false;
+	},
+	/* custom bootstrap modal functions }}} */
+
+	getImageHtmlBlock: function(imageUrl) {
+		var templateBlock = false;
+		if (imageUrl) {
+			templateBlock = '<img style="width: 100%;" alt="Image preview" src="' + imageUrl + '">';
+		}
+
+		return templateBlock;
+	},
+
+	deleteImageButtonHtmlBlock: function(imageId) {
+		var templateBlock = false;
+		if (imageId) {
+			templateBlock = '<button type="button" data-image-id="' + imageId + '" class="btn btn-success deleteProfileImageClickAction">Cancella</button>';
+		}
+
+		return templateBlock;
+	}
+};
 
 /* Object to perform custom ajax action */
 var customAjaxAction = {

@@ -33,7 +33,7 @@
 		</div>
 		<div class="bottom user_action_link_container">
 			<span>
-				<a class="user_action_link" href="#">
+				<a class="user_action_link addToFavoritesClickAction" href="#">
 					<img src="{% static "website/img/catwalk/aggiungi-a-preferiti.png" %}" alt="Aggiungi ai preferiti">
 				</a>
 			</span>
@@ -194,11 +194,8 @@
 	elementsListObject.addFilter("show_limit", 5);
 
 	$(document).ready(function(){
-		// write bootstrap modal inside body tag
-		write_modal_inside_body_tag();
-
 		// single vote type click
-		$(".voteTypeClick").click(function(){
+		$("body").on("click",".voteTypeClick", function(){
 			voteUserObject.addParam($(this).data("voteType"), $(this).data("voteValue"));
 			deactivateGroupVoteType($(this));
 			activateVoteType($(this));
@@ -207,17 +204,38 @@
 		});
 
 		// perform vote action
-		$(".submitVoteButtonClickAction").click(function(){
+		$("body").on("click",".submitVoteButtonClickAction", function(){
 			voteUserObject.addParam("user_id", "{{ user_info.user_id }}");
 			voteUserObject.performVotingAction();
 
 			return false;
 		});
 
-		$(".loadMoreElementsAction").on("click", function(){
+		// load more photo action
+		$("body").on("click",".loadMoreElementsAction", function(){
 			elementsListObject.setElementsListType("photobook");
 			elementsListObject.addFilter("user_id", "{{ user_info.user_id }}");
 			elementsListObject.getElementsList();
+
+			return false;
+		});
+
+		// open zoomed image action
+		$("body").on("click",".zoom-image", function(){
+			var imageUrl = "";
+			if ($(this).attr("data-fullimage-url")) {
+				imageUrl = $(this).data("fullimageUrl");
+			}
+			// open bootstrap modal
+			bootstrapModalsObect.showZoomImageModal(imageUrl);
+
+			return false;
+		});
+
+		// add to favorites action
+		$("body").on("click",".addToFavoritesClickAction", function(){
+			// open bootstrap modal
+			bootstrapModalsObect.showPerformLoginModal();
 
 			return false;
 		});

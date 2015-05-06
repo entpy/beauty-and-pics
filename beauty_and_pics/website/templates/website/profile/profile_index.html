@@ -99,11 +99,17 @@
 
 		// write delete button inside bootstrap modal
 		$("body").on("click",".zoom-image", function(){
-			imageId = "";
+			var imageId = "";
 			if ($(this).attr("data-image-id")) {
 				imageId = $(this).data("imageId");
 			}
-			$(".bootstrap_modal").find('.modal-footer').html('<button type="button" data-image-id="' + imageId + '" class="btn btn-success deleteProfileImageClickAction">Cancella</button>');
+
+			var imageUrl = "";
+			if ($(this).attr("data-fullimage-url")) {
+				imageUrl = $(this).data("fullimageUrl");
+			}
+			// open bootstrap modal
+			bootstrapModalsObect.showDeleteImageModal(imageUrl, imageId);
 		});
 
 		// write delete button inside bootstrap modal
@@ -126,9 +132,6 @@
 		});
 
 		$(".loadMoreElementsAction").click();
-
-		// write bootstrap modal inside body tag
-		write_modal_inside_body_tag();
 	});
 
 	/* Function to update profile image */
@@ -167,7 +170,7 @@
 			var sm_size = "3";
 			var xs_size = "6";
 			// build html block with link and image
-			var returnVar = '<div class="col-lg-' + lg_size + ' col-md-' + md_size + ' col-xs-' + xs_size + ' col-sm-' + sm_size + ' thumb imgBlockContainer_' + jsonResponse.image_id + '"><a href="" class="thumbnail"><img alt="" data-fullimage-url="' + jsonResponse.image_url + '" data-image-id="' + jsonResponse.image_id + '" class="img-responsive zoom-image" src="' + jsonResponse.image_url + '"></a></div>'
+			var returnVar = '<div class="col-lg-' + lg_size + ' col-md-' + md_size + ' col-xs-' + xs_size + ' col-sm-' + sm_size + ' thumb imgBlockContainer_' + jsonResponse.image_id + '"><a href="#" class="thumbnail"><img alt="" data-fullimage-url="' + jsonResponse.image_url + '" data-image-id="' + jsonResponse.image_id + '" class="img-responsive zoom-image" src="' + jsonResponse.image_url + '"></a></div>'
 
 			// https://github.com/karacas/imgLiquid
 			$(".image_grid_container").prepend(returnVar);
