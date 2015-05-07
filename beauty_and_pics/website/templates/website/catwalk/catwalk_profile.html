@@ -234,16 +234,15 @@
 
 		// add to favorites action
 		$("body").on("click",".addToFavoritesClickAction", function(){
-			{% if not user.is_authenticated %}
+			{% if not user_is_authenticated %}
 				bootstrapModalsObect.showPerformLoginModal();
-			{% else if user_already_favorite %}
-				bootstrapModalsObect.showAlertModal("Utente già aggiunto tra i preferiti");
+			{% elif user_already_favorite %}
+				bootstrapModalsObect.showAlertModal('Utente già presente nell\'elenco dei tuoi preferiti. <a href="/profilo/preferiti/" class="alert-link">Vai nella sezione preferiti</a>.');
 			{% else %}
-				if (confirm("vuoi aggiungere tra i preferiti") {
-					addToFavorite('{{user_info["user_id"]}}');
+				if (confirm("Vuoi aggiungere l'utente all'elenco dei tuoi preferiti?")) {
+					addToFavorite('{{user_info.user_id}}');
 				}
 			{% endif %}
-			// var userIsAuthenticated = "{{ if user.is_authenticated }}";
 			// var userAlreadyAddedToFavorite = "";
 			// open bootstrap modal
 			// se l'utente non è loggato:
@@ -268,12 +267,18 @@
 			addToFavoriteCustomAjaxAction.setActionName("add_favorite");
 			// success callback function
 			var successCallback = function(jsonResponse) {
-				if (jsonResponse.success) {
-					// open bootstrap modal
-					bootstrapModalsObect.showSuccessModal(jsonResponse.message);
-				}
+                // open success bootstrap modal
+                bootstrapModalsObect.showSuccessModal('L\'utente è stato aggiunto correttamente all\'elenco dei tuoi preferiti. <a href="/profilo/preferiti/" class="alert-link">Vai nella sezione preferiti</a> per visualizzare la lista completa.');
 			};
 			addToFavoriteCustomAjaxAction.setAjaxSuccessCallbackFunction(successCallback);
+			// error callback function
+			var errorCallback = function(jsonResponse) {
+				if (jsonResponse.type == "already_added") {
+					// open alert bootstrap modal
+                    bootstrapModalsObect.showAlertModal('Utente già presente nell\'elenco dei tuoi preferiti. <a href="/profilo/preferiti/" class="alert-link">Vai nella sezione preferiti</a>.');
+                }
+			};
+			addToFavoriteCustomAjaxAction.setAjaxErrorCallbackFunction(errorCallback);
 			// perform ajax call to add favorite
 			addToFavoriteCustomAjaxAction.performAjaxAction();
 		}

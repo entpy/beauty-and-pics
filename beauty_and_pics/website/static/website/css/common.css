@@ -5,6 +5,7 @@ textarea { resize: none; }
 .centered_page { margin: 0 auto; }
 .height_100 { height: 100%; }
 .left_100 { float: left; width: 100%; }
+.margin_top_30 { margin-top: 30px; }
 .margin_top_20 { margin-top: 20px; }
 .margin_top_15 { margin-top: 15px; }
 .float_left { float: left; }

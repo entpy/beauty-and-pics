@@ -13,6 +13,7 @@ from contest_app.models.votes import Vote
 from account_app.models import *
 from contest_app.models import Contest
 from upload_image_box.models import cropUploadedImages
+from website.exceptions import *
 import logging, json
 
 # Get an instance of a logger
@@ -30,6 +31,7 @@ class ajaxManager():
         self.__valid_action_list += ('perform_voting',)
         self.__valid_action_list += ('save_image',)
         self.__valid_action_list += ('delete_image',)
+        self.__valid_action_list += ('add_favorite',)
 
         # retrieve action to perform
         self.ajax_action = request.POST.get("ajax_action")
@@ -267,7 +269,7 @@ class ajaxManager():
 
         return True
 
-    def add_favorite():
+    def add_favorite(self):
         """Function to add a favorite"""
         logger.debug("ajax_function: @@add_favorite@@")
         logger.debug("parametri della chiamata: " + str(self.request.POST))
@@ -279,9 +281,13 @@ class ajaxManager():
 
         # add favorite
         favorite_obj = Favorite()
-        add_favorite_status = favorite_obj.add_favorite(user_id=user_id, favorite_user_id=favorite_user_id)
-        if add_favorite_status:
-            data = {'success' : True, 'message': "Preferito aggiunto con successo" }
+        try:
+            add_favorite_status = favorite_obj.add_favorite(user_id=user_id, favorite_user_id=favorite_user_id)
+        except userAlreadyAddedToFavoritesError:
+            data = {'error' : True, 'type': "already_added" }
+        else:
+            if add_favorite_status:
+                data = {'success' : True }
 
         # build JSON response
         json_data_string = json.dumps(data)

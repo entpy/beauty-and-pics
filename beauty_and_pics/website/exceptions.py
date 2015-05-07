@@ -74,3 +74,8 @@ class deleteImageReferenceError(Exception):
     """Exception on book image delete when user id and image user id are !=."""
     get_error_code = "015"
     pass
+
+class userAlreadyAddedToFavoritesError(Exception):
+    """Exception on multiple add to favorite on same user action"""
+    get_error_code = "016"
+    pass

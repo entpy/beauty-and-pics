@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 from account_app.models import Account
+from website.exceptions import *
 
 class Favorite(models.Model):
     id_favorite = models.AutoField(primary_key=True)
@@ -27,6 +28,8 @@ class Favorite(models.Model):
                 favorite_obj.favorite_user = favorite_user_obj
                 favorite_obj.save()
                 return_var = True
+            else:
+                raise userAlreadyAddedToFavoritesError
 
         return return_var
 
@@ -47,14 +50,14 @@ class Favorite(models.Model):
     def remove_favorite(self, user_id=None, favorite_user_id=None):
         """Function to remove favorite user"""
         return_var = False
-            if user_id and favorite_user_id:
-                try:
-                    favorite_obj = Favorite.objects.get(user__id=user_id, favorite_user__id=favorite_user_id)
-                    return_var = True
-                except Favorite.DoesNotExist:
-                    pass
-                else:
-                    favorite_obj.delete()
-                    return_var = True
+        if user_id and favorite_user_id:
+            try:
+                favorite_obj = Favorite.objects.get(user__id=user_id, favorite_user__id=favorite_user_id)
+                return_var = True
+            except Favorite.DoesNotExist:
+                pass
+            else:
+                favorite_obj.delete()
+                return_var = True
 
         return return_var
