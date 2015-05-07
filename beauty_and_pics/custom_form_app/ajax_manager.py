@@ -266,3 +266,25 @@ class ajaxManager():
         self.set_json_response(json_response=json_data_string)
 
         return True
+
+    def add_favorite():
+        """Function to add a favorite"""
+        logger.debug("ajax_function: @@add_favorite@@")
+        logger.debug("parametri della chiamata: " + str(self.request.POST))
+
+        account_obj = Account()
+        data = {'error' : True, 'message': "Controllare i parametri della chiamata" }
+        favorite_user_id = self.request.POST.get("user_id")
+        user_id = self.request.user.id
+
+        # add favorite
+        favorite_obj = Favorite()
+        add_favorite_status = favorite_obj.add_favorite(user_id=user_id, favorite_user_id=favorite_user_id)
+        if add_favorite_status:
+            data = {'success' : True, 'message': "Preferito aggiunto con successo" }
+
+        # build JSON response
+        json_data_string = json.dumps(data)
+        self.set_json_response(json_response=json_data_string)
+
+        return True

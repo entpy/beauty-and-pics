@@ -234,14 +234,52 @@
 
 		// add to favorites action
 		$("body").on("click",".addToFavoritesClickAction", function(){
+			{% if not user.is_authenticated %}
+				bootstrapModalsObect.showPerformLoginModal();
+			{% else if user_already_favorite %}
+				bootstrapModalsObect.showAlertModal("Utente già aggiunto tra i preferiti");
+			{% else %}
+				if (confirm("vuoi aggiungere tra i preferiti") {
+					addToFavorite('{{user_info["user_id"]}}');
+				}
+			{% endif %}
+			// var userIsAuthenticated = "{{ if user.is_authenticated }}";
+			// var userAlreadyAddedToFavorite = "";
 			// open bootstrap modal
-			bootstrapModalsObect.showPerformLoginModal();
+			// se l'utente non è loggato:
+			// - bootstrapModalsObect.showPerformLoginModal();
+			// se l'utente è già stato aggiunto come preferito:
+			// - bootstrapModalsObect.showAlertModal("Utente già aggiunto tra i preferiti");
+			// altrimenti: confirm("vuoi aggiungere tra i preferiti") e chiamo la funzione addToFavorite
 
 			return false;
 		});
 
 		$(".loadMoreElementsAction").click();
 	});
+
+	/* Function to add a user to favorites */
+	function addToFavorite(userId) {
+		if (userId) {
+			var addToFavoriteCustomAjaxAction = customAjaxAction;
+			// serialize form
+			addToFavoriteCustomAjaxAction.setAjaxCallParams("user_id=" + userId + "&");
+			// setting action name
+			addToFavoriteCustomAjaxAction.setActionName("add_favorite");
+			// success callback function
+			var successCallback = function(jsonResponse) {
+				if (jsonResponse.success) {
+					// open bootstrap modal
+					bootstrapModalsObect.showSuccessModal(jsonResponse.message);
+				}
+			};
+			addToFavoriteCustomAjaxAction.setAjaxSuccessCallbackFunction(successCallback);
+			// perform ajax call to add favorite
+			addToFavoriteCustomAjaxAction.performAjaxAction();
+		}
+
+		return true;
+	}
 
 	/* function to remove "active" class to all vote type elements */
 	function deactivateGroupVoteType(voteTypeElement) {

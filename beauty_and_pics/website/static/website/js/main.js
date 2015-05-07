@@ -228,6 +228,29 @@ var bootstrapModalsObect = {
 
 		return false;
 	},
+
+	/* Function to build and show a success bootstrap modal */
+	showSuccessModal: function(message) {
+		if (message) {
+			this.resetBootstrapModal();
+			$(".bootstrap_modal").find('.modal-body').html("success:" + message);
+			this.showBootstrapModal();
+		}
+
+		return false;
+	},
+
+	/* Function to build and show an alert bootstrap modal */
+	showAlertModal: function(message) {
+		if (message) {
+			this.resetBootstrapModal();
+			$(".bootstrap_modal").find('.modal-body').html("alert: " + message);
+			this.showBootstrapModal();
+		}
+
+		return false;
+	},
+
 	/* custom bootstrap modal functions }}} */
 
 	getImageHtmlBlock: function(imageUrl) {

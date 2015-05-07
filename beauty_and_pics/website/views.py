@@ -147,6 +147,10 @@ def catwalk_profile(request, user_id):
     except UserAlreadyVotedError:
         user_already_voted = True
 
+    # TODO: check if favorite already exists for this account 
+    favorite_obj = Favorite()
+    user_already_favorite = favorite_obj.check_if_favorite_exists(user_id=request.user.id, favorite_user_id=user_id)
+
     # logger.debug("info account(" + str(user_id) + "): " + str(account_info))
 
     context = {
@@ -154,6 +158,7 @@ def catwalk_profile(request, user_id):
         "user_contest_info" : contest_account_info,
         "user_already_voted" : user_already_voted,
         "profile_image_url" : profile_image_url,
+        "user_already_favorite" : user_already_favorite,
     }
 
     return render(request, 'website/catwalk/catwalk_profile.html', context)
