@@ -289,6 +289,31 @@ var bootstrapModalsObect = {
 		return false;
 	},
 
+	/* Function to build and show favorite user bootstrap modal */
+    showFavoriteUserModal: function(userId, userFirstName, userLastName, userRanking, userPoints, userProfileImageUrl) {
+        this.resetBootstrapModal();
+        var messageBlockTemplate = '';
+        messageBlockTemplate += '<div class="row">';
+        messageBlockTemplate += '<div class="col-md-8">';
+        messageBlockTemplate += '<div class="favorite_popup_info_container">';
+        messageBlockTemplate += '<div class="favorite_popup_name_container">' + userFirstName + ' ' + userLastName + '</div>';
+        if (userRanking) {
+            messageBlockTemplate += '<div><span class="favorite_popup_ranking_value">' + userRanking + '</span> posizione</div>';
+        }
+        messageBlockTemplate += '<div class="favorite_popup_points_container"><span class="favorite_popup_points_value">' + userPoints + '</span> punti</div>';
+        messageBlockTemplate += '</div>';
+        messageBlockTemplate += '</div>';
+        messageBlockTemplate += '<div class="col-md-4">';
+        messageBlockTemplate += '<img class="favorite_profile_image" alt="Immagine profilo" src="' + userProfileImageUrl + '"';
+        messageBlockTemplate += '</div>';
+        messageBlockTemplate += '</div>';
+        $(".bootstrap_modal").find('.modal-title').html("Dettaglio utente");
+        $(".bootstrap_modal").find('.modal-footer').html('<button type="button" class="btn btn-default" data-dismiss="modal">Chiudi</button><a href="/passerella/dettaglio-utente/' + userId + '/" class="btn btn-success">Vai al profilo</a>');
+        $(".bootstrap_modal").find('.modal-body').html(messageBlockTemplate);
+        this.showBootstrapModal();
+
+        return false;
+    },
 	/* custom bootstrap modal functions }}} */
 
 	getImageHtmlBlock: function(imageUrl) {
@@ -303,7 +328,7 @@ var bootstrapModalsObect = {
 	deleteImageButtonHtmlBlock: function(imageId) {
 		var templateBlock = false;
 		if (imageId) {
-			templateBlock = '<button type="button" data-image-id="' + imageId + '" class="btn btn-success deleteProfileImageClickAction">Cancella</button>';
+			templateBlock = '<button type="button" data-image-id="' + imageId + '" class="btn btn-success deleteProfileImageClickAction">Cancella immagine</button>';
 		}
 
 		return templateBlock;
@@ -761,9 +786,9 @@ var elementsListObject = {
 	/* Function to retrieve an html blocks list, this must be appended to html page */
 		var items = "";
 		$.each(elementsList, function(index, singleElement) {
-			blockUrl = "passerella/dettaglio-utente/" + singleElement.user_id;
+			blockUrl = "#";
 			blockThumbnailImageUrl = singleElement.thumbnail_image_url;
-			items += elementsListObject.getSingleHtmlBlock(blockUrl, blockThumbnailImageUrl, false, false, singleElement.user_id);
+			items += elementsListObject.getSingleHtmlBlock(blockUrl, blockThumbnailImageUrl, false, "zoom-image", singleElement.user_id);
 		});
 
 		// return jQuery object

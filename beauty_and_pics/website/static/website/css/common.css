@@ -152,3 +152,11 @@ ul.grid_container li img:hover { opacity: 0.5; }
 /*.book_thumbnail { background-color: white; border-radius: 0px; display: block; margin: 0 3px 6px; padding: 0; height: 200px; overflow: hidden; width: auto; }*/
 .book_thumbnail { height: 250px!important; width: 100%!important; }
 .book_thumbnail:hover { background-color: #18bc9c; opacity: 0.8; }
+
+/* favorite user popup */
+.favorite_profile_image { width: 100%; }
+.favorite_popup_info_container > div { margin-bottom: 10px; }
+.favorite_popup_info_container .favorite_popup_ranking_value, .favorite_popup_info_container .favorite_popup_points_value { font-weight: bold; font-size: 21px; }
+.favorite_popup_info_container .favorite_popup_points_container { margin-bottom: 30px; }
+.favorite_popup_info_container .favorite_popup_name_container { margin-bottom: 20px; }
+

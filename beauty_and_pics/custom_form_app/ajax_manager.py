@@ -32,6 +32,7 @@ class ajaxManager():
         self.__valid_action_list += ('save_image',)
         self.__valid_action_list += ('delete_image',)
         self.__valid_action_list += ('add_favorite',)
+        self.__valid_action_list += ('get_user_info',)
 
         # retrieve action to perform
         self.ajax_action = request.POST.get("ajax_action")
@@ -143,7 +144,7 @@ class ajaxManager():
                         "image_url": settings.MEDIA_URL + image["image_id__image"],
                 }),
 
-        # TODO work on favorite section
+        # favorite section
         if elements_list_type == "favorite":
             book_obj = Book()
             favorite_obj = Favorite()
@@ -153,8 +154,8 @@ class ajaxManager():
             for favorite_user in filtered_elements:
                 logger.debug("element list: " + str(favorite_user))
                 json_account_element.append({
-                        "user_id": image["favorite_user__id"],
-                        "thumbnail_image_url": book_obj.get_profile_thumbnail_image_url(user_id=user_info["favorite_user__id"]),
+                        "user_id": favorite_user["favorite_user__id"],
+                        "thumbnail_image_url": book_obj.get_profile_thumbnail_image_url(user_id=favorite_user["favorite_user__id"]),
                 }),
         """
         data = {
@@ -300,6 +301,44 @@ class ajaxManager():
         else:
             if add_favorite_status:
                 data = {'success' : True}
+
+        # build JSON response
+        json_data_string = json.dumps(data)
+        self.set_json_response(json_response=json_data_string)
+
+        return True
+
+    def get_user_info(self):
+        """Function to retrieve user info"""
+        logger.debug("ajax_function: @@get_user_info@@")
+        logger.debug("parametri della chiamata: " + str(self.request.POST))
+
+        account_obj = Account()
+        book_obj = Book()
+        data = {'error' : True, 'message': "Controllare i parametri della chiamata"}
+        user_id = self.request.POST.get("user_id")
+
+        # retrieve user info
+        try:
+            account_info = account_obj.custom_user_id_data(user_id=user_id)
+        except Account.DoesNotExist:
+            # user id doesn't exists
+            pass
+        else:
+            # retrieve contest user info
+            contest_account_info = account_obj.get_contest_account_info(user_id=user_id)
+            # retrieve profile image url
+            profile_image_url = book_obj.get_profile_image_url(user_id=user_id)
+            # response data
+            response_data = {
+                "user_id" : account_info["user_id"],
+                "user_first_name" : account_info["first_name"],
+                "user_last_name" : account_info["last_name"],
+                "user_ranking" : contest_account_info["ranking"],
+                "user_points" : contest_account_info["total_points"],
+                "user_profile_image_url" : profile_image_url,
+            }
+            data = {'success' : True, "user_info" : response_data}
 
         # build JSON response
         json_data_string = json.dumps(data)

@@ -11,6 +11,9 @@ class Favorite(models.Model):
     class Meta:
         app_label = 'account_app'
 
+    def __unicode__(self):
+        return str(self.favorite_user.email)
+
     def add_favorite(self, user_id=None, favorite_user_id=None):
         """Function to add a new favorite user"""
         return_var = False
@@ -68,7 +71,7 @@ class Favorite(models.Model):
         if user_id:
             return_var = Favorite.objects.values('favorite_user__id').filter(user__id=user_id)
             # list orders
-            return_var = return_var.order_by('-favorite_user__id')
+            return_var = return_var.order_by('-id_favorite')
             # list limits
             return_var = return_var[filters_list["start_limit"]:filters_list["show_limit"]]
 
