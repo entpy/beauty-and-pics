@@ -21,33 +21,30 @@
 		</div>
 	</div>
 </div>
-<div class="manage_buttons_container">
-	<div class="manage_buttons_block1">Con i selezionati:</div>
-	<div class="manage_buttons_block2">
-		<button class="btn btn-success" type="button">Elimina</button>
-	</div>
-	<div class="manage_buttons_block3">
-		<a href="#">annulla selezione</a>
-	</div>
-</div>
-{# image grid #}
+{# image grid block {{{ #}
 <div class="row">
 	<div class="col-sm-12 margin_top_15 image_grid_container"></div>
 </div>
 <div class="text-center">
-	<a class="btn btn-success load_more_images" href="#">Carica altre</a>
+	<a class="btn btn-success loadMoreElementsAction" href="#">Carica altre</a>
 </div>
+{# image grid block }}} #}
 {% endblock container4_content %}
 
 {% block custom_js %}
 <script>
+	elementsListObject.addFilter("show_limit", 10);
+
 	$(document).ready(function(){
-		$(".load_more_images").click(function(){
-			var elements = getItems();
-			$(".image_grid_container").append(elements);
+		$("body").on("click",".loadMoreElementsAction", function(){
+			elementsListObject.setElementsListType("favorite");
+			elementsListObject.getElementsList();
 
 			return false;
 		});
+
+		// default click on load more elements button
+		$(".loadMoreElementsAction").click();
 	});
 </script>
 {% endblock custom_js %}

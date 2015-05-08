@@ -762,8 +762,8 @@ var elementsListObject = {
 		var items = "";
 		$.each(elementsList, function(index, singleElement) {
 			blockUrl = "passerella/dettaglio-utente/" + singleElement.user_id;
-			blockImageUrl = singleElement.image_url;
-			items += elementsListObject.getSingleHtmlBlock(blockUrl, blockImageUrl);
+			blockThumbnailImageUrl = singleElement.thumbnail_image_url;
+			items += elementsListObject.getSingleHtmlBlock(blockUrl, blockThumbnailImageUrl, false, false, singleElement.user_id);
 		});
 
 		// return jQuery object
@@ -802,15 +802,29 @@ var elementsListObject = {
 			if (!this.bootstrapBlockSize) {
 				this.bootstrapBlockSize = true;
 			}
-			var lg_size = (this.bootstrapBlockSize["lg_size"] ? this.bootstrapBlockSize["lg_size"] : "15");
-			var md_size = (this.bootstrapBlockSize["md_size"] ? this.bootstrapBlockSize["md_size"] : "3");
-			var sm_size = (this.bootstrapBlockSize["sm_size"] ? this.bootstrapBlockSize["sm_size"] : "3");
-			var xs_size = (this.bootstrapBlockSize["xs_size"] ? this.bootstrapBlockSize["xs_size"] : "6");
+
+			// retrieve bootstrap block size
+			var blockSize = this.getBlockSize();
 			// build html block with link and image
-			var returnVar = '<div class="col-lg-' + lg_size + ' col-md-' + md_size + ' col-xs-' + xs_size + ' col-sm-' + sm_size + ' thumb imgBlockContainer_' + imgId + '"><a href="' + blockUrl + '" class="thumbnail"><img alt="" src="' + blockThumbnailImageUrl + '" data-fullimage-url="' + blockImageUrl + '" data-image-id="' + imgId + '" class="img-responsive ' + imgTagClass + '"></a></div>'
+			var returnVar = '<div class="col-lg-' + blockSize["lg_size"] + ' col-md-' + blockSize["md_size"] + ' col-xs-' + blockSize["xs_size"] + ' col-sm-' + blockSize["sm_size"] + ' thumb imgBlockContainer_' + imgId + '"><a href="' + blockUrl + '" class="thumbnail"><img alt="" src="' + blockThumbnailImageUrl + '" data-fullimage-url="' + blockImageUrl + '" data-image-id="' + imgId + '" class="img-responsive ' + imgTagClass + '"></a></div>'
 		}
 
 		return returnVar;
+	},
+
+	getBlockSize : function() {
+	/* Function to retrieve bootstrap block size */
+		// setting bootstrap block size
+		if (!this.bootstrapBlockSize) {
+			this.bootstrapBlockSize = true;
+		}
+		var blockSize = Array();
+		blockSize["lg_size"] = (this.bootstrapBlockSize["lg_size"] ? this.bootstrapBlockSize["lg_size"] : "15");
+		blockSize["md_size"] = (this.bootstrapBlockSize["md_size"] ? this.bootstrapBlockSize["md_size"] : "3");
+		blockSize["sm_size"] = (this.bootstrapBlockSize["sm_size"] ? this.bootstrapBlockSize["sm_size"] : "3");
+		blockSize["xs_size"] = (this.bootstrapBlockSize["xs_size"] ? this.bootstrapBlockSize["xs_size"] : "6");
+
+		return blockSize;
 	},
 
 	writeHtmlBlock : function(htmlBlocksList) {

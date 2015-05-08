@@ -118,7 +118,7 @@ class ajaxManager():
             # retrieve current contest_type
             contest_obj = Contest()
             filtered_elements = Account_obj.get_filtered_accounts_list(filters_list=self.request.POST, contest_type=contest_obj.get_contest_type_from_session(request=self.request))
-            Book_obj = Book()
+            book_obj = Book()
 
             for user_info in filtered_elements:
                 logger.debug("element list: " + str(user_info))
@@ -126,14 +126,14 @@ class ajaxManager():
                         "user_id": user_info["user__id"],
                         "user_email": user_info["user__email"],
                         "total_points": user_info.get("total_points"),
-                        "thumbnail_image_url": Book_obj.get_profile_thumbnail_image_url(user_id=user_info["user__id"]),
+                        "thumbnail_image_url": book_obj.get_profile_thumbnail_image_url(user_id=user_info["user__id"]),
                 }),
 
         # photobook section
         if elements_list_type == "photobook":
-            Book_obj = Book()
+            book_obj = Book()
             user_id = self.request.POST.get("user_id")
-            filtered_elements = Book_obj.get_photobook_list(user_id=user_id, filters_list=self.request.POST)
+            filtered_elements = book_obj.get_photobook_list(user_id=user_id, filters_list=self.request.POST)
 
             for image in filtered_elements:
                 logger.debug("element list: " + str(image))
@@ -143,7 +143,19 @@ class ajaxManager():
                         "image_url": settings.MEDIA_URL + image["image_id__image"],
                 }),
 
-        # TODO favorite section
+        # TODO work on favorite section
+        if elements_list_type == "favorite":
+            book_obj = Book()
+            favorite_obj = Favorite()
+            user_id = self.request.user.id
+            filtered_elements = favorite_obj.get_favorites_list(user_id=user_id, filters_list=self.request.POST)
+
+            for favorite_user in filtered_elements:
+                logger.debug("element list: " + str(favorite_user))
+                json_account_element.append({
+                        "user_id": image["favorite_user__id"],
+                        "thumbnail_image_url": book_obj.get_profile_thumbnail_image_url(user_id=user_info["favorite_user__id"]),
+                }),
         """
         data = {
                 'success' : True,
@@ -156,7 +168,7 @@ class ajaxManager():
                 }
         """
 
-        data = {'success' : True, 'elements_list_type': elements_list_type, 'elements_list': json_account_element, }
+        data = {'success' : True, 'elements_list_type': elements_list_type, 'elements_list': json_account_element,}
         json_data_string = json.dumps(data)
         self.set_json_response(json_response=json_data_string)
 
@@ -193,9 +205,9 @@ class ajaxManager():
             pass
 
         if error_msg:
-            data = {'error' : True, 'message': error_msg }
+            data = {'error' : True, 'message': error_msg}
         else:
-            data = {'success' : True, 'message': "Grazie per aver votato. Tieni d'occhio la classifica!" }
+            data = {'success' : True, 'message': "Grazie per aver votato. Tieni d'occhio la classifica!"}
 
         # build JSON response
         json_data_string = json.dumps(data)
@@ -223,12 +235,12 @@ class ajaxManager():
             saved_image_id = saved_image_obj.image_id.id
         except croppedImageDoesNotExistError:
             logger.error("Errore nell'upload dell'immagine profilo, l'immagine richiesta non esiste nella tabella cropUploadedImages: " + str(self.request) + " | error code: " + str(croppedImageDoesNotExistError.get_error_code))
-            data = {'error' : True, 'message': "Errore inaspettato (codice=" + str(croppedImageDoesNotExistError.get_error_code) + "), sii gentile contatta l'amministratore!" }
+            data = {'error' : True, 'message': "Errore inaspettato (codice=" + str(croppedImageDoesNotExistError.get_error_code) + "), sii gentile contatta l'amministratore!"}
         except imageTypeWrongError:
             logger.error("Image type inserito non valido: " + str(self.request) + " | error code: " + str(imageTypeWrongError.get_error_code))
-            data = {'error' : True, 'message': "Errore inaspettato (codice=" + str(imageTypeWrongError.get_error_code) + "), sii gentile contatta l'amministratore!" }
+            data = {'error' : True, 'message': "Errore inaspettato (codice=" + str(imageTypeWrongError.get_error_code) + "), sii gentile contatta l'amministratore!"}
         else:
-            data = {'success' : True, 'image_url': saved_image_url, 'image_id': saved_image_id, 'message': "immagine salvata correttamente!" }
+            data = {'success' : True, 'image_url': saved_image_url, 'image_id': saved_image_id, 'message': "immagine salvata correttamente!"}
 
         # build JSON response
         json_data_string = json.dumps(data)
@@ -244,7 +256,7 @@ class ajaxManager():
         book_obj = Book()
 
         # retrieve uploaded image data
-        data = {'error' : True, 'message': "Controllare i parametri della chiamata" }
+        data = {'error' : True, 'message': "Controllare i parametri della chiamata"}
         image_id = self.request.POST.get("image_id")
         user_id = self.request.user.id
 
@@ -252,16 +264,16 @@ class ajaxManager():
             image_delete_status = book_obj.delete_book_image(image_id=image_id, user_id=user_id)
         except bookImageDoesNotExistError:
             logger.error("Errore nell'eliminazione dell'immagine, l'immagine richiesta non esiste nella tabella Book: " + str(self.request) + " | error code: " + str(bookImageDoesNotExistError.get_error_code))
-            data = {'error' : True, 'message': "Errore inaspettato (codice=" + str(bookImageDoesNotExistError.get_error_code) + "), sii gentile contatta l'amministratore!" }
+            data = {'error' : True, 'message': "Errore inaspettato (codice=" + str(bookImageDoesNotExistError.get_error_code) + "), sii gentile contatta l'amministratore!"}
         except croppedImageDoesNotExistError:
             logger.error("Errore nell'eliminazione dell'immagine, l'immagine richiesta non esiste nella tabella cropUploadedImages: " + str(self.request) + " | error code: " + str(croppedImageDoesNotExistError.get_error_code))
-            data = {'error' : True, 'message': "Errore inaspettato (codice=" + str(croppedImageDoesNotExistError.get_error_code) + "), sii gentile contatta l'amministratore!" }
+            data = {'error' : True, 'message': "Errore inaspettato (codice=" + str(croppedImageDoesNotExistError.get_error_code) + "), sii gentile contatta l'amministratore!"}
         except deleteImageReferenceError:
             logger.error("Errore nell'eliminazione dell'immagine, gli id utenti non coincidono: " + str(self.request) + " | error code: " + str(deleteImageReferenceError.get_error_code))
-            data = {'error' : True, 'message': "Errore inaspettato (codice=" + str(deleteImageReferenceError.get_error_code) + "), sii gentile contatta l'amministratore!" }
+            data = {'error' : True, 'message': "Errore inaspettato (codice=" + str(deleteImageReferenceError.get_error_code) + "), sii gentile contatta l'amministratore!"}
         else:
             if image_delete_status:
-                data = {'success' : True, 'image_id': image_id, 'message': "Immagine eliminata correttamente!" }
+                data = {'success' : True, 'image_id': image_id, 'message': "Immagine eliminata correttamente!"}
 
         # build JSON response
         json_data_string = json.dumps(data)
@@ -275,7 +287,7 @@ class ajaxManager():
         logger.debug("parametri della chiamata: " + str(self.request.POST))
 
         account_obj = Account()
-        data = {'error' : True, 'message': "Controllare i parametri della chiamata" }
+        data = {'error' : True, 'message': "Controllare i parametri della chiamata"}
         favorite_user_id = self.request.POST.get("user_id")
         user_id = self.request.user.id
 
@@ -284,10 +296,10 @@ class ajaxManager():
         try:
             add_favorite_status = favorite_obj.add_favorite(user_id=user_id, favorite_user_id=favorite_user_id)
         except userAlreadyAddedToFavoritesError:
-            data = {'error' : True, 'type': "already_added" }
+            data = {'error' : True, 'type': "already_added"}
         else:
             if add_favorite_status:
-                data = {'success' : True }
+                data = {'success' : True}
 
         # build JSON response
         json_data_string = json.dumps(data)
