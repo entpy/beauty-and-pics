@@ -72,10 +72,14 @@ class cropUploadedImages(models.Model):
     def save_image(self, tmp_uploaded_image_obj, crop_info, custom_crop_directory_name=None):
         """Function to (crop and) save uploaded image"""
         if tmp_uploaded_image_obj:
-            # retrieve images save path directory name
-            images_save_path = self.build_crop_image_directory(custom_crop_directory_name)
-            # create images save path directory name
-            self.create_cropped_image_directory(images_save_path)
+	    if USE_BOTO:
+		# retrieve boto images save path directory name
+		images_save_path = self.build_boto_crop_directory(custom_crop_directory_name)
+	    else:
+		# retrieve images save path directory name
+		images_save_path = self.build_crop_image_directory(custom_crop_directory_name)
+		# create images save path directory name
+		self.create_cropped_image_directory(images_save_path)
             # retrieve a valid image with or without crop
             valid_image = self.create_valid_image(tmp_uploaded_image_obj=tmp_uploaded_image_obj, crop_info=crop_info)
             # get dimensions about image
@@ -93,19 +97,46 @@ class cropUploadedImages(models.Model):
                 logger.debug("thumbnail image name: " + str(thumbnail_image_name))
                 logger.debug("thumbnail image: " + str(cropped_image_thumbnail))
 		# save valid cropped (or not) image and thumbnail image into filesystem
-                valid_image_saved = self.write_image_into_fs(image_obj=valid_image, save_full_path=images_save_path + valid_image_name)
-                thumbnail_image_saved = self.write_image_into_fs(image_obj=cropped_image_thumbnail, save_full_path=images_save_path + thumbnail_image_name)
+		if USE_BOTO:
+		    valid_image_saved = self.write_image_into_cloud(image_obj=valid_image, image_path=images_save_path + valid_image_name, image_name=valid_image_name)
+		    thumbnail_image_saved = self.write_image_into_cloud(image_obj=cropped_image_thumbnail, image_path=images_save_path + thumbnail_image_name, image_name=thumbnail_image_name)
+		else:
+		    valid_image_saved = self.write_image_into_fs(image_obj=valid_image, save_full_path=images_save_path + valid_image_name)
+		    thumbnail_image_saved = self.write_image_into_fs(image_obj=cropped_image_thumbnail, save_full_path=images_save_path + thumbnail_image_name)
 		# save valid cropped (or not) image and thumbnail image into database
 		thumbnail_row_saved = self.write_image_into_db(image_path=APP_BASE_DIRECTORY + CROPPED_IMG_DIRECTORY + custom_crop_directory_name + "/" + thumbnail_image_name, thumbnail_image=None)
 		valid_image_row_saved = self.write_image_into_db(image_path=APP_BASE_DIRECTORY + CROPPED_IMG_DIRECTORY + custom_crop_directory_name + "/" + valid_image_name, thumbnail_image=thumbnail_row_saved)
 
         return valid_image_row_saved
 
+    # TODO: work on this function
+    def write_image_into_cloud(self, image_obj, image_path, image_name):
+        """Function to write an image obj to fs"""
+	import boto
+	import boto.s3.connection
+	from boto.s3.bucket import Bucket
+        if image_obj and image_path and image_name:
+	    # create boto connection
+	    conn = boto.connect_s3(calling_format = boto.s3.connection.OrdinaryCallingFormat(),)
+	    # logger.info("bucket list: " + str(bolo_bucket)) # connection test
+	    # set bucket
+	    bolo_bucket = Bucket(connection=conn, name=self.get_bucket_name())
+	    # retrieve image type
+	    image_type = self.get_image_type(image_name=image_name)
+	    # write image inside bucket
+	    key = bolo_bucket.new_key(image_path)
+	    # key.set_metadata("Content-Type", image_type)
+	    key.set_contents_from_string(image_obj.image, headers={"Content-Type": image_type})
+	    # key.make_public()
+	    # logger.info("image type: " + str(image_type))
+
+        return image_obj
+
     def write_image_into_fs(self, image_obj, save_full_path):
         """Function to write an image obj to fs"""
         if image_obj and save_full_path:
             image_obj.save(save_full_path)
-            logger.debug("image: " + str(image_obj) + " saved on fs")
+            logger.debug("image: " + str(image_obj) + " saved on fs (" + str(save_full_path) + ")")
 
         return image_obj
 
@@ -158,12 +189,46 @@ class cropUploadedImages(models.Model):
 
 	return new_file_name
 
+    def get_image_type(self, image_name):
+	"""Function to retrieve image type"""
+	return_var = False
+        mimetypes = {'.jpg': 'image/jpeg', '.jpeg': 'image/jpeg', '.png': 'image/png',} # http://www.sitepoint.com/web-foundations/mime-types-complete-list/
+	if image_name:
+	    file_name, file_extension = os.path.splitext(image_name)
+	    return_var = mimetypes.get(file_extension)
+
+	return return_var
+
     def build_crop_image_directory(self, custom_crop_directory_name=None):
 	"""Function to build crop image directory"""
 	crop_image_directory = settings.MEDIA_ROOT + "/" + APP_BASE_DIRECTORY + CROPPED_IMG_DIRECTORY + custom_crop_directory_name + "/"
         logger.debug("crop_image_directory: " + str(crop_image_directory))
 
 	return crop_image_directory
+
+    def build_boto_crop_directory(self, custom_crop_directory_name=None):
+        """Function to retrieve boto directory path"""
+        return_var = False
+        if settings.BOTO_APP_DIR:
+	    # custom boto directory
+	    return_var = settings.BOTO_APP_DIR + custom_crop_directory_name + "/"
+	elif BOTO_APP_DIR:
+	    # default boto directory
+	    return_var = BOTO_APP_DIR + custom_crop_directory_name + "/"
+
+        return return_var
+
+    def get_bucket_name(self):
+        """Function to retrieve boto bucket name"""
+        return_var = False
+        if settings.BOTO_BUCKET:
+	    # custom boto directory
+	    return_var = settings.BOTO_BUCKET
+	elif BOTO_BUCKET:
+	    # default boto directory
+	    return_var = BOTO_BUCKET
+
+        return return_var
 
     def get_custom_crop_directory(self, request):
         """Function to retrieve crop directory name"""

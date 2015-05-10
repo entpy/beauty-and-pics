@@ -21,6 +21,11 @@ CROPPED_IMG_DIRECTORY = 'cropped_upload/'
 CROPPED_IMG_MIN_WIDTH = 200
 CROPPED_IMG_MIN_HEIGHT = 200
 
+# custom directory with boto
+USE_BOTO = True
+BOTO_BUCKET = 'upload_image_box'
+BOTO_APP_DIR = '/'
+
 # TODO
 """
 TODO

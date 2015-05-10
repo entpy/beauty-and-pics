@@ -34,6 +34,7 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'storages',
     'account_app',
     'contest_app',
     'website',
@@ -101,16 +102,6 @@ USE_I18N = True
 USE_L10N = True
 
 USE_TZ = False
-
-
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/1.7/howto/static-files/
-
-STATIC_URL = '/static/'
-
-STATICFILES_DIRS = (
-    os.path.join(BASE_DIR, "static"),
-)
 
 """
 HOW TO SUL LOGGING
@@ -180,21 +171,23 @@ LOGGING = {
     }
 }
 
+BOTO_BUCKET = 'beauty-and-pics'
+BOTO_APP_DIR = 'home/'
+
 MEDIA_ROOT = '/tmp/images'
 MEDIA_URL = '/tmp/'
-CUSTOM_CROPPED_IMG_DIRECTORY = 'green/'
+
+# Static files (CSS, JavaScript, Images)
+# https://docs.djangoproject.com/en/1.7/howto/static-files/
+
+STATIC_URL = '/static/'
+
+STATICFILES_DIRS = (
+    os.path.join(BASE_DIR, "static"),
+)
 
 # email settings
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend' # this backend is only for development debug
-
-THUMBNAIL_ALIASES = {
-    '': {
-        'avatar': {'size': (250, 250), 'crop': True},
-    },
-}
-
-# AJAX image Settings
-# AJAXIMAGE_AUTH_TEST = lambda u: True
 
 # loading local settings
 try:
