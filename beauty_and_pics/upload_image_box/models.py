@@ -111,24 +111,29 @@ class cropUploadedImages(models.Model):
 
     # TODO: work on this function
     def write_image_into_cloud(self, image_obj, image_path, image_name):
-        """Function to write an image obj to fs"""
+        """
+        Function to write an image into cloud storage
+        (Es. Amazon S3 or Aruba Object Cloud Storage)
+        """
 	import boto
 	import boto.s3.connection
 	from boto.s3.bucket import Bucket
         if image_obj and image_path and image_name:
 	    # create boto connection
 	    conn = boto.connect_s3(calling_format = boto.s3.connection.OrdinaryCallingFormat(),)
-	    # logger.info("bucket list: " + str(bolo_bucket)) # connection test
+	    # logger.info("bucket list: " + str(boto_bucket)) # connection test
 	    # set bucket
-	    bolo_bucket = Bucket(connection=conn, name=self.get_bucket_name())
+	    boto_bucket = Bucket(connection=conn, name=self.get_bucket_name())
+	    # prepare new file
+	    key = boto_bucket.new_key(image_path)
 	    # retrieve image type
 	    image_type = self.get_image_type(image_name=image_name)
-	    # write image inside bucket
-	    key = bolo_bucket.new_key(image_path)
-	    # key.set_metadata("Content-Type", image_type)
-	    key.set_contents_from_string(image_obj.image, headers={"Content-Type": image_type})
-	    # key.make_public()
-	    # logger.info("image type: " + str(image_type))
+	    key.set_metadata("Content-Type", image_type)
+            # write image inside bucket
+	    key.set_contents_from_string(image_obj.tostring("raw", "RGBA", 0, -1))
+	    # key.load()
+	    logger.info("image tostring: " + str(image_obj.tostring("raw", "RGBA", 0, -1)))
+	    logger.info("image load: " + str(image_obj.load()))
 
         return image_obj
 
