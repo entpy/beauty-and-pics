@@ -6,7 +6,7 @@ from datetime import timedelta
 from django.utils import timezone
 from .settings import *
 from PIL import Image
-import os, logging, shutil, uuid
+import os, logging, shutil, uuid, cStringIO
 
 # Get an instance of a logger
 logger = logging.getLogger(__name__)
@@ -80,8 +80,12 @@ class cropUploadedImages(models.Model):
 		images_save_path = self.build_crop_image_directory(custom_crop_directory_name)
 		# create images save path directory name
 		self.create_cropped_image_directory(images_save_path)
+
             # retrieve a valid image with or without crop
             valid_image = self.create_valid_image(tmp_uploaded_image_obj=tmp_uploaded_image_obj, crop_info=crop_info)
+            if FORCE_JPEG:
+                # convert image to jpeg
+                valid_image = self.convert_image_to_jpeg(image=valid_image)
             # get dimensions about image
             cropped_width, cropped_height = valid_image.size
             if cropped_width >= CROPPED_IMG_MIN_WIDTH and cropped_height >= CROPPED_IMG_MIN_HEIGHT:
@@ -96,7 +100,8 @@ class cropUploadedImages(models.Model):
                 logger.debug("valid image: " + str(valid_image))
                 logger.debug("thumbnail image name: " + str(thumbnail_image_name))
                 logger.debug("thumbnail image: " + str(cropped_image_thumbnail))
-		# save valid cropped (or not) image and thumbnail image into filesystem
+		# save valid cropped (or not) image and thumbnail image into
+                # cloud or filesystem
 		if USE_BOTO:
 		    valid_image_saved = self.write_image_into_cloud(image_obj=valid_image, image_path=images_save_path + valid_image_name, image_name=valid_image_name)
 		    thumbnail_image_saved = self.write_image_into_cloud(image_obj=cropped_image_thumbnail, image_path=images_save_path + thumbnail_image_name, image_name=thumbnail_image_name)
@@ -128,14 +133,37 @@ class cropUploadedImages(models.Model):
 	    key = boto_bucket.new_key(image_path)
 	    # retrieve image type
 	    image_type = self.get_image_type(image_name=image_name)
-	    key.set_metadata("Content-Type", image_type)
+	    key.set_metadata("Content-Type", image_type["mimetype"])
             # write image inside bucket
-	    key.set_contents_from_string(image_obj.tostring("raw", "RGBA", 0, -1))
+	    key.set_contents_from_string(self.prepare_image_to_cloud(image=image_obj, image_name=image_name))
 	    # key.load()
-	    logger.info("image tostring: " + str(image_obj.tostring("raw", "RGBA", 0, -1)))
-	    logger.info("image load: " + str(image_obj.load()))
+	    logger.info("image tostring: " + str(self.prepare_image_to_cloud(image=image_obj, image_name=image_name)))
 
         return image_obj
+
+    def convert_image_to_jpeg(self, image):
+        """Function to convert an image to jpeg"""
+        bg = Image.new("RGB", image.size)
+        bg.paste(image)
+
+        return bg
+
+    def prepare_image_to_cloud(self, image, image_name):
+        """
+        Function to retrieve output image
+        http://stackoverflow.com/questions/6685500/upload-resized-image-to-s3
+        """
+        return_var = False
+        if image and image_name:
+            image_type = self.get_image_type(image_name=image_name)
+            #NOTE, we're saving the image into a cStringIO object to avoid writing to disk
+            out_im = cStringIO.StringIO()
+            #You MUST specify the file type because there is no file name to discern it from
+            image.save(out_im, image_type["format"])
+            #Note we're setting contents from the in-memory string provided by cStringIO
+            return_var = out_im.getvalue()
+
+        return return_var
 
     def write_image_into_fs(self, image_obj, save_full_path):
         """Function to write an image obj to fs"""
@@ -177,7 +205,10 @@ class cropUploadedImages(models.Model):
 	"""Function to retrieve image name about a full image path, ie. '/tmp/image/file1.png' -> must return 'file1.png' """
 	head, tail = os.path.split(full_image_path)
 	file_name, file_extension = os.path.splitext(full_image_path)
-	# low risk of file name collision (if file exists generate a new name)
+        if FORCE_JPEG:
+            # force jpeg
+            file_extension = '.jpg'
+	# file name collision low risk (if file exists generate a new name)
 	new_file_name = str(uuid.uuid4()) + file_extension
 
         # if os.path.isfile(fname)
@@ -189,18 +220,29 @@ class cropUploadedImages(models.Model):
     def get_image_thumbnail_name(self, valid_image_name):
 	"""Function to retrieve thumbnail image name about a full image path, ie. '/tmp/image/file1.png' -> must return 'file1.png' """
 	file_name, file_extension = os.path.splitext(valid_image_name)
-	# low risk of file name collision (if file exists generate a new name)
+        if FORCE_JPEG:
+            # force jpeg
+            file_extension = '.jpg'
+	# file name collision low risk (if file exists generate a new name)
 	new_file_name = str(file_name) + "_thumb" + str(file_extension)
 
 	return new_file_name
 
     def get_image_type(self, image_name):
-	"""Function to retrieve image type"""
+	"""Function to retrieve image type and file extension"""
 	return_var = False
-        mimetypes = {'.jpg': 'image/jpeg', '.jpeg': 'image/jpeg', '.png': 'image/png',} # http://www.sitepoint.com/web-foundations/mime-types-complete-list/
+        # http://www.sitepoint.com/web-foundations/mime-types-complete-list/
+        mimetypes = {
+                '.jpg': { 'format': 'JPEG', 'mimetype': 'image/jpeg', },
+                '.jpeg': { 'format': 'JPEG', 'mimetype': 'image/jpeg', },
+                '.png': { 'format': 'PNG', 'mimetype': 'image/png', },
+        }
 	if image_name:
-	    file_name, file_extension = os.path.splitext(image_name)
-	    return_var = mimetypes.get(file_extension)
+            if FORCE_JPEG:
+                return_var = mimetypes.get('.jpeg')
+            else:
+                file_name, file_extension = os.path.splitext(image_name)
+                return_var = mimetypes.get(file_extension)
 
 	return return_var
 

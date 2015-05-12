@@ -16,10 +16,11 @@ BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 
 APP_BASE_DIRECTORY = 'upload_image_box/'
 UPLOADED_IMG_TMP_DIRECTORY = 'tmp_upload/'
-UPLOADED_IMG_TMP_MAX_LIFETIME = 300 # 5 minutes = 300 seconds
+UPLOADED_IMG_TMP_MAX_LIFETIME = 300 # 5 minutes = 300 seconds after tmp images deletion
 CROPPED_IMG_DIRECTORY = 'cropped_upload/'
 CROPPED_IMG_MIN_WIDTH = 200
 CROPPED_IMG_MIN_HEIGHT = 200
+FORCE_JPEG = True # force saved images ad .jpg
 
 # custom directory with boto
 USE_BOTO = True
