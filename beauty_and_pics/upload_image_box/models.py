@@ -105,16 +105,18 @@ class cropUploadedImages(models.Model):
 		if USE_BOTO:
 		    valid_image_saved = self.write_image_into_cloud(image_obj=valid_image, image_path=images_save_path + valid_image_name, image_name=valid_image_name)
 		    thumbnail_image_saved = self.write_image_into_cloud(image_obj=cropped_image_thumbnail, image_path=images_save_path + thumbnail_image_name, image_name=thumbnail_image_name)
+		    # save valid cropped (or not) image and thumbnail image into database
+		    thumbnail_row_saved = self.write_image_into_db(image_path=images_save_path + thumbnail_image_name, thumbnail_image=None)
+		    valid_image_row_saved = self.write_image_into_db(image_path=images_save_path + valid_image_name, thumbnail_image=thumbnail_row_saved)
 		else:
 		    valid_image_saved = self.write_image_into_fs(image_obj=valid_image, save_full_path=images_save_path + valid_image_name)
 		    thumbnail_image_saved = self.write_image_into_fs(image_obj=cropped_image_thumbnail, save_full_path=images_save_path + thumbnail_image_name)
-		# save valid cropped (or not) image and thumbnail image into database
-		thumbnail_row_saved = self.write_image_into_db(image_path=APP_BASE_DIRECTORY + CROPPED_IMG_DIRECTORY + custom_crop_directory_name + "/" + thumbnail_image_name, thumbnail_image=None)
-		valid_image_row_saved = self.write_image_into_db(image_path=APP_BASE_DIRECTORY + CROPPED_IMG_DIRECTORY + custom_crop_directory_name + "/" + valid_image_name, thumbnail_image=thumbnail_row_saved)
+		    # save valid cropped (or not) image and thumbnail image into database
+		    thumbnail_row_saved = self.write_image_into_db(image_path=APP_BASE_DIRECTORY + CROPPED_IMG_DIRECTORY + custom_crop_directory_name + "/" + thumbnail_image_name, thumbnail_image=None)
+		    valid_image_row_saved = self.write_image_into_db(image_path=APP_BASE_DIRECTORY + CROPPED_IMG_DIRECTORY + custom_crop_directory_name + "/" + valid_image_name, thumbnail_image=thumbnail_row_saved)
 
         return valid_image_row_saved
 
-    # TODO: work on this function
     def write_image_into_cloud(self, image_obj, image_path, image_name):
         """
         Function to write an image into cloud storage

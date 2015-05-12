@@ -21,6 +21,7 @@ CROPPED_IMG_DIRECTORY = 'cropped_upload/'
 CROPPED_IMG_MIN_WIDTH = 200
 CROPPED_IMG_MIN_HEIGHT = 200
 FORCE_JPEG = True # force saved images ad .jpg
+MEDIA_URL = '/tmp' 
 
 # custom directory with boto
 USE_BOTO = True
