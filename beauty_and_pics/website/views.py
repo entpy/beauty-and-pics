@@ -305,10 +305,8 @@ def profile_area51(request):
 
         # check whether it's valid:
         if delete_user_form.is_valid() and delete_user_form.form_actions():
-            # TODO: show message in home page
-            messages.add_message(request, messages.SUCCESS, 'Utente eliminato correttamente')
-            # redirect to user profile
-            return HttpResponseRedirect('/')
+            # redirect to logout page
+            return HttpResponseRedirect('/logout')
 
     # if a GET (or any other method) we'll create a blank form
     else:
