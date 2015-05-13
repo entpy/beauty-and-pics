@@ -39,4 +39,4 @@ urlpatterns = patterns('',
     url(r'^upload_image/', include('upload_image_box.urls', namespace="upload_image_box")),
     # upload image example
     url(r'^example_upload_image/', include('upload_image_box.example.urls', namespace="example_upload_image_box")),
-) + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+) + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT) + static(settings.MEDIA_URL_TMP, document_root=settings.MEDIA_ROOT)

@@ -136,9 +136,8 @@ class cropUploadedImages(models.Model):
 	    # retrieve image type
 	    image_type = self.get_image_type(image_name=image_name)
 	    key.set_metadata("Content-Type", image_type["mimetype"])
-            # write image inside bucket
-	    key.set_contents_from_string(self.prepare_image_to_cloud(image=image_obj, image_name=image_name))
-	    # key.load()
+            # write image inside bucket (with show permission)
+	    key.set_contents_from_string(self.prepare_image_to_cloud(image=image_obj, image_name=image_name), policy='public-read')
 	    logger.info("image tostring: " + str(self.prepare_image_to_cloud(image=image_obj, image_name=image_name)))
 
         return image_obj
