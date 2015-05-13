@@ -62,7 +62,6 @@ class Account(models.Model):
         try:
             return_var = User.objects.get(email=email)
         except User.DoesNotExist:
-            return_var = False
             raise
 
         return return_var
@@ -73,10 +72,26 @@ class Account(models.Model):
         try:
             return_var = User.objects.get(pk=user_id)
         except User.DoesNotExist:
-            return_var = False
             raise
 
         return return_var
+
+    def delete_user(self, user_id=None, logged_user_id=None):
+        """Function to delete user"""
+        if user_id and logged_user_id:
+            if user_id == logged_user_id:
+                try:
+                    user_obj = User.objects.get(pk=user_id)
+                    user_obj.delete()
+                    # TODO: delete addictional data if required
+                except User.DoesNotExist:
+                    raise UserDeleteDoesNotExistsError
+            else:
+                raise UserDeleteIdDoesNotMatchError
+        else:
+            raise UserDeleteDoesNotExistsError
+
+        return True
 
     def register_account(self, user_info=None):
         """Function to register a new account"""

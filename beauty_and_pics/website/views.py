@@ -16,6 +16,7 @@ from custom_form_app.forms.login_form import *
 from custom_form_app.forms.password_recover import *
 from custom_form_app.forms.account_edit_form import *
 from custom_form_app.forms.area51_form import *
+from custom_form_app.forms.delete_user_form import *
 from custom_form_app.forms.help_request_form import *
 from custom_form_app.forms.upload_book_form import *
 import logging
@@ -298,16 +299,29 @@ def profile_area51(request):
             # redirect to user profile
             return HttpResponseRedirect('/profilo/zona-proibita/')
 
+        # delete user block
+        delete_user_form = DeleteUserForm(request.POST)
+        delete_user_form.set_current_request(request=request)
+
+        # check whether it's valid:
+        if delete_user_form.is_valid() and delete_user_form.form_actions():
+            # TODO: show message in home page
+            messages.add_message(request, messages.SUCCESS, 'Utente eliminato correttamente')
+            # redirect to user profile
+            return HttpResponseRedirect('/')
+
     # if a GET (or any other method) we'll create a blank form
     else:
         # pre-prepopulate post dictionary with current user data
         account_obj =  Account()
         request.POST = account_obj.get_autenticated_user_data(request=request)
         form = Area51Form()
+        delete_user_form = DeleteUserForm()
 
     context = {
         "post" : request.POST,
         "form": form,
+        "delete_user_form": delete_user_form,
     }
 
     return render(request, 'website/profile/profile_area51.html', context)

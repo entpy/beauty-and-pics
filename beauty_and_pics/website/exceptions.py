@@ -76,6 +76,16 @@ class deleteImageReferenceError(Exception):
     pass
 
 class userAlreadyAddedToFavoritesError(Exception):
-    """Exception on multiple add to favorite on same user action"""
+    """Exception on multiple add to favorite on same user action."""
     get_error_code = "016"
+    pass
+
+class UserDeleteIdDoesNotMatchError(Exception):
+    """Error in user delete, user id and logged in user id doesn't match."""
+    get_error_code = "017"
+    pass
+
+class UserDeleteDoesNotExistsError(Exception):
+    """Error in user delete, user id doesn't exists."""
+    get_error_code = "018"
     pass
