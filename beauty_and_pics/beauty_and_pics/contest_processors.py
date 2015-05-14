@@ -2,6 +2,7 @@
 from account_app.models.accounts import *
 from account_app.models.images import *
 from contest_app.models.contests import *
+from contest_app.models.hall_of_fame import *
 from beauty_and_pics.consts import project_constants
 import logging
 
@@ -13,6 +14,7 @@ def common_contest_processors(request):
     account_obj =  Account()
     book_obj = Book()
     contest_obj = Contest()
+    hall_of_fame_obj = HallOfFame()
     logger.info("@@@current contest_type: " + str(contest_obj.get_contest_type_from_session(request=request)))
 
     ### template context vars {{{ ###
@@ -22,6 +24,8 @@ def common_contest_processors(request):
     profile_thumbnail_image_url = None
     # current contest start_time
     contest_info = contest_obj.get_contest_info_about_type(contest_type=contest_obj.get_contest_type_from_session(request=request))
+    # last contest winner
+    contest_winner = hall_of_fame_obj.get_last_active_contest_winner(contest_type==contest_obj.get_contest_type_from_session(request=request))
     ### template context vars }}} ###
 
     autenticated_user_data = account_obj.get_autenticated_user_data(request=request)
@@ -36,4 +40,5 @@ def common_contest_processors(request):
             'top_five_account': top_five_account,
             'profile_thumbnail_image_url': profile_thumbnail_image_url,
             'contest_info': contest_info,
+            'contest_winner': contest_winner,
     }

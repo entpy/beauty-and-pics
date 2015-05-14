@@ -60,6 +60,7 @@ class Contest(models.Model):
         return True
 
     def __close_contests(self):
+        from contest_app.models.hall_of_fame import HallOfFame
         """Function to close contests
         Funzione per chiudere i concorsi()
 
@@ -71,6 +72,9 @@ class Contest(models.Model):
         """
         for contest in Contest.objects.filter(status=project_constants.CONTEST_ACTIVE):
             if timezone.now() >= contest.end_date:
+                # save best users inside hall of fame
+                hall_of_fame_obj = HallOfFame()
+                hall_of_fame_obj.save_active_contest_hall_of_fame(contest_type=contest.contest_type.code)
                 # send an email
                 logger.info("contest chiuso:" + str(contest))
                 pass
@@ -201,6 +205,16 @@ class Contest(models.Model):
 
         return return_var
 
+    def get_last_active_contests_by_type(self, contest_type):
+        """Function to retrieve last active contest by contest_type"""
+        return_var = None
+	try:
+            return_var = Contest.objects.get(status=project_constants.CONTEST_ACTIVE, contest_type__code=contest_type).order_by('-id_contest')[0]
+	except Contest.DoesNotExist:
+	    pass
+
+        return return_var
+
     def get_contest_info_about_type(self, contest_type):
         """Function to retrieve contest info about contest_type"""
         return_var = {}
@@ -264,8 +278,17 @@ class Contest(models.Model):
 
     def set_contest_type(self, request, contest_type=None):
         """Function to save contest_type identified into session"""
+        return_var = False
         if contest_type:
             if self.contest_type_exists_check(contest_type=str(contest_type)):
                 request.session['contest_type'] = str(contest_type)
+                return_var = True
 
-        return True
+        return return_var
+
+    def get_contest_year(self, contest_obj=None):
+        """Function to retrieve start_date year about a contest"""
+        return_var = False
+        if contest_obj:
+            return_var = contest_obj.start_date.year
+        return return_var

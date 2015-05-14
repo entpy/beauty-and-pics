@@ -222,6 +222,23 @@
 									<a class="btn btn-danger" href="/registrati/">Partecipa</a>
 								</div>
 							</div>
+							{# winner user block {{{ #}
+							{% if contest_winner %}
+							<div class="text-center inline_block generic_container9">
+								<div class="title">
+									<h4>Vincitore anno {{ contest_winner.contest_year }}</h4>
+								</div>
+								<div class="winner_block_wrapper">
+									<div>{{ contest_winner.first_name }} {{ contest_winner.first_name }}</div>
+									<div><img alt="Profile image" src="{{ contest_winner.profile_image }}"></div>
+									<div>{{ contest_winner.points }} punti</div>
+									{% if contest_winner.user %}
+										<div><a class="btn btn-danger" href="/passerella/dettaglio-utente/{{ contest_winner.user.id }}/">Guarda profilo</a></div>
+									{% endif %}
+								</div>
+							</div>
+							{% endif %}
+							{# right classification block }}} #}
 							{# right classification block {{{ #}
 							{% if top_five_account %}
 							<div class="text-center inline_block generic_container9">
