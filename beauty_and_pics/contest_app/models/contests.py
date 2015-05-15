@@ -208,10 +208,18 @@ class Contest(models.Model):
     def get_last_active_contests_by_type(self, contest_type):
         """Function to retrieve last active contest by contest_type"""
         return_var = None
-	try:
-            return_var = Contest.objects.get(status=project_constants.CONTEST_ACTIVE, contest_type__code=contest_type).order_by('-id_contest')[0]
-	except Contest.DoesNotExist:
-	    pass
+        last_contest_list = Contest.objects.filter(status=project_constants.CONTEST_ACTIVE, contest_type__code=contest_type).order_by('-id_contest')
+        if last_contest_list:
+            return_var = last_contest_list[0]
+
+        return return_var
+
+    def get_last_closed_contests_by_type(self, contest_type):
+        """Function to retrieve last active contest closed by contest_type"""
+        return_var = None
+        last_contest_list = Contest.objects.filter(status=project_constants.CONTEST_CLOSED, contest_type__code=contest_type).order_by('-id_contest')
+        if last_contest_list:
+            return_var = last_contest_list[0]
 
         return return_var
 
@@ -286,9 +294,9 @@ class Contest(models.Model):
 
         return return_var
 
-    def get_contest_year(self, contest_obj=None):
+    def get_contest_year(self, contest=None):
         """Function to retrieve start_date year about a contest"""
         return_var = False
-        if contest_obj:
-            return_var = contest_obj.start_date.year
+        if contest:
+            return_var = contest.start_date.year
         return return_var

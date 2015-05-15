@@ -179,7 +179,7 @@ class cropUploadedImages(models.Model):
         thumb = None
         if image:
             thumb = image.copy()
-            size = [200,200]
+            size = [CROPPED_IMG_MIN_WIDTH,CROPPED_IMG_MIN_HEIGHT]
             thumb.thumbnail(size, Image.ANTIALIAS)
             # logger.debug("thumbnail image: " + str(image))
 

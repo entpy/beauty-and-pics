@@ -25,7 +25,7 @@ def common_contest_processors(request):
     # current contest start_time
     contest_info = contest_obj.get_contest_info_about_type(contest_type=contest_obj.get_contest_type_from_session(request=request))
     # last contest winner
-    contest_winner = hall_of_fame_obj.get_last_active_contest_winner(contest_type==contest_obj.get_contest_type_from_session(request=request))
+    contest_winner = hall_of_fame_obj.get_last_active_contest_winner(contest_type=contest_obj.get_contest_type_from_session(request=request))
     ### template context vars }}} ###
 
     autenticated_user_data = account_obj.get_autenticated_user_data(request=request)

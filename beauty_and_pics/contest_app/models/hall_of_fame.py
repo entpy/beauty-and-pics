@@ -12,11 +12,12 @@ logger = logging.getLogger(__name__)
 class HallOfFame(models.Model):
     id_hall_of_fame = models.AutoField(primary_key=True)
     contest = models.ForeignKey('Contest')
-    user = models.ForeignKey(User, null=True)
+    user = models.ForeignKey(User, null=True, on_delete=models.SET_NULL)
     first_name = models.CharField(max_length=50, null=True)
     last_name = models.CharField(max_length=50, null=True)
     email = models.CharField(max_length=75)
     profile_image = models.ImageField(max_length=500, null=True)
+    profile_thumbnail_image = models.ImageField(max_length=500, null=True)
     ranking = models.IntegerField()
     points = models.IntegerField(max_length=50)
 
@@ -34,6 +35,7 @@ class HallOfFame(models.Model):
         * last_name
         * email
         * profile_image
+        * profile_thumbnail_image
         * ranking
         * points
     """
@@ -60,6 +62,7 @@ class HallOfFame(models.Model):
                     hall_of_fame_obj.last_name = single_user["user_last_name"]
                     hall_of_fame_obj.email = single_user["user_email"]
                     hall_of_fame_obj.profile_image = single_user["user_profile_image_url"]
+                    hall_of_fame_obj.profile_thumbnail_image = single_user["user_profile_thumbnail_image_url"]
                     hall_of_fame_obj.ranking = ranking
                     hall_of_fame_obj.points = single_user["user_total_points"]
                     hall_of_fame_obj.save()
@@ -68,18 +71,36 @@ class HallOfFame(models.Model):
 
         return return_var
 
-    def get_last_active_contest_hall_of_fame(self, contest_type=None):
+    def get_last_active_contest_hall_of_fame(self, contest_type=None, only_winner=False):
         """Function to retrieve hall of fame about a contest (last active contest)"""
         contest_obj = Contest()
         return_var = None
 
         if contest_type:
             # retrieve last active contest
-            last_active_contest = contest_obj.get_last_active_contests_by_type(contest_type=contest_type)
-            if last_active_contest:
+            last_closed_contest = contest_obj.get_last_closed_contests_by_type(contest_type=contest_type)
+            if last_closed_contest:
                 # retrieve all hall of fame users about last active contest
-                return_var = HallOfFame.objects.get(contest__contest_type__code=last_active_contest.contest_type.code).order_by('ranking')
-                return_var["contest_year"] = contest_obj.get_contest_year(contest=last_active_contest)
+                hall_of_fame_users = HallOfFame.objects.values(
+                        'contest__start_date',
+                        'user__id',
+                        'first_name',
+                        'last_name',
+                        'email',
+                        'profile_image',
+                        'profile_thumbnail_image',
+                        'ranking',
+                        'points',
+                        ).filter(contest__id_contest=last_closed_contest.id_contest).order_by('ranking')
+                if hall_of_fame_users:
+                    if only_winner:
+                        # retrieve only winner
+                        return_var = hall_of_fame_users[0]
+                    else:
+                        # retrieve top 5
+                        return_var = hall_of_fame_users
+                    # return_var["contest_year"] = contest_obj.get_contest_year(contest=last_closed_contest)
+                    logger.debug("test@@@@: " + str(return_var))
 
         return return_var
 
@@ -88,7 +109,7 @@ class HallOfFame(models.Model):
         return_var = None
 
         if contest_type:
-            return_var = self.get_last_active_contest_hall_of_fame(contest_type=contest_type)[0]
+            return_var = self.get_last_active_contest_hall_of_fame(contest_type=contest_type, only_winner=True)
 
         return return_var
 

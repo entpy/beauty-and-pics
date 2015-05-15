@@ -8,6 +8,7 @@ textarea { resize: none; }
 .margin_top_30 { margin-top: 30px; }
 .margin_top_20 { margin-top: 20px; }
 .margin_top_15 { margin-top: 15px; }
+.margin_bottom_20 { margin-bottom: 20px; }
 .float_left { float: left; }
 .float_right { float: right; }
 .readable_text1 { letter-spacing: 0.02em; line-height: 1.8678; }
@@ -73,10 +74,10 @@ textarea { resize: none; }
 .generic_container4, .generic_container6, .generic_container7, .generic_container9 { border-radius: 4px; -moz-border-radius: 4px; background-color: #ecf0f1; }
 .generic_container6, .generic_container7, .generic_container9 { width: 100%; }
 .generic_container6 { background: url(../img/partecipa.png) no-repeat center center #3498db; margin-bottom: 20px; text-align: center }
-.generic_container6 > .title { color: white; margin-top: 25px; }
+.generic_container6 > .title { color: white; margin-top: 15px; }
 .generic_container6 > .button_container { margin-top: 195px; }
 .generic_container9 { padding: 0 25px 25px; }
-.generic_container9 > .title { margin-top: 25px; }
+.generic_container9 > .title { margin-top: 15px; }
 
 /* catwalk user details page */
 .background_container1 { background-color: #E0E0E0; padding: 20px; }
@@ -160,3 +161,8 @@ ul.grid_container li img:hover { opacity: 0.5; }
 .favorite_popup_info_container .favorite_popup_points_container { margin-bottom: 30px; }
 .favorite_popup_info_container .favorite_popup_name_container { margin-bottom: 20px; }
 
+/* catwalk winner block */
+.winner_block_wrapper .winner_block_name { margin-bottom: 10px; }
+.winner_block_wrapper .winner_block_img { margin-bottom: 10px; }
+.winner_block_wrapper .winner_block_img img { max-width: 250px; width: 80%; }
+.winner_block_wrapper .winner_block_button { margin-top: 25px; }

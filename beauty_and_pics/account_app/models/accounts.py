@@ -383,6 +383,7 @@ class Account(models.Model):
 
     def get_top_five_contest_user(self, contest_type=None, hall_of_fame=False):
         """Function to retrieve the top five contest user"""
+        user = None
         book_obj = Book()
         top_five_account = []
         filters_list = {"filter_name": "classification", "start_limit": "0", "show_limit": "5"}
@@ -391,17 +392,16 @@ class Account(models.Model):
             # logger.debug("element list: " + str(user_info))
             # retrieve extra params in hall of fame case
             if hall_of_fame:
-                user_profile_image_url = book_obj.get_profile_image_url(user_id=user_info["user__id"])
-                user_obj = self.get_user_about_id(user_id=user_info["user__id"])
+                user = self.get_user_about_id(user_id=user_info["user__id"])
 
             top_five_account.append({
                 "user_id": user_info["user__id"],
-                "user": user_obj,
+                "user": user,
                 "user_first_name": user_info["user__first_name"],
                 "user_last_name": user_info["user__last_name"],
                 "user_email": user_info.get("user__email"),
                 "user_profile_thumbnail_image_url": book_obj.get_profile_thumbnail_image_url(user_id=user_info["user__id"]),
-                "user_profile_image_url": user_profile_image_url,
+                "user_profile_image_url": book_obj.get_profile_image_url(user_id=user_info["user__id"]),
                 "user_total_points": user_info.get("total_points"),
             }),
 
