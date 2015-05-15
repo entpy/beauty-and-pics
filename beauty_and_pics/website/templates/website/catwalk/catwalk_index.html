@@ -11,10 +11,10 @@
 <div class="row">
 	<div class="col-sm-12">
 		<ul class="nav nav-pills">
-			<li class="active setFilterAction" data-filter-name="latest_registered"><a aria-expanded="false" href="#" data-toggle="tab">Le ultime registrate</a></li>
-			<li class="setFilterAction" data-filter-name="classification"><a aria-expanded="true" href="#" data-toggle="tab">La classifica</a></li>
-			<li class="setFilterAction" data-filter-name="most_beautiful_smile"><a aria-expanded="true" href="#" data-toggle="tab">Il sorriso più bello</a></li>
-			<li class="setFilterAction" data-filter-name="look_more_beautiful"><a aria-expanded="true" href="#" data-toggle="tab">Lo sguardo più bello</a></li>
+			<li class="active setFilterAction" data-filter-name="latest_registered"><a href="#">Le ultime registrate</a></li>
+			<li class="setFilterAction" data-filter-name="classification"><a href="#" data-toggle="tab">La classifica</a></li>
+			<li class="setFilterAction" data-filter-name="most_beautiful_smile"><a href="#">Il sorriso più bello</a></li>
+			<li class="setFilterAction" data-filter-name="look_more_beautiful"><a href="#">Lo sguardo più bello</a></li>
 		</ul>
 	</div>
 </div>
@@ -31,7 +31,9 @@
 <script>
 	elementsListObject.addFilter("show_limit", 10);
 	$(document).ready(function(){
-		$(".setFilterAction").click(function(){
+		$("body").on("click",".setFilterAction", function(){
+			$(".setFilterAction").removeClass("active");
+			$(this).addClass("active");
 			elementsListObject.newElementList();
 			elementsListObject.addFilter("show_limit", 10);
 			$(".loadMoreElementsAction").click();

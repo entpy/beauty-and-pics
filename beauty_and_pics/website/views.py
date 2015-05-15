@@ -134,7 +134,7 @@ def catwalk_profile(request, user_id):
     contest_obj.set_contest_type(request=request, contest_type=account_info["contest_type"])
 
     # retrieve contest user info
-    contest_account_info = account_obj.get_contest_account_info(user_id=user_id)
+    contest_account_info = account_obj.get_contest_account_info(user_id=user_id, contest_type=contest_obj.get_contest_type_from_session(request=request))
 
     # retrieve profile image url
     book_obj = Book()

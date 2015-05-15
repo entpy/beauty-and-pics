@@ -170,17 +170,6 @@ LOGGING = {
     }
 }
 
-# Media file settings {{{
-BOTO_BUCKET = 'beauty-and-pics'
-BOTO_APP_DIR = 'home/'
-# Tell django-storages that when coming up with the URL for an item in Cloud Object Storage
-BOTO_CUSTOM_DOMAIN = '%s.r1-it.storage.cloud.it' % BOTO_BUCKET
-
-MEDIA_URL = "https://%s/" % BOTO_CUSTOM_DOMAIN # used with cropped images
-MEDIA_URL_TMP = '/tmp/' # used with temporary images
-MEDIA_ROOT = '/tmp/images'
-# Media file settings }}}
-
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.7/howto/static-files/
 STATIC_URL = '/static/'
