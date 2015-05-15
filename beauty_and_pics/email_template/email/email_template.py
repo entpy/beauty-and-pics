@@ -14,6 +14,8 @@ logger = logging.getLogger(__name__)
 
 class CustomEmailTemplate():
 
+    # TODO: take a look here: http://rocketway.net/themebuilder/products/?template=escape
+
     # the email name, es recover_password_email
     email_name = None
 
