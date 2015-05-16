@@ -94,7 +94,10 @@ class RegisterForm(forms.Form, FormCommonUtils):
 
     def send_welcome_email(self):
             """Function to send a welcome email"""
-            email_context = {"first_name": self.form_validated_data["first_name"]}
+            email_context = {
+		"first_name": self.form_validated_data["first_name"],
+		"last_name": self.form_validated_data["last_name"]
+	    }
             CustomEmailTemplate(
                                     email_name="signup_email",
                                     email_context=email_context,

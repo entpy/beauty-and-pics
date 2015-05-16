@@ -70,8 +70,34 @@ class CustomEmailTemplate():
         # send email
         self.send_mail()
 
+    def build_dear_block(self):
+	"""Function to build dear block"""
+	return_var = False
+	first_name = self.email_context.get("first_name")
+	last_name = self.email_context.get("last_name")
+	if last_name:
+	    last_name = " " + last_name
+
+	if first_name:
+	    return_var = "Caro/a " + str(first_name)+str(last_name)+","
+
+	return return_var
+
+    def get_call_to_action_template(self, href=None, label=None):
+	"""Function to retrieve call to action template"""
+	return_var = False
+
+	if href and label:
+	    return_var = '<a style="display: inline-block;text-decoration: none;-webkit-text-size-adjust: none;mso-hide: all;text-align: center;font-family: Verdana,Geneva,sans-serif;-webkit-border-radius: 4px;-moz-border-radius: 4px;border-radius: 4px;border-top: 0px solid transparent;border-right: 0px solid transparent;border-bottom: 0px solid transparent;border-left: 0px solid transparent;color: #ffffff !important;padding: 5px 20px 5px 20px;vertical-align: middle" href="' + str(href) + '" target="_blank">'
+	    return_var += '<!--[if gte mso 9]>&nbsp;<![endif]-->'
+	    return_var += '<div style="text-align: center;font-family: inherit;font-size: 16px;line-height: 32px;color: #ffffff;min-width: 140px">' + str(label) + '</div>'
+	    return_var += '<!--[if gte mso 9]>&nbsp;<![endif]-->'
+	    return_var += '</a>'
+
+	return return_var
+
     def set_template_name(self, template_type=None):
-        """"Function to set a template name starting from template type"""
+        """Function to set a template name starting from template type"""
         self.template_name = self.template_type.get(template_type, "default")
 
         return True
@@ -88,7 +114,7 @@ class CustomEmailTemplate():
         """Function to create plain text template"""
         return_var = False
         if self.template_name:
-            return_var = render_to_string(self.template_dir + self.template_name + '.txt', self.email_text_blocks)
+            return_var = render_to_string(self.template_dir + self.template_name + '.txt', self.email_html_blocks)
 
         return return_var
 
@@ -135,25 +161,18 @@ class CustomEmailTemplate():
         """
         Email on signup form
         Context vars required:
-        ->    ['first_name',]
+        ->    ['first_name', 'last_name',]
         """
+
+        # email blocks
+	self.email_html_blocks["dear_block"] = self.build_dear_block()
+	self.email_html_blocks["main_title_block"] = "Beauty and Pics ti da il benvenuto!"
+	self.email_html_blocks["main_text_block"] = "Grazie per esserti registrato"
+	self.email_html_blocks["html_call_to_action_block"] = self.get_call_to_action_template(href="http://www.beautyandpics.com/richiesta-aiuto", label="Chiedi aiuto")
+	self.email_html_blocks["plain_call_to_action_block"] = "http://www.beautyandpics.com/richiesta-aiuto"
 
         # email subject
         self.email_subject = "Beauty & Pics ti da il benvenuto."
-        # email blocks
-        self.email_html_blocks["title_block"] = "Benvenuto al concorso!"
-        self.email_text_blocks["title_block"] = "Benvenuto al concorso!"
-
-        main_block_html = """
-                <div>Ciao <b>{{first_name}}</b>,</div>
-                <div>grazie per esserti registrato in Beauty & Pics!</div>
-        """
-
-        main_block_text = "Ciao *{{first_name}}*, grazie per esserti registrato in Beauty & Pics!"
-
-        # building of email template block
-        self.email_html_blocks["main_block"] = self.create_email_block(template=main_block_html, context=self.email_context)
-        self.email_text_blocks["main_block"] = self.create_email_block(template=main_block_text, context=self.email_context)
 
         return True
 

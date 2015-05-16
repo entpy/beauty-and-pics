@@ -1,3 +1,8 @@
-{{title_block}}
-===============
-{{main_block}}
+Beauty and Pics: il primo concorso di bellezza fatto a misura di web!
+=================
+{{dear_block}}
+* {{main_title_block}} *
+-----------------
+{{main_text_block}}
+
+{{plain_call_to_action_block}}
