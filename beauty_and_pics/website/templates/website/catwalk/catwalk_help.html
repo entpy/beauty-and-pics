@@ -42,6 +42,8 @@
 			</div>
 		{% endif %}
 		<form class="form-horizontal ajax_form" method="post" action="">
+			{% csrf_token %}
+			<input type="hidden" name="form_class" value="HelpRequestForm">
 			<fieldset class="col-md-9">
 				<div class="form-group {% if form.email.errors %}has-error{% endif %}">
 					<label for="{{ form.email.id_for_label }}" class="col-md-4 control-label">{{ form.email.label }} *</label>
@@ -52,7 +54,7 @@
 				<div class="form-group {% if form.help_text.errors %}has-error{% endif %}">
 					<label for="{{ form.help_text.id_for_label }}" class="col-md-4 control-label">{{ form.help_text.label }} *</label>
 					<div class="col-md-8">
-						<input name="{{ form.help_text.name }}" class="form-control" id="{{ form.help_text.id_for_label }}" placeholder="Scrivi qui come possiamo aiutarti!" value="{{ post.help_text }}" type="email">
+						<textarea name="{{ form.help_text.name }}" class="form-control" id="{{ form.help_text.id_for_label }}" placeholder="Scrivi qui come possiamo aiutarti!">{{ post.help_text }}</textarea>
 					</div>
 				</div>
 				<div class="form-group">
@@ -69,12 +71,11 @@
 <script>
 	$(document).ready(function(){
 		$(".submitButtonClickAction").click(function(event){
+			// preventing default click event
 			event.preventDefault();
-			// performing ajax call
-			ajaxFormValidation.callData["post_url"] = "/validate_form/";
+			// serialize form data
 			ajaxFormValidation.callData["data"] = $(".ajax_form").serialize();
-			ajaxFormValidation.callData["form_class"] = "HelpRequestForm";
-
+			// performing ajax call
 			ajaxFormValidation.validateForm();
 
 			return true;

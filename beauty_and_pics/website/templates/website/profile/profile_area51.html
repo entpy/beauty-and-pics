@@ -121,7 +121,7 @@
 
 		$('[data-toggle="tooltip"]').tooltip();
 
-		$("body").on("click",".submitButtonClickAction", function(){
+		$("body").on("click",".submitButtonClickAction", function(event){
 			// preventing default click event
 			event.preventDefault();
 			// serialize form data

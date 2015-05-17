@@ -916,7 +916,7 @@ var ajaxFormValidation = {
 
 	/* Function to show form error message after Ajax call */
 	showFormErrorMessages : function(jsonResponse) {
-		if (!$.isEmptyObject(jsonResponse)) {
+		if (!$.isEmptyObject(jsonResponse) && !$.isEmptyObject(jsonResponse["form_data"])) {
 			$.each(jsonResponse["form_data"], function(fieldName, errorList) {
 				if (fieldName == "__all__") {
 					ajaxFormValidation.showAllFieldErrorsBox(errorList);

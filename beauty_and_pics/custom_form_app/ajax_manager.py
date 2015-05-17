@@ -8,6 +8,8 @@ from custom_form_app.forms.register_form import *
 from custom_form_app.forms.password_recover import *
 from custom_form_app.forms.account_edit_form import *
 from custom_form_app.forms.area51_form import *
+from custom_form_app.forms.help_request_form import *
+from custom_form_app.forms.report_user_form import *
 from beauty_and_pics.consts import project_constants
 from contest_app.models.votes import Vote
 from account_app.models import *
@@ -99,8 +101,15 @@ class ajaxManager():
             # check if form is valid
             form.is_valid()
 
-            # make a json response
-            self.set_json_response(json_response=form.get_validation_json_response())
+	    # build JSON response
+	    json_data_string = form.get_validation_json_response()
+	else:
+	    logger.debug("no----" + form_class)
+            data = { 'error' : True, 'message': 'Form class does not exist', }
+	    json_data_string = json.dumps(data)
+
+	# make a json response
+	self.set_json_response(json_response=json_data_string)
 
         return True
 

@@ -17,10 +17,11 @@ sys.setdefaultencoding("utf8")
 # Get an instance of a logger
 logger = logging.getLogger(__name__)
 
-class HelpRequestForm(forms.Form, FormCommonUtils):
+class ReportUserForm(forms.Form, FormCommonUtils):
 
     email = forms.CharField(label='La tua email', max_length=75, required=True)
-    help_text = forms.CharField(label='Dettagli', max_length=1000, required=True, widget=forms.Textarea)
+    report_user_id = forms.IntegerField(required=True)
+    report_text = forms.CharField(label='Dettagli segnalazione', max_length=1000, required=True, widget=forms.Textarea)
 
     # list of validator for this form
     custom_validation_list = (
@@ -35,21 +36,22 @@ class HelpRequestForm(forms.Form, FormCommonUtils):
 
     def __init__(self, *args, **kwargs):
         # parent forms.Form init
-        super(HelpRequestForm, self).__init__(*args, **kwargs)
+        super(ReportUserForm, self).__init__(*args, **kwargs)
         FormCommonUtils.__init__(self)
 
 	# current form instance
-        self.validation_form = super(HelpRequestForm, self)
+        self.validation_form = super(ReportUserForm, self)
 
     def clean(self):
-	super(HelpRequestForm, self).clean_form_custom()
+	super(ReportUserForm, self).clean_form_custom()
         return True
 
     def send_email(self):
-        # send new password via email
-        email_context = {"email": self.form_validated_data["email"], "help_text": self.form_validated_data["help_text"]}
+        # send report user email
+	# TODO: prelevare i dati dell'utente da segnalare: user_id, email, profile_url
+        email_context = {"email": self.form_validated_data["email"], "report_text": self.form_validated_data["report_text"]}
         CustomEmailTemplate(
-	    email_name="help_request_email",
+	    email_name="report_user_email",
 	    email_context=email_context,
 	    template_type="user",
 	    email_type="admin_email",
@@ -60,7 +62,7 @@ class HelpRequestForm(forms.Form, FormCommonUtils):
     def form_actions(self):
         """Function to update user email and password"""
         return_var = False
-        if super(HelpRequestForm, self).form_can_perform_actions():
+        if super(ReportUserForm, self).form_can_perform_actions():
             # send help mail 
             if self.send_email():
                 return_var = True

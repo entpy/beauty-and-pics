@@ -18,6 +18,7 @@ from custom_form_app.forms.account_edit_form import *
 from custom_form_app.forms.area51_form import *
 from custom_form_app.forms.delete_user_form import *
 from custom_form_app.forms.help_request_form import *
+from custom_form_app.forms.report_user_form import *
 from custom_form_app.forms.upload_book_form import *
 import logging
 
@@ -42,8 +43,12 @@ def www_login(request):
         if form.is_valid() and form.form_actions():
             account_obj =  Account()
             autenticated_user_data = account_obj.get_autenticated_user_data(request=request)
-            # redirect to catwalk
-            return HttpResponseRedirect('/passerella/' + str(autenticated_user_data["contest_type"]))
+	    if request.GET.get('next'):
+		# redirect to custom url
+		return HttpResponseRedirect(request.GET.get('next'))
+	    else:
+		# redirect to catwalk
+		return HttpResponseRedirect('/passerella/' + str(autenticated_user_data["contest_type"]))
 
     # if a GET (or any other method) we'll create a blank form
     else:
@@ -176,7 +181,7 @@ def catwalk_help(request):
         if form.is_valid() and form.form_actions():
             messages.add_message(request, messages.SUCCESS, 'La richiesta di aiuto è stata inviata, ti risponderemo appena poss...tut-tut-tut-tut')
             # redirect to user profile
-            return HttpResponseRedirect('/profilo/richiesta-aiuto/')
+            return HttpResponseRedirect('/passerella/richiesta-aiuto/')
 
     # if a GET (or any other method) we'll create a blank form
     else:
@@ -192,8 +197,36 @@ def catwalk_help(request):
 
     return render(request, 'website/catwalk/catwalk_help.html', context)
 
-def catwalk_report_user(request):
-    return render(request, 'website/catwalk/catwalk_report_user.html', False)
+def catwalk_report_user(request, user_id):
+
+    # retrieve current logged in user email
+    account_obj =  Account()
+    user_email = account_obj.get_autenticated_user_data(request=request)
+
+    # if this is a POST request we need to process the form data
+    if request.method == 'POST':
+        # create a form instance and populate it with data from the request:
+        form = ReportUserForm(request.POST)
+        form.set_current_request(request=request)
+
+        # check whether it's valid:
+        if form.is_valid() and form.form_actions():
+            messages.add_message(request, messages.SUCCESS, 'L\'utente è stato segnalato, prenderemo dei provvedimenti appena possibile')
+            # redirect to user profile
+            return HttpResponseRedirect('/passerella/segnalazione-utente/' + user_id + '/')
+
+    # if a GET (or any other method) we'll create a blank form
+    else:
+        form = ReportUserForm()
+
+    context = {
+        "report_user_id" : user_id,
+        "user_email" : user_email.get("email"),
+        "post" : request.POST,
+        "form": form,
+    }
+
+    return render(request, 'website/catwalk/catwalk_report_user.html', context)
 # }}}
 
 # private profile {{{

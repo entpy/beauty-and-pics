@@ -6,6 +6,7 @@ from dateutil.relativedelta import *
 from account_app.models import *
 from website.exceptions import *
 from beauty_and_pics.consts import project_constants
+from itertools import chain
 import calendar, logging, json, sys, re
 
 # force utf8 read data
@@ -49,14 +50,15 @@ class FormCommonUtils():
 	FormCommonUtils.__valid_form_class_list += ('LoginForm',)
 	FormCommonUtils.__valid_form_class_list += ('passwordRecoverForm',)
 	FormCommonUtils.__valid_form_class_list += ('RegisterForm',)
+	FormCommonUtils.__valid_form_class_list += ('ReportUserForm',)
 
     def check_if_validation_method_is_valid(self, validation_method=False):
         """Checking if a validation method exists"""
-        return validation_method in self.__valid_custom_validation_list
+	return validation_method in chain(self.__valid_custom_validation_list)
 
     def check_if_form_class_is_valid(self, form_class=False):
         """Checking if a form class exists"""
-        return form_class in self.__valid_form_class_list
+	return form_class in chain(self.__valid_form_class_list)
 
     def clean_form_custom(self):
         """Running all validation functions"""

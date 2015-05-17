@@ -131,8 +131,8 @@
     <tbody><tr style="padding: 0;vertical-align: top">
         <td style="word-break: break-word;-webkit-hyphens: auto;-moz-hyphens: auto;hyphens: auto;border-collapse: collapse !important;padding: 0;vertical-align: top;margin: 0;width: 100%;text-align: center" align="center">
             <div style="max-width: 100%;" align="center">
-              <a href="http://www.beefree.io" target="_blank">
-                <img class="center" style="outline: none;text-decoration: none;-ms-interpolation-mode: bicubic;width: 100%;clear: both;display: block;border: none;height: auto;line-height: 100%;margin: 0 auto;float: none;max-width: 189px" border="0" width="100%" align="center" src="http://127.0.0.1:8000/static/website/img/logo.png" alt="Image" title="Image">
+              <a href="{{base_url}}" target="_blank">
+                <img class="center" style="outline: none;text-decoration: none;-ms-interpolation-mode: bicubic;width: 100%;clear: both;display: block;border: none;height: auto;line-height: 100%;margin: 0 auto;float: none;max-width: 189px" border="0" width="100%" align="center" src="{{base_url}}/static/website/img/logo.png" alt="Image" title="Image">
               </a>
             </div>
         </td>
@@ -280,7 +280,7 @@
         <div style="color:#555555;line-height:120%;font-family:Verdana,Geneva,sans-serif;">            
         	<div style="font-size: 14px; line-height: 16px;color: #555555;font-family: Verdana,Geneva,sans-serif;text-align: left;line-height: 17px" data-mce-style="font-size: 14px; line-height: 16px;">
 		  {% autoescape off %}
-		  {{main_text_block}}
+		  {{html_main_text_block}}
 		  {% endautoescape %}
 		</div>
         </div>

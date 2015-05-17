@@ -12,27 +12,55 @@
 	<div class="col-md-12">
 		<div class="alert alert-warning">
 			<h4>Attenzione!</h4>
-			<p>Best check yo self, you're not looking too good. Nulla vitae elit libero, a pharetra augue. Praesent commodo cursus magna, <a href="#" class="alert-link">vel scelerisque nisl consectetur et</a>.</p>
+			<p>Best check yo self, you're not looking too good. Nulla vitae elit libero, a pharetra augue. Praesent commodo cursus magna</p>
 		</div>
 	</div>
-	<div class="col-md-10">
-		<form class="form-horizontal">
-			<fieldset>
-				<div class="form-group">
-					<label for="inputEmail" class="col-md-2 control-label">Tua email</label>
-					<div class="col-md-10">
-						<input class="form-control" id="inputEmail" placeholder="Tua email" type="text">
+	<div class="col-md-12">
+		{# messages block #}
+		<div class="error_container"></div>
+		{% if form.errors or messages %}
+			<div class="row server_msg_container">
+				<div class="col-md-12">
+					{% if form.errors %}
+						<div class="alert alert-danger">
+							<h4>Uhm qualcosa non va!</h4>
+							<ul>
+								{% for form_error in form.non_field_errors %}
+									<li>{{ form_error }}</li>
+								{% endfor %}
+							</ul>
+						</div>
+					{% else %}
+						<div class="alert alert-success">
+							<h4>Ottimo!</h4>
+							{% for message in messages %}
+								<div>{{ message }}</div>
+							{% endfor %}
+						</div>
+					{% endif %}
+				</div>
+			</div>
+		{% endif %}
+		<form class="form-horizontal ajax_form" method="post" action="">
+			{% csrf_token %}
+			<input type="hidden" name="form_class" value="ReportUserForm">
+			<input type="hidden" name="report_user_id" value="{{ report_user_id }}">
+			<fieldset class="col-md-9">
+				<div class="form-group {% if form.email.errors %}has-error{% endif %}">
+					<label for="{{ form.email.id_for_label }}" class="col-md-4 control-label">{{ form.email.label }} *</label>
+					<div class="col-md-8">
+						<input name="{{ form.email.name }}" class="form-control" id="{{ form.email.id_for_label }}" placeholder="{{ form.email.label }}" value="{% if post.email %}{{ post.email }}{% elif user_email %}{{user_email}}{% endif %}" type="email">
+					</div>
+				</div>
+				<div class="form-group {% if form.report_text.errors %}has-error{% endif %}">
+					<label for="{{ form.report_text.id_for_label }}" class="col-md-4 control-label">{{ form.report_text.label }} *</label>
+					<div class="col-md-8">
+						<textarea name="{{ form.report_text.name }}" class="form-control" id="{{ form.report_text.id_for_label }}" placeholder="Qualche dettaglio su chi vuoi segnalare...">{{ post.report_text }}</textarea>
 					</div>
 				</div>
 				<div class="form-group">
-					<label for="textArea" class="col-md-2 control-label">Dettagli</label>
-					<div class="col-md-10">
-						<textarea class="form-control" rows="3" id="textArea" placeholder="Qualche dettaglio su chi vuoi segnalare..."></textarea>
-					</div>
-				</div>
-				<div class="form-group">
-					<div class="col-md-10 col-md-offset-2">
-						<button type="submit" class="btn btn-success">Segnala utente</button>
+					<div class="col-md-8 col-md-offset-4">
+						<button type="submit" class="btn btn-success submitButtonClickAction">Segnala utente</button>
 					</div>
 				</div>
 			</fieldset>
@@ -40,3 +68,19 @@
 	</div>
 </div>
 {% endblock container4_content %}
+{% block custom_js %}
+<script>
+	$(document).ready(function(){
+		$(".submitButtonClickAction").click(function(event){
+			// preventing default click event
+			event.preventDefault();
+			// serialize form data
+			ajaxFormValidation.callData["data"] = $(".ajax_form").serialize();
+			// performing ajax call
+			ajaxFormValidation.validateForm();
+
+			return true;
+		});
+	});
+</script>
+{% endblock custom_js %}

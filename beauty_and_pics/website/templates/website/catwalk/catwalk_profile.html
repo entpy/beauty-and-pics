@@ -43,7 +43,7 @@
 				</a>
 			</span>
 			<span>
-				<a class="user_action_link" href="/passerella/segnalazione-utente">
+				<a class="user_action_link" href="/passerella/segnalazione-utente/{{user_info.user_id}}/">
 					<img src="{% static "website/img/catwalk/segnala-utente.png" %}" alt="Segnala utente">
 				</a>
 			</span>
@@ -243,13 +243,6 @@
 					addToFavorite('{{user_info.user_id}}');
 				}
 			{% endif %}
-			// var userAlreadyAddedToFavorite = "";
-			// open bootstrap modal
-			// se l'utente non è loggato:
-			// - bootstrapModalsObect.showPerformLoginModal();
-			// se l'utente è già stato aggiunto come preferito:
-			// - bootstrapModalsObect.showAlertModal("Utente già aggiunto tra i preferiti");
-			// altrimenti: confirm("vuoi aggiungere tra i preferiti") e chiamo la funzione addToFavorite
 
 			return false;
 		});
