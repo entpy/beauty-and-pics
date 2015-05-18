@@ -20,6 +20,7 @@ from custom_form_app.forms.delete_user_form import *
 from custom_form_app.forms.help_request_form import *
 from custom_form_app.forms.report_user_form import *
 from custom_form_app.forms.upload_book_form import *
+from custom_form_app.forms.unsubscribe_form import *
 import logging
 
 # Get an instance of a logger
@@ -170,6 +171,7 @@ def catwalk_profile(request, user_id):
 
     return render(request, 'website/catwalk/catwalk_profile.html', context)
 
+@ensure_csrf_cookie
 def catwalk_help(request):
     # if this is a POST request we need to process the form data
     if request.method == 'POST':
@@ -197,6 +199,7 @@ def catwalk_help(request):
 
     return render(request, 'website/catwalk/catwalk_help.html', context)
 
+@ensure_csrf_cookie
 def catwalk_report_user(request, user_id):
 
     # retrieve current logged in user email
@@ -227,6 +230,33 @@ def catwalk_report_user(request, user_id):
     }
 
     return render(request, 'website/catwalk/catwalk_report_user.html', context)
+
+@ensure_csrf_cookie
+def catwalk_unsubscribe(request, user_email):
+    # if this is a POST request we need to process the form data
+    if request.method == 'POST':
+        # create a form instance and populate it with data from the request:
+        form = UnsubscribeForm(request.POST)
+        form.set_current_request(request=request)
+
+        # check whether it's valid:
+        if form.is_valid() and form.form_actions():
+            messages.add_message(request, messages.SUCCESS, 'Ti sei disiscritto dalla reportistica mensile.')
+            # redirect to user profile
+            return HttpResponseRedirect('/passerella/disiscriviti/')
+
+    # if a GET (or any other method) we'll create a blank form
+    else:
+        # pre-prepopulate post dictionary with current user data
+        form = UnsubscribeForm()
+
+    context = {
+        "user_email" : user_email,
+        "post" : request.POST,
+        "form": form,
+    }
+
+    return render(request, 'website/catwalk/catwalk_unsubscribe.html', context)
 # }}}
 
 # private profile {{{

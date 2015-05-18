@@ -10,6 +10,7 @@ from custom_form_app.forms.account_edit_form import *
 from custom_form_app.forms.area51_form import *
 from custom_form_app.forms.help_request_form import *
 from custom_form_app.forms.report_user_form import *
+from custom_form_app.forms.unsubscribe_form import *
 from beauty_and_pics.consts import project_constants
 from contest_app.models.votes import Vote
 from account_app.models import *

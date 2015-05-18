@@ -36,6 +36,8 @@ class Account(models.Model):
     hair = models.CharField(max_length=15, null=True) 
     eyes = models.CharField(max_length=15, null=True)
     height = models.CharField(max_length=4, null=True)
+    receive_newsletters = models.IntegerField(max_length=1, default=1, null=True)
+    last_newsletter_date = models.DateTimeField(null=True)
     creation_date = models.DateTimeField(auto_now_add=True)
     update_date = models.DateTimeField(auto_now=True)
 
