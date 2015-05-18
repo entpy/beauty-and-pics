@@ -53,7 +53,7 @@ class UnsubscribeForm(forms.Form, FormCommonUtils):
         try:
             # if user exists will be unsubscribed
             user_obj = account_obj.get_user_about_email(email=user_email)
-        except User.DoesNotExist
+        except User.DoesNotExist:
             pass
         else:
             # TODO: plz try it!

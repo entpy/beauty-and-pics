@@ -40,6 +40,9 @@ class CustomEmailTemplate():
 	'signup_email',
 	'help_request_email',
 	'report_user_email',
+	'contest_closed',
+	'contest_opened',
+	'monthly_report',
    )
 
     # email template directory
@@ -243,7 +246,7 @@ class CustomEmailTemplate():
                 </table><br />
             """
 
-        self.email_html_blocks["html_main_text_block"] += 'Stanco di ricevere queste email? <a target="_blank" href="' + self.base_url + '/passerella/disiscriviti/' + str(self.email_context.get('user_email')) + '/'">Disiscriviti</a>
+        self.email_html_blocks["html_main_text_block"] += 'Stanco di ricevere queste email? <a target="_blank" href="' + self.base_url + '/passerella/disiscriviti/' + str(self.email_context.get('user_email')) + '/">Disiscriviti</a>'
 
         self.get_call_to_action_template(href=self.base_url + "/passerella/dettaglio-utente/" + str(self.email_context.get("user_id")) + "/", label="Accedi al tuo profilo")
 	# plain text email blocks
@@ -276,7 +279,7 @@ class CustomEmailTemplate():
             alcuni consigli su come acquisire punti per scalare la classifica!<br />
             <table style="width: 100%;">
                 <tr>
-                    <td>
+                    <td style="padding-top: 30px;">
                         <b>Condividi la tua pagina profilo sui social networks.</b>
                     </td>
                 </tr>
@@ -286,7 +289,7 @@ class CustomEmailTemplate():
                     </td>
                 </tr>
                 <tr>
-                    <td>
+                    <td style="padding-top: 30px;">
                         <b>Carica un'immagine profilo.</b>
                     </td>
                 </tr>
@@ -296,7 +299,7 @@ class CustomEmailTemplate():
                     </td>
                 </tr>
                 <tr>
-                    <td>
+                    <td style="padding-top: 30px;">
                         <b>Carica le immagini del book.</b>
                     </td>
                 </tr>
@@ -308,8 +311,7 @@ class CustomEmailTemplate():
             </table><br />
             Questi sono solo alcuni consigli, il resto dipende da te!
         """
-	self.email_html_blocks["html_call_to_action_block"] =
-        self.get_call_to_action_template(href=self.base_url + "/passerella/dettaglio-utente/" + str(self.email_context.get("user_id")) + "/", label="Accedi al tuo profilo")
+	self.email_html_blocks["html_call_to_action_block"] = self.get_call_to_action_template(href=self.base_url + "/passerella/dettaglio-utente/" + str(self.email_context.get("user_id")) + "/", label="Accedi al tuo profilo")
 	# plain text email blocks
 	self.email_html_blocks["plain_main_text_block"] = "Beauty and Pics ti informa che il contest più atteso dell'anno è APERTO."
 	self.email_html_blocks["plain_call_to_action_block"] = "Accedi al tuo profilo:" + self.base_url + "/passerella/dettaglio-utente/" + str(self.email_context.get("user_id")) + "/"
