@@ -9,6 +9,7 @@ from django.contrib.auth.models import User, Group
 from contest_app.models.contest_types import Contest_Type
 from contest_app.models.points import Point
 from account_app.models.images import Book
+from email_template.email.email_template import *
 from website.exceptions import *
 from beauty_and_pics.consts import project_constants
 from django.db.models import Q, F, Count, Sum
@@ -85,7 +86,6 @@ class Account(models.Model):
                 try:
                     user_obj = User.objects.get(pk=user_id)
                     user_obj.delete()
-                    # TODO: delete addictional data if required
                 except User.DoesNotExist:
                     raise UserDeleteDoesNotExistsError
             else:
@@ -409,7 +409,7 @@ class Account(models.Model):
 
         return top_five_account
 
-    def get_filtered_accounts_list(self, filters_list=None, contest_type=None):
+    def get_filtered_accounts_list(self, contest_type, filters_list=None):
         """Function to retrieve a list of filtere accounts"""
         return_var = False
         # logger.debug("NOME FILTRO: " + str(filters_list["filter_name"]))
@@ -451,13 +451,13 @@ class Account(models.Model):
         # limits filter
         #logger.debug("limite da: " + str(filters_list["start_limit"]))
         #logger.debug("limite numero elementi: " + str(filters_list["show_limit"]))
-        return_var = return_var[filters_list["start_limit"]:filters_list["show_limit"]]
+        if filters_list.get("start_limit") and filters_list.get("show_limit"):
+            return_var = return_var[filters_list["start_limit"]:filters_list["show_limit"]]
 
         #logger.debug("@@@: " + str(return_var))
 
         return return_var
 
-    # TODO: filtrare il contest type
     def get_user_contest_ranking(self, user_id=None, contest_type=None):
         """Function to retrieve current user contest ranking"""
         cursor = connection.cursor()
@@ -476,3 +476,83 @@ class Account(models.Model):
         return_var = row[0][0] if row else None
 
         return return_var
+
+    def send_contest_opening_emails(self, contest_type):
+        """Function to send email filters_list["filter_name"] == "latest_registered"on contest opening"""
+        filters_list = {}
+        filters_list["filter_name"] = "latest_registered"
+        account_list = self.get_filtered_accounts_list(filters_list=filters_list, contest_type=contest_type)
+        if account_list:
+            for single_account in account_list:
+                logger.debug("contest_opened EMAIL DA INVIARE: " + str(single_account["user__email"]))
+		# contest opening email
+		email_context = {
+		    "first_name": single_account["user__first_name"],
+		    "last_name": single_account["user__last_name"],
+		    "user_id": single_account["user__id"],
+                }
+		CustomEmailTemplate(
+		    email_name="contest_opened",
+		    email_context=email_context,
+		    template_type="user",
+		    recipient_list=[single_account["user__email"],]
+		)
+
+        return True
+
+    def send_contest_closing_emails(self, contest_type):
+        """Function to send email on contest closing"""
+        filters_list = {}
+        filters_list["filter_name"] = "latest_registered"
+        account_list = self.get_filtered_accounts_list(filters_list=filters_list, contest_type=contest_type)
+        if account_list:
+            for single_account in account_list:
+                logger.debug("contest_closed EMAIL DA INVIARE: " + str(single_account["user__email"]))
+		# contest opening email
+		email_context = {
+		    "first_name": single_account["user__first_name"],
+		    "last_name": single_account["user__last_name"],
+		    "contest_type": contest_type,
+                }
+		CustomEmailTemplate(
+		    email_name="contest_closed",
+		    email_context=email_context,
+		    template_type="user",
+		    recipient_list=[single_account["user__email"],]
+		)
+
+        return True
+
+    def send_report_emails(self, contest_type):
+        """
+            Function to send report email
+            ['first_name', 'last_name', 'user_email', 'user_id', 'points', ranking]
+            Agli utenti che non hanno voti non invio la mail (risultato con il
+            filtro 'classification', dove tiro fuori gli utenti se hanno dei
+            punti)
+        """
+
+        filters_list = {}
+        filters_list["filter_name"] = "classification"
+        account_list = self.get_filtered_accounts_list(filters_list=filters_list, contest_type=contest_type)
+        if account_list:
+            for single_account in account_list:
+                logger.debug("contest_report EMAIL DA INVIARE: " + str(single_account["user__email"]))
+                account_info = self.get_contest_account_info(user_id=single_account["user__id"], contest_type=contest_type)
+		# contest opening email
+		email_context = {
+		    "first_name": single_account["user__first_name"],
+		    "last_name": single_account["user__last_name"],
+		    "user_email": single_account["user__email"],
+		    "user_id": single_account["user__id"],
+		    "points": account_info["total_points"],
+		    "ranking": account_info["ranking"],
+                }
+		CustomEmailTemplate(
+		    email_name="contest_report",
+		    email_context=email_context,
+		    template_type="user",
+		    recipient_list=[single_account["user__email"],]
+		)
+
+        return True

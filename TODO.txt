@@ -5,7 +5,10 @@ TODO
    e se la data dell'ultima newsletter è >= 1 mese
  - localizzare
  - test sui vari browser
+ - far funzionare il disiscriviti nella mail
 
 BUG NOTI
 --------
-
+ - se accedo alla pagina profilo di un utente che non esiste fare redirect in home page
+ - nella pagina profilo per caricare le immagini, se si clicca sul bordo esterno dell'immagine non si
+   apre la fancybox ma si va in cima alla pagina di scatto

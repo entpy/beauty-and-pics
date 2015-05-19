@@ -42,7 +42,7 @@ class CustomEmailTemplate():
 	'report_user_email',
 	'contest_closed',
 	'contest_opened',
-	'monthly_report',
+	'contest_report',
    )
 
     # email template directory
@@ -57,7 +57,7 @@ class CustomEmailTemplate():
 
     email_ready_to_send = False
 
-    def __init__(self, email_name=None, email_context=None, template_type=None, recipient_list=[], email_type=None):
+    def __init__(self, email_name=None, email_context=None, template_type=None, recipient_list=[], email_type=None, debug_only=False):
         self.email_from = "no-reply@entpy.com"
 
         # load recipient list
@@ -79,7 +79,8 @@ class CustomEmailTemplate():
         self.build_email_template()
 
         # send email
-        self.send_mail()
+        if not debug_only:
+            self.send_mail()
 
     def build_dear_block(self):
 	"""Function to build dear block"""
@@ -101,7 +102,7 @@ class CustomEmailTemplate():
 	if href and label:
 	    return_var = '<a style="display: inline-block;text-decoration: none;-webkit-text-size-adjust: none;mso-hide: all;text-align: center;font-family: Verdana,Geneva,sans-serif;-webkit-border-radius: 4px;-moz-border-radius: 4px;border-radius: 4px;border-top: 0px solid transparent;border-right: 0px solid transparent;border-bottom: 0px solid transparent;border-left: 0px solid transparent;color: #ffffff !important;padding: 5px 20px 5px 20px;vertical-align: middle" href="' + str(href) + '" target="_blank">'
 	    return_var += '<!--[if gte mso 9]>&nbsp;<![endif]-->'
-	    return_var += '<div style="text-align: center;font-family: inherit;font-size: 16px;line-height: 32px;color: #ffffff;min-width: 140px">' + str(label) + '</div>'
+	    return_var += '<div style="text-align: center;font-family: inherit;font-size: 16px;line-height: 32px;color: #ffffff;min-width: 220px">' + str(label) + '</div>'
 	    return_var += '<!--[if gte mso 9]>&nbsp;<![endif]-->'
 	    return_var += '</a>'
 
@@ -173,38 +174,15 @@ class CustomEmailTemplate():
 
         return True
 
-    def contest_closed(self):
+    def contest_report(self):
         """
-        Email on contest closing
-        Context vars required:
-        ->    ['first_name', 'last_name', 'contest_type']
-        """
-
-	# common email blocks
-	self.email_html_blocks["dear_block"] = self.build_dear_block()
-	self.email_html_blocks["main_title_block"] = "Beauty and Pics ha chiuso il contest!"
-	# html text email blocks
-	self.email_html_blocks["html_main_text_block"] = """
-            Beauty and Pics ti informa che il contest è stato CHIUSO.<br />
-            Vuoi sapere com'è finita? Accedi subito alla passerella per
-            scoprire il vincitore!
-        """
-	self.email_html_blocks["html_call_to_action_block"] = self.get_call_to_action_template(href=self.base_url + "/passerella/" + str(self.email_context.get("contest_type")) + "/", label="Accedi alla passerella")
-	# plain text email blocks
-	self.email_html_blocks["plain_main_text_block"] = "Beauty and Pics ti informa che il contest è stato CHIUSO."
-	self.email_html_blocks["plain_call_to_action_block"] = "Accedi alla passerella:" + self.base_url + "/passerella/" + str(self.email_context.get("contest_type")) + "/"
-
-        # email subject
-        self.email_subject = "Beauty & Pics: contest è stato CHIUSO."
-
-        return True
-
-    def monthly_report(self):
-        """
-        Report monthly report
+        Contest report
         Context vars required:
         ->    ['first_name', 'last_name', 'user_email', 'user_id', 'points', ranking]
         """
+        
+        # debug only
+        # self.email_context["ranking"] = 5
 
         append_random_tip = True
 	# common email blocks
@@ -212,12 +190,21 @@ class CustomEmailTemplate():
         self.email_html_blocks["main_title_block"] = "ecco il report mensile del concorso."
 	# html text email blocks
 	self.email_html_blocks["html_main_text_block"] = """
-            Ti riepiloghiamo le informazioni principali del contest.
             <table style="width: 100%;">
+                <tr>
+                    <td>
+                        Ti riepiloghiamo le informazioni principali del contest.
+                    </td>
+                </tr>
+                <tr>
+                    <td>&nbsp;</td>
+                </tr>
                 <tr>
                     <td>
                         <b>Punteggio: </b>""" + str(self.email_context.get("points")) + """
                     </td>
+                </tr>
+                <tr>
                     <td>
                         <b>Posizione: </b>""" + str(self.email_context.get("ranking")) + """
                     </td>
@@ -228,8 +215,8 @@ class CustomEmailTemplate():
         if self.email_context.get("ranking") == 1:
             self.email_html_blocks["html_main_text_block"] += "Complimenti, sei in prima posizione, stai andando bene :)<br />"
             append_random_tip = False
-        if self.email_context.get("ranking") <= 10:
-            self.email_html_blocks["html_main_text_block"] += "Complimenti, sei tra i primi 10, è il momento di iniziare la scalata verso la pima posizione ;)<br />"
+        elif self.email_context.get("ranking") <= 10:
+            self.email_html_blocks["html_main_text_block"] += "Complimenti, sei tra i primi 10, è il momento di iniziare la scalata verso la pima posizione ;)<br /><br />"
 
         if append_random_tip:
             # adding random tips
@@ -237,8 +224,10 @@ class CustomEmailTemplate():
                 <table style="width: 100%;">
                     <tr>
                         <td>
-                            <b>TIP mensile, buone regole per ottenere più punti</b>
+                            <b>TIP mensile AKA buone regole per ottenere più punti</b>
                         </td>
+                    </tr>
+                    <tr>
                         <td>
                             """ + self.get_random_tip() + """
                         </td>
@@ -246,9 +235,8 @@ class CustomEmailTemplate():
                 </table><br />
             """
 
-        self.email_html_blocks["html_main_text_block"] += 'Stanco di ricevere queste email? <a target="_blank" href="' + self.base_url + '/passerella/disiscriviti/' + str(self.email_context.get('user_email')) + '/">Disiscriviti</a>'
+        self.email_html_blocks["html_main_text_block"] += 'Stanco di ricevere queste email? <a target="_blank" href="' + self.base_url + '/passerella/disiscriviti/' + str(self.email_context.get('user_email')) + '/">Disiscriviti</a>.'
 
-        self.get_call_to_action_template(href=self.base_url + "/passerella/dettaglio-utente/" + str(self.email_context.get("user_id")) + "/", label="Accedi al tuo profilo")
 	# plain text email blocks
 	self.email_html_blocks["plain_main_text_block"] = """
             Ti riepiloghiamo le informazioni principali del contest. \n
@@ -256,7 +244,10 @@ class CustomEmailTemplate():
             Posizione: """ + str(self.email_context.get("ranking")) + """\n
             Stanco di ricevere queste email? Disiscriviti: """ + self.base_url + '/passerella/disiscriviti/' + str(self.email_context.get('user_email')) + '/' + """
         """
-        self.email_html_blocks["plain_call_to_action_block"] = "Accedi al tuo profilo:" + self.base_url + "/passerella/dettaglio-utente/" + str(self.email_context.get("user_id")) + "/"
+
+        # call to action blocks
+        self.email_html_blocks["html_call_to_action_block"] = self.get_call_to_action_template(href=self.base_url + "/profilo/", label="Accedi al tuo profilo")
+        self.email_html_blocks["plain_call_to_action_block"] = "Accedi al tuo profilo: " + self.base_url + "/profilo/"
 
         # email subject
         self.email_subject = "Beauty & Pics: report mensile del concorso."
@@ -305,19 +296,49 @@ class CustomEmailTemplate():
                 </tr>
                 <tr>
                     <td>
-                        Rendi il tuo profilo interessante caricando le immagini del book. PS: modificando spesso le tue immagini, aumentarai l'interesse della gente a visualizzare il tuo profilo!
+                        Rendi il tuo profilo interessante caricando le
+                        immagini del book. PS: modificando spesso le tue
+                        immagini, aumentarai l'interesse della gente a tornare
+                        nel tuo profilo, aumentando le probabilità di ricevere
+                        dei voti!
                     </td>
                 </tr>
             </table><br />
             Questi sono solo alcuni consigli, il resto dipende da te!
         """
-	self.email_html_blocks["html_call_to_action_block"] = self.get_call_to_action_template(href=self.base_url + "/passerella/dettaglio-utente/" + str(self.email_context.get("user_id")) + "/", label="Accedi al tuo profilo")
+	self.email_html_blocks["html_call_to_action_block"] = self.get_call_to_action_template(href=self.base_url + "/passerella/dettaglio-utente/" + str(self.email_context.get("user_id")) + "/", label="Visualizza il mio profilo")
 	# plain text email blocks
 	self.email_html_blocks["plain_main_text_block"] = "Beauty and Pics ti informa che il contest più atteso dell'anno è APERTO."
-	self.email_html_blocks["plain_call_to_action_block"] = "Accedi al tuo profilo:" + self.base_url + "/passerella/dettaglio-utente/" + str(self.email_context.get("user_id")) + "/"
+	self.email_html_blocks["plain_call_to_action_block"] = "Visualizza il mio profilo: " + self.base_url + "/passerella/dettaglio-utente/" + str(self.email_context.get("user_id")) + "/"
 
         # email subject
         self.email_subject = "Beauty & Pics: il contest più atteso dell'anno è APERTO."
+
+        return True
+
+    def contest_closed(self):
+        """
+        Email on contest closing
+        Context vars required:
+        ->    ['first_name', 'last_name', 'contest_type']
+        """
+
+	# common email blocks
+	self.email_html_blocks["dear_block"] = self.build_dear_block()
+	self.email_html_blocks["main_title_block"] = "Beauty and Pics ha chiuso il contest!"
+	# html text email blocks
+	self.email_html_blocks["html_main_text_block"] = """
+            Beauty and Pics ti informa che il contest è stato <b>CHIUSO</b>.<br /><br />
+            Vuoi sapere com'è finita? Accedi subito alla passerella per
+            scoprire il vincitore!
+        """
+	self.email_html_blocks["html_call_to_action_block"] = self.get_call_to_action_template(href=self.base_url + "/passerella/" + str(self.email_context.get("contest_type")) + "/", label="Accedi alla passerella")
+	# plain text email blocks
+	self.email_html_blocks["plain_main_text_block"] = "Beauty and Pics ti informa che il contest è stato CHIUSO."
+	self.email_html_blocks["plain_call_to_action_block"] = "Accedi alla passerella: " + self.base_url + "/passerella/" + str(self.email_context.get("contest_type")) + "/"
+
+        # email subject
+        self.email_subject = "Beauty & Pics: contest è stato CHIUSO."
 
         return True
 
@@ -336,7 +357,7 @@ class CustomEmailTemplate():
 	self.email_html_blocks["html_call_to_action_block"] = self.get_call_to_action_template(href=self.base_url + "/richiesta-aiuto", label="Chiedi aiuto")
 	# plain text email blocks
 	self.email_html_blocks["plain_main_text_block"] = "Grazie per esserti registrato"
-	self.email_html_blocks["plain_call_to_action_block"] = "Richiedi aiuto:" + self.base_url + "/richiesta-aiuto"
+	self.email_html_blocks["plain_call_to_action_block"] = "Richiedi aiuto: " + self.base_url + "/richiesta-aiuto"
 
         # email subject
         self.email_subject = "Beauty & Pics ti da il benvenuto."
@@ -478,13 +499,13 @@ class CustomEmailTemplate():
             "Condividi spesso la tua pagina profilo sui social networks (Es. Facebook, Twitter, ecc...)",
             "Carica un'immagine profilo che attiri l'attenzione",
             "Aggiungi i tuoi competitori ai preferiti (direttamente dalla loro pagina profilo), per poterli monitorare in tempo reale",
-            "Rendi il tuo profilo interessante: carica molte immagini del book cambiale spesso",
+            "Rendi il tuo profilo interessante: carica molte immagini del book e cambiale spesso",
             "Spargi la voce, suggerisci ai tuoi amici e parenti di votarti",
             "Hai dubbi o domande? No problem, scrivici e noi ti risponderemo appena possibile!",
             "Hai dei consigli? Scrivici, siamo sempre felici di ricevere nuove proposte!",
             # adding more priority
             "Condividi spesso la tua pagina profilo sui social networks (Es. Facebook, Twitter, ecc...)",
-            "Rendi il tuo profilo interessante: carica molte immagini del book cambiale spesso",
+            "Rendi il tuo profilo interessante: carica molte immagini del book e cambiale spesso",
         ]
 
         return random.choice(tips_list)

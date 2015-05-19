@@ -34,6 +34,7 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'storages',
+    'django_cron',
     'account_app',
     'contest_app',
     'website',
@@ -51,6 +52,11 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'beauty_and_pics.contest_middleware.ContestMiddleware',
+)
+
+CRON_CLASSES = (
+    'beauty_and_pics.cron_job.WeeklyReportJob',
+    'beauty_and_pics.cron_job.ContestManagerJob',
 )
 
 # login with username and password

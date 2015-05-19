@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from django.shortcuts import render
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, HttpResponse
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import logout
@@ -10,6 +10,7 @@ from account_app.models.accounts import *
 from contest_app.models.contests import *
 from contest_app.models.contest_types import *
 from contest_app.models.votes import Vote
+from email_template.email.email_template import *
 # loading forms
 from custom_form_app.forms.register_form import *
 from custom_form_app.forms.login_form import *
@@ -386,4 +387,46 @@ def profile_area51(request):
     }
 
     return render(request, 'website/profile/profile_area51.html', context)
+# }}}
+
+# test email {{{
+def email_test(request, email_name, email_mode):
+    """View to test email template object"""
+
+    if email_name and email_mode:
+        # build email context with all vars
+        email_context = {
+            "first_name": "Nome",
+            "last_name": "Cognome",
+            "contest_type": "man_contest",
+            "email": "mail@mail.com",
+            "password": "pass123",
+            "user_email": "user_mail@mail.com",
+            "user_id": "2",
+            "points": "12345",
+            "ranking": "13",
+            "help_text": "Ciao ho bisogno di qualche aiuto per...",
+            "report_text": "Voglio segnalare l'utente per...",
+            "report_user_id": "2",
+            "report_user_email": "mailincriminata@mail.com",
+            "report_user_profile_url": "http://www.google.com",
+        }
+        # build requested email template
+        email_obj = CustomEmailTemplate(email_name=email_name, email_context=email_context, template_type="user", debug_only=True)
+
+        if email_obj.email_ready_to_send:
+            if email_mode == "html":
+                email_content = email_obj.get_html_template()
+                email_subject = email_obj.email_subject
+            elif email_mode == "plain":
+                email_content = email_obj.get_plain_template()
+                email_subject = email_obj.email_subject
+            else:
+                email_content = "Please enter a valid visual mode!"
+        else:
+            email_content = "Please enter a valid template name!"
+    else:
+        email_content = "Please enter a valid template name and visual mode!"
+
+    return HttpResponse(email_content)
 # }}}

@@ -6,7 +6,6 @@ from datetime import timedelta
 from django.utils import timezone
 from contest_app.models.contest_types import Contest_Type
 from contest_app.models.metrics import Metric
-from email_template.email.email_template import *
 from beauty_and_pics.consts import project_constants
 import logging, time
 
@@ -62,6 +61,7 @@ class Contest(models.Model):
 
     def __close_contests(self):
         from contest_app.models.hall_of_fame import HallOfFame
+        from account_app.models.accounts import Account
         """Function to close contests
         Funzione per chiudere i concorsi()
 
@@ -71,30 +71,30 @@ class Contest(models.Model):
                 - notifico tutti gli utenti (TUTTI!) che il concorso è stato chiuso
 
         """
-        for contest in Contest.objects.filter(status=project_constants.CONTEST_ACTIVE):
+        send_email = False
+        contest_list = Contest.objects.filter(status=project_constants.CONTEST_ACTIVE)
+        for contest in contest_list:
             if timezone.now() >= contest.end_date:
+                logger.info("contest chiuso:" + str(contest))
                 # save best users inside hall of fame
                 hall_of_fame_obj = HallOfFame()
                 hall_of_fame_obj.save_active_contest_hall_of_fame(contest_type=contest.contest_type.code)
-                # send an email
-                logger.info("contest chiuso:" + str(contest))
-		# contest opening email
-		email_context = {
-		    "first_name": "Nome",
-		    "last_name": "Cognome",
-		    "contest_type": "man_contest"}
-		CustomEmailTemplate(
-		    email_name="contest_closed",
-		    email_context=email_context,
-		    template_type="user",
-		    # recipient_list=[self.form_validated_data["email"],]
-		)
+                send_email = True
                 pass
         Contest.objects.filter(status=project_constants.CONTEST_ACTIVE, end_date__lte=timezone.now()).update(status=project_constants.CONTEST_CLOSED)
+
+        # send emails
+        if send_email and contest_list:
+            for contest in contest_list:
+                if timezone.now() >= contest.end_date:
+                    # send close contest emails
+                    account_obj = Account()
+                    account_obj.send_contest_closing_emails(contest_type=contest.contest_type.code)
 
         return True
 
     def __activate_contests(self):
+        from account_app.models.accounts import Account
         """Function to activate contests
         Funzione per attivare i concorsi()
 
@@ -104,24 +104,22 @@ class Contest(models.Model):
                 ponendo come end_date "+ 10 mesi" a partire dalla data attuale
                 - notifico tutti gli utenti (TUTTI!) che il concorso è stato aperto
         """
-        for contest in Contest.objects.filter(status=project_constants.CONTEST_OPENING):
+        send_email = False
+        contest_list = Contest.objects.filter(status=project_constants.CONTEST_OPENING)
+        for contest in contest_list:
             if timezone.now() >= contest.start_date:
-                # send an email
                 logger.info("contest attivato:" + str(contest))
-
-		# contest opening email
-		email_context = {
-		    "first_name": "Nome",
-		    "last_name": "Cognome",
-		    "user_id": 12}
-		CustomEmailTemplate(
-		    email_name="contest_opened",
-		    email_context=email_context,
-		    template_type="user",
-		    # recipient_list=[self.form_validated_data["email"],]
-		)
+                send_email = True
                 pass
         Contest.objects.filter(status=project_constants.CONTEST_OPENING, start_date__lte=timezone.now()).update(status=project_constants.CONTEST_ACTIVE, end_date=(timezone.now()+timedelta(days=project_constants.CONTEST_EXPIRING_DAYS)))
+
+        # send emails
+        if send_email and contest_list:
+            for contest in contest_list:
+                if timezone.now() >= contest.start_date:
+                    # send open contest emails
+                    account_obj = Account()
+                    account_obj.send_contest_opening_emails(contest_type=contest.contest_type.code)
 
         return True
 
@@ -139,6 +137,10 @@ class Contest(models.Model):
         metric_obj = Metric()
         metric_obj.metrics_manager()
 
+        # TODO: solo per debug, scriptizzarlo e inviarlo max 1 volta al mese
+        # per ogni account
+        # account_obj.send_report_emails(contest_type="woman_contest")
+
         # create contests
         self.__create_default_types()
         self.__close_contests()
@@ -153,6 +155,17 @@ class Contest(models.Model):
     __create_contests()
     __activate_contests()
     """
+
+    def contest_report(self):
+        """Send emails for each open contests"""
+        from account_app.models.accounts import Account
+        account_obj = Account()
+        return_var = False
+        for contest in Contest.objects.filter(status=project_constants.CONTEST_ACTIVE):
+            account_obj.send_report_emails(contest_type=contest.contest_type.code)
+            return_var = True
+
+        return return_var
 
     def format_contest_time(self, date=None):
         """Function to format the contest start/end date as dictionary"""

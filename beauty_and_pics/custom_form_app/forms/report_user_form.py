@@ -61,7 +61,7 @@ class ReportUserForm(forms.Form, FormCommonUtils):
             email_context = {
                 "email": self.form_validated_data["email"],
                 "report_text": self.form_validated_data["report_text"],
-                "report_user_id": self.form_validated_data["report_text"],
+                "report_user_id": self.form_validated_data["report_user_id"],
                 "report_user_email": account_info["email"],
                 "report_user_profile_url": settings.SITE_URL + "/passerella/dettaglio-utente/" + str(self.form_validated_data["report_user_id"]) + "/",
             }

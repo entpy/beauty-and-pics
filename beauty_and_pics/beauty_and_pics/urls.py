@@ -22,7 +22,7 @@ urlpatterns = patterns('',
     url(r'^passerella/dettaglio-utente/(?P<user_id>\d+)/$', 'website.views.catwalk_profile', name='catwalk_profile'),
     url(r'^passerella/richiesta-aiuto/$', 'website.views.catwalk_help', name='catwalk_help'),
     url(r'^passerella/segnalazione-utente/(?P<user_id>\d+)/$', 'website.views.catwalk_report_user', name='catwalk_report_user'),
-    url(r'^passerella/disiscriviti/(?P<user_email>\w+)/$', 'website.views.catwalk_unsubscribe', name='catwalk_unsubscribe'),
+    url(r'^passerella/disiscriviti/(?P<user_email>.+)/$', 'website.views.catwalk_unsubscribe', name='catwalk_unsubscribe'),
 
     # private profile
     url(r'^profilo/$', 'website.views.profile_index', name='profile_index'),
@@ -30,6 +30,9 @@ urlpatterns = patterns('',
     url(r'^profilo/preferiti/$', 'website.views.profile_favorites', name='profile_favorites'),
     url(r'^profilo/statistiche/$', 'website.views.profile_stats', name='profile_stats'),
     url(r'^profilo/zona-proibita/$', 'website.views.profile_area51', name='profile_area51'),
+
+    # email test
+    url(r'^email-test/(?P<email_name>\w+)/(?P<email_mode>\w+)/$', 'website.views.email_test', name='email_test'),
 
     # admin
     url(r'^admin/', include(admin.site.urls)),
@@ -40,5 +43,5 @@ urlpatterns = patterns('',
     # upload image
     url(r'^upload_image/', include('upload_image_box.urls', namespace="upload_image_box")),
     # upload image example
-    url(r'^example_upload_image/', include('upload_image_box.example.urls', namespace="example_upload_image_box")),
+    # url(r'^example_upload_image/', include('upload_image_box.example.urls', namespace="example_upload_image_box")),
 ) + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT) + static(settings.MEDIA_URL_TMP, document_root=settings.MEDIA_ROOT)
