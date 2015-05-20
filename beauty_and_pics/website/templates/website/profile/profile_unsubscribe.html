@@ -1,18 +1,23 @@
-{% extends "website/inc/base_catwalk.html" %}
+{% extends "website/inc/base_profile.html" %}
 {% load staticfiles %}
 
-{% block title %}Beauty and Pics | disiscriviti{% endblock %}
+{% block title %}Beauty and Pics | notifiche{% endblock %}
 
-{% block description %}Beauty and Pics: pagina di disiscrizione dal report mensile{% endblock %}
+{% block description %}Beauty and Pics: impostazioni ricezione notifiche{% endblock %}
 
-{% block container4_title %}Disiscriviti{% endblock %}
+{% block container4_title %}Notifiche{% endblock %}
+
+{# navigation tabs active element #}
+{% block container4_navigation_profile_unsubscribe %}active{% endblock %}
 
 {% block container4_content %}
 <div class="row">
 	<div class="col-md-12">
+		<h3>Notifiche</h3>
+	</div>
+	<div class="col-md-12">
 		<div class="alert alert-info">
-			<h4>Disiscriviti</h4>
-			<p>Stai per disiscriverti dal report mensile...sicura/o?</p>
+			<p>Stanco di ricevere le nostre notifiche? Seleziona le notifiche che vuoi ricevere.</p>
 		</div>
 	</div>
 	<div class="col-md-12">
@@ -45,15 +50,24 @@
 			{% csrf_token %}
 			<input type="hidden" name="form_class" value="UnsubscribeForm">
 			<fieldset class="col-md-9">
-				<div class="form-group {% if form.email.errors %}has-error{% endif %}">
-					<label for="{{ form.email.id_for_label }}" class="col-md-4 control-label">{{ form.email.label }} *</label>
-					<div class="col-md-8">
-						<input name="{{ form.email.name }}" class="form-control" id="{{ form.email.id_for_label }}" placeholder="{{ form.email.label }}" value="{% if post.email %}{{ post.email }}{% elif user_email %}{{user_email}}{% endif %}" type="email">
+				<div class="form-group {% if form.receive_weekly_report.errors %}has-error{% endif %}">
+					<div class="checkbox">
+					<label for="{{ form.receive_weekly_report.id_for_label }}" class="col-md-9 control-label">
+						<input name="{{ form.receive_weekly_report.name }}" id="{{ form.receive_weekly_report.id_for_label }}" value="1" type="checkbox">
+						{{ form.receive_weekly_report.label }} *
+					</label>
+				</div>
+				<div class="form-group {% if form.contest_report.errors %}has-error{% endif %}">
+					<div class="checkbox">
+						<label for="{{ form.contest_report.id_for_label }}" class="col-md-9 control-label">
+							<input name="{{ form.contest_report.name }}" id="{{ form.contest_report.id_for_label }}" value="1" type="checkbox">
+							{{ form.contest_report.label }} *
+						</label>
 					</div>
 				</div>
 				<div class="form-group">
 					<div class="col-md-8 col-md-offset-4">
-						<button type="submit" class="btn btn-success submitButtonClickAction">Si, disiscrivimi</button>
+						<button type="submit" class="btn btn-success submitButtonClickAction">Salva le modifiche</button>
 					</div>
 				</div>
 			</fieldset>
@@ -61,6 +75,7 @@
 	</div>
 </div>
 {% endblock container4_content %}
+
 {% block custom_js %}
 <script>
 	$(document).ready(function(){

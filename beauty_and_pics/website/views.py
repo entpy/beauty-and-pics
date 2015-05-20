@@ -232,8 +232,8 @@ def catwalk_report_user(request, user_id):
 
     return render(request, 'website/catwalk/catwalk_report_user.html', context)
 
-@ensure_csrf_cookie
-def catwalk_unsubscribe(request, user_email):
+@login_required
+def profile_unsubscribe(request):
     # if this is a POST request we need to process the form data
     if request.method == 'POST':
         # create a form instance and populate it with data from the request:
@@ -242,9 +242,9 @@ def catwalk_unsubscribe(request, user_email):
 
         # check whether it's valid:
         if form.is_valid() and form.form_actions():
-            messages.add_message(request, messages.SUCCESS, 'Ti sei disiscritto dalla reportistica mensile.')
+            messages.add_message(request, messages.SUCCESS, 'Le preferenze sono state salvate con successo.')
             # redirect to user profile
-            return HttpResponseRedirect('/passerella/disiscriviti/')
+            return HttpResponseRedirect('/profilo/disiscriviti/')
 
     # if a GET (or any other method) we'll create a blank form
     else:
@@ -252,12 +252,11 @@ def catwalk_unsubscribe(request, user_email):
         form = UnsubscribeForm()
 
     context = {
-        "user_email" : user_email,
         "post" : request.POST,
         "form": form,
     }
 
-    return render(request, 'website/catwalk/catwalk_unsubscribe.html', context)
+    return render(request, 'website/profile/profile_unsubscribe.html', context)
 # }}}
 
 # private profile {{{

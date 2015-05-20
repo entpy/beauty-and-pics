@@ -37,8 +37,7 @@ class Account(models.Model):
     hair = models.CharField(max_length=15, null=True) 
     eyes = models.CharField(max_length=15, null=True)
     height = models.CharField(max_length=4, null=True)
-    receive_newsletters = models.IntegerField(max_length=1, default=1, null=True)
-    last_newsletter_date = models.DateTimeField(null=True)
+    newsletters_bitmask = models.IntegerField(max_length=10, default=1, null=True)
     creation_date = models.DateTimeField(auto_now_add=True)
     update_date = models.DateTimeField(auto_now=True)
 
@@ -47,6 +46,20 @@ class Account(models.Model):
 
     def __unicode__(self):
         return self.user.username
+
+    # bitwise functions {{{
+    def check_bitmask(self, b1, b2):
+        """Function to compare two bitmask 'b1' and 'b2'"""
+        return b1 & b2
+
+    def add_bitmask(self, bitmask, add_value):
+        """Function to add bitmask 'add_value' to 'bitmask'"""
+        return bitmask | add_value;
+
+    def remove_bitmask(self, bitmask, remove_value):
+        """Function to remove bitmask 'remove_value' from 'bitmask'"""
+        return bitmask & (~remove_value);
+    # bitwise functions }}}
 
     def check_if_email_exists(self, email_to_check=None):
         """Function to check if an email already exists"""

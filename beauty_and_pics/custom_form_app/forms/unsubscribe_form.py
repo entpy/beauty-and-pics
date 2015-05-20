@@ -19,18 +19,13 @@ logger = logging.getLogger(__name__)
 
 class UnsubscribeForm(forms.Form, FormCommonUtils):
 
-    email = forms.CharField(label='La tua email', max_length=75, required=True)
+    receive_weekly_report = forms.BooleanField(label='Voglio ricevere il report settimanale')
+    contest_report = forms.BooleanField(label='Voglio ricevere il report annuale del concorso')
 
     # list of validator for this form
     custom_validation_list = (
         'check_all_fields_valid',
-	'check_email_is_valid',
     )
-
-    # list of addictional validator fied
-    addictional_validation_fields = {
-        "email":"email",
-    }
 
     def __init__(self, *args, **kwargs):
         # parent forms.Form init
@@ -44,32 +39,31 @@ class UnsubscribeForm(forms.Form, FormCommonUtils):
 	super(UnsubscribeForm, self).clean_form_custom()
         return True
 
-    def unsubscribe_email(self):
-        """Function to unsubscribe user"""
+    def manage_newsletters(self):
+        """Function to unsubscribe/subscribe user"""
         # unsubscribe user
-        return_var = False
         account_obj = Account()
-        user_email = self.form_validated_data["email"]
-        try:
-            # if user exists will be unsubscribed
-            user_obj = account_obj.get_user_about_email(email=user_email)
-        except User.DoesNotExist:
+        if self.form_validated_data["receive_weekly_report"]:
+            # TODO: add weekly report bitmask
             pass
         else:
-            # TODO: plz try it!
-            # setting 'receive_newsletters' to '0'
-            user_obj.account.receive_newsletters = 0
-            user_obj.save()
-            return_var = True
+            # TODO: remove weekly report bitmask
+            pass
 
-        return return_var
+        if self.form_validated_data["contest_report"]:
+            # TODO: add contest report bitmask
+            pass
+        else:
+            # TODO: remove contest report bitmask
+            pass
+
+        return True
 
     def form_actions(self):
         """Function to perform form action"""
         return_var = False
         if super(UnsubscribeForm, self).form_can_perform_actions():
-            # send help mail 
-            if self.unsubscribe_email():
+            if self.manage_newsletters():
                 return_var = True
 
         return return_var

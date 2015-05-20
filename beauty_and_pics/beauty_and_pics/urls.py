@@ -22,7 +22,6 @@ urlpatterns = patterns('',
     url(r'^passerella/dettaglio-utente/(?P<user_id>\d+)/$', 'website.views.catwalk_profile', name='catwalk_profile'),
     url(r'^passerella/richiesta-aiuto/$', 'website.views.catwalk_help', name='catwalk_help'),
     url(r'^passerella/segnalazione-utente/(?P<user_id>\d+)/$', 'website.views.catwalk_report_user', name='catwalk_report_user'),
-    url(r'^passerella/disiscriviti/(?P<user_email>.+)/$', 'website.views.catwalk_unsubscribe', name='catwalk_unsubscribe'),
 
     # private profile
     url(r'^profilo/$', 'website.views.profile_index', name='profile_index'),
@@ -30,6 +29,7 @@ urlpatterns = patterns('',
     url(r'^profilo/preferiti/$', 'website.views.profile_favorites', name='profile_favorites'),
     url(r'^profilo/statistiche/$', 'website.views.profile_stats', name='profile_stats'),
     url(r'^profilo/zona-proibita/$', 'website.views.profile_area51', name='profile_area51'),
+    url(r'^profilo/disiscriviti/$', 'website.views.profile_unsubscribe', name='profile_unsubscribe'),
 
     # email test
     url(r'^email-test/(?P<email_name>\w+)/(?P<email_mode>\w+)/$', 'website.views.email_test', name='email_test'),
