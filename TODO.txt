@@ -3,9 +3,9 @@ TODO
  - script giornaliero che apra/chiuda i contest
  - script mensile che invii le mail di riepilogo se gli utente vogliono ricevere newsletter
    e se la data dell'ultima newsletter è >= 1 mese
+ - far funzionare il disiscriviti nella mail
  - localizzare
  - test sui vari browser
- - far funzionare il disiscriviti nella mail
 
 BUG NOTI
 --------
