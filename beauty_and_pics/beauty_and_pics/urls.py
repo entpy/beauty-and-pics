@@ -4,10 +4,6 @@ from django.conf import settings
 from django.conf.urls.static import static
 
 urlpatterns = patterns('',
-    # Examples:
-    # url(r'^$', 'beauty_and_pics.views.home', name='home'),
-    # url(r'^blog/', include('blog.urls')),
-
     # www 
     url(r'^$', 'website.views.www_index', name='www_index'),
     url(r'^index/$', 'website.views.www_index', name='www_index'),

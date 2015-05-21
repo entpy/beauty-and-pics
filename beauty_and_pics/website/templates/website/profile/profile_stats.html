@@ -17,7 +17,7 @@
 	</div>
 	<div class="col-sm-12">
 		<div class="alert alert-info">
-			<p>Best check yo self, you're not looking too good. Nulla vitae elit libero, a pharetra augue. Praesent commodo cursus magna, <a href="#" class="alert-link">vel scelerisque nisl consectetur et</a>.</p>
+			<p>Statistiche e altri dati che potrebbero tornarti utili!</p>
 		</div>
 	</div>
 </div>
@@ -25,18 +25,18 @@
 	<div class="right">
 		<div class="top user_stats_container">
 			<div class="user_stats_block">
-				<span class="position">2°</span>
+				<span class="position">{{ user_contest_info.ranking }}°</span>
 				<span>Posizione</span>
 			</div>
 			<div class="user_stats_space"></div>
 			<div class="user_stats_block">
-				<span class="points">327</span>
+				<span class="points">{{ user_contest_info.total_points }}</span>
 				<span>Punti</span>
 			</div>
 			<div class="user_stats_space"></div>
 			<div class="user_stats_block">
 				<span class="points">
-					18
+					{{ favorites_count }}
 				</span>
 				<span>
 					<span>
@@ -51,42 +51,27 @@
 		<div class="bottom">
 			<div class="stats_bar_container">
 				<!-- stats block -->
-				<div class="stats_bar_label">Globale</div>
+				<div class="stats_bar_label">Globale: {{ user_contest_info.global.total_points }} punti ({{ user_contest_info.look.metric_rate_percentage }}%)</div>
 				<div class="stats_bar">
 					<div class="progress">
-						<div class="progress-bar progress-bar-warning" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 30%">
-							<span class="sr-only">60% Complete (warning)</span>
-						</div>
+						<div class="progress-bar progress-bar-warning" role="progressbar" aria-valuenow="{{ user_contest_info.global.metric_rate_percentage }}" aria-valuemin="0" aria-valuemax="100" style="width: {{ user_contest_info.global.metric_rate_percentage }}%"></div>
+				</div>
+				<!-- stats block -->
+				<div class="stats_bar_label">Sorriso: {{ user_contest_info.smile.total_points }} punti ({{ user_contest_info.smile.metric_rate_percentage }}%)</div>
+				<div class="stats_bar">
+					<div class="progress">
+						<div class="progress-bar progress-bar-warning" role="progressbar" aria-valuenow="{{ user_contest_info.look.metric_rate_percentage }}" aria-valuemin="0" aria-valuemax="100" style="width: {{ user_contest_info.look.metric_rate_percentage }}%"></div>
 					</div>
 				</div>
 				<!-- stats block -->
-				<div class="stats_bar_label">Viso</div>
+				<div class="stats_bar_label">Sguardo: {{ user_contest_info.look.total_points }} punti ({{ user_contest_info.look.metric_rate_percentage }}%)</div>
 				<div class="stats_bar">
 					<div class="progress">
-						<div class="progress-bar progress-bar-warning" role="progressbar" aria-valuenow="30" aria-valuemin="0" aria-valuemax="100" style="width: 60%">
-							<span class="sr-only">60% Complete (warning)</span>
-						</div>
-					</div>
-				</div>
-				<!-- stats block -->
-				<div class="stats_bar_label">Sguardo</div>
-				<div class="stats_bar">
-					<div class="progress">
-						<div class="progress-bar progress-bar-warning" role="progressbar" aria-valuenow="90" aria-valuemin="0" aria-valuemax="100" style="width: 90%">
-							<span class="sr-only">60% Complete (warning)</span>
-						</div>
+						<div class="progress-bar progress-bar-warning" role="progressbar" aria-valuenow="{{ user_contest_info.smile.metric_rate_percentage }}" aria-valuemin="0" aria-valuemax="100" style="width: {{ user_contest_info.smile.metric_rate_percentage }}%"></div>
 					</div>
 				</div>
 			</div>
 		</div>
-	</div>
-</div>
-<div class="row">
-	<div class="col-sm-12">
-		<h3>Visite del profilo mensili</h3>
-	</div>
-	<div class="col-sm-12">
-		<h3>Punteggio nel tempo</h3>
 	</div>
 </div>
 {% endblock container4_content %}

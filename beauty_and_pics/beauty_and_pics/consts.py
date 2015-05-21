@@ -44,3 +44,8 @@ class project_constants(object):
     IMAGE_TYPE = {"profile": "profile_image", "book": "book_image"}
 
     # votations }}}
+
+    # newsletters bitmask {{{
+    WEEKLY_REPORT_EMAIL_BITMASK = 1
+    CONTEST_REPORT_EMAIL_BITMASK = 2
+    # newsletters bitmask }}}

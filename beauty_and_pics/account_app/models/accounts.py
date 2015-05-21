@@ -37,7 +37,7 @@ class Account(models.Model):
     hair = models.CharField(max_length=15, null=True) 
     eyes = models.CharField(max_length=15, null=True)
     height = models.CharField(max_length=4, null=True)
-    newsletters_bitmask = models.IntegerField(max_length=10, default=1, null=True)
+    newsletters_bitmask = models.CharField(max_length=20, default=(project_constants.WEEKLY_REPORT_EMAIL_BITMASK + project_constants.CONTEST_REPORT_EMAIL_BITMASK), null=True)
     creation_date = models.DateTimeField(auto_now_add=True)
     update_date = models.DateTimeField(auto_now=True)
 
@@ -50,15 +50,15 @@ class Account(models.Model):
     # bitwise functions {{{
     def check_bitmask(self, b1, b2):
         """Function to compare two bitmask 'b1' and 'b2'"""
-        return b1 & b2
+        return int(b1) & int(b2)
 
     def add_bitmask(self, bitmask, add_value):
         """Function to add bitmask 'add_value' to 'bitmask'"""
-        return bitmask | add_value;
+        return int(bitmask) | int(add_value);
 
     def remove_bitmask(self, bitmask, remove_value):
         """Function to remove bitmask 'remove_value' from 'bitmask'"""
-        return bitmask & (~remove_value);
+        return int(bitmask) & (~int(remove_value));
     # bitwise functions }}}
 
     def check_if_email_exists(self, email_to_check=None):
@@ -431,14 +431,14 @@ class Account(models.Model):
 
         # order by "latest_registered" filter
         if filters_list["filter_name"] == "latest_registered":
-            return_var = Account.objects.values('user__first_name', 'user__last_name', 'user__email', 'user__id').filter(user__groups__name=project_constants.CATWALK_GROUP_NAME, contest_type__code=contest_type)
+            return_var = Account.objects.values('user__first_name', 'user__last_name', 'user__email', 'user__id', 'user__account__newsletters_bitmask').filter(user__groups__name=project_constants.CATWALK_GROUP_NAME, contest_type__code=contest_type)
             return_var = return_var.order_by('-user__account__creation_date')
 
         # order by "classification" filter
         if filters_list["filter_name"] == "classification":
             # "contest__status" to identify point about current contest
             # più leggera ma non mostra gli utenti che non hanno ancora punti
-            return_var = Point.objects.values('user__first_name', 'user__last_name', 'user__email', 'user__id').filter(user__groups__name=project_constants.CATWALK_GROUP_NAME, contest__status=project_constants.CONTEST_ACTIVE, contest__contest_type__code=contest_type).annotate(total_points=Sum('points'))
+            return_var = Point.objects.values('user__first_name', 'user__last_name', 'user__email', 'user__id', 'user__account__newsletters_bitmask').filter(user__groups__name=project_constants.CATWALK_GROUP_NAME, contest__status=project_constants.CONTEST_ACTIVE, contest__contest_type__code=contest_type).annotate(total_points=Sum('points'))
             # più pesante e mostra anche gli utenti che non hanno ancora punti
             # return_var = Account.objects.values('user__first_name', 'user__last_name', 'user__email', 'user__id').filter(user__groups__name=project_constants.CATWALK_GROUP_NAME, contest_type__contest__status=project_constants.CONTEST_ACTIVE).annotate(total_points=Sum('user__point__points'))
             return_var = return_var.order_by('-total_points', 'user__id')
@@ -447,7 +447,7 @@ class Account(models.Model):
         if filters_list["filter_name"] == "most_beautiful_smile":
             # "contest__status" to identify point about current contest
             # più leggera ma non mostra gli utenti che non hanno ancora punti
-            return_var = Point.objects.values('user__first_name', 'user__last_name', 'user__email', 'user__id').filter(user__groups__name=project_constants.CATWALK_GROUP_NAME, contest__status=project_constants.CONTEST_ACTIVE, contest__contest_type__code=contest_type, metric__name=project_constants.VOTE_METRICS_LIST["smile_metric"]).annotate(total_points=Sum('points'))
+            return_var = Point.objects.values('user__first_name', 'user__last_name', 'user__email', 'user__id', 'user__account__newsletters_bitmask').filter(user__groups__name=project_constants.CATWALK_GROUP_NAME, contest__status=project_constants.CONTEST_ACTIVE, contest__contest_type__code=contest_type, metric__name=project_constants.VOTE_METRICS_LIST["smile_metric"]).annotate(total_points=Sum('points'))
             # più pesante e mostra anche gli utenti che non hanno ancora punti
             # return_var = Account.objects.values('user__first_name', 'user__last_name', 'user__email', 'user__id').filter(Q(user__point__metric__name=project_constants.VOTE_METRICS_LIST["smile_metric"]) | Q(user__point__isnull=True), user__groups__name=project_constants.CATWALK_GROUP_NAME, contest_type__contest__status=project_constants.CONTEST_ACTIVE).annotate(total_points=Sum('user__point__points'))
             return_var = return_var.order_by('-total_points', 'user__id')
@@ -456,7 +456,8 @@ class Account(models.Model):
         if filters_list["filter_name"] == "look_more_beautiful":
             # "contest__status" to identify point about current contest
             # più leggera ma non mostra gli utenti che non hanno ancora punti
-            return_var = Point.objects.values('user__first_name', 'user__last_name', 'user__email', 'user__id').filter(user__groups__name=project_constants.CATWALK_GROUP_NAME, contest__status=project_constants.CONTEST_ACTIVE, contest__contest_type__code=contest_type, metric__name=project_constants.VOTE_METRICS_LIST["look_metric"]).annotate(total_points=Sum('points'))
+            return_var = Point.objects.values('user__first_name',
+                    'user__last_name', 'user__email', 'user__id', 'user__account__newsletters_bitmask').filter(user__groups__name=project_constants.CATWALK_GROUP_NAME, contest__status=project_constants.CONTEST_ACTIVE, contest__contest_type__code=contest_type, metric__name=project_constants.VOTE_METRICS_LIST["look_metric"]).annotate(total_points=Sum('points'))
             # più pesante e mostra anche gli utenti che non hanno ancora punti
             # return_var = Account.objects.values('user__first_name', 'user__last_name', 'user__email', 'user__id').filter(user__groups__name=project_constants.CATWALK_GROUP_NAME, contest_type__contest__status=project_constants.CONTEST_ACTIVE).filter(Q(user__point__metric__name=project_constants.VOTE_METRICS_LIST["look_metric"]) | Q(user__point__metric__isnull=True)).annotate(total_points=Sum('user__point__points'))
             return_var = return_var.order_by('-total_points', 'user__id')
@@ -497,6 +498,9 @@ class Account(models.Model):
         account_list = self.get_filtered_accounts_list(filters_list=filters_list, contest_type=contest_type)
         if account_list:
             for single_account in account_list:
+                if not self.check_bitmask(b1=single_account["user__account__newsletters_bitmask"], b2=project_constants.CONTEST_REPORT_EMAIL_BITMASK):
+                    # skip loop if the user doesn't want to receive this notify
+                    continue
                 logger.debug("contest_opened EMAIL DA INVIARE: " + str(single_account["user__email"]))
 		# contest opening email
 		email_context = {
@@ -520,6 +524,9 @@ class Account(models.Model):
         account_list = self.get_filtered_accounts_list(filters_list=filters_list, contest_type=contest_type)
         if account_list:
             for single_account in account_list:
+                if not self.check_bitmask(b1=single_account["user__account__newsletters_bitmask"], b2=project_constants.CONTEST_REPORT_EMAIL_BITMASK):
+                    # skip loop if the user doesn't want to receive this notify
+                    continue
                 logger.debug("contest_closed EMAIL DA INVIARE: " + str(single_account["user__email"]))
 		# contest opening email
 		email_context = {
@@ -550,6 +557,9 @@ class Account(models.Model):
         account_list = self.get_filtered_accounts_list(filters_list=filters_list, contest_type=contest_type)
         if account_list:
             for single_account in account_list:
+                if not self.check_bitmask(b1=single_account["user__account__newsletters_bitmask"], b2=project_constants.WEEKLY_REPORT_EMAIL_BITMASK):
+                    # skip loop if the user doesn't want to receive this notify
+                    continue
                 logger.debug("contest_report EMAIL DA INVIARE: " + str(single_account["user__email"]))
                 account_info = self.get_contest_account_info(user_id=single_account["user__id"], contest_type=contest_type)
 		# contest opening email

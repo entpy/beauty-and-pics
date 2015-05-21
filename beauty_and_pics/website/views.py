@@ -206,6 +206,7 @@ def catwalk_report_user(request, user_id):
     # retrieve current logged in user email
     account_obj =  Account()
     user_email = account_obj.get_autenticated_user_data(request=request)
+    report_user_obj = account_obj.get_user_about_id(user_id=user_id)
 
     # if this is a POST request we need to process the form data
     if request.method == 'POST':
@@ -223,9 +224,14 @@ def catwalk_report_user(request, user_id):
     else:
         form = ReportUserForm()
 
+    report_user_name = report_user_obj.get("first_name")
+    if report_user_obj.get("last_name"):
+        report_user_name += " " + report_user_obj.get("last_name")
+
     context = {
         "report_user_id" : user_id,
         "user_email" : user_email.get("email"),
+        "report_user_name" : report_user_name,
         "post" : request.POST,
         "form": form,
     }
@@ -234,6 +240,14 @@ def catwalk_report_user(request, user_id):
 
 @login_required
 def profile_unsubscribe(request):
+
+    account_obj = Account()
+    user_obj = account_obj.get_user_about_id(user_id=request.user.id)
+
+    # check which notify are enabled
+    enable_receive_weekly_report = account_obj.check_bitmask(b1=user_obj.account.newsletters_bitmask, b2=project_constants.WEEKLY_REPORT_EMAIL_BITMASK)
+    enable_receive_contest_report = account_obj.check_bitmask(b1=user_obj.account.newsletters_bitmask, b2=project_constants.CONTEST_REPORT_EMAIL_BITMASK)
+
     # if this is a POST request we need to process the form data
     if request.method == 'POST':
         # create a form instance and populate it with data from the request:
@@ -254,6 +268,8 @@ def profile_unsubscribe(request):
     context = {
         "post" : request.POST,
         "form": form,
+        "enable_receive_weekly_report": enable_receive_weekly_report,
+        "enable_receive_contest_report": enable_receive_contest_report,
     }
 
     return render(request, 'website/profile/profile_unsubscribe.html', context)
@@ -334,13 +350,27 @@ def profile_favorites(request):
 
 @login_required
 def profile_stats(request):
-    # set current contest_type
-    account_obj =  Account()
-    autenticated_user_data = account_obj.get_autenticated_user_data(request=request)
-    contest_obj = Contest()
-    contest_obj.set_contest_type(request=request, contest_type=autenticated_user_data["contest_type"])
+    # retrieve info about current logged in user
+    account_obj = Account()
+    account_info = account_obj.get_autenticated_user_data(request=request)
 
-    return render(request, 'website/profile/profile_stats.html', False)
+    # set current contest_type
+    contest_obj = Contest()
+    contest_obj.set_contest_type(request=request, contest_type=account_info["contest_type"])
+
+    # retrieve contest user info
+    contest_account_info = account_obj.get_contest_account_info(user_id=account_info["user_id"], contest_type=contest_obj.get_contest_type_from_session(request=request))
+
+    # TODO: calcolare il numero di preferiti
+    favorites_count = 12
+
+    context = {
+        "user_info" : account_info,
+        "user_contest_info" : contest_account_info,
+        "favorites_count" : favorites_count,
+    }
+
+    return render(request, 'website/profile/profile_stats.html', context)
 
 @login_required
 def profile_area51(request):
