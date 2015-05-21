@@ -224,9 +224,9 @@ def catwalk_report_user(request, user_id):
     else:
         form = ReportUserForm()
 
-    report_user_name = report_user_obj.get("first_name")
-    if report_user_obj.get("last_name"):
-        report_user_name += " " + report_user_obj.get("last_name")
+    report_user_name = report_user_obj.first_name
+    if report_user_obj.last_name:
+        report_user_name += " " + report_user_obj.last_name
 
     context = {
         "report_user_id" : user_id,
