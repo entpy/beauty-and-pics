@@ -297,30 +297,49 @@ var bootstrapModalsObect = {
 	},
 
 	/* Function to build and show favorite user bootstrap modal */
-    showFavoriteUserModal: function(userId, userFirstName, userLastName, userRanking, userPoints, userProfileImageUrl) {
-        this.resetBootstrapModal();
-        var messageBlockTemplate = '';
-        messageBlockTemplate += '<div class="row">';
-        messageBlockTemplate += '<div class="col-md-8">';
-        messageBlockTemplate += '<div class="favorite_popup_info_container">';
-        messageBlockTemplate += '<div class="favorite_popup_name_container">' + userFirstName + ' ' + userLastName + '</div>';
-        if (userRanking) {
-            messageBlockTemplate += '<div><span class="favorite_popup_ranking_value">' + userRanking + '</span> posizione</div>';
-        }
-        messageBlockTemplate += '<div class="favorite_popup_points_container"><span class="favorite_popup_points_value">' + userPoints + '</span> punti</div>';
-        messageBlockTemplate += '</div>';
-        messageBlockTemplate += '</div>';
-        messageBlockTemplate += '<div class="col-md-4">';
-        messageBlockTemplate += '<img class="favorite_profile_image" alt="Immagine profilo" src="' + userProfileImageUrl + '"';
-        messageBlockTemplate += '</div>';
-        messageBlockTemplate += '</div>';
-        $(".bootstrap_modal").find('.modal-title').html("Dettaglio utente");
-        $(".bootstrap_modal").find('.modal-footer').html('<button type="button" class="btn btn-default" data-dismiss="modal">Chiudi</button><a href="/passerella/dettaglio-utente/' + userId + '/" class="btn btn-success">Vai al profilo</a>');
-        $(".bootstrap_modal").find('.modal-body').html(messageBlockTemplate);
-        this.showBootstrapModal();
+	showFavoriteUserModal: function(userId, userFirstName, userLastName, userRanking, userPoints, userProfileImageUrl) {
+		this.resetBootstrapModal();
+		var messageBlockTemplate = '';
+		messageBlockTemplate += '<div class="row">';
+		messageBlockTemplate += '<div class="col-md-8">';
+		messageBlockTemplate += '<div class="favorite_popup_info_container">';
+		messageBlockTemplate += '<div class="favorite_popup_name_container">' + userFirstName + ' ' + userLastName + '</div>';
+		if (userRanking) {
+		    messageBlockTemplate += '<div><span class="favorite_popup_ranking_value">' + userRanking + '</span> posizione</div>';
+		}
+		messageBlockTemplate += '<div class="favorite_popup_points_container"><span class="favorite_popup_points_value">' + userPoints + '</span> punti</div>';
+		messageBlockTemplate += '</div>';
+		messageBlockTemplate += '</div>';
+		messageBlockTemplate += '<div class="col-md-4">';
+		messageBlockTemplate += '<img class="favorite_profile_image" alt="Immagine profilo" src="' + userProfileImageUrl + '"';
+		messageBlockTemplate += '</div>';
+		messageBlockTemplate += '</div>';
+		$(".bootstrap_modal").find('.modal-title').html("Dettaglio utente");
+		$(".bootstrap_modal").find('.modal-footer').html('<button type="button" class="btn btn-default" data-dismiss="modal">Chiudi</button><a href="/passerella/dettaglio-utente/' + userId + '/" class="btn btn-success">Vai al profilo</a>');
+		$(".bootstrap_modal").find('.modal-body').html(messageBlockTemplate);
+		this.showBootstrapModal();
 
-        return false;
-    },
+		return false;
+	},
+
+	/* Function to build and show welcome bootstrap modal */
+	showWelcomeModal: function(userFirstName) {
+		this.resetBootstrapModal();
+		var messageBlockTemplate = '';
+		messageBlockTemplate += '<div class="row">';
+		messageBlockTemplate += '<div class="col-md-8">';
+		messageBlockTemplate += '<p>';
+		messageBlockTemplate += '<h4>Ciao ' + userFirstName + '</h4>,<br />';
+		messageBlockTemplate += 'benvenuta/o a Beauty and Pics, il contest più fico dell\'universo! Se hai bisogno d\'aiuto vai nella sezione <a href="/passerella/richiesta-aiuto/">richiesta aiuto</a>.<br />Per iniziare carica un\'immagine profilo e almeno 5/6 immagini del book, quindi aspetta i primi voti e tieni d\'occhio la classifica...pronta/o per diventare una star del web?';
+		messageBlockTemplate += '</p>';
+		messageBlockTemplate += '</div>';
+		$(".bootstrap_modal").find('.modal-title').html("Benvenuta/o al concorso!");
+		$(".bootstrap_modal").find('.modal-footer').html('<button type="button" class="btn btn-default" data-dismiss="modal">Si, iniziamo!</button>');
+		$(".bootstrap_modal").find('.modal-body').html(messageBlockTemplate);
+		this.showBootstrapModal();
+
+		return false;
+	},
 	/* custom bootstrap modal functions }}} */
 
 	getImageHtmlBlock: function(imageUrl) {

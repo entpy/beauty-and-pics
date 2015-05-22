@@ -20,7 +20,7 @@ urlpatterns = patterns('',
     url(r'^passerella/segnalazione-utente/(?P<user_id>\d+)/$', 'website.views.catwalk_report_user', name='catwalk_report_user'),
 
     # private profile
-    url(r'^profilo/$', 'website.views.profile_index', name='profile_index'),
+    url(r'^profilo/(?:(?P<welcome>\d+)/)/$', 'website.views.profile_index', name='profile_index'),
     url(r'^profilo/dati-personali/$', 'website.views.profile_data', name='profile_data'),
     url(r'^profilo/preferiti/$', 'website.views.profile_favorites', name='profile_favorites'),
     url(r'^profilo/statistiche/$', 'website.views.profile_stats', name='profile_stats'),

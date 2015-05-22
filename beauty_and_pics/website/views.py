@@ -103,7 +103,7 @@ def www_register(request):
         if form.is_valid() and form.form_actions():
 
             # redirect to user profile
-            return HttpResponseRedirect('/profilo/')
+            return HttpResponseRedirect('/profilo/1')
 
     # if a GET (or any other method) we'll create a blank form
     else:
@@ -277,7 +277,7 @@ def profile_unsubscribe(request):
 
 # private profile {{{
 @login_required
-def profile_index(request):
+def profile_index(request, welcome):
     profile_image_form = profileImageForm()
     book_images_form = bookImagesForm()
 
@@ -300,6 +300,8 @@ def profile_index(request):
         "book_images_form": book_images_form,
         "profile_image_url": profile_image_url,
         "user_id": autenticated_user_data["user_id"],
+        "user_first_name": autenticated_user_data["first_name"],
+        "welcome": welcome,
     }
 
     return render(request, 'website/profile/profile_index.html', context)
