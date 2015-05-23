@@ -327,14 +327,16 @@ var bootstrapModalsObect = {
 		this.resetBootstrapModal();
 		var messageBlockTemplate = '';
 		messageBlockTemplate += '<div class="row">';
-		messageBlockTemplate += '<div class="col-md-8">';
+		messageBlockTemplate += '<div class="col-md-12">';
 		messageBlockTemplate += '<p>';
-		messageBlockTemplate += '<h4>Ciao ' + userFirstName + '</h4>,<br />';
-		messageBlockTemplate += 'benvenuta/o a Beauty and Pics, il contest più fico dell\'universo! Se hai bisogno d\'aiuto vai nella sezione <a href="/passerella/richiesta-aiuto/">richiesta aiuto</a>.<br />Per iniziare carica un\'immagine profilo e almeno 5/6 immagini del book, quindi aspetta i primi voti e tieni d\'occhio la classifica...pronta/o per diventare una star del web?';
+		messageBlockTemplate += '<h4>Ciao ' + userFirstName + ',</h4>';
+		messageBlockTemplate += 'benvenuta/o a <b>Beauty and Pics</b>, il contest più fico dell\'universo!<br />'
+		messageBlockTemplate += 'Ecco qualche dritta per iniziare: <ol class="welcome_list"><li><b>Carica</b> un\'immagine profilo.</li><li><b>Carica</b> almeno 5/6 immagini del book.</li><li><b>Chiedi</b> ai tuoi amici e parenti di votarti.</li></ol>';
+		messageBlockTemplate += 'Quindi aspetta i primi voti e tieni d\'occhio la classifica...pronta/o per diventare una star del web?';
 		messageBlockTemplate += '</p>';
 		messageBlockTemplate += '</div>';
 		$(".bootstrap_modal").find('.modal-title').html("Benvenuta/o al concorso!");
-		$(".bootstrap_modal").find('.modal-footer').html('<button type="button" class="btn btn-default" data-dismiss="modal">Si, iniziamo!</button>');
+		$(".bootstrap_modal").find('.modal-footer').html('<button type="button" class="btn btn-success" data-dismiss="modal">Si, iniziamo!</button>');
 		$(".bootstrap_modal").find('.modal-body').html(messageBlockTemplate);
 		this.showBootstrapModal();
 

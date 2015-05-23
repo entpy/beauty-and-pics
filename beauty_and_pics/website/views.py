@@ -299,8 +299,8 @@ def profile_index(request, welcome):
         "profile_image_form": profile_image_form,
         "book_images_form": book_images_form,
         "profile_image_url": profile_image_url,
-        "user_id": autenticated_user_data["user_id"],
-        "user_first_name": autenticated_user_data["first_name"],
+        "user_id": autenticated_user_data.get("user_id"),
+        "user_first_name": autenticated_user_data.get("first_name"),
         "welcome": welcome,
     }
 
