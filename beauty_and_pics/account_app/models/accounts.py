@@ -342,18 +342,21 @@ class Account(models.Model):
             return_var["email"] = user_obj.email or ''
             # from user model }}}
             # from account model {{{
-            return_var["city"] = user_obj.account.city or ''
-            return_var["country"] = user_obj.account.country or ''
-            return_var["gender"] = user_obj.account.gender or ''
-            return_var["contest_type"] = user_obj.account.contest_type or ''
-            return_var["birthday_date"] = user_obj.account.birthday_date or ''
-            return_var["birthday_day"] = str(user_obj.account.birthday_date.day) or ''
-            return_var["birthday_month"] = str(user_obj.account.birthday_date.month) or ''
-            return_var["birthday_year"] = str(user_obj.account.birthday_date.year) or ''
-            return_var["age"] = str(relativedelta(date.today(), user_obj.account.birthday_date).years) or ''
-            return_var["hair"] = user_obj.account.hair or ''
-            return_var["eyes"] = user_obj.account.eyes or ''
-            return_var["height"] = user_obj.account.height or ''
+	    try:
+		return_var["city"] = user_obj.account.city or ''
+		return_var["country"] = user_obj.account.country or ''
+		return_var["gender"] = user_obj.account.gender or ''
+		return_var["contest_type"] = user_obj.account.contest_type or ''
+		return_var["birthday_date"] = user_obj.account.birthday_date or ''
+		return_var["birthday_day"] = str(user_obj.account.birthday_date.day) or ''
+		return_var["birthday_month"] = str(user_obj.account.birthday_date.month) or ''
+		return_var["birthday_year"] = str(user_obj.account.birthday_date.year) or ''
+		return_var["age"] = str(relativedelta(date.today(), user_obj.account.birthday_date).years) or ''
+		return_var["hair"] = user_obj.account.hair or ''
+		return_var["eyes"] = user_obj.account.eyes or ''
+		return_var["height"] = user_obj.account.height or ''
+	    except Account.DoesNotExist:
+		pass
             # from account model }}}
 
         return return_var
