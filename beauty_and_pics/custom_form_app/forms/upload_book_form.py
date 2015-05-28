@@ -11,7 +11,7 @@ logger = logging.getLogger(__name__)
 
 class profileImageForm(forms.Form, FormCommonUtils):
     # custom upload button template
-    custom_upload_button = '<div data-widget-id="%(widget_id)s" class="uploaderButtonClickAction upload_profile_image_button btn btn-success">%(widget_button_text)s</div>'
+    custom_upload_button = '<div data-widget-id="%(widget_id)s" class="uploaderButtonClickAction upload_profile_image_button btn btn-success bootstrap-trigger">%(widget_button_text)s</div>'
     # form fields
     widget_attr = {
             'widget_id': 'uploader_1',
@@ -36,7 +36,7 @@ class profileImageForm(forms.Form, FormCommonUtils):
 
 class bookImagesForm(forms.Form, FormCommonUtils):
     # custom upload button template
-    custom_upload_button = '<div data-widget-id="%(widget_id)s" class="uploaderButtonClickAction upload_book_image_button btn btn-success">%(widget_button_text)s</div>'
+    custom_upload_button = '<div data-widget-id="%(widget_id)s" class="uploaderButtonClickAction upload_book_image_button btn btn-success bootstrap-trigger">%(widget_button_text)s</div>'
     # form fields
     widget_attr = {
             'widget_id': "uploader_2",

@@ -1,0 +1,30 @@
+/* Internet Explorer 8 / Internet Explorer 9 css fix */
+.modal-dialog {
+	width: 60%;
+	margin: 0 auto;
+}
+
+.thumb {
+	width: 25%;
+}
+
+.generic_container {
+}
+
+.footer_block {
+}
+
+header {
+	float: none!important;
+}
+
+.page_section {
+	width: 100%;
+	height: auto!important;
+	display: inline-block;
+}
+
+footer {
+	display: inline-block;
+	width: 100%;
+}

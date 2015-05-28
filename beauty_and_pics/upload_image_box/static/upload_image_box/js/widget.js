@@ -24,6 +24,8 @@ var uploaderImageBox = {
 	__writeModalTemplateInsideHtml: function(widgetId) {
 		// write html inside current widget id
 		$("#" + widgetId).html(this.__getModalTemplateHtml(widgetId));
+		// FIX per lo scorrimento della modal sui dispositivi mobile
+		// $("body").prepend(this.__getModalTemplateHtml(widgetId));
 	},
 
 	/* function to write an hidden form */
@@ -31,7 +33,7 @@ var uploaderImageBox = {
 		// write hidden form only if not already exists
 		if (!$(".upload_image_box_form").length) {
 			var hiddenForm = '';
-			hiddenForm += '<form class="upload_image_box_form" name="upload_image_box_form" enctype="multipart/form-data" action="" method="POST" style="display: none;">';
+			hiddenForm += '<form class="upload_image_box_form" name="upload_image_box_form" enctype="multipart/form-data" action="" method="POST" style="position: absolute; left: -999999px; top: -999999px;">';
 			hiddenForm += '<input type="hidden" value="' + this.getCookie('csrftoken') + '" name="csrfmiddlewaretoken">';
 			// hiddenForm += '<input class="hiddenFormWidgetIdAction" type="hidden" value="" name="widget_id">';
 			hiddenForm += '<input class="select_image_input" type="file" name="image" />';
@@ -44,7 +46,7 @@ var uploaderImageBox = {
 	/* Function to write modal window scheleton */
 	__getModalTemplateHtml: function(widgetId) {
 		var modalTemplate = '';
-		modalTemplate += '<div id="' + widgetId + '_modal" class="modal fade bs-example-modal-md" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">';
+		modalTemplate += '<div id="' + widgetId + '_modal" class="modal bootstrap_upload_modal fade" tabindex="-1" role="dialog" aria-labelledby="bootstrapUploadModal" aria-hidden="true">';
 		modalTemplate += '<div class="modal-dialog modal-md">';
 		modalTemplate += '<div class="modal-content">';
 		modalTemplate += '<div class="modal-header"></div>';
@@ -203,6 +205,7 @@ var uploaderImageBox = {
 
 	/* Function to open a modal window by type */
 	openModalWindow: function(modalType) {
+
 		this.modalWindow = $("#" + this.widgetId + "_modal").modal();
 		this.buildModalWindow(modalType);
 

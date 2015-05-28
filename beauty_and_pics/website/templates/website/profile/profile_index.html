@@ -16,32 +16,47 @@
 {% endblock %}
 
 {% block container4_content %}
+{# upload profile image form #}
+<form class="profile_image_form" method="post" action="">
+	{% csrf_token %}
+	<input class="profile_image_id" name="{{ profile_image_form.image_id.name }}" value="" type="hidden">
+	<input name="{{ profile_image_form.image_type.name }}" value="profile_image" type="hidden">
+	{{ profile_image_form.uploaded_image }}
+</form>
+
+{# upload book image form #}
+<form class="book_image_form" method="post" action="">
+	{% csrf_token %}
+	<input class="book_image_id" name="{{ book_images_form.image_id.name }}" value="" type="hidden">
+	<input name="{{ book_images_form.image_type.name }}" value="book_image" type="hidden">
+	{{ book_images_form.uploaded_image }}
+</form>
+
 <div class="row">
 	<div class="col-sm-12">
 		<h3>Foto Profilo</h3>
 	</div>
 </div>
-<div class="background_container1 styled_container1 main_photo_edit_container">
-	<div class="alert alert-info visible-xs visible-sm">
-		<p>Da qui puoi caricare la tua immagine del profilo. E' importante caricare un'immagine che sappia farsi notare, in questo modo aumenterai le probabilità che qualcuno visiti il tuo profilo.</p>
-	</div>
-	<div class="main_photo_edit_container_wrapper">
-		<div class="left">
-			<div class="profile_uplad_button">
-				<form class="profile_image_form" method="post" action="">
-					{% csrf_token %}
-					<input class="profile_image_id" name="{{ profile_image_form.image_id.name }}" value="" type="hidden">
-					<input name="{{ profile_image_form.image_type.name }}" value="profile_image" type="hidden">
-					{{ profile_image_form.uploaded_image }}
-				</form>
+<div class="row">
+	<div class="col-sm-12">
+		<div class="background_container1 styled_container1 main_photo_edit_container">
+			<div class="alert alert-info visible-xs visible-sm">
+				<p>Da qui puoi caricare la tua immagine del profilo. E' importante caricare un'immagine che sappia farsi notare, in questo modo aumenterai le probabilità che qualcuno visiti il tuo profilo.</p>
 			</div>
-			<div class="profile_image_container">
-				<img src="{{ profile_image_url }}" class="profile_image">
-			</div>
-		</div>
-		<div class="right">
-			<div class="alert alert-info hidden-xs hidden-sm">
-			    <p>Da qui puoi caricare la tua immagine del profilo. E' importante caricare un'immagine che sappia farsi notare, in questo modo aumenterai le probabilità che qualcuno visiti il tuo profilo.</p>
+			<div class="main_photo_edit_container_wrapper">
+				<div class="left">
+					<div class="profile_uplad_button">
+						<a class="btn btn-success profile_image_button uploadProfileImageClickAction" href="#">Carica immagine</a>
+					</div>
+					<div class="profile_image_container">
+						<img src="{{ profile_image_url }}" class="profile_image">
+					</div>
+				</div>
+				<div class="right">
+					<div class="alert alert-info hidden-xs hidden-sm">
+					    <p>Da qui puoi caricare la tua immagine del profilo. E' importante caricare un'immagine che sappia farsi notare, in questo modo aumenterai le probabilità che qualcuno visiti il tuo profilo.</p>
+					</div>
+				</div>
 			</div>
 		</div>
 	</div>
@@ -54,16 +69,7 @@
 		<div class="alert alert-info">
 			<p>Da qui puoi caricare le immagini del tuo book fotografico. E' importante caricare almeno 5/6 immagini e cambiarle spesso, in questo modo si aumenteranno le probabilità che qualcuno <b>ritorni</b> a visitare il tuo profilo per <b>votarti</b> ancora.</p>
 		</div>
-	</div>
-</div>
-<div class="row">
-	<div class="col-sm-12">
-		<form class="book_image_form" method="post" action="">
-			{% csrf_token %}
-			<input class="book_image_id" name="{{ book_images_form.image_id.name }}" value="" type="hidden">
-			<input name="{{ book_images_form.image_type.name }}" value="book_image" type="hidden">
-			{{ book_images_form.uploaded_image }}
-		</form>
+			<a class="btn btn-success book_image_button uploadBookImageClickAction" href="#">Aggiungi immagine +</a>
 	</div>
 </div>
 {# image grid block {{{ #}
@@ -88,7 +94,21 @@
 	elementsListObject.addFilter("show_limit", 10);
 
 	$(document).ready(function(){
-		$("body").on("click",".loadMoreElementsAction", function(){
+		// upload profile image action
+		$(document).on("click",".uploadProfileImageClickAction", function(){
+			$(".upload_profile_image_button").click();
+
+			return false;
+		});
+
+		// upload book image action
+		$(document).on("click",".uploadBookImageClickAction", function(){
+			$(".upload_book_image_button").click();
+
+			return false;
+		});
+
+		$(document).on("click",".loadMoreElementsAction", function(){
 			elementsListObject.setElementsListType("photobook");
 			elementsListObject.addFilter("user_id", "{{ user_id }}");
 			elementsListObject.addFilter("page_loaded_timestamp", page_loaded_timestamp);
@@ -98,7 +118,7 @@
 		});
 
 		// write delete button inside bootstrap modal
-		$("body").on("click",".zoom-image", function(){
+		$(document).on("click",".zoom-image", function(){
 			var imageId = "";
 			if ($(this).attr("data-image-id")) {
 				imageId = $(this).data("imageId");
@@ -115,7 +135,7 @@
 		});
 
 		// write delete button inside bootstrap modal
-		$("body").on("click",".deleteProfileImageClickAction", function(){
+		$(document).on("click",".deleteProfileImageClickAction", function(){
 			if (confirm("Stai per eliminare definitivamente l'immagine, confermi?")) {
 				imageId = "";
 				if ($(this).attr("data-image-id")) {
@@ -139,7 +159,7 @@
 		{% endif %}
 
 		// default click on load more elements button
-		$(".loadMoreElementsAction").click();
+		// $(".loadMoreElementsAction").click();
 	});
 
 	/* Function to show bootstrap welcome modal */
@@ -195,7 +215,7 @@
 			var blockSize = elementsListObject.getBlockSize();
 
 			// build html block with link and image
-			var returnVar = '<div class="col-lg-' + blockSize["lg_size"] + ' col-md-' + blockSize["md_size"] + ' col-xs-' + blockSize["xs_size"] + ' col-sm-' + blockSize["sm_size"] + ' thumb imgBlockContainer_' + jsonResponse.image_id + '"><a href="#" class="thumbnail"><img alt="" data-fullimage-url="' + jsonResponse.image_url + '" data-image-id="' + jsonResponse.image_id + '" class="img-responsive zoom-image" src="' + jsonResponse.image_url + '"></a></div>'
+			var returnVar = '<div class="col-lg-' + blockSize["lg_size"] + ' col-md-' + blockSize["md_size"] + ' col-xs-' + blockSize["xs_size"] + ' col-sm-' + blockSize["sm_size"] + ' thumb imgBlockContainer_' + jsonResponse.image_id + '"><a href="#" class="thumbnail"><img alt="" data-fullimage-url="' + jsonResponse.image_url + '" data-image-id="' + jsonResponse.image_id + '" class="img-responsive zoom-image bootstrap-trigger" src="' + jsonResponse.image_url + '"></a></div>'
 
 			$(".image_grid_container").prepend(returnVar);
 		};

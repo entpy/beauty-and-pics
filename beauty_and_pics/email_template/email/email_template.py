@@ -524,6 +524,7 @@ class CustomEmailTemplate():
         """Function to send email"""
 	return_var = False
         # send email
+	return True
 	if self.email_ready_to_send:
 	    return_var = send_mail(
 		subject=self.email_subject,

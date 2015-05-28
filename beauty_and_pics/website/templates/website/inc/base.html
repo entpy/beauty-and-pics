@@ -5,10 +5,11 @@
 <!--[if IE 8]><html class="no-js lt-ie9"> <![endif]-->
 <!--[if gt IE 8]><!--> <html class="no-js" lang="it"> <!--<![endif]-->
 	<head>
+		<!-- <script type="text/javascript" src="https://getfirebug.com/firebug-lite.js"></script> -->
 		{% block head %}
 		<meta charset="utf-8">
 		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
 		<meta name="description" content="{% block description %}{% endblock description %}">
 
 		<title>{% block title %}Beauty and Pics: il contest più fico dell'universo{% endblock title %}</title>
@@ -19,8 +20,9 @@
 		<link rel="stylesheet" href="{% static "website/css/main.css" %}">
 
 		{# IE8 CSS fix style sheets #}
-		<!--[if lt IE 9]>
-			<link rel="stylesheet" type="text/css" href="{% static "website/css/big.css" %}" />
+		<!--[if lte IE 9]>
+			{# <link rel="stylesheet" type="text/css" href="{% static "website/css/big.css" %}" /> #}
+			<link rel="stylesheet" type="text/css" href="{% static "website/css/ie8-ie9_fix.css" %}" />
 		<![endif]-->
 
 		{# Custom page css block #}
@@ -30,7 +32,6 @@
 		<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
 		<script>window.jQuery || document.write('<script src="js/vendor/jquery-1.11.1.min.js"><\/script>')</script>
 		<script src="{% static "website/js/vendor/modernizr-2.6.2.min.js" %}"></script>
-
 		{% endblock head %}
 	</head>
 	<body>
@@ -177,7 +178,7 @@
 
 		{# content without image div here {{{ #}
 		{% block block0_1 %}
-			<section class="height_100">
+			<section class="height_100 page_section">
 				{% block block0_1_title %}
 					<div class="title_block">
 						<h1 class="title">{% block block0_1_title_h1 %}Main title{% endblock block0_1_title_h1 %}</h1>

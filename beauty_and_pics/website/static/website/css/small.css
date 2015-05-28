@@ -79,3 +79,52 @@
 .styled_container1 { display: block; margin: 0 auto; width: 95%; }
 .user_top_info_container { margin-left: 15px; width: auto; }
 .catwalk_user_main_image { max-width: 250px; width: 100%; }
+
+.modal_scrolling {
+	/*position: absolute;
+	top: 10%;*/
+	/*position: absolute;*/
+}
+/*
+.modal-open .modal {
+	overflow: visible;
+}
+*/
+.modal-open {
+    overflow: auto;
+}
+
+.modal {
+	position: absolute;
+	overflow: visible;
+}
+
+/* black background only for upload modal */
+.modal-backdrop.in {
+	opacity: 0.85!important;
+}
+
+@media (min-height: 40em) {
+	/*.modal_scrolling {*/
+	.modal {
+		position: fixed;
+	}
+	/*.modal_scrolling .modal-body {*/
+	.modal-body {
+		max-height: 35em; /* This should be less than the min-height in the media query. */
+		overflow-y: auto;
+	}
+}
+
+/*.modal_scrolling {
+	position: absolute;
+}*/
+/*@media (min-height: 40em) {
+	.modal_scrolling {
+		position: fixed;
+	}
+	.modal_scrolling .modal-body {
+		max-height: 35em; /* This should be less than the min-height in the media query. */
+		/*overflow-y: auto;*/
+/*	}
+}*/

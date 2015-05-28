@@ -45,3 +45,54 @@
 }
 /* new bootstrap column }}} */
 /* bootstrap theme custom style }}} */
+/* scroll fixes */
+/*.modal-open .modal {
+	padding-left: 0px !important;
+	padding-right: 0px !important;
+	/*overflow: visible;*/
+/*	-webkit-overflow-scrolling: touch;
+}*/
+/*body.modal-open {
+	/* overflow: visible;*/
+/*}*/
+
+/*.modal-body {
+	-webkit-overflow-scrolling: touch;
+}*/
+
+/*.modal {
+position: fixed;
+top: 3%;
+right: 3%;
+left: 3%;
+bottom: auto;
+width: auto;
+margin: 0;
+overflow: hidden;
+}
+.modal-body {
+height: 100%;
+}*/
+
+/*overflow: visible;*/
+
+/*.modal-body {*/
+/*max-height: 350px;*/
+/*-webkit-overflow-scrolling: touch;
+}*/
+
+/*.modal-open {
+    position: fixed;
+}
+
+.modal {
+    overflow-y: auto;
+}*/
+
+/*.modal-dialog {
+	/*overflow: visible;*/
+/*}*/
+/*.modal-open .modal {
+	overflow: visible;
+}*/
+

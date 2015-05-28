@@ -116,6 +116,8 @@ ul.grid_container li img:hover { opacity: 0.5; }
 /* image grids }}} */
 
 /* profile section {{{ */
+.upload_profile_image_button, .upload_book_image_button { display: none; } /* hide widget upload buttons */
+
 .favorites_question_point_container img { margin-left: 5px; vertical-align: text-bottom; }
 .manage_buttons_container { margin-left: auto; margin-right: 10%; text-align: right; }
 
@@ -128,7 +130,7 @@ ul.grid_container li img:hover { opacity: 0.5; }
 .upload_image_button:hover .img_not_active { display: none; }
 .upload_image_button:hover .img_active { display: inline-block; }
 
-.upload_profile_image_button { display: block; }
+.profile_image_button { display: block; }
 .main_photo_edit_container_wrapper { display: table; }
 .main_photo_edit_container_wrapper > div { display: table-cell; vertical-align: middle; }
 .main_photo_edit_container_wrapper { margin: 0 auto; }
