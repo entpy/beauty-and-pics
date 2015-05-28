@@ -87,6 +87,12 @@ var uploaderImageBox = {
 		modalTemplate += '<div id="movingBallG_1" class="movingBallG">';
 		modalTemplate += '</div>';
 		modalTemplate += '</div>';
+
+		modalTemplate += '<div class="progress_loader">';
+		modalTemplate += '<div class="bar"></div>';
+		modalTemplate += '<div class="percent">0%</div>';
+		modalTemplate += '</div>';
+
 		modalTemplate += '</div>';
 		modalTemplate += '</div>';
 
@@ -311,11 +317,33 @@ var uploaderImageBox = {
 var fileManager = {
 	/* function to send a file via AJAX == submitting hidden form */
 	sendFile: function() {
+		var bar = $('.bar');
+		var percent = $('.percent');
 		// setting widgetId to use it in callback function
 		var options = {
 			//beforeSubmit:  showRequest,  // TODO: show "upload_modal" with loader
-			success:       this.loadUploadedImage  // post-submit callback 
+			success: this.loadUploadedImage, // post-submit callback 
 
+			beforeSend: function() {
+			    var percentVal = '0%';
+			    bar.width(percentVal)
+			    percent.html(percentVal);
+			},
+			uploadProgress: function(event, position, total, percentComplete) {
+			    var percentVal = percentComplete + '%';
+			    bar.width(percentVal)
+			    percent.html(percentVal);
+			},
+			/*success: function() {
+			    var percentVal = '100%';
+			    bar.width(percentVal)
+			    percent.html(percentVal);
+			    this.loadUploadedImage;
+			}*/
+
+			/*complete: function(xhr) {
+				status.html(xhr.responseText);
+			}*/
 			// other available options: 
 			//url:       url         // override for form's 'action' attribute 
 			//type:      type        // 'get' or 'post', override for form's 'method' attribute 
