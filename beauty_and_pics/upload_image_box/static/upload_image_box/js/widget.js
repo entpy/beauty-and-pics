@@ -6,10 +6,10 @@ var uploaderImageBox = {
 	widgetId: false,
 	// modal window settings, like buttons, content, titles, ecc...
 	modalWindowSettings: {
-		"base_modal": {"hidden_form": {"action": "/upload_image/upload/"}, "body": {"html": function() { return uploaderImageBox.__buildBaseModalBodyHtml("base_modal"); }}, "header": {"title": function() { return uploaderImageBox.getOptionValue("baseModalTitleText"); }}, "footer": {"cancel": {"exists": true, "label": function() { return uploaderImageBox.getOptionValue("cancelButtonText");}}, "action_button": {"exists": true, "label": function() { return uploaderImageBox.getOptionValue("selectImageActionButtonText"); }}}},
-		"upload_modal": {"hidden_form": {"action": "/upload_image/upload/"}, "body": {"html": function() { return uploaderImageBox.__buildUploadModalBodyHtml("upload_modal"); }}, "header": {"title": function() { return uploaderImageBox.getOptionValue("uploadModalTitleText"); }}, "footer": false},
-		"crop_modal": {"hidden_form": {"action": "/upload_image/crop/"}, "body": {"html": function() { return uploaderImageBox.__buildCropModalBodyHtml("crop_modal"); }, "crop_image_url": false, "crop_image_id": false, "modal_description_text": function() { return uploaderImageBox.getOptionValue("cropModalDescriptionText"); }}, "header": {"title": function() { return uploaderImageBox.getOptionValue("cropModalTitleText"); }}, "footer": {"cancel": {"exists": true, "label": function() { return uploaderImageBox.getOptionValue("cancelButtonText"); }}, "change_image": {"exists": true, "label": function() { return uploaderImageBox.getOptionValue("changeImageButtonText"); }}, "action_button": {"exists": true, "label": function() { return uploaderImageBox.getOptionValue("cropActionButtonText"); }}}},
-		"preview_modal": {"hidden_form": {"action": "/upload_image/crop/"}, "body": {"html": function() { return uploaderImageBox.__buildPreviewModalBodyHtml("preview_modal"); }, "crop_image_url": false, "crop_image_id": false}, "header": {"title": function() { return uploaderImageBox.getOptionValue("previewModalTitleText"); }}, "footer": {"cancel": {"exists": true, "label": function() { return uploaderImageBox.getOptionValue("cancelButtonText"); }}, "change_image": {"exists": true, "label": function() { return uploaderImageBox.getOptionValue("changeImageButtonText"); }}, "action_button": {"exists": true, "label": function() { return uploaderImageBox.getOptionValue("previewActionButtonText"); }}}},
+		"base_modal": {"hidden_form": {"action": "/upload_image/upload/"}, "body": {"min-height": "200px", "html": function() { return uploaderImageBox.__buildBaseModalBodyHtml("base_modal"); }}, "header": {"title": function() { return uploaderImageBox.getOptionValue("baseModalTitleText"); }}, "footer": {"cancel": {"exists": true, "label": function() { return uploaderImageBox.getOptionValue("cancelButtonText");}}, "action_button": {"exists": true, "label": function() { return uploaderImageBox.getOptionValue("selectImageActionButtonText"); }}}},
+		"upload_modal": {"hidden_form": {"action": "/upload_image/upload/"}, "body": {"min-height": "200px", "html": function() { return uploaderImageBox.__buildUploadModalBodyHtml("upload_modal"); }}, "header": {"title": function() { return uploaderImageBox.getOptionValue("uploadModalTitleText"); }}, "footer": false},
+		"crop_modal": {"hidden_form": {"action": "/upload_image/crop/"}, "body": {"min-height": "500px", "html": function() { return uploaderImageBox.__buildCropModalBodyHtml("crop_modal"); }, "crop_image_url": false, "crop_image_id": false, "modal_description_text": function() { return uploaderImageBox.getOptionValue("cropModalDescriptionText"); }}, "header": {"title": function() { return uploaderImageBox.getOptionValue("cropModalTitleText"); }}, "footer": {"cancel": {"exists": true, "label": function() { return uploaderImageBox.getOptionValue("cancelButtonText"); }}, "change_image": {"exists": true, "label": function() { return uploaderImageBox.getOptionValue("changeImageButtonText"); }}, "action_button": {"exists": true, "label": function() { return uploaderImageBox.getOptionValue("cropActionButtonText"); }}}},
+		"preview_modal": {"hidden_form": {"action": "/upload_image/crop/"}, "body": {"min-height": "500px", "html": function() { return uploaderImageBox.__buildPreviewModalBodyHtml("preview_modal"); }, "crop_image_url": false, "crop_image_id": false}, "header": {"title": function() { return uploaderImageBox.getOptionValue("previewModalTitleText"); }}, "footer": {"cancel": {"exists": true, "label": function() { return uploaderImageBox.getOptionValue("cancelButtonText"); }}, "change_image": {"exists": true, "label": function() { return uploaderImageBox.getOptionValue("changeImageButtonText"); }}, "action_button": {"exists": true, "label": function() { return uploaderImageBox.getOptionValue("previewActionButtonText"); }}}},
 		"global_options" : { "enable_crop": function() { return uploaderImageBox.getOptionValue("enableCrop"); }, "error_msg_container_class": "error_msg_container", "generic_msg_container_class": "generic_msg_container", "callback_function": function() { return uploaderImageBox.getOptionValue("callbackFunction"); }}
 	},
 
@@ -166,6 +166,9 @@ var uploaderImageBox = {
 		// change loaded elements with bootstrap modal interface
 		this.modalWindow.find('.modal-title').text(this.modalWindowSettings[modalType]["header"]["title"]);
 		this.modalWindow.find('.modal-body').html(this.modalWindowSettings[modalType]["body"]["html"]);
+		if ($(".modal").css('position') === 'absolute') {
+			this.modalWindow.find('.modal-body').css("min-height", this.modalWindowSettings[modalType]["body"]["min-height"]);
+		}
 		if (this.modalWindowSettings[modalType]["body"].hasOwnProperty("modal_description_text")) {
 			this.showModalWindowMsg("info", this.modalWindowSettings[modalType]["body"]["modal_description_text"].call());
 		}
@@ -209,6 +212,9 @@ var uploaderImageBox = {
 		this.modalWindow = $("#" + this.widgetId + "_modal").modal();
 		this.buildModalWindow(modalType);
 
+		// refresh modal after content change
+		$("#" + this.widgetId + "_modal").modal('handleUpdate')
+
 		return true;
 	},
 
@@ -235,6 +241,25 @@ var uploaderImageBox = {
 		$("#" + this.widgetId).contents().find('.crop_image_tag').cropper({
 			aspectRatio: 1 / 1,
 			autoCropArea: 0.9,
+			// minCropBoxWidth: 250,
+			// minCropBoxHeight: 250,
+			checkImageOrigin: false,
+			touchDragZoom: false,
+			strict: false,
+			guides: true,
+			highlight: false,
+			dragCrop: false,
+			movable: false,
+			zoomable: false,
+			rotatable: false,
+			mouseWheelZoom: false,
+			resizable: false
+		});
+
+/*
+		$("#" + this.widgetId).contents().find('.crop_image_tag').cropper({
+			aspectRatio: 1 / 1,
+			autoCropArea: 0.9,
 			minCropBoxWidth: 250,
 			minCropBoxHeight: 250,
 			checkImageOrigin: false,
@@ -247,7 +272,7 @@ var uploaderImageBox = {
 			zoomable: false,
 			rotatable: false,
 			resizable: false
-		});
+		});*/
 	},
 
 	/* Function to retrieve an option value */

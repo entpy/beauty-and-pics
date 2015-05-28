@@ -24,11 +24,13 @@
 <div class="background_container1 styled_container1">
 	<div class="right">
 		<div class="top user_stats_container">
+			{% if user_contest_info.ranking %}
 			<div class="user_stats_block">
 				<span class="position">{{ user_contest_info.ranking }}°</span>
 				<span>Posizione</span>
 			</div>
 			<div class="user_stats_space"></div>
+			{% endif %}
 			<div class="user_stats_block">
 				<span class="points">{{ user_contest_info.total_points }}</span>
 				<span>Punti</span>
@@ -51,23 +53,24 @@
 		<div class="bottom">
 			<div class="stats_bar_container">
 				<!-- stats block -->
-				<div class="stats_bar_label">Globale: {{ user_contest_info.global.total_points }} punti ({{ user_contest_info.look.metric_rate_percentage }}%)</div>
+				<div class="stats_bar_label">Globale: {{ user_contest_info.global.total_points|default:"0" }} punti {% if user_contest_info.global.metric_rate_percentage %}({{ user_contest_info.global.metric_rate_percentage }}%){% endif %}</div>
 				<div class="stats_bar">
 					<div class="progress">
 						<div class="progress-bar progress-bar-warning" role="progressbar" aria-valuenow="{{ user_contest_info.global.metric_rate_percentage }}" aria-valuemin="0" aria-valuemax="100" style="width: {{ user_contest_info.global.metric_rate_percentage }}%"></div>
-				</div>
-				<!-- stats block -->
-				<div class="stats_bar_label">Sorriso: {{ user_contest_info.smile.total_points }} punti ({{ user_contest_info.smile.metric_rate_percentage }}%)</div>
-				<div class="stats_bar">
-					<div class="progress">
-						<div class="progress-bar progress-bar-warning" role="progressbar" aria-valuenow="{{ user_contest_info.look.metric_rate_percentage }}" aria-valuemin="0" aria-valuemax="100" style="width: {{ user_contest_info.look.metric_rate_percentage }}%"></div>
 					</div>
 				</div>
 				<!-- stats block -->
-				<div class="stats_bar_label">Sguardo: {{ user_contest_info.look.total_points }} punti ({{ user_contest_info.look.metric_rate_percentage }}%)</div>
+				<div class="stats_bar_label">Sorriso: {{ user_contest_info.smile.total_points|default:"0" }} punti {% if user_contest_info.smile.metric_rate_percentage %}({{ user_contest_info.smile.metric_rate_percentage }}%){% endif %}</div>
 				<div class="stats_bar">
 					<div class="progress">
 						<div class="progress-bar progress-bar-warning" role="progressbar" aria-valuenow="{{ user_contest_info.smile.metric_rate_percentage }}" aria-valuemin="0" aria-valuemax="100" style="width: {{ user_contest_info.smile.metric_rate_percentage }}%"></div>
+					</div>
+				</div>
+				<!-- stats block -->
+				<div class="stats_bar_label">Sguardo: {{ user_contest_info.look.total_points|default:"0" }} punti {% if user_contest_info.look.metric_rate_percentage %}({{ user_contest_info.look.metric_rate_percentage }}%){% endif %}</div>
+				<div class="stats_bar">
+					<div class="progress">
+						<div class="progress-bar progress-bar-warning" role="progressbar" aria-valuenow="{{ user_contest_info.look.metric_rate_percentage }}" aria-valuemin="0" aria-valuemax="100" style="width: {{ user_contest_info.look.metric_rate_percentage }}%"></div>
 					</div>
 				</div>
 			</div>

@@ -19,6 +19,8 @@
 .header .navigation_container .navigation_item { float: left; padding: 39px 30px; }
 .header .navigation_container .navigation_label { margin-right: 10px; }
 	/* after login */
+.header .navigation_container .navigation_item:hover, .header .navigation_container a:hover, .profile_container .navigation_container .menu_item_container:hover { background-color: #3498DB; }
+.profile_container .profile_container_wrapper .navigation_container .last_menu_item_container:hover { background-color: #e74c3c; }
 .search_form_container { padding: 28px 0; width: 300px; }
 .profile_container { float: right; padding: 14px 0; min-width: 214px; }
 .profile_container .profile_container_wrapper { float: left; padding: 10px 15px; }

@@ -19,26 +19,24 @@
 		{# messages block #}
 		<div class="error_container"></div>
 		{% if form.errors or messages %}
-			<div class="row server_msg_container">
-				<div class="col-md-12">
-					{% if form.errors %}
-						<div class="alert alert-danger">
-							<h4>Uhm qualcosa non va!</h4>
-							<ul>
-								{% for form_error in form.non_field_errors %}
-									<li>{{ form_error }}</li>
-								{% endfor %}
-							</ul>
-						</div>
-					{% else %}
-						<div class="alert alert-success">
-							<h4>Ottimo!</h4>
-							{% for message in messages %}
-								<div>{{ message }}</div>
+			<div class="server_msg_container">
+				{% if form.errors %}
+					<div class="alert alert-danger">
+						<h4>Uhm qualcosa non va!</h4>
+						<ul>
+							{% for form_error in form.non_field_errors %}
+								<li>{{ form_error }}</li>
 							{% endfor %}
-						</div>
-					{% endif %}
-				</div>
+						</ul>
+					</div>
+				{% else %}
+					<div class="alert alert-success">
+						<h4>Ottimo!</h4>
+						{% for message in messages %}
+							<div>{{ message }}</div>
+						{% endfor %}
+					</div>
+				{% endif %}
 			</div>
 		{% endif %}
 		<form class="form-horizontal ajax_form" method="post" action="">

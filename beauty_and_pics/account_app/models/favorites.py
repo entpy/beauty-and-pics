@@ -76,3 +76,11 @@ class Favorite(models.Model):
             return_var = return_var[filters_list["start_limit"]:filters_list["show_limit"]]
 
         return return_var
+
+    def count_favorites_about_user_id(self, user_id):
+        """Function to retrieve a list of favorites about a user"""
+        return_var = 0
+        if user_id:
+            return_var = Favorite.objects.filter(user__id=user_id).count()
+
+        return return_var

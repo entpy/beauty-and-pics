@@ -80,51 +80,30 @@
 .user_top_info_container { margin-left: 15px; width: auto; }
 .catwalk_user_main_image { max-width: 250px; width: 100%; }
 
-.modal_scrolling {
-	/*position: absolute;
-	top: 10%;*/
-	/*position: absolute;*/
-}
-/*
-.modal-open .modal {
-	overflow: visible;
-}
-*/
+/* bootstrap modal mobile fix {{{ */
 .modal-open {
-    overflow: auto;
+	/*-webkit-overflow-scrolling: touch*/
+	overflow: visible;
 }
 
 .modal {
 	position: absolute;
+	/*-webkit-overflow-scrolling: touch*/
 	overflow: visible;
 }
 
-/* black background only for upload modal */
+/* black background only for all bootstrap modal */
 .modal-backdrop.in {
 	opacity: 0.85!important;
 }
 
 @media (min-height: 40em) {
-	/*.modal_scrolling {*/
 	.modal {
-		position: fixed;
+		position: absolute;
 	}
-	/*.modal_scrolling .modal-body {*/
 	.modal-body {
 		max-height: 35em; /* This should be less than the min-height in the media query. */
 		overflow-y: auto;
 	}
 }
-
-/*.modal_scrolling {
-	position: absolute;
-}*/
-/*@media (min-height: 40em) {
-	.modal_scrolling {
-		position: fixed;
-	}
-	.modal_scrolling .modal-body {
-		max-height: 35em; /* This should be less than the min-height in the media query. */
-		/*overflow-y: auto;*/
-/*	}
-}*/
+/* bootstrap modal mobile fix }}} */

@@ -37,26 +37,22 @@
 		<h3>Foto Profilo</h3>
 	</div>
 </div>
-<div class="row">
-	<div class="col-sm-12">
-		<div class="background_container1 styled_container1 main_photo_edit_container">
-			<div class="alert alert-info visible-xs visible-sm">
-				<p>Da qui puoi caricare la tua immagine del profilo. E' importante caricare un'immagine che sappia farsi notare, in questo modo aumenterai le probabilità che qualcuno visiti il tuo profilo.</p>
+<div class="background_container1 styled_container1 main_photo_edit_container">
+	<div class="alert alert-info visible-xs visible-sm">
+		<p>Da qui puoi caricare la tua immagine del profilo. E' importante caricare un'immagine che sappia farsi notare, in questo modo aumenterai le probabilità che qualcuno visiti il tuo profilo.</p>
+	</div>
+	<div class="main_photo_edit_container_wrapper">
+		<div class="left">
+			<div class="profile_uplad_button">
+				<a class="btn btn-success profile_image_button uploadProfileImageClickAction" href="#">Carica immagine</a>
 			</div>
-			<div class="main_photo_edit_container_wrapper">
-				<div class="left">
-					<div class="profile_uplad_button">
-						<a class="btn btn-success profile_image_button uploadProfileImageClickAction" href="#">Carica immagine</a>
-					</div>
-					<div class="profile_image_container">
-						<img src="{{ profile_image_url }}" class="profile_image">
-					</div>
-				</div>
-				<div class="right">
-					<div class="alert alert-info hidden-xs hidden-sm">
-					    <p>Da qui puoi caricare la tua immagine del profilo. E' importante caricare un'immagine che sappia farsi notare, in questo modo aumenterai le probabilità che qualcuno visiti il tuo profilo.</p>
-					</div>
-				</div>
+			<div class="profile_image_container">
+				<img src="{{ profile_image_url }}" class="profile_image">
+			</div>
+		</div>
+		<div class="right">
+			<div class="alert alert-info hidden-xs hidden-sm">
+			    <p>Da qui puoi caricare la tua immagine del profilo. E' importante caricare un'immagine che sappia farsi notare, in questo modo aumenterai le probabilità che qualcuno visiti il tuo profilo.</p>
 			</div>
 		</div>
 	</div>
@@ -134,7 +130,7 @@
 			return false;
 		});
 
-		// write delete button inside bootstrap modal
+		// delete book image action
 		$(document).on("click",".deleteProfileImageClickAction", function(){
 			if (confirm("Stai per eliminare definitivamente l'immagine, confermi?")) {
 				imageId = "";
@@ -215,7 +211,7 @@
 			var blockSize = elementsListObject.getBlockSize();
 
 			// build html block with link and image
-			var returnVar = '<div class="col-lg-' + blockSize["lg_size"] + ' col-md-' + blockSize["md_size"] + ' col-xs-' + blockSize["xs_size"] + ' col-sm-' + blockSize["sm_size"] + ' thumb imgBlockContainer_' + jsonResponse.image_id + '"><a href="#" class="thumbnail"><img alt="" data-fullimage-url="' + jsonResponse.image_url + '" data-image-id="' + jsonResponse.image_id + '" class="img-responsive zoom-image bootstrap-trigger" src="' + jsonResponse.image_url + '"></a></div>'
+			var returnVar = '<div class="col-lg-' + blockSize["lg_size"] + ' col-md-' + blockSize["md_size"] + ' col-xs-' + blockSize["xs_size"] + ' col-sm-' + blockSize["sm_size"] + ' thumb imgBlockContainer_' + jsonResponse.image_id + '"><a href="#" class="thumbnail"><img alt="" data-fullimage-url="' + jsonResponse.image_url + '" data-image-id="' + jsonResponse.image_id + '" class="img-responsive zoom-image" src="' + jsonResponse.image_url + '"></a></div>'
 
 			$(".image_grid_container").prepend(returnVar);
 		};

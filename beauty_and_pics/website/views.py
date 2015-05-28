@@ -363,8 +363,9 @@ def profile_stats(request):
     # retrieve contest user info
     contest_account_info = account_obj.get_contest_account_info(user_id=account_info["user_id"], contest_type=contest_obj.get_contest_type_from_session(request=request))
 
-    # TODO: calcolare il numero di preferiti
-    favorites_count = 12
+    # retrieve favorites count
+    favorites_obj = Favorite()
+    favorites_count = favorites_obj.count_favorites_about_user_id(user_id=account_info["user_id"])
 
     context = {
         "user_info" : account_info,

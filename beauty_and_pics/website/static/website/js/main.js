@@ -23,6 +23,7 @@
 */
 var scroll_position = false;
 var return_position = false;
+var not_scroll = false;
 $(document).ready(function(){
 	$(document).on("click",".navbar-toggle", function(){
 		$(".toggle_navigation").toggle();
@@ -34,70 +35,36 @@ $(document).ready(function(){
 	// write bootstrap modal inside body tag
 	bootstrapModalsObect.writeModalInsideBodyTag();
 
-// '.modal_scrolling'
+	// modal in fase di apertura ma non ancora aperta
 	$(document).on('show.bs.modal', ".modal", function () {
-		if ($(".modal").css('position') === 'absolute') {
+		if ($(".modal").css('position') === 'absolute' && !not_scroll) {
 			/* We will need to return to where we were.*/
-			return_position = true;
-			/* Jump to the top of the modal.*/
-			//$(window).scrollTop($(".modal").offset().top);
+			// return_position = true;
 			// saving position
 			scroll_position = $(window).scrollTop(); // Where did we start in the window.
+			not_scroll = true;
+		}
+	});
+
+	// modal apertura completata
+	$(document).on('shown.bs.modal', ".modal", function () {
+		if ($(".modal").css('position') === 'absolute') {
 			// scroll top page top
 			$(window).scrollTop(0);
 			// document.body.scrollTop = document.documentElement.scrollTop = 0;
-			// $(window).scrollTop(10);
+			//$(".modal-open").css("overflow", "auto");
 		}
 	});
 
-	/*$(document).on('shown.bs.modal', ".modal", function () {
-		// se è la finestra di upload lo sfondo deve essere nero
-		if ($(this).hasClass("bootstrap_upload_modal")) {
-			$(".modal-backdrop.in").attr("style" ,"opacity: 0.85!important;");
-		}
-	});*/
-
-
+	// modal in fase di chiusura ma non ancora chiusa
 	$(document).on('hide.bs.modal', ".modal", function (e) {
-	// $(document).on('hidden.bs.modal', function (e) {
-		// if ($('.modal').is(':visible')) {
-			if (return_position) {
-				/* Return to where we were.*/
-				// alert(scroll_position);
-				$(window).scrollTop(scroll_position);
-			}
-		// }
+		if ($(".modal").css('position') === 'absolute') {
+			/* Return to where we were.*/
+			$(window).scrollTop(scroll_position);
+			not_scroll = false;
+		}
 	});
-
-	/*$(document).on('click', '.bootstrap-trigger', function () {
-		scroll_position = $(window).scrollTop(); // Where did we start in the window.
-	});*/
-
-	/*var modal_window = $('.modal');
-	$('.modal').on('shown.bs.modal', function (e) {
-		var scroll_position = $(window).scrollTop(), // Where did we start in the window.
-		return_position = false; // Should we return to the start position?
-
-		e.preventDefault();
-
-		// Build and show the modal.
-		modal_window.on('show', function () {
-			if (modal_window.css('position') === 'absolute') {
-				// We will need to return to where we were.
-				return_position = true;
-				// Jump to the top of the modal.
-				$(window).scrollTop(modal_window.offset().top);
-			}
-			alert("show");
-		}).on('hidden', function () {
-			if (return_position) {
-				// Return to where we were.
-				$(window).scrollTop(scroll_position);
-			}
-		}).modal('show');
-	});*/
 });
-
 
 // Avoid `console` errors in browsers that lack a console.
 (function() {
@@ -274,6 +241,7 @@ var bootstrapModalsObect = {
 		if (imageUrl) {
 			this.resetBootstrapModal();
 			$(".bootstrap_modal").find('.modal-body').html(this.getImageHtmlBlock(imageUrl));
+			$(".bootstrap_modal").find('.modal-footer').html('<button type="button" class="btn btn-default" data-dismiss="modal">Chiudi</button>');
 			this.showBootstrapModal();
 		}
 
@@ -421,7 +389,7 @@ var bootstrapModalsObect = {
 	deleteImageButtonHtmlBlock: function(imageId) {
 		var templateBlock = false;
 		if (imageId) {
-			templateBlock = '<button type="button" data-image-id="' + imageId + '" class="btn btn-success deleteProfileImageClickAction">Cancella immagine</button>';
+			templateBlock = '<button type="button" class="btn btn-default" data-dismiss="modal">Chiudi</button><button type="button" data-image-id="' + imageId + '" class="btn btn-success deleteProfileImageClickAction">Cancella immagine</button>';
 		}
 
 		return templateBlock;
@@ -924,7 +892,7 @@ var elementsListObject = {
 			// retrieve bootstrap block size
 			var blockSize = this.getBlockSize();
 			// build html block with link and image
-			var returnVar = '<div class="col-lg-' + blockSize["lg_size"] + ' col-md-' + blockSize["md_size"] + ' col-xs-' + blockSize["xs_size"] + ' col-sm-' + blockSize["sm_size"] + ' thumb imgBlockContainer_' + imgId + '"><a href="' + blockUrl + '" class="thumbnail"><img alt="" src="' + blockThumbnailImageUrl + '" data-fullimage-url="' + blockImageUrl + '" data-image-id="' + imgId + '" class="img-responsive bootstrap-trigger ' + imgTagClass + '"></a></div>'
+			var returnVar = '<div class="col-lg-' + blockSize["lg_size"] + ' col-md-' + blockSize["md_size"] + ' col-xs-' + blockSize["xs_size"] + ' col-sm-' + blockSize["sm_size"] + ' thumb imgBlockContainer_' + imgId + '"><a href="' + blockUrl + '" class="thumbnail"><img alt="" src="' + blockThumbnailImageUrl + '" data-fullimage-url="' + blockImageUrl + '" data-image-id="' + imgId + '" class="img-responsive ' + imgTagClass + '"></a></div>'
 		}
 
 		return returnVar;

@@ -37,7 +37,6 @@ textarea { resize: none; }
 .header .navigation_container .navigation_arrow { font-size: 13px; }
 .header .navigation_container .navigation_item { color: #fff; cursor: pointer; }
 .header .navigation_container a { text-decoration: none; }
-.header .navigation_container .navigation_item:hover, .header .navigation_container a:hover, .profile_container .navigation_container .menu_item_container:hover { background-color: #3498DB; }
 	/* after login */
 .profile_container { color: white; position: relative; text-align: left; z-index: 1; }
 .profile_container .profile_container_wrapper { cursor: default; display: inline-block; }
@@ -45,7 +44,6 @@ textarea { resize: none; }
 .profile_container .profile_container_wrapper .profile_name_container .profile_arrow_bottom { margin-left: 5px; }
 .profile_container .profile_container_wrapper .navigation_container { clear: left; display: none; width: 100%; }
 .profile_container .profile_container_wrapper .navigation_container .last_menu_item_container { margin-top: 15px; }
-.profile_container .profile_container_wrapper .navigation_container .last_menu_item_container:hover { background-color: #e74c3c; }
 .profile_container .profile_container_wrapper .navigation_container .menu_item_container > a { color: white; }
 .profile_name_image_container .navigation_profile_image { width: 50px; }
 

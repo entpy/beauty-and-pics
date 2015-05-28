@@ -58,3 +58,12 @@
 	</div>
 </div>
 {% endblock block0_0_content %}
+
+{% block custom_js %}
+<script>
+	$(document).ready(function(){
+		// autofocus element
+		$("#id_email").focus();
+	});
+</script>
+{% endblock custom_js %}
