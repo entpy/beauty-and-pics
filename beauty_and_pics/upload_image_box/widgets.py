@@ -81,6 +81,8 @@ class UibUploaderInput(forms.ClearableFileInput):
         parent_validation = super(UibUploaderInput, self).value_from_datadict(data, files, name)
         # logger.debug("files retrieved: " + str(files))
         file_object = files.get('image', None)
+        logger.debug("files: " + str(files))
+        logger.debug("data: " + str(data))
         logger.debug("file object: " + str(file_object))
         if parent_validation is not None and file_object is not None:
             # check image MIME/Type
