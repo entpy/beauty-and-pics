@@ -36,7 +36,7 @@ var uploaderImageBox = {
 			hiddenForm += '<form class="upload_image_box_form" name="upload_image_box_form" enctype="multipart/form-data" action="" method="POST" style="position: absolute; left: -999999px; top: -999999px;">';
 			hiddenForm += '<input type="hidden" value="' + this.getCookie('csrftoken') + '" name="csrfmiddlewaretoken">';
 			// hiddenForm += '<input class="hiddenFormWidgetIdAction" type="hidden" value="" name="widget_id">';
-			hiddenForm += '<input class="select_image_input" type="file" name="image" />';
+			hiddenForm += '<input class="select_image_input" type="file" name="image" onchange="sendFileOnFormChange();" />';
 			hiddenForm += '</form>';
 
 			$("#" + widgetId).parents("form").after(hiddenForm);
@@ -66,7 +66,11 @@ var uploaderImageBox = {
 		modalTemplate += '<div class="' + this.modalWindowSettings["global_options"]["error_msg_container_class"] + '"></div><div class="' + this.modalWindowSettings["global_options"]["generic_msg_container_class"] + '"></div>'; // msg block
 		modalTemplate += '<div class="row">';
 		modalTemplate += '<div class="col-md-12 text-center">';
-		modalTemplate += '<button type="button" class="btn btn-success fileSelectClickAction">' + this.modalWindowSettings[modalType]["footer"]["action_button"]["label"].call() + '</button>';
+		if (fileManager.detect_file_input_support()) {
+			modalTemplate += '<button type="button" class="btn btn-success fileSelectClickAction">' + this.modalWindowSettings[modalType]["footer"]["action_button"]["label"].call() + '</button>';
+		} else {
+			modalTemplate += '<div style="text-align: left;"><b>Attenzione</b>: il tuo dispositivo (smartphone, pc, tablet, ...) non supporta l\'upload dei file, provare cambiando dispositivo o con un altro browser.</div>';
+		}
 		modalTemplate += '</div>';
 		modalTemplate += '</div>';
 
@@ -81,12 +85,12 @@ var uploaderImageBox = {
 		modalTemplate += '<div class="' + this.modalWindowSettings["global_options"]["error_msg_container_class"] + '"></div><div class="' + this.modalWindowSettings["global_options"]["generic_msg_container_class"] + '"></div>'; // msg block
 		modalTemplate += '<div class="row">';
 		modalTemplate += '<div class="col-md-12 text-center">';
-		modalTemplate += '<div id="movingBallG">';
+		/*modalTemplate += '<div id="movingBallG">';
 		modalTemplate += '<div class="movingBallLineG">';
 		modalTemplate += '</div>';
 		modalTemplate += '<div id="movingBallG_1" class="movingBallG">';
 		modalTemplate += '</div>';
-		modalTemplate += '</div>';
+		modalTemplate += '</div>';*/
 
 		modalTemplate += '<div class="progress_loader">';
 		modalTemplate += '<div class="bar"></div>';
@@ -427,6 +431,13 @@ var fileManager = {
 	saveCroppedImage: function(ajaxCallData) {
 		this.performAjaxCall(ajaxCallData);
 	},
+
+	/* Function to check if device support file input */
+	detect_file_input_support: function() {
+		var elem = document.createElement('input');
+		elem.type = 'file';
+		return !elem.disabled;
+	},
 };
 
 // Function to open modal window
@@ -498,11 +509,15 @@ $(document).on("click", ".confirmImageClickAction", function(){
 });
 
 // function to send a file on "onChange" event
-$(document).on("change", ".select_image_input", function(){
+function sendFileOnFormChange() {
+// $(document).on("change", ".select_image_input", function(){
+
+	alert("inviato");
 	// show upload modal to show upload status bar
 	uploaderImageBox.openModalWindow("upload_modal");
 	// show uploaded image
 	fileManager.sendFile();
 
 	return false;
-});
+// });
+}
