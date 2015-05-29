@@ -26,11 +26,12 @@ logger = logging.getLogger(__name__)
 class Account(models.Model):
     # id_account = models.AutoField(primary_key=True)
     # Links Account to a User model instance.
-    user = models.OneToOneField(User, primary_key=True)
+    id_account = models.AutoField(primary_key=True)
+    user = models.OneToOneField(User, null=True)
     contest_type = models.ForeignKey(Contest_Type, null=True)
-    city = models.CharField(max_length=100, null=True)
     # TODO: https://github.com/coderholic/django-cities
     country = models.CharField(max_length=100, null=True)
+    city = models.CharField(max_length=100, null=True)
     gender = models.CharField(max_length=100, null=True)
     status = models.IntegerField(null=True)
     birthday_date = models.DateField(null=True)
@@ -86,7 +87,7 @@ class Account(models.Model):
         """Function to retrieve user about id"""
         return_var = None
         try:
-            return_var = User.objects.get(pk=user_id)
+            return_var = User.objects.get(pk=user_id, groups__name=project_constants.CATWALK_GROUP_NAME)
         except User.DoesNotExist:
             raise
 
