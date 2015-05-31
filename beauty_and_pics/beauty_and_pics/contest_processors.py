@@ -28,6 +28,9 @@ def common_contest_processors(request):
     contest_winner = hall_of_fame_obj.get_last_active_contest_winner(contest_type=contest_obj.get_contest_type_from_session(request=request))
     ### template context vars }}} ###
 
+    # check if user is authenticated
+    user_is_authenticated = account_obj.check_if_logged_user_is_valid(request_user=request.user)
+
     autenticated_user_data = account_obj.get_autenticated_user_data(request=request)
     if autenticated_user_data.get("user_id"):
         # logger.debug("[TEMPLATE_PROCESSOR] user logged in (user id: " + str(autenticated_user_data["user_id"]) + ")")
@@ -41,4 +44,5 @@ def common_contest_processors(request):
             'profile_thumbnail_image_url': profile_thumbnail_image_url,
             'contest_info': contest_info,
             'contest_winner': contest_winner,
+            'user_is_authenticated': user_is_authenticated,
     }

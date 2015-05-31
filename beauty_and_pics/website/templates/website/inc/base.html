@@ -55,7 +55,7 @@
 					</div>
 					{# navigation after login {{{ #}
 					{#% block login-navigation %#}
-					{% if user.is_authenticated %}
+					{% if user_is_authenticated %}
 						<!-- search user form
 						<div class="search_form_container display_only_big">
 							<form class="form-horizontal">
@@ -84,49 +84,49 @@
 								{# after login menu {{{ #}
 								<div class="navigation_container toggle_navigation">
 									<!-- single menu item -->
-									<div class="menu_item_container">
-										<a href="/profilo/">
+									<a href="/profilo/">
+										<div class="menu_item_container menuItemContainerClickAction">
 											<div class="menu_item_image">
 												<img alt="Profilo" src="{% static "website/img/menu_profile.png" %}">
 											</div>
 											<div class="menu_item_label">
 												Profilo
 											</div>
-										</a>
-									</div>
+										</div>
+									</a>
 									<!-- single menu item -->
-									<div class="menu_item_container">
-										<a href="/profilo/statistiche/">
+									<a href="/profilo/statistiche/">
+										<div class="menu_item_container menuItemContainerClickAction">
 											<div class="menu_item_image">
 												<img alt="Profilo" src="{% static "website/img/menu_stats.png" %}">
 											</div>
 											<div class="menu_item_label">
 												Sguardo rapido
 											</div>
-										</a>
-									</div>
+										</div>
+									</a>
 									<!-- single menu item -->
-									<div class="menu_item_container">
-										<a href="/passerella/richiesta-aiuto">
+									<a href="/passerella/richiesta-aiuto">
+										<div class="menu_item_container menuItemContainerClickAction">
 											<div class="menu_item_image">
 												<img alt="Profilo" src="{% static "website/img/menu_help.png" %}">
 											</div>
 											<div class="menu_item_label">
 												Bisogno di aiuto?
 											</div>
-										</a>
-									</div>
+										</div>
+									</a>
 									<!-- single menu item -->
-									<div class="menu_item_container last_menu_item_container">
-										<a href="/logout/">
+									<a href="/logout/">
+										<div class="menu_item_container last_menu_item_container menuItemContainerClickAction">
 											<div class="menu_item_image">
 												<img alt="Profilo" src="{% static "website/img/menu_logout.png" %}">
 											</div>
 											<div class="menu_item_label">
 												Esci
 											</div>
-										</a>
-									</div>
+										</div>
+									</a>
 								</div>
 								{# after login menu }}} #}
 							</div>
@@ -190,6 +190,9 @@
 						<div class="generic_container generic_container4">
 							{# left block (with catwalk) #}
 							{% block container4_title_block %}
+							<div class="row">
+							    <a href="#" class="btn btn-link">Torna alla passerella</a>
+							</div>
 							<div class="row">
 								<div class="col-sm-12">
 									<h3>{% block container4_title %}Page title{% endblock %}</h3>

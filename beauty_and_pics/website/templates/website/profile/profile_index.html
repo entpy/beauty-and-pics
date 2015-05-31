@@ -79,10 +79,14 @@
 {% endblock container4_content %}
 {% block custom_js %}
 {# addictional page script #}
-<script src="{% static "website/js/vendor/jquery.form.js" %}"></script>
+{#<script src="{% static "website/js/vendor/jquery.form.js" %}"></script>#}
 <script src="{% static "website/js/vendor/cropper.min.js" %}"></script>
+
+<script src="{% static "website/js/vendor/jquery.ui.widget.js" %}"></script>
+<script src="{% static "website/js/vendor/jquery.iframe-transport.js" %}"></script>
+<script src="{% static "website/js/vendor/jquery.fileupload.js" %}"></script>
 {#<script src="{% static "website/js/vendor/jquery.nailthumb.1.1.min.js" %}"></script>#}
-<script src="{% static "website/js/vendor/imgLiquid-min.js" %}"></script>
+{#<script src="{% static "website/js/vendor/imgLiquid-min.js" %}"></script>#}
 {{ profile_image_form.media }}
 
 <script>
