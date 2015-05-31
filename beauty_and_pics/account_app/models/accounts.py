@@ -4,7 +4,7 @@ from django.db import models
 from django.db import connection
 from datetime import date
 from dateutil.relativedelta import *
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User, Group
 from contest_app.models.contest_types import Contest_Type
 from contest_app.models.points import Point
@@ -92,6 +92,24 @@ class Account(models.Model):
             raise
 
         return return_var
+
+    def check_if_logged_user_is_valid(self, request_user):
+	"""Function to check if current logged in user is a catwalker user"""
+	return_var = False
+	if request_user.is_authenticated:
+	    try:
+		user_obj = self.get_user_about_id(user_id=request_user.id)
+	    except User.DoesNotExist:
+		# logout user
+		# in questo caso sono loggato con un utente non appartenente al gruppo "catwalker_user"
+		# probabilmente si tratta dell'amministratore, ma visto che non ha un oggetto account
+		# associato facci il logout dalla piattaforma
+		# logout(request)
+		pass
+	    else:
+		return_var = True
+
+	return return_var
 
     def delete_user(self, user_id=None, logged_user_id=None):
         """Function to delete user"""
@@ -460,8 +478,7 @@ class Account(models.Model):
         if filters_list["filter_name"] == "look_more_beautiful":
             # "contest__status" to identify point about current contest
             # più leggera ma non mostra gli utenti che non hanno ancora punti
-            return_var = Point.objects.values('user__first_name',
-                    'user__last_name', 'user__email', 'user__id', 'user__account__newsletters_bitmask').filter(user__groups__name=project_constants.CATWALK_GROUP_NAME, contest__status=project_constants.CONTEST_ACTIVE, contest__contest_type__code=contest_type, metric__name=project_constants.VOTE_METRICS_LIST["look_metric"]).annotate(total_points=Sum('points'))
+            return_var = Point.objects.values('user__first_name', 'user__last_name', 'user__email', 'user__id', 'user__account__newsletters_bitmask').filter(user__groups__name=project_constants.CATWALK_GROUP_NAME, contest__status=project_constants.CONTEST_ACTIVE, contest__contest_type__code=contest_type, metric__name=project_constants.VOTE_METRICS_LIST["look_metric"]).annotate(total_points=Sum('points'))
             # più pesante e mostra anche gli utenti che non hanno ancora punti
             # return_var = Account.objects.values('user__first_name', 'user__last_name', 'user__email', 'user__id').filter(user__groups__name=project_constants.CATWALK_GROUP_NAME, contest_type__contest__status=project_constants.CONTEST_ACTIVE).filter(Q(user__point__metric__name=project_constants.VOTE_METRICS_LIST["look_metric"]) | Q(user__point__metric__isnull=True)).annotate(total_points=Sum('user__point__points'))
             return_var = return_var.order_by('-total_points', 'user__id')

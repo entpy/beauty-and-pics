@@ -32,10 +32,10 @@ textarea { resize: none; }
 /* header */
 .header { display: inline-block; width: 100%; }
 .header > div { text-align: center; }
-.header .navigation_container { color: white; }
+.header .navigation_container a { color: white; }
 .header .navigation_container .navigation_label, .profile_container .navigation_container .menu_item_container .menu_item_label { font-weight: bold; }
 .header .navigation_container .navigation_arrow { font-size: 13px; }
-.header .navigation_container .navigation_item { color: #fff; cursor: pointer; }
+/*.header .navigation_container .navigation_item { color: #fff; cursor: pointer; }*/
 .header .navigation_container a { text-decoration: none; }
 	/* after login */
 .profile_container { color: white; position: relative; text-align: left; z-index: 1; }

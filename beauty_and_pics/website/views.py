@@ -3,7 +3,7 @@
 from django.shortcuts import render
 from django.http import HttpResponseRedirect, HttpResponse
 from django.contrib import messages
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib.auth import logout
 from django.views.decorators.csrf import ensure_csrf_cookie
 from account_app.models.accounts import *
@@ -26,6 +26,13 @@ import logging
 
 # Get an instance of a logger
 logger = logging.getLogger(__name__)
+
+def check_if_is_a_catwalker_user(user):
+    """ Function to check if user is a catwalker user """
+    account_obj =  Account()
+    is_catwalker_user = account_obj.check_if_logged_user_is_valid(request_user=user)
+    logger.debug("logged user is a catwalker user: " + str(is_catwalker_user))
+    return is_catwalker_user
 
 # www {{{
 def www_index(request):
@@ -277,6 +284,7 @@ def profile_unsubscribe(request):
 
 # private profile {{{
 @login_required
+@user_passes_test(check_if_is_a_catwalker_user)
 def profile_index(request, welcome):
     profile_image_form = profileImageForm()
     book_images_form = bookImagesForm()
@@ -307,6 +315,7 @@ def profile_index(request, welcome):
     return render(request, 'website/profile/profile_index.html', context)
 
 @login_required
+@user_passes_test(check_if_is_a_catwalker_user)
 def profile_data(request):
     # set current contest_type
     account_obj =  Account()
@@ -341,6 +350,7 @@ def profile_data(request):
     return render(request, 'website/profile/profile_data.html', context)
 
 @login_required
+@user_passes_test(check_if_is_a_catwalker_user)
 def profile_favorites(request):
     # set current contest_type
     account_obj =  Account()
@@ -351,6 +361,7 @@ def profile_favorites(request):
     return render(request, 'website/profile/profile_favorites.html', False)
 
 @login_required
+@user_passes_test(check_if_is_a_catwalker_user)
 def profile_stats(request):
     # retrieve info about current logged in user
     account_obj = Account()
@@ -376,6 +387,7 @@ def profile_stats(request):
     return render(request, 'website/profile/profile_stats.html', context)
 
 @login_required
+@user_passes_test(check_if_is_a_catwalker_user)
 def profile_area51(request):
     # set current contest_type
     account_obj =  Account()

@@ -55,7 +55,7 @@
 					</div>
 					{# navigation after login {{{ #}
 					{#% block login-navigation %#}
-					{% if user.is_authenticated %}
+					{% if user_is_authenticated %}
 						<!-- search user form
 						<div class="search_form_container display_only_big">
 							<form class="form-horizontal">
@@ -190,6 +190,9 @@
 						<div class="generic_container generic_container4">
 							{# left block (with catwalk) #}
 							{% block container4_title_block %}
+							<div class="row">
+							    <a href="#" class="btn btn-link">Torna alla passerella</a>
+							</div>
 							<div class="row">
 								<div class="col-sm-12">
 									<h3>{% block container4_title %}Page title{% endblock %}</h3>
