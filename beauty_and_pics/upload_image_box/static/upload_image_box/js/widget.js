@@ -29,7 +29,7 @@ var uploaderImageBox = {
 	},
 
 	/* function to write an hidden form */
-	__writeHiddenForm: function(widgetId) {
+	/*__writeHiddenForm: function(widgetId) {
 		// write hidden form only if not already exists
 		if (!$(".upload_image_box_form").length) {
 			var hiddenForm = '';
@@ -40,6 +40,38 @@ var uploaderImageBox = {
 			hiddenForm += '</form>';
 
 			$("#" + widgetId).parents("form").after(hiddenForm);
+		}
+	},*/
+	__writeHiddenForm: function(widgetId) {
+		// write hidden form only if not already exists
+		if (!$(".upload_image_box_form").length) {
+			var hiddenForm = '';
+			hiddenForm += '<form class="upload_image_box_form" name="upload_image_box_form" enctype="multipart/form-data" action="" method="POST">';
+			hiddenForm += '<input class="fileupload_input" type="file" name="image" data-url="" >';
+			hiddenForm += '</form>';
+
+			$("#" + widgetId).parents("form").after(hiddenForm);
+			$('.fileupload_input').fileupload({
+			    dataType: 'json',
+			    formData: [{ name: 'csrfmiddlewaretoken', value: this.getCookie('csrftoken') }],
+			    add: function (e, data) {
+				data.url = $(".fileupload_input").data("url");
+				alert("invio il file");
+				uploaderImageBox.openModalWindow("upload_modal");
+				data.submit();
+			    },
+			    done: function (e, data) {
+				    // TODO controllare se data è null non deve dare errori
+				    // console.log(data.result);
+				    var respnseText = data.result
+				    fileManager.loadUploadedImage(respnseText);
+				    // $('<p/>').text(file.name).appendTo(document.body);
+			    },
+			    fail: function (e) {
+				console.log("tmp fileupload error: ");
+				console.log(e);
+			    },
+			});
 		}
 	},
 
@@ -75,7 +107,7 @@ var uploaderImageBox = {
 		modalTemplate += '</div>';
 
 		// setting hidden form action url
-		$(".upload_image_box_form").attr("action", this.modalWindowSettings[modalType]["hidden_form"]["action"])
+		$(".fileupload_input").data("url", this.modalWindowSettings[modalType]["hidden_form"]["action"]);
 
 		return modalTemplate;
 	},
@@ -321,6 +353,26 @@ var uploaderImageBox = {
 var fileManager = {
 	/* function to send a file via AJAX == submitting hidden form */
 	sendFile: function() {
+	 /*   // alert("invio");
+	    $('.fileupload_input').fileupload({
+		dataType: 'json',
+		done: function (e, data) {
+		    alert("ddd");
+		    $.each(data.result.files, function (index, file) {
+			alert(file.name);
+			// $('<p/>').text(file.name).appendTo(document.body);
+		    });
+		},
+		fail: function (e) {
+		    console.log("tmp fileupload error: ");
+		    console.log(e);
+		    // $('<p/>').text(file.name).appendTo(document.body);
+		},
+		send: function() {
+		    alert("sto inviando");
+		},
+	    });*/
+		/*
 		var bar = $('.bar');
 		var percent = $('.percent');
 		// setting widgetId to use it in callback function
@@ -357,18 +409,18 @@ var fileManager = {
 
 			// $.ajax options can be used here too, for example: 
 			//timeout:   3000 
-		}; 
+		/*}; 
 
 		// prepare hidden form to submit
 		$(".upload_image_box_form").ajaxForm(options); 
 		// submit hidden form
 		$(".upload_image_box_form").submit();
 		// reset hidden form
-		$(".upload_image_box_form").resetForm();
+		$(".upload_image_box_form").resetForm();*/
 	},
 
 	/* Function to load uploaded image inside modal window body */
-	loadUploadedImage: function(responseText, statusText, xhr, $form) { 
+	loadUploadedImage: function(responseText) { 
 		// console.log('status: ' + statusText + '\n\nresponseText: \n');
 		console.log(responseText);
 		if (responseText.hasOwnProperty('error')) {
@@ -456,7 +508,7 @@ $(document).on("click", ".fileSelectClickAction", function(){
 	uploaderImageBox.autoSetWidgetId($(this));
 	// open file chooser
 	// TODO: su chrome se il form è display none non funziona
-	$(".select_image_input").click();
+	$(".fileupload_input").click();
 
 	return false;
 });
@@ -509,15 +561,12 @@ $(document).on("click", ".confirmImageClickAction", function(){
 });
 
 // function to send a file on "onChange" event
-function sendFileOnFormChange() {
-// $(document).on("change", ".select_image_input", function(){
+/*$(document).on("change", "#fileupload_input", function(){
 
-	alert("inviato");
 	// show upload modal to show upload status bar
-	uploaderImageBox.openModalWindow("upload_modal");
+	// uploaderImageBox.openModalWindow("upload_modal");
 	// show uploaded image
-	fileManager.sendFile();
+	// fileManager.sendFile();
 
-	return false;
-// });
-}
+	return true;
+});*/
