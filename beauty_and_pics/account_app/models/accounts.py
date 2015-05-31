@@ -326,8 +326,14 @@ class Account(models.Model):
     def custom_user_id_data(self, user_id=None):
         """Function to retrieve user/account info about user id"""
         return_var = {}
+
         if user_id:
-            return_var = self.get_user_data_as_dictionary(user_obj=self.get_user_about_id(user_id=user_id))
+	    try:
+	        user_obj = self.get_user_about_id(user_id=user_id)
+            except User.DoesNotExist:
+	        raise
+            else:
+                return_var = self.get_user_data_as_dictionary(user_obj=user_obj)
 
         return return_var
 
@@ -410,7 +416,11 @@ class Account(models.Model):
             # logger.debug("element list: " + str(user_info))
             # retrieve extra params in hall of fame case
             if hall_of_fame:
-                user = self.get_user_about_id(user_id=user_info["user__id"])
+                try:
+		    user = self.get_user_about_id(user_id=user_info["user__id"])
+		except User.DoesNotExist:
+                    user = {}
+		    pass
 
             top_five_account.append({
                 "user_id": user_info["user__id"],

@@ -132,7 +132,7 @@ def catwalk_profile(request, user_id):
     account_obj =  Account()
     try:
         account_info = account_obj.custom_user_id_data(user_id=user_id)
-    except Account.DoesNotExist:
+    except User.DoesNotExist:
         # user id doesn't exists
         return HttpResponseRedirect('/index/')
 
