@@ -22,10 +22,11 @@
 .header .navigation_container .navigation_item:hover, .header .navigation_container a:hover, .profile_container .navigation_container .menu_item_container:hover { background-color: #3498DB; }
 .profile_container .profile_container_wrapper .navigation_container .last_menu_item_container:hover { background-color: #e74c3c; }
 .search_form_container { padding: 28px 0; width: 300px; }
-.profile_container { float: right; padding: 14px 0; min-width: 214px; }
-.profile_container .profile_container_wrapper { float: left; padding: 10px 15px; }
+.profile_container { float: right; padding: 14px 0; min-width: 215px; }
+.profile_container .profile_container_wrapper { float: left; padding: 10px 15px; width: 100%; }
 .profile_container .profile_container_wrapper:hover { border: 1px solid #000; box-shadow: 0 0 4px 0 black; background-color: #1A242F; color: #fff; padding: 9px 14px; }
-.profile_container .profile_container_wrapper .profile_name_image_container > div { float: left; }
+.profile_container .profile_container_wrapper .profile_name_image_container > .profile_image_container { float: left; }
+.profile_container .profile_container_wrapper .profile_name_image_container > .profile_name_container { float: right; margin-right: 15px; }
 .profile_container .profile_container_wrapper:hover .navigation_container { display: inline-block; margin-top: 30px; }
 .profile_container .navigation_container .menu_item_container { cursor: pointer; clear: left; float: left; margin-bottom: 5px; padding: 3px 5px; width: 100%; }
 .profile_container .navigation_container a .menu_item_container > div { float: left; }

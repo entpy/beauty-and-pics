@@ -161,39 +161,6 @@
 
 		// default click on load more elements button
 		$(".loadMoreElementsAction").click();
-
-		$('.fileupload_input').fileupload({
-		    dataType: 'json',
-		    forceIframeTransport: true,
-		    url: "/upload_image/upload/",
-		    formData: [{ name: "csrfmiddlewaretoken", value: $.cookie('csrftoken') }],
-		    add: function (e, data) {
-			//data.url = $(".upload_image_box_form").attr("action");
-			alert("invio il file");
-			//fileInput: $(this);
-			/*data.context = $('<button/>').text('Upload')
-			.appendTo(document.body)
-			.click(function () {
-			    data.context = $('<p/>').text('Uploading...').replaceAll($(this));
-			    data.submit();
-			});*/
-			data.submit();
-			//uploaderImageBox.openModalWindow("upload_modal");
-		    },
-		    done: function (e, data) {
-			    // TODO controllare se data è null non deve dare errori
-			    // console.log(data.result);
-			    var responseText = data.result
-			    console.log(responseText);
-			    fileManager.loadUploadedImage(responseText);
-			    // $('<p/>').text(file.name).appendTo(document.body);
-		    },
-		    fail: function (e) {
-			alert("errore");
-			console.log("tmp fileupload error: ");
-			console.log(e);
-		    },
-		});
 	});
 
 	/* Function to show bootstrap welcome modal */
