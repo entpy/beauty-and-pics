@@ -4,6 +4,7 @@ from django.db import models
 from django.conf import settings
 from datetime import timedelta
 from django.utils import timezone
+from upload_image_box.exceptions import *
 from .settings import *
 from PIL import Image
 import os, logging, shutil, uuid, cStringIO
@@ -71,6 +72,7 @@ class cropUploadedImages(models.Model):
 
     def save_image(self, tmp_uploaded_image_obj, crop_info, custom_crop_directory_name=None):
         """Function to (crop and) save uploaded image"""
+	valid_image_row_saved = None
         if tmp_uploaded_image_obj:
 	    if USE_BOTO:
 		# retrieve boto images save path directory name
@@ -85,7 +87,7 @@ class cropUploadedImages(models.Model):
             valid_image = self.create_valid_image(tmp_uploaded_image_obj=tmp_uploaded_image_obj, crop_info=crop_info)
             if FORCE_JPEG:
                 # convert image to jpeg
-                valid_image = self.convert_image_to_jpeg(image=valid_image)
+                valid_image = self.convert_image_to_jpeg(image=valid_image, image_name=tmp_uploaded_image_obj.image.path)
             # get dimensions about image
             cropped_width, cropped_height = valid_image.size
             if cropped_width >= CROPPED_IMG_MIN_WIDTH and cropped_height >= CROPPED_IMG_MIN_HEIGHT:
@@ -96,10 +98,13 @@ class cropUploadedImages(models.Model):
                 # todo create thumbnail image name append "_thumb" postfix to valid_image_name
                 thumbnail_image_name = self.get_image_thumbnail_name(valid_image_name)
 
+		"""
                 logger.debug("valid image name: " + str(valid_image_name))
                 logger.debug("valid image: " + str(valid_image))
                 logger.debug("thumbnail image name: " + str(thumbnail_image_name))
                 logger.debug("thumbnail image: " + str(cropped_image_thumbnail))
+		"""
+
 		# save valid cropped (or not) image and thumbnail image into
                 # cloud or filesystem
 		if USE_BOTO:
@@ -138,14 +143,21 @@ class cropUploadedImages(models.Model):
 	    key.set_metadata("Content-Type", image_type["mimetype"])
             # write image inside bucket (with show permission)
 	    key.set_contents_from_string(self.prepare_image_to_cloud(image=image_obj, image_name=image_name), policy='public-read')
-	    logger.info("image tostring: " + str(self.prepare_image_to_cloud(image=image_obj, image_name=image_name)))
+	    # logger.info("image tostring: " + str(self.prepare_image_to_cloud(image=image_obj, image_name=image_name)))
 
         return image_obj
 
-    def convert_image_to_jpeg(self, image):
+    def convert_image_to_jpeg(self, image, image_name):
         """Function to convert an image to jpeg"""
-        bg = Image.new("RGB", image.size)
-        bg.paste(image)
+	file_name, file_extension = os.path.splitext(image_name)
+
+	logger.info("(convert_image_to_jpeg) image ext: " + str(file_extension))
+	if (file_extension == ".jpg") or (file_extension == ".jpeg"):
+	    bg = Image.new("RGB", image.size)
+	    bg.paste(image)
+	else:
+	    bg = Image.new("RGBA", image.size, (255,255,255,255))
+	    bg.paste(image, (0,0), image)
 
         return bg
 
