@@ -267,8 +267,8 @@ var uploaderImageBox = {
 		$("#" + this.widgetId).contents().find('.crop_image_tag').cropper({
 			aspectRatio: 1 / 1,
 			autoCropArea: 0.9,
-			minCropBoxWidth: 200,
-			minCropBoxHeight: 200,
+			// minCropBoxWidth: 200,
+			// minCropBoxHeight: 200,
 			checkImageOrigin: false,
 			touchDragZoom: false,
 			strict: false,

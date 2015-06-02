@@ -151,7 +151,7 @@ class cropUploadedImages(models.Model):
         """Function to convert an image to jpeg"""
 	file_name, file_extension = os.path.splitext(image_name)
 
-	logger.info("(convert_image_to_jpeg) image ext: " + str(file_extension))
+	# logger.info("(convert_image_to_jpeg) image ext: " + str(file_extension))
 	if (file_extension == ".jpg") or (file_extension == ".jpeg"):
 	    bg = Image.new("RGB", image.size)
 	    bg.paste(image)
@@ -201,6 +201,8 @@ class cropUploadedImages(models.Model):
         """Function to retrieve a valid image with or without crop"""
         # open tmp uploaded image
         image = Image.open(tmp_uploaded_image_obj.image.path)
+	exifdict = image._getexif()
+	logger.info("image attr: "+ str(exifdict))
         # check if image must be cropped or not
         if crop_info["enable_crop"]:
             cropped_image = image.crop(self.get_crop_box(crop_info))
