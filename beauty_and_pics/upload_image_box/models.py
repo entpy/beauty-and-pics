@@ -202,15 +202,7 @@ class cropUploadedImages(models.Model):
         """Function to retrieve a valid image with or without crop"""
         # open tmp uploaded image
         image = Image.open(tmp_uploaded_image_obj.image.path)
-	exifdict = image._getexif()
-	if len(exifdict):
-	    for k in exifdict.keys():
-		if k in TAGS.keys():
-		    logger.info(str(TAGS[k]) + " " + str(exifdict[k]))
-		    print TAGS[k], exifdict[k]
-		else:
-		    logger.info(str(k) + " " + str(exifdict[k]))
-		    print k, exifdict[k]
+
         # check if image must be cropped or not
         if crop_info["enable_crop"]:
             cropped_image = image.crop(self.get_crop_box(crop_info))
@@ -331,6 +323,45 @@ class tmpUploadedImages(models.Model):
 
     def __unicode__(self):
         return self.image.name
+
+    def save(self, *args, **kwargs):
+	# Did we have rotated the image?
+	# We pop it to remove from kwargs when we pass these along
+	# image_rotated = kwargs.pop('image_rotated',False)
+
+	super(tmpUploadedImages, self).save(*args, **kwargs)
+
+	if self.image:
+	    # filename = self.get_source_filename()
+	    image = Image.open(self.image)
+
+	    try:
+		exifdict = image._getexif()
+	    except:
+		logger.info("errore con _getexif, probabilmente l'immagine non è jpg")
+		pass
+	    else:
+		if exifdict is not None and len(exifdict):
+		    orientation_key = 274 # cf ExifTags
+		    if orientation_key in exifdict:
+			orientation = exifdict[orientation_key]
+			logger.info("tmp image orientation: " + str(orientation))
+
+			rotate_values = {
+			    3: 180,
+			    6: 270,
+			    8: 90
+			}
+
+			if orientation in rotate_values:
+			    # Rotate and save the picture
+			    rotated_image_obj = image.rotate(rotate_values[orientation])
+			    # Save rotated image
+			    rotated_image_obj.save(self.image.path)
+		    else:
+			logger.info("exifdict esiste, ma non è presente l'attributo orientation")
+		else:
+		    logger.info("exifdict vuoto")
 
     def delete(self, *args, **kwargs):
         # You have to prepare what you need before delete the model
