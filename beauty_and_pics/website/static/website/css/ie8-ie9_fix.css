@@ -28,3 +28,11 @@ footer {
 	display: inline-block;
 	width: 100%;
 }
+
+.profile_container  {
+	width: auto!important;
+}
+.profile_container .navigation_container .menu_item_container {
+	width: 100%!important;
+	display: block!important;
+}
