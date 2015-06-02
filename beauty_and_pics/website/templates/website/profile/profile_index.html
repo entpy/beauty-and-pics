@@ -21,16 +21,16 @@
 	{% csrf_token %}
 	<input class="profile_image_id" name="{{ profile_image_form.image_id.name }}" value="" type="hidden">
 	<input name="{{ profile_image_form.image_type.name }}" value="profile_image" type="hidden">
-	{{ profile_image_form.uploaded_image }}
 </form>
+	{{ profile_image_form.uploaded_image }}
 
 {# upload book image form #}
 <form class="book_image_form" method="post" action="">
 	{% csrf_token %}
 	<input class="book_image_id" name="{{ book_images_form.image_id.name }}" value="" type="hidden">
 	<input name="{{ book_images_form.image_type.name }}" value="book_image" type="hidden">
-	{{ book_images_form.uploaded_image }}
 </form>
+	{{ book_images_form.uploaded_image }}
 
 <div class="row">
 	<div class="col-sm-12">

@@ -36,6 +36,7 @@ class UibUploaderInput(forms.ClearableFileInput):
 	self.default_attrs = {
 		'base_modal_title_text': 'Load an image',
 		'upload_modal_title_text': 'Image upload...',
+		'moving_ball_modal_title_text': 'Please wait...',
 		'crop_modal_title_text': 'Crop your image',
 		'preview_modal_title_text': 'Image preview',
 		'crop_action_button_text': 'Crop',
@@ -56,7 +57,7 @@ class UibUploaderInput(forms.ClearableFileInput):
             self.default_attrs.update(attrs)
 
         self.uploader_button = self.default_attrs["default_uploader_button"]
-        self.modal_window_scheleton = '<div id="%(widget_id)s" class="modal_container" data-base-modal-title-text="%(base_modal_title_text)s" data-upload-modal-title-text="%(upload_modal_title_text)s" data-crop-modal-title-text="%(crop_modal_title_text)s" data-preview-modal-title-text="%(preview_modal_title_text)s" data-crop-action-button-text="%(crop_action_button_text)s" data-preview-action-button-text="%(preview_action_button_text)s" data-cancel-button-text="%(cancel_button_text)s" data-change-image-button-text="%(change_image_button_text)s" data-enable-crop="%(enable_crop)s" data-select-image-action-button-text="%(select_image_action_button_text)s" data-crop-modal-description-text="%(crop_modal_description_text)s" data-callback-function="%(callback_function)s"></div>'
+        self.modal_window_scheleton = '<div id="%(widget_id)s" class="modal_container" data-base-modal-title-text="%(base_modal_title_text)s" data-upload-modal-title-text="%(upload_modal_title_text)s" data-crop-modal-title-text="%(crop_modal_title_text)s" data-preview-modal-title-text="%(preview_modal_title_text)s" data-crop-action-button-text="%(crop_action_button_text)s" data-preview-action-button-text="%(preview_action_button_text)s" data-cancel-button-text="%(cancel_button_text)s" data-change-image-button-text="%(change_image_button_text)s" data-enable-crop="%(enable_crop)s" data-select-image-action-button-text="%(select_image_action_button_text)s" data-crop-modal-description-text="%(crop_modal_description_text)s" data-callback-function="%(callback_function)s" data-moving-ball-modal-title-text="%(moving_ball_modal_title_text)s"></div>'
         self.uploader_script = '<script type="text/javascript">$(function(){uploaderImageBox.init("%(widget_id)s");});</script>'
         # self.uploader_options = '<div class="' + str(self.default_attrs["widget_id"]) '_options" style="display: none!important"></div>'
         super(UibUploaderInput , self).__init__(attrs=None)

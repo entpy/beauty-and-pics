@@ -129,3 +129,30 @@ left:0px;
 .progress_loader { border: 1px solid #ddd; border-radius: 3px; margin: 20px auto; padding: 1px; position: relative; width: 100%; }
 .bar { background-color: #B4F5B4; width:0%; height:26px; border-radius: 3px; }
 .percent { position:absolute; display:inline-block; top:3px; left:48%; }
+
+/* choose file button style {{{ */
+.chooseFileWrapperStyle {
+	position: relative;    
+	display: inline-block;
+	text-align: center;
+	overflow: hidden;
+}
+
+.chooseFileWrapperStyle > input[type="file"] {
+	position: absolute;
+	cursor: pointer;
+	top: -5px;
+	right: -5px;
+	font-size: 200px;
+	/* IE 8 */
+	-ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";
+	/* IE 5-7 */
+	filter: alpha(opacity=0);
+	/* Netscape */
+	-moz-opacity: 0.0;
+	/* Safari 1.x */
+	-khtml-opacity: 0.0;
+	/* Good browsers */
+	opacity: 0.0;
+}
+/* choose file button style }}} */

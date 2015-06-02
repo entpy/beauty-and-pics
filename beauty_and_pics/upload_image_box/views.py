@@ -49,7 +49,7 @@ def upload(request):
             data = {'success': True, "file_id": image_form.id, "file_url": "http://" + str(request.get_host()) + str(settings.MEDIA_URL_TMP) + str(image_form.image)}
             # logger.debug("immagine salvata: " + str(settings.MEDIA_URL) + str(image_form.image))
 
-    return HttpResponse(json.dumps(data), content_type="application/json")
+    return HttpResponse(json.dumps(data), content_type="text/html")
 
 # View to crop an uploaded image
 @require_POST

@@ -20,6 +20,7 @@ class profileImageForm(forms.Form, FormCommonUtils):
             'callback_function': 'saveProfileImage',
             'base_modal_title_text': "Seleziona un'immagine",
             'upload_modal_title_text': 'Caricamento in corso, attendi...',
+            'moving_ball_modal_title_text': 'Caricamento in corso, attendi...',
             'crop_modal_title_text': 'Seleziona area immagine',
             'preview_modal_title_text': 'Anteprima immagine',
             'crop_action_button_text': 'Conferma immagine',
