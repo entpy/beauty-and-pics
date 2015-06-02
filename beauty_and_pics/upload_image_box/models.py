@@ -7,6 +7,7 @@ from django.utils import timezone
 from upload_image_box.exceptions import *
 from .settings import *
 from PIL import Image
+from PIL.ExifTags import TAGS
 import os, logging, shutil, uuid, cStringIO
 
 # Get an instance of a logger
@@ -202,7 +203,14 @@ class cropUploadedImages(models.Model):
         # open tmp uploaded image
         image = Image.open(tmp_uploaded_image_obj.image.path)
 	exifdict = image._getexif()
-	logger.info("image attr: "+ str(exifdict))
+	if len(exifdict):
+	    for k in exifdict.keys():
+		if k in TAGS.keys():
+		    logger.info(str(TAGS[k]) + " " + str(exifdict[k]))
+		    print TAGS[k], exifdict[k]
+		else:
+		    logger.info(str(k) + " " + str(exifdict[k]))
+		    print k, exifdict[k]
         # check if image must be cropped or not
         if crop_info["enable_crop"]:
             cropped_image = image.crop(self.get_crop_box(crop_info))
