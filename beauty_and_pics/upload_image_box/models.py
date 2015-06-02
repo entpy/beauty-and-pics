@@ -331,7 +331,7 @@ class tmpUploadedImages(models.Model):
 
 	super(tmpUploadedImages, self).save(*args, **kwargs)
 
-	if self.image:
+	if self.image and ENABLE_AUTO_ROTATING_IF_REQUIRED:
 	    # filename = self.get_source_filename()
 	    image = Image.open(self.image)
 
@@ -355,6 +355,7 @@ class tmpUploadedImages(models.Model):
 
 			if orientation in rotate_values:
 			    # Rotate and save the picture
+			    logger.info("ruoto l'immagine di " + str(rotate_values[orientation]) + "°")
 			    rotated_image_obj = image.rotate(rotate_values[orientation])
 			    # Save rotated image
 			    rotated_image_obj.save(self.image.path)

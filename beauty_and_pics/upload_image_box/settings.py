@@ -18,10 +18,11 @@ APP_BASE_DIRECTORY = 'upload_image_box/'
 UPLOADED_IMG_TMP_DIRECTORY = 'tmp_upload/'
 UPLOADED_IMG_TMP_MAX_LIFETIME = 300 # 5 minutes = 300 seconds after tmp images deletion
 CROPPED_IMG_DIRECTORY = 'cropped_upload/'
-CROPPED_IMG_MIN_WIDTH = 200
-CROPPED_IMG_MIN_HEIGHT = 200
-FORCE_JPEG = True # force saved images ad .jpg
+CROPPED_IMG_MIN_WIDTH = 230
+CROPPED_IMG_MIN_HEIGHT = 230
+FORCE_JPEG = True # force saved images as .jpg
 MEDIA_URL = '/tmp' 
+ENABLE_AUTO_ROTATING_IF_REQUIRED = True # nelle immagini uploadate da smartphone in landscape occorre fare una rotazione per visualizzarle correttamente
 
 # custom directory with boto
 USE_BOTO = True

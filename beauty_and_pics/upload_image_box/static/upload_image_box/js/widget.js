@@ -386,10 +386,14 @@ var fileManager = {
 
 				// if exists perform a custom callback function (ie. to update a parent contenitor)
 				if (uploaderImageBox.modalWindowSettings["global_options"]["callback_function"].call()) {
-					if (textStatus.hasOwnProperty("image_id")) {
-						eval(uploaderImageBox.modalWindowSettings["global_options"]["callback_function"].call() + "('" + textStatus.image_id + "');");
-					}
+				    if (textStatus.hasOwnProperty("image_id")) {
+					    eval(uploaderImageBox.modalWindowSettings["global_options"]["callback_function"].call() + "('" + textStatus.image_id + "');");
+				    }
 				}
+			} else {
+			    // probably image cropped width/height wrong -> show base modal with error
+			    uploaderImageBox.openModalWindow("base_modal");
+			    uploaderImageBox.showModalWindowMsg("danger", textStatus.msg);
 			}
 		});
 
