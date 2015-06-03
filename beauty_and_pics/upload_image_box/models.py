@@ -157,8 +157,12 @@ class cropUploadedImages(models.Model):
 	    bg = Image.new("RGB", image.size)
 	    bg.paste(image)
 	else:
-	    bg = Image.new("RGBA", image.size, (255,255,255,255))
-	    bg.paste(image, (0,0), image)
+	    if image.mode == 'RGBA':
+	        bg = Image.new("RGBA", image.size, (255,255,255,255))
+	        bg.paste(image, (0,0), image)
+	    else:
+	        bg = Image.new("RGB", image.size)
+	        bg.paste(image)
 
         return bg
 
