@@ -187,7 +187,7 @@ class CustomEmailTemplate():
         append_random_tip = True
 	# common email blocks
 	self.email_html_blocks["dear_block"] = self.build_dear_block()
-        self.email_html_blocks["main_title_block"] = "ecco il report mensile del concorso."
+        self.email_html_blocks["main_title_block"] = "ecco il report settimanale del concorso."
 	# html text email blocks
 	self.email_html_blocks["html_main_text_block"] = """
             <table style="width: 100%;">
@@ -224,7 +224,7 @@ class CustomEmailTemplate():
                 <table style="width: 100%;">
                     <tr>
                         <td>
-                            <b>TIP mensile AKA buone regole per ottenere più punti</b>
+                            <b>TIP settimanale AKA buone regole per ottenere più punti</b>
                         </td>
                     </tr>
                     <tr>
@@ -235,14 +235,14 @@ class CustomEmailTemplate():
                 </table><br />
             """
 
-        self.email_html_blocks["html_main_text_block"] += 'Stanco di ricevere queste email? <a target="_blank" href="' + self.base_url + '/passerella/disiscriviti/' + str(self.email_context.get('user_email')) + '/">Disiscriviti</a>.'
+        self.email_html_blocks["html_main_text_block"] += 'Stanco di ricevere queste email? <a target="_blank" href="' + self.base_url + '/profilo/disiscriviti/">Disiscriviti</a>.'
 
 	# plain text email blocks
 	self.email_html_blocks["plain_main_text_block"] = """
             Ti riepiloghiamo le informazioni principali del contest. \n
             Punti: """ + str(self.email_context.get("points")) + """\n
             Posizione: """ + str(self.email_context.get("ranking")) + """\n
-            Stanco di ricevere queste email? Disiscriviti: """ + self.base_url + '/passerella/disiscriviti/' + str(self.email_context.get('user_email')) + '/' + """
+            Stanco di ricevere queste email? Disiscriviti: """ + self.base_url + '/profilo/disiscriviti/' + """
         """
 
         # call to action blocks
@@ -250,7 +250,7 @@ class CustomEmailTemplate():
         self.email_html_blocks["plain_call_to_action_block"] = "Accedi al tuo profilo: " + self.base_url + "/profilo/"
 
         # email subject
-        self.email_subject = "Beauty & Pics: report mensile del concorso."
+        self.email_subject = "Beauty & Pics: report settimanale del concorso."
 
         return True
 
@@ -286,7 +286,7 @@ class CustomEmailTemplate():
                 </tr>
                 <tr>
                     <td>
-                        Fatti notare: caricando un'immagine profilo che possa attirare l'attenzione, questo invoglierà la gente a cliccare sul tuo profilo!
+                        Fatti notare caricando un'immagine profilo che possa attirare l'attenzione, questo invoglierà la gente a cliccare sul tuo profilo!
                     </td>
                 </tr>
                 <tr>
@@ -353,11 +353,51 @@ class CustomEmailTemplate():
 	self.email_html_blocks["dear_block"] = self.build_dear_block()
 	self.email_html_blocks["main_title_block"] = "Beauty and Pics ti da il benvenuto!"
 	# html text email blocks
-	self.email_html_blocks["html_main_text_block"] = "Grazie per esserti registrato"
-	self.email_html_blocks["html_call_to_action_block"] = self.get_call_to_action_template(href=self.base_url + "/richiesta-aiuto", label="Chiedi aiuto")
+	self.email_html_blocks["html_main_text_block"] = """
+	    Ciao e grazie per esserti registrata/o <b>""" + str(self.email_context.get("first_name")) + """</b>,<br />
+	    ecco alcuni consigli su come iniziare a scalare la classifica di Beauty and Pics!<br />
+            <table style="width: 100%;">
+                <tr>
+                    <td style="padding-top: 30px;">
+                        <b>1) Carica un'immagine profilo.</b>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Fatti notare caricando un'immagine profilo che possa attirare l'attenzione, questo invoglierà la gente a cliccare sul tuo profilo!
+                    </td>
+                </tr>
+                <tr>
+                    <td style="padding-top: 30px;">
+                        <b>2) Carica le immagini del book.</b>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Rendi il tuo profilo interessante caricando le
+                        immagini del book. PS: modificando spesso le tue
+                        immagini, aumentarai l'interesse della gente a tornare
+                        nel tuo profilo, aumentando le probabilità di ricevere
+                        dei voti!
+                    </td>
+                </tr>
+                <tr>
+                    <td style="padding-top: 30px;">
+                        <b>3) Condividi la tua pagina profilo sui social networks.</b>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Pubblicizzati: più persone visualizzeranno il tuo profilo e maggiori saranno le possibilità di ricevere dei punti.
+                    </td>
+                </tr>
+            </table><br />
+            Se hai dubbi, domande o consigli non esitare a chiedere :)...premendo il pulsante sotto!
+	"""
+	self.email_html_blocks["html_call_to_action_block"] = self.get_call_to_action_template(href=self.base_url + "/passerella/richiesta-aiuto", label="Richiedi aiuto")
 	# plain text email blocks
-	self.email_html_blocks["plain_main_text_block"] = "Grazie per esserti registrato"
-	self.email_html_blocks["plain_call_to_action_block"] = "Richiedi aiuto: " + self.base_url + "/richiesta-aiuto"
+	self.email_html_blocks["plain_main_text_block"] = "Grazie per esserti registrato " + str(self.email_context.get("first_name")) + ".\nBeauty and Pics: il concorso più fico dell'universo."
+	self.email_html_blocks["plain_call_to_action_block"] = "Richiedi aiuto: " + self.base_url + "/passerella/richiesta-aiuto"
 
         # email subject
         self.email_subject = "Beauty & Pics ti da il benvenuto."
@@ -524,7 +564,6 @@ class CustomEmailTemplate():
         """Function to send email"""
 	return_var = False
         # send email
-	return True
 	if self.email_ready_to_send:
 	    return_var = send_mail(
 		subject=self.email_subject,
@@ -533,6 +572,6 @@ class CustomEmailTemplate():
 		recipient_list=self.email_recipient_list,
 		html_message=self.get_html_template(),
 	    )
-	    logger.debug("email inviate: " + str(return_var) + " destinatari: " + str(self.email_recipient_list))
+	    logger.info("email inviate: " + str(return_var) + " destinatari: " + str(self.email_recipient_list))
 
         return return_var

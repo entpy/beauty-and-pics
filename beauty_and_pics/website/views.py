@@ -158,7 +158,7 @@ def catwalk_profile(request, user_id):
     vote_obj = Vote()
     user_already_voted = False
     try:
-        vote_obj.check_if_user_can_vote(user_id=user_id, ip_address=request.META["REMOTE_ADDR"])
+        vote_obj.check_if_user_can_vote(user_id=user_id, ip_address=request.META["HTTP_X_FORWARDED_FOR"])
     except UserAlreadyVotedError:
         user_already_voted = True
 

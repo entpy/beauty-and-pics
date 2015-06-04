@@ -181,12 +181,15 @@ LOGGING = {
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.7/howto/static-files/
 STATIC_URL = '/static/'
+"""
 STATICFILES_DIRS = (
     os.path.join(BASE_DIR, "static"),
 )
+"""
 
 # email settings
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend' # this backend is only for development debug
+# EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 
 # loading local settings
 try:

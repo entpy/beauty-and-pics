@@ -21,7 +21,7 @@ CROPPED_IMG_DIRECTORY = 'cropped_upload/'
 CROPPED_IMG_MIN_WIDTH = 230
 CROPPED_IMG_MIN_HEIGHT = 230
 FORCE_JPEG = True # force saved images as .jpg
-MEDIA_URL = '/tmp' 
+# MEDIA_URL = '/tmp' 
 ENABLE_AUTO_ROTATING_IF_REQUIRED = True # nelle immagini uploadate da smartphone in landscape occorre fare una rotazione per visualizzarle correttamente
 
 # custom directory with boto

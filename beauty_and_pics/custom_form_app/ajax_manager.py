@@ -198,9 +198,12 @@ class ajaxManager():
         votation_data["look_vote_points"] = self.request.POST.get("look_vote_points")
         error_msg = ""
 
+        # logger.info("indirizzo ip: " + str( self.request.META["REMOTE_ADDR"]))
+        logger.info("indirizzo ip: " + str( self.request.META["HTTP_X_FORWARDED_FOR"]))
+
         try:
             vote_obj = Vote()
-            vote_obj.perform_votation(votation_data, self.request.POST.get("user_id"), self.request.META["REMOTE_ADDR"])
+            vote_obj.perform_votation(votation_data, self.request.POST.get("user_id"), self.request.META["HTTP_X_FORWARDED_FOR"])
         except VoteUserIdMissingError:
             error_msg = "Non è stato possibile eseguire la votazione, sii gentile, contatta l'amministratore."
         except VoteMetricMissingError:
