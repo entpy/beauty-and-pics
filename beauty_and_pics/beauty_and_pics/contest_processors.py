@@ -15,17 +15,18 @@ def common_contest_processors(request):
     book_obj = Book()
     contest_obj = Contest()
     hall_of_fame_obj = HallOfFame()
-    logger.info("@@@current contest_type: " + str(contest_obj.get_contest_type_from_session(request=request)))
+    contest_type = contest_obj.get_contest_type_from_session(request=request)
+    logger.info("@@@current contest_type: " + str(contest_type))
 
     ### template context vars {{{ ###
     # top five user ranking
-    top_five_account = account_obj.get_top_five_contest_user(contest_type=contest_obj.get_contest_type_from_session(request=request))
+    top_five_account = account_obj.get_top_five_contest_user(contest_type=contest_type)
     # profile thumbnail image url
     profile_thumbnail_image_url = None
     # current contest start_time
-    contest_info = contest_obj.get_contest_info_about_type(contest_type=contest_obj.get_contest_type_from_session(request=request))
+    contest_info = contest_obj.get_contest_info_about_type(contest_type=contest_type)
     # last contest winner
-    contest_winner = hall_of_fame_obj.get_last_active_contest_winner(contest_type=contest_obj.get_contest_type_from_session(request=request))
+    contest_winner = hall_of_fame_obj.get_last_active_contest_winner(contest_type=contest_type)
     ### template context vars }}} ###
 
     # check if user is authenticated

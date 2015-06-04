@@ -10,6 +10,7 @@ from account_app.models.accounts import *
 from contest_app.models.contests import *
 from contest_app.models.contest_types import *
 from contest_app.models.votes import Vote
+from beauty_and_pics.common_utils import CommonUtils
 from email_template.email.email_template import *
 # loading forms
 from custom_form_app.forms.register_form import *
@@ -40,6 +41,9 @@ def www_index(request):
 
 def www_how_it_works(request):
     return render(request, 'website/www/www_come_funziona.html', False)
+
+def www_privacy(request):
+    return render(request, 'website/www/www_privacy.html', False)
 
 def www_login(request):
     # if this is a POST request we need to process the form data
@@ -135,6 +139,9 @@ def catwalk_index(request, contest_type=None):
 
 @ensure_csrf_cookie
 def catwalk_profile(request, user_id):
+    # common method class init
+    CommonUtils_obj = CommonUtils()
+
     # retrieve user info
     account_obj =  Account()
     try:
@@ -158,7 +165,7 @@ def catwalk_profile(request, user_id):
     vote_obj = Vote()
     user_already_voted = False
     try:
-        vote_obj.check_if_user_can_vote(user_id=user_id, ip_address=request.META["HTTP_X_FORWARDED_FOR"])
+        vote_obj.check_if_user_can_vote(user_id=user_id, ip_address=CommonUtils_obj.get_ip_address(request=request))
     except UserAlreadyVotedError:
         user_already_voted = True
 

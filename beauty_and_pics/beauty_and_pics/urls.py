@@ -12,6 +12,7 @@ urlpatterns = patterns('',
     url(r'^logout/$', 'website.views.www_logout', name='www_logout'),
     url(r'^recupera-password/$', 'website.views.www_forgot_password', name='www_forgot_password'),
     url(r'^registrati/$', 'website.views.www_register', name='www_register'),
+    url(r'^privacy/$', 'website.views.www_privacy', name='www_privacy'),
 
     # catwalk
     url(r'^passerella/(?:(?P<contest_type>\w+)/)?$', 'website.views.catwalk_index', name='catwalk_index'),

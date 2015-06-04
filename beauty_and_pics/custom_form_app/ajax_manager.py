@@ -12,6 +12,7 @@ from custom_form_app.forms.help_request_form import *
 from custom_form_app.forms.report_user_form import *
 from custom_form_app.forms.unsubscribe_form import *
 from beauty_and_pics.consts import project_constants
+from beauty_and_pics.common_utils import CommonUtils
 from contest_app.models.votes import Vote
 from account_app.models import *
 from contest_app.models import Contest
@@ -190,6 +191,9 @@ class ajaxManager():
         logger.debug("ajax_function: @@perform_voting@@")
         logger.debug("parametri della chiamata: " + str(self.request.POST))
 
+        # common method class init
+        CommonUtils_obj = CommonUtils()
+
         # build votation dictionary
         votation_data = {}
         votation_data["user_id"] = self.request.POST.get("user_id")
@@ -198,12 +202,9 @@ class ajaxManager():
         votation_data["look_vote_points"] = self.request.POST.get("look_vote_points")
         error_msg = ""
 
-        # logger.info("indirizzo ip: " + str( self.request.META["REMOTE_ADDR"]))
-        logger.info("indirizzo ip: " + str( self.request.META["HTTP_X_FORWARDED_FOR"]))
-
         try:
             vote_obj = Vote()
-            vote_obj.perform_votation(votation_data, self.request.POST.get("user_id"), self.request.META["HTTP_X_FORWARDED_FOR"])
+            vote_obj.perform_votation(votation_data, self.request.POST.get("user_id"), CommonUtils_obj.get_ip_address(request=request))
         except VoteUserIdMissingError:
             error_msg = "Non è stato possibile eseguire la votazione, sii gentile, contatta l'amministratore."
         except VoteMetricMissingError:

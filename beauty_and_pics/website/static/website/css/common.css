@@ -74,11 +74,14 @@ textarea { resize: none; }
 .generic_container3 > .generic_container { float: left; }
 .generic_container4, .generic_container6, .generic_container7, .generic_container9 { border-radius: 4px; -moz-border-radius: 4px; background-color: #ecf0f1; }
 .generic_container6, .generic_container7, .generic_container9 { width: 100%; }
-.generic_container6 { background: url(../img/partecipa.png) no-repeat center center #3498db; margin-bottom: 20px; text-align: center }
+.generic_container6 { margin-bottom: 20px; text-align: center }
 .generic_container6 > .title { color: white; margin-top: 15px; }
 .generic_container6 > .button_container { margin-top: 195px; }
 .generic_container9 { padding: 0 25px 25px; }
 .generic_container9 > .title { margin-top: 15px; }
+
+.signup_banner_bg { background: url(../img/partecipa.png) no-repeat center center #3498db; }
+.catwalk_banner_bg { background: url(../img/partecipa.png) no-repeat center center red; }
 
 /* catwalk user details page */
 .background_container1 { background-color: #E0E0E0; padding: 20px; }

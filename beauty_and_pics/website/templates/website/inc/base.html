@@ -183,6 +183,11 @@
 					<div class="title_block">
 						<h1 class="title">{% block block0_1_title_h1 %}Main title{% endblock block0_1_title_h1 %}</h1>
 						<h4 class="description">{% block block0_1_title_h4 %}Page description{% endblock block0_1_title_h4 %}</h4>
+						{% block block0_1_link_block %}
+							<div class="row">
+								<a href="/passerella/">Torna alla passerella</a>
+							</div>
+						{% endblock block0_1_link_block %}
 					</div>
 				{% endblock block0_1_title %}
 				<div class="left_100 text-center">
@@ -190,9 +195,6 @@
 						<div class="generic_container generic_container4">
 							{# left block (with catwalk) #}
 							{% block container4_title_block %}
-							<div class="row">
-							    <a href="#" class="btn btn-link">Torna alla passerella</a>
-							</div>
 							<div class="row">
 								<div class="col-sm-12">
 									<h3>{% block container4_title %}Page title{% endblock %}</h3>
@@ -219,14 +221,28 @@
 						</div>
 						<div class="generic_container generic_container5">
 							{# banner block #}
-							<div class="generic_container generic_container6">
+							{% block signup_banner %}
+								{% if not user_is_authenticated %}
+								<div class="generic_container generic_container6 signup_banner_bg">
+									<div class="title">
+										<h4>Partecipa anche tu!</h4>
+									</div>
+									<div class="button_container">
+										<a class="btn btn-danger" href="/registrati/">Partecipa</a>
+									</div>
+								</div>
+								{% endif %}
+							{% endblock signup_banner %}
+							{% block catwalk_banner %}
+							<div class="generic_container generic_container6 catwalk_banner_bg">
 								<div class="title">
-									<h4>Partecipa anche tu!</h4>
+									<h4>Vai alla passerella!</h4>
 								</div>
 								<div class="button_container">
-									<a class="btn btn-danger" href="/registrati/">Partecipa</a>
+									<a class="btn btn-danger" href="/passerella/">La passerella</a>
 								</div>
 							</div>
+							{% endblock catwalk_banner %}
 							{# winner user block {{{ #}
 							{% if contest_winner %}
 							<div class="text-center inline_block generic_container9 margin_bottom_20">
@@ -276,6 +292,17 @@
 		<footer>
 			<div class="left_100 second_color footer_block">
 				<div class="centered_page max_width_page text-center">
+					<div class="footer_nav">
+						<div>
+							<a href="/privacy/">Privacy</a>
+						</div>
+						<div>
+							<a href="/come-funziona/">Come funziona</a>
+						</div>
+						<div>
+							<a href="/passerella/richiesta-aiuto/">Segnala un problema</a>
+						</div>
+					</div>
 					<div class="footer_container">
 						<div class="footer_image_continer">
 							<img alt="Beauty and Pics" src="{% static "website/img/unicorn_left.png" %}">

@@ -36,6 +36,8 @@
 /* footer style {{{ */
 .footer_container { padding: 145px 0 45px; }
 .footer_container .powered_by_container { margin: 75px 50px 0; }
+.footer_nav { display: table; margin: 30px auto 0 auto; }
+.footer_nav > div { display: table-cell; text-align: center; padding-left: 30px; padding-right: 30px; width: 33.33%; }
 /* footer style }}} */
 
 /* www index page */
