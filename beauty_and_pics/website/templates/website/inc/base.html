@@ -84,6 +84,17 @@
 								{# after login menu {{{ #}
 								<div class="navigation_container toggle_navigation">
 									<!-- single menu item -->
+									<a href="/passerella/">
+										<div class="menu_item_container menuItemContainerClickAction">
+											<div class="menu_item_image">
+												<img alt="Passerella" src="{% static "website/img/menu_profile.png" %}">
+											</div>
+											<div class="menu_item_label">
+												Vai alla passerella
+											</div>
+										</div>
+									</a>
+									<!-- single menu item -->
 									<a href="/profilo/">
 										<div class="menu_item_container menuItemContainerClickAction">
 											<div class="menu_item_image">
@@ -145,8 +156,10 @@
 						<div class="navigation_container www_navigation toggle_navigation">
 							<nav>
 								<a href="/come-funziona/"><div class="navigation_item"><span class="navigation_label">Come funziona</span><span class="navigation_arrow display_only_big">v</span></div></a>
-								<a href="/come-funziona/"><div class="navigation_item"><span class="navigation_label">Il concorso</span><span class="navigation_arrow display_only_big">v</span></div></a>
-								<a href="/come-funziona/"><div class="navigation_item"><span class="navigation_label">Come iscriversi</span><span class="navigation_arrow display_only_big">v</span></div></a>
+								<a href="/come-funziona/" class="display_only_big"><div class="navigation_item"><span class="navigation_label">Il concorso</span><span class="navigation_arrow display_only_big">v</span></div></a>
+								<a href="/come-funziona/" class="display_only_big"><div class="navigation_item"><span class="navigation_label">Come iscriversi</span><span class="navigation_arrow display_only_big">v</span></div></a>
+								<a href="/passerella/woman_contest" class="display_only_small"><div class="navigation_item"><span class="navigation_label">Passerella donna</span><span class="navigation_arrow display_only_big">v</span></div></a>
+								<a href="/passerella/man_contest" class="display_only_small"><div class="navigation_item"><span class="navigation_label">Passerella uomo</span><span class="navigation_arrow display_only_big">v</span></div></a>
 							</nav>
 						</div>
 						{#% endblock no-login-navigation %#}
@@ -183,17 +196,13 @@
 					<div class="title_block">
 						<h1 class="title">{% block block0_1_title_h1 %}Main title{% endblock block0_1_title_h1 %}</h1>
 						<h4 class="description">{% block block0_1_title_h4 %}Page description{% endblock block0_1_title_h4 %}</h4>
-						{% block block0_1_link_block %}
-							<div class="row">
-								<a href="/passerella/">Torna alla passerella</a>
-							</div>
-						{% endblock block0_1_link_block %}
 					</div>
 				{% endblock block0_1_title %}
 				<div class="left_100 text-center">
 					<div class="generic_container generic_container3">
+						{# left block (with catwalk) #}
 						<div class="generic_container generic_container4">
-							{# left block (with catwalk) #}
+							{% block return_to_catwalk_block %}{% endblock %} {# return to catwalk block #}
 							{% block container4_title_block %}
 							<div class="row">
 								<div class="col-sm-12">

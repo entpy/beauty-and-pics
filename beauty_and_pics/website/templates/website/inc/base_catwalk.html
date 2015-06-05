@@ -34,6 +34,13 @@
 {# custom page js #}
 {% block custom_js %}{% endblock %}
 
+{# return to catwalk block #}
+{% block return_to_catwalk_block %}
+<div class="row">
+	<a href="/passerella/">Torna alla passerella</a>
+</div>
+{% endblock return_to_catwalk_block %}
+
 {# contest info block #}
 {% block contest_info_block %}
 {% if contest_info %}
