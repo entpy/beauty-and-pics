@@ -204,7 +204,7 @@ class ajaxManager():
 
         try:
             vote_obj = Vote()
-            vote_obj.perform_votation(votation_data, self.request.POST.get("user_id"), CommonUtils_obj.get_ip_address(request=request))
+            vote_obj.perform_votation(votation_data, self.request.POST.get("user_id"), CommonUtils_obj.get_ip_address(request=self.request))
         except VoteUserIdMissingError:
             error_msg = "Non è stato possibile eseguire la votazione, sii gentile, contatta l'amministratore."
         except VoteMetricMissingError:
