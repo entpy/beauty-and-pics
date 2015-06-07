@@ -82,9 +82,9 @@
 									</div>
 								</div>
 								{# after login menu {{{ #}
-								<div class="navigation_container toggle_navigation">
+								<div class="logged_navigation_container navigation_container toggle_navigation">
 									<!-- single menu item -->
-									<a href="/passerella/">
+									<a href="/passerella/{{ authenticated_user_contest_type }}">
 										<div class="menu_item_container menuItemContainerClickAction">
 											<div class="menu_item_image">
 												<img alt="Passerella" src="{% static "website/img/menu_profile.png" %}">
@@ -155,9 +155,10 @@
 						</div>
 						<div class="navigation_container www_navigation toggle_navigation">
 							<nav>
-								<a href="/come-funziona/"><div class="navigation_item"><span class="navigation_label">Come funziona</span><span class="navigation_arrow display_only_big">v</span></div></a>
+								<a href="/come-funziona/" class="display_only_big"><div class="navigation_item"><span class="navigation_label">Come funziona</span><span class="navigation_arrow display_only_big">v</span></div></a>
 								<a href="/come-funziona/" class="display_only_big"><div class="navigation_item"><span class="navigation_label">Il concorso</span><span class="navigation_arrow display_only_big">v</span></div></a>
 								<a href="/come-funziona/" class="display_only_big"><div class="navigation_item"><span class="navigation_label">Come iscriversi</span><span class="navigation_arrow display_only_big">v</span></div></a>
+								<a href="/come-funziona/" class="display_only_small"><div class="navigation_item"><span class="navigation_label">Come funziona</span><span class="navigation_arrow display_only_big">v</span></div></a>
 								<a href="/passerella/woman_contest" class="display_only_small"><div class="navigation_item"><span class="navigation_label">Passerella donna</span><span class="navigation_arrow display_only_big">v</span></div></a>
 								<a href="/passerella/man_contest" class="display_only_small"><div class="navigation_item"><span class="navigation_label">Passerella uomo</span><span class="navigation_arrow display_only_big">v</span></div></a>
 							</nav>
@@ -230,6 +231,8 @@
 						</div>
 						<div class="generic_container generic_container5">
 							{# banner block #}
+							{% block catwalk_tip %}
+							{% endblock catwalk_tip %}
 							{% block signup_banner %}
 								{% if not user_is_authenticated %}
 								<div class="generic_container generic_container6 signup_banner_bg">
@@ -301,25 +304,25 @@
 		<footer>
 			<div class="left_100 second_color footer_block">
 				<div class="centered_page max_width_page text-center">
-					<div class="footer_nav">
-						<div>
-							<a href="/privacy/">Privacy</a>
-						</div>
-						<div>
-							<a href="/come-funziona/">Come funziona</a>
-						</div>
-						<div>
-							<a href="/passerella/richiesta-aiuto/">Segnala un problema</a>
-						</div>
-					</div>
 					<div class="footer_container">
-						<div class="footer_image_continer">
+						<div class="footer_image_continer display_only_big">
 							<img alt="Beauty and Pics" src="{% static "website/img/unicorn_left.png" %}">
 						</div>
 						<div class="powered_by_container">
+							<div class="footer_nav">
+								<div>
+									<a href="/privacy/">Privacy</a>
+								</div>
+								<div>
+									<a href="/come-funziona/">Come funziona</a>
+								</div>
+								<div>
+									<a href="/passerella/richiesta-aiuto/">Segnala un problema</a>
+								</div>
+							</div>
 							<span><span class="footer_year">2015</span><span class="display_only_big">&nbsp;|&nbsp;</span>Proudly powered by <b>Entpy Software</b></span>
 						</div>
-						<div class="footer_image_continer">
+						<div class="footer_image_continer display_only_big">
 							<img alt="Beauty and Pics" src="{% static "website/img/unicorn_right.png" %}">
 						</div>
 					</div>

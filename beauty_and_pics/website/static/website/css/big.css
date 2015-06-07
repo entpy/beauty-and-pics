@@ -4,8 +4,8 @@
 .nav.nav-tabs { margin: 25px 0 25px; }
 /* bootstrap elements fix }}} */
 
-.display_only_small { display: none!important; }
-.display_only_big { display: inline-block!important; }
+.display_only_small { display: none; }
+.display_only_big { display: inline-block; }
 .max_width_page { max-width: 1200px; }
 
 /* header */
@@ -34,9 +34,9 @@
 .profile_container .navigation_container .menu_item_container .menu_item_label { margin-left: 34px; }
 
 /* footer style {{{ */
-.footer_container { padding: 145px 0 45px; }
-.footer_container .powered_by_container { margin: 75px 50px 0; }
-.footer_nav { display: table; margin: 30px auto 0 auto; }
+.footer_container { padding: 45px 0 45px; }
+.footer_container .powered_by_container { margin: 97px 50px 0; }
+.footer_nav { display: table; margin: 0px auto 88px auto; }
 .footer_nav > div { display: table-cell; text-align: center; padding-left: 30px; padding-right: 30px; width: 33.33%; }
 /* footer style }}} */
 
@@ -62,7 +62,7 @@
 .generic_container4 { margin-right: 20px; width: 900px; }
 .generic_container5 { width: 280px; }
 .generic_container4, .generic_container7 { min-height: 20px; padding: 10px 50px 50px; }
-.generic_container6 { height: 300px; }
+.generic_container6 { height: 310px; }
 .generic_container8 > div { float: left; }
 .generic_container8 > .left { width: 36%; }
 .generic_container8 > .left > .top > img { width: 100%; }

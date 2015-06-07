@@ -46,4 +46,5 @@ def common_contest_processors(request):
             'contest_info': contest_info,
             'contest_winner': contest_winner,
             'user_is_authenticated': user_is_authenticated,
+            'authenticated_user_contest_type': autenticated_user_data.get("contest_type"),
     }

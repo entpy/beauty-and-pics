@@ -12,6 +12,7 @@ textarea { resize: none; }
 .float_left { float: left; }
 .float_right { float: right; }
 .readable_text1 { letter-spacing: 0.02em; line-height: 1.8678; }
+.readable_text2 { letter-spacing: 0.02em; line-height: 1.8678; color: #C5C5C5; padding: 20px; display: inline-block; }
 .last_page_element_margin { margin-bottom: 100px; }
 .inline_block { display: inline-block; }
 .display_none { display: none; }
@@ -50,6 +51,7 @@ textarea { resize: none; }
 /* footer style {{{ */
 .footer_container { display: inline-block; }
 .footer_container > div { float: left; }
+.footer_nav a { color: #4073A6; }
 /* footer style }}} */
 
 /* www index page */
@@ -72,16 +74,19 @@ textarea { resize: none; }
 
 /* backend containers */
 .generic_container3 > .generic_container { float: left; }
-.generic_container4, .generic_container6, .generic_container7, .generic_container9 { border-radius: 4px; -moz-border-radius: 4px; background-color: #ecf0f1; }
-.generic_container6, .generic_container7, .generic_container9 { width: 100%; }
+.generic_container4, .generic_container6, .generic_container7, .generic_container9, .tip_container { border-radius: 4px; -moz-border-radius: 4px; background-color: #ecf0f1; }
+.generic_container6, .generic_container7, .generic_container9, .tip_container { width: 100%; }
 .generic_container6 { margin-bottom: 20px; text-align: center }
-.generic_container6 > .title { color: white; margin-top: 15px; }
-.generic_container6 > .button_container { margin-top: 195px; }
+.tip_container { margin-bottom: 20px; padding: 0 20px 20px 20px; }
+.generic_container6 > .title, .tip_container > .title { text-align: center; color: white; margin-top: 15px; }
+.generic_container6 > .button_container { margin-top: 220px; }
 .generic_container9 { padding: 0 25px 25px; }
 .generic_container9 > .title { margin-top: 15px; }
 
+.tip_container { background-color: #1a2530; }
+.tip_container .tip_readable_text { color: #459fdd; }
 .signup_banner_bg { background: url(../img/partecipa.png) no-repeat center center #3498db; }
-.catwalk_banner_bg { background: url(../img/partecipa.png) no-repeat center center red; }
+.catwalk_banner_bg { background: url(../img/passerella.png) no-repeat center center #1a2530; }
 
 /* catwalk user details page */
 .background_container1 { background-color: #E0E0E0; padding: 20px; }
@@ -173,3 +178,4 @@ ul.grid_container li img:hover { opacity: 0.5; }
 .winner_block_wrapper .winner_block_img { margin-bottom: 10px; }
 .winner_block_wrapper .winner_block_img img { max-width: 250px; width: 80%; }
 .winner_block_wrapper .winner_block_button { margin-top: 25px; }
+
