@@ -11,10 +11,10 @@ class CommonUtils(object):
         return_var = None
 
         if request:
-            if request.META["REMOTE_ADDR"]:
-                return_var = request.META["REMOTE_ADDR"]
-            elif request.META["HTTP_X_FORWARDED_FOR"]:
-                return_var = request.META["HTTP_X_FORWARDED_FOR"]
+            if request.META.get("REMOTE_ADDR"):
+                return_var = request.META.get("REMOTE_ADDR")
+            elif request.META.get("HTTP_X_FORWARDED_FOR"):
+                return_var = request.META.get("HTTP_X_FORWARDED_FOR")
         logger.info("indirizzo ip rilevato: " + str(return_var))
 
         return return_var
