@@ -16,6 +16,10 @@
 .profile_container { margin-right: 1%; }
 /* header style }}} */
 
+/* footer style {{{ */
+.footer_container .powered_by_container { min-width: auto; margin: 96px 30px 0; }
+/* footer style }}} */
+
 /* www index page {{{ */
 .catwalk_container .catwalk_block { width: 39%; }
 /* www index page }}} */

@@ -35,7 +35,7 @@
 
 /* footer style {{{ */
 .footer_container { padding: 45px 0 45px; }
-.footer_container .powered_by_container { margin: 97px 50px 0; }
+.footer_container .powered_by_container { margin: 97px 50px 0; min-width: 650px; }
 .footer_nav { display: table; margin: 0px auto 88px auto; }
 .footer_nav > div { display: table-cell; text-align: center; padding-left: 30px; padding-right: 30px; width: 33.33%; }
 /* footer style }}} */
