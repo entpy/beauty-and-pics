@@ -48,4 +48,6 @@ class project_constants(object):
     # newsletters bitmask {{{
     WEEKLY_REPORT_EMAIL_BITMASK = 1
     CONTEST_REPORT_EMAIL_BITMASK = 2
+
+    SITE_NAME = "Beauty and Pics"
     # newsletters bitmask }}}

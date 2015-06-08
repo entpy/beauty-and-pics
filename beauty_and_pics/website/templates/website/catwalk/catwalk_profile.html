@@ -1,9 +1,9 @@
 {% extends "website/inc/base_catwalk.html" %}
 {% load staticfiles %}
 
-{% block title %}Beauty and Pics | passerella index{% endblock title %}
+{% block title %}{{ site_name }} | profilo utente{% endblock title %}
 
-{% block description %}Beauty and Pics: pagina index passerella{% endblock description %}
+{% block description %}Profilo utente: da qui puoi vedere il punteggio, la posizione e le foto del book di un modello o di una modella. Potrai inoltre votare i tuoi preferiti.{% endblock description %}
 
 {% block container4_title %}{{ user_info.first_name }} {{ user_info.last_name }}{% endblock container4_title %}
 
@@ -29,17 +29,17 @@
 <div class="background_container1 generic_container8">
 	<div class="left">
 		<div class="top">
-			<img class="catwalk_user_main_image" src="{{ profile_image_url }}">
+			<img alt="Imagine profilo" class="catwalk_user_main_image" src="{{ profile_image_url }}">
 		</div>
 		<div class="bottom user_action_link_container">
 			<span>
 				<a class="user_action_link addToFavoritesClickAction" href="#">
-					<img src="{% static "website/img/catwalk/aggiungi-a-preferiti.png" %}" alt="Aggiungi ai preferiti">
+					<img alt="Aggiungi ai preferiti" src="{% static "website/img/catwalk/aggiungi-a-preferiti.png" %}">
 				</a>
 			</span>
 			<span>
 				<a class="user_action_link" href="/passerella/segnalazione-utente/{{user_info.user_id}}/">
-					<img src="{% static "website/img/catwalk/segnala-utente.png" %}" alt="Segnala utente">
+					<img alt="Segnala utente" src="{% static "website/img/catwalk/segnala-utente.png" %}">
 				</a>
 			</span>
 		</div>

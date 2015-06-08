@@ -2,13 +2,13 @@
 {% load staticfiles %}
 
 {# page title #}
-{% block title %}Beauty and Pics | pagina registrati {% endblock %}
+{% block title %}{{ site_name }} | partecipa anche tu{% endblock %}
 
 {# page description #}
-{% block description %}pagina di registrazione{% endblock %}
+{% block description %}Partecipa anche tu: da qui è possibile registrarsi per partecipare in prima persona al concorso. Inserisci le informazioni richieste, clicca sul pulsante registrati e...buon concorso!{% endblock %}
 
-{% block block0_0_title_h1 %}Sfoggia il tuo stile sul web{% endblock %}
-{% block block0_0_title_h4 %}La prossima o il prossimo miss Beauty and Pics potresti essere tu{% endblock %}
+{% block block0_0_title_h1 %}Registrati adesso{% endblock %}
+{% block block0_0_title_h4 %}Sfila sulla passerella in pochi click{% endblock %}
 
 {% block block0_0_content %}
 <div class="centered_page generic_container generic_container2 last_page_element_margin">
@@ -36,7 +36,7 @@
 			<fieldset>
 				<legend>Registrati</legend>
 				<span class="help-block">
-					Il prossimo Mister o la prossima Miss <b>Beauty and Pics</b> potresti essere tu. Registrati ora per partecipare al concorso.
+					La prossima star di <b>{{ site_name }}</b> potresti essere tu.<br />Registrati ora e partecipa al al concorso più fico dell'universo.
 				</span>
 				<div class="form-group {% if form.first_name.errors %}has-error{% endif %}">
 					<label for="{{ form.first_name.id_for_label }}" class="col-lg-4 control-label">{{ form.first_name.label }} *</label>

@@ -1,9 +1,9 @@
 {% extends "website/inc/base_catwalk.html" %}
 {% load staticfiles %}
 
-{% block title %}Beauty and Pics | segnala un utente{% endblock %}
+{% block title %}{{ site_name }} | segnalazione utente{% endblock %}
 
-{% block description %}Beauty and Pics: pagina di segnalazione utente{% endblock %}
+{% block description %}Segnalazione utente: in questa sezione è posibile segnalare gli utenti che non si sono comportati bene.{% endblock %}
 
 {% block container4_title %}Segnala un utente{% endblock %}
 
@@ -11,7 +11,7 @@
 <div class="row">
 	<div class="col-md-12">
 		<div class="alert alert-warning">
-			<p>Stai per segnalare {{ report_user_name }} ai piani alti. Scrivici il motivo della segnalazione e noi prenderemo provvedimenti.</p>
+			<p>Stai per segnalare <b>{{ report_user_name }}</b> ai piani alti. Scrivici il motivo della segnalazione e noi prenderemo provvedimenti.</p>
 		</div>
 	</div>
 	<div class="col-md-12">

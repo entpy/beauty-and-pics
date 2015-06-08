@@ -1,9 +1,9 @@
 {% extends "website/inc/base_catwalk.html" %}
 {% load staticfiles %}
 
-{% block title %}Beauty and Pics | la passerella{% endblock title %}
+{% block title %}{{ site_name }} | la passerella{% endblock title %}
 
-{% block description %}Beauty and Pics: la passerella{% endblock description %}
+{% block description %}La passerella: qui puoi trovare l'elenco di tutti i modelli e le modelle, vota quelli che preferisci.{% endblock description %}
 
 {% block container4_title %}La passerella{% endblock container4_title %}
 
@@ -38,7 +38,7 @@
 </div>
 {# image grid block }}} #}
 <div class="text-center">
-	<a class="btn btn-success loadMoreElementsAction" href="#">Carica altre</a>
+	<a class="btn btn-success loadMoreElementsAction" href="#">Carica altri</a>
 </div>
 {% endblock container4_content %}
 {% block custom_js %}

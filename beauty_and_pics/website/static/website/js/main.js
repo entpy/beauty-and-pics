@@ -102,7 +102,7 @@ function randomInt(min, max) {
 function getImageTemplateHtml(imageUrl) {
 	var imageTemplate = false;
 	if (imageUrl) {
-		imageTemplate = '<img style="width: 100%;" alt="Image preview" src="' + imageUrl + '">';
+		imageTemplate = '<img style="width: 100%;" alt="Anteprima immagine" src="' + imageUrl + '">';
 	}
 
 	return imageTemplate
@@ -892,7 +892,7 @@ var elementsListObject = {
 			// retrieve bootstrap block size
 			var blockSize = this.getBlockSize();
 			// build html block with link and image
-			var returnVar = '<div class="col-lg-' + blockSize["lg_size"] + ' col-md-' + blockSize["md_size"] + ' col-xs-' + blockSize["xs_size"] + ' col-sm-' + blockSize["sm_size"] + ' thumb imgBlockContainer_' + imgId + '"><a href="' + blockUrl + '" class="thumbnail"><img alt="" src="' + blockThumbnailImageUrl + '" data-fullimage-url="' + blockImageUrl + '" data-image-id="' + imgId + '" class="img-responsive ' + imgTagClass + '"></a></div>'
+			var returnVar = '<div class="col-lg-' + blockSize["lg_size"] + ' col-md-' + blockSize["md_size"] + ' col-xs-' + blockSize["xs_size"] + ' col-sm-' + blockSize["sm_size"] + ' thumb imgBlockContainer_' + imgId + '"><a href="' + blockUrl + '" class="thumbnail"><img alt="Immagine del book" src="' + blockThumbnailImageUrl + '" data-fullimage-url="' + blockImageUrl + '" data-image-id="' + imgId + '" class="img-responsive ' + imgTagClass + '"></a></div>'
 		}
 
 		return returnVar;
