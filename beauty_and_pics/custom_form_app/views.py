@@ -14,5 +14,9 @@ def ajax_action(request):
     ajaxManager_obj.perform_ajax_action()
     json_response = ajaxManager_obj.get_json_response()
 
+    # create http response (also attach a cookie if exists)
+    http_response = HttpResponse(json_response, content_type="application/json")
+    http_response = ajaxManager_obj.attach_cookie_to_response(response=http_response)
+
     # return a JSON response
-    return HttpResponse(json_response, content_type="application/json")
+    return http_response

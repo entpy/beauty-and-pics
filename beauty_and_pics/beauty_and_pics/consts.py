@@ -50,4 +50,6 @@ class project_constants(object):
     CONTEST_REPORT_EMAIL_BITMASK = 2
 
     SITE_NAME = "Beauty and Pics"
+
+    USER_ALREADY_VOTED_COOKIE_NAME = "_uav_"
     # newsletters bitmask }}}

@@ -27,6 +27,9 @@ class ajaxManager():
 
     __json_response = None
     __valid_action_list = ()
+    cookie_key = ""
+    cookie_value = ""
+    cookie_expiring = ""
 
     def __init__(self, request=None):
         # list of valid methods
@@ -54,6 +57,17 @@ class ajaxManager():
             return_var = True
 
         return return_var
+
+    def attach_cookie_to_response(self, response):
+        """Function to attach a cookie to response"""
+        return_var = None
+        if response and self.cookie_key:
+            # TODO: create cookie with expiring in = 48h (2 days)
+            response.set_cookie(key=self.cookie_key, value=self.cookie_value, max_age=self.cookie_expiring) # 172800 = seconds in 2 days
+            return_var = response
+            # response.set_cookie(key='user_already_voted_' + str(user_id), value=True, max_age=172800) # 172800 = seconds in 2 days
+
+        return response
 
     def perform_ajax_action(self):
         """Function to perform ajax action"""
@@ -204,7 +218,7 @@ class ajaxManager():
 
         try:
             vote_obj = Vote()
-            vote_obj.perform_votation(votation_data, self.request.POST.get("user_id"), CommonUtils_obj.get_ip_address(request=self.request))
+            vote_obj.perform_votation(votation_data, self.request.POST.get("user_id"), CommonUtils_obj.get_ip_address(request=self.request), request=self.request)
         except VoteUserIdMissingError:
             error_msg = "Non è stato possibile eseguire la votazione, sii gentile, contatta l'amministratore."
         except VoteMetricMissingError:
@@ -216,7 +230,10 @@ class ajaxManager():
         except UserAlreadyVotedError:
             error_msg = "Non puoi votare più volte lo stesso utente nell'arco di 48 ore."
         else:
-            # votation performing seems ok
+            # votation performing seems ok, attach cookie to response
+            self.cookie_key = project_constants.USER_ALREADY_VOTED_COOKIE_NAME + str(self.request.POST.get("user_id"))
+            self.cookie_value = True
+            self.cookie_expiring = 172800
             pass
 
         if error_msg:

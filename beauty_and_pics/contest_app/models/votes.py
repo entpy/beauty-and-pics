@@ -7,6 +7,7 @@ from django.contrib.auth.models import User
 from contest_app.models.contest_types import Contest_Type
 from contest_app.models.points import Point
 from beauty_and_pics.consts import project_constants
+from django.http import HttpResponse
 import sys, logging
 
 # Get an instance of a logger
@@ -28,22 +29,26 @@ class Vote(models.Model):
             * date
     """
 
-    def check_if_user_can_vote(self, user_id, ip_address):
+    def check_if_user_can_vote(self, user_id, ip_address, request):
         """Function to check if a user can (re-)vote a catwalker"""
-        try:
-            vote_obj = Vote.objects.get(user__id=user_id, ip_address=ip_address)
-            # user already voted this catwalker, check if vote date is <
-            # project_constants.SECONDS_BETWEEN_VOTATION user can't revote
-            datediff = datetime.now() - vote_obj.date
-            if datediff.total_seconds() < project_constants.SECONDS_BETWEEN_VOTATION:
-                # user can't re-vote, raise an exception
-                raise UserAlreadyVotedError
-            else:
-                # user can (re-)vote this catwalker, remove user row from db table
-                vote_obj.delete()
-	except Vote.DoesNotExist:
-            # user can vote this catwalker
-            pass
+        # check if exists cookie
+        if request.COOKIES.get(project_constants.USER_ALREADY_VOTED_COOKIE_NAME + str(user_id)):
+            raise UserAlreadyVotedError
+        else:
+            try:
+                vote_obj = Vote.objects.get(user__id=user_id, ip_address=ip_address)
+                # user already voted this catwalker, check if vote date is <
+                # project_constants.SECONDS_BETWEEN_VOTATION user can't revote
+                datediff = datetime.now() - vote_obj.date
+                if datediff.total_seconds() < project_constants.SECONDS_BETWEEN_VOTATION:
+                    # user can't re-vote, raise an exception
+                    raise UserAlreadyVotedError
+                else:
+                    # user can (re-)vote this catwalker, remove user row from db table
+                    vote_obj.delete()
+            except Vote.DoesNotExist:
+                # user can vote this catwalker
+                pass
 
         return True
 
@@ -86,6 +91,7 @@ class Vote(models.Model):
 	from account_app.models.accounts import Account
 
         if user_id and ip_address:
+            # save ip adress inside db
 	    account_obj = Account()
             vote_obj = Vote()
             vote_obj.user = account_obj.get_user_about_id(user_id=user_id)
@@ -94,7 +100,7 @@ class Vote(models.Model):
 
         return True
 
-    def perform_votation(self, votation_data, user_id, ip_address):
+    def perform_votation(self, votation_data, user_id, ip_address, request):
         """Function to perform a votation after validity check"""
 	from account_app.models.accounts import Account
 	from contest_app.models.contests import Contest
@@ -126,7 +132,7 @@ class Vote(models.Model):
             else:
                 # check if user can vote
                 try:
-                    self.check_if_user_can_vote(user_id=user_id, ip_address=ip_address)
+                    self.check_if_user_can_vote(user_id=user_id, ip_address=ip_address, request=request)
                 except UserAlreadyVotedError:
                     # send exception to parent try-except block
                     logger.error("Errore nella votazione, utente già votato | error code: " + str(UserAlreadyVotedError.get_error_code))

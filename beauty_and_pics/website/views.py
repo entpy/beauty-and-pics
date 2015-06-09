@@ -164,8 +164,9 @@ def catwalk_profile(request, user_id):
     # check if this catwalker can be voted
     vote_obj = Vote()
     user_already_voted = False
+
     try:
-        vote_obj.check_if_user_can_vote(user_id=user_id, ip_address=CommonUtils_obj.get_ip_address(request=request))
+        vote_obj.check_if_user_can_vote(user_id=user_id, ip_address=CommonUtils_obj.get_ip_address(request=request), request=request)
     except UserAlreadyVotedError:
         user_already_voted = True
 
