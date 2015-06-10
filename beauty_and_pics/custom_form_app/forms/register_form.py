@@ -72,10 +72,15 @@ class RegisterForm(forms.Form, FormCommonUtils):
         birthday_date = account_obj.create_date(date_dictionary={"day" : self.form_validated_data.get("birthday_day"), "month" : self.form_validated_data.get("birthday_month"), "year" : self.form_validated_data.get("birthday_year")}, get_isoformat=True)
         if (birthday_date):
             self.form_validated_data["birthday_date"] = birthday_date
-        self.form_validated_data["status"] = 1
 
         # saving new account
         try:
+	    self.form_validated_data["status"] = 1
+
+	    # uppercase first name and last name
+	    self.form_validated_data["first_name"] = self.form_validated_data["first_name"].title()
+	    self.form_validated_data["last_name"] = self.form_validated_data["last_name"].title()
+
             account_obj.register_account(user_info=self.form_validated_data)
             return_var = True
         except UserCreateError:
@@ -99,11 +104,11 @@ class RegisterForm(forms.Form, FormCommonUtils):
 		"last_name": self.form_validated_data["last_name"]
 	    }
             CustomEmailTemplate(
-                                    email_name="signup_email",
-                                    email_context=email_context,
-                                    template_type="user",
-                                    recipient_list=[self.form_validated_data["email"],]
-                                )
+		email_name="signup_email",
+		email_context=email_context,
+		template_type="user",
+		recipient_list=[self.form_validated_data["email"],]
+	    )
 
     def log_user(self):
         """Function to create login session"""

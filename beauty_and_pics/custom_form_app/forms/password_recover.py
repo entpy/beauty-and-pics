@@ -64,16 +64,28 @@ class passwordRecoverForm(forms.Form, FormCommonUtils):
 
     def send_password_email(self, new_password=None):
         """Function to send generated password via email"""
-        # send new password via email
-        email_context = {"email": self.form_validated_data["email"], "password": new_password}
-        CustomEmailTemplate(
-                                email_name="recover_password_email",
-                                email_context=email_context,
-                                template_type="user",
-                                recipient_list=[self.form_validated_data["email"],]
-                            )
+        return_var = False
+	# retrieve account info
+	account_obj = Account()
+        try:
+	    user_obj = account_obj.get_user_about_email(email=self.form_validated_data["email"])
+        except User.DoesNotExist:
+            logger.error("Errore nel recupero password: utente non esistente" + str(self.form_validated_data))
+            self._errors = {"__all__": ["Sembrerebbe che l'email inserita non esista"]}
+	else:
+	    # retrieving first name and last name
+	    # account_obj.custom_user_id_data(user_id=user_obj.id):
+	    # send new password via email
+	    email_context = { "first_name" : user_obj.first_name, "last_name" : user_obj.last_name, "email": self.form_validated_data["email"], "password": new_password }
+	    CustomEmailTemplate(
+		email_name="recover_password_email",
+		email_context=email_context,
+		template_type="user",
+		recipient_list=[self.form_validated_data["email"],]
+	    )
+	    return_var = True
 
-        return True
+        return return_var
 
     def form_actions(self):
         return_var = False

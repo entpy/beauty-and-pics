@@ -10,9 +10,9 @@ logger = logging.getLogger(__name__)
 
 class ContestManagerJob(CronJobBase):
     """Cron to manage contest"""
-    RUN_EVERY_MINS = (60*24) # every 24 hours = 1 day
+    RUN_EVERY_DAY = (60*24) # every 24 hours = 1 day
 
-    schedule = Schedule(run_every_mins=RUN_EVERY_MINS)
+    schedule = Schedule(run_every_mins=RUN_EVERY_DAY)
     code = 'beauty_and_pics.contest_manager_cron_job' # a unique code
 
     def do(self):
@@ -25,9 +25,9 @@ class ContestManagerJob(CronJobBase):
 
 class WeeklyReportJob(CronJobBase):
     """Cron to send weekly contest report"""
-    RUN_EVERY_MINS = (60*24*7) # every 7 days
+    RUN_EVERY_7DAY = (60*24*7) # every 7 days
 
-    schedule = Schedule(run_every_mins=RUN_EVERY_MINS)
+    schedule = Schedule(run_every_mins=RUN_EVERY_7DAY)
     code = 'beauty_and_pics.contest_report_cron_job' # a unique code
 
     def do(self):

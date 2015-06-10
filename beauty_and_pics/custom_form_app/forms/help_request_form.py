@@ -53,6 +53,7 @@ class HelpRequestForm(forms.Form, FormCommonUtils):
 	    email_context=email_context,
 	    template_type="user",
 	    email_type="admin_email",
+	    email_from=self.form_validated_data["email"],
 	)
 
         return True

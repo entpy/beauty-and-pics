@@ -35,15 +35,15 @@ class CustomEmailTemplate():
     template_name = None
 
     # available email name
-    available_email_name = (
-	'recover_password_email',
-	'signup_email',
-	'help_request_email',
-	'report_user_email',
-	'contest_closed',
-	'contest_opened',
-	'contest_report',
-   )
+    available_email_name = {
+	'recover_password_email' : { 'email_from' : settings.DEFAULT_NO_REPLY_FROM_EMAIL },
+	'signup_email' : { 'email_from' : settings.DEFAULT_NO_REPLY_FROM_EMAIL },
+	'help_request_email' : { 'email_from' : False },
+	'report_user_email' : { 'email_from' : False },
+	'contest_closed' : { 'email_from' : settings.DEFAULT_NO_REPLY_FROM_EMAIL },
+	'contest_opened' : { 'email_from' : settings.DEFAULT_NO_REPLY_FROM_EMAIL },
+	'contest_report' : { 'email_from' : settings.DEFAULT_NO_REPLY_FROM_EMAIL },
+   }
 
     # email template directory
     template_dir = "email_template/"
@@ -57,16 +57,25 @@ class CustomEmailTemplate():
 
     email_ready_to_send = False
 
-    def __init__(self, email_name=None, email_context=None, template_type=None, recipient_list=[], email_type=None, debug_only=False):
-        self.email_from = "no-reply@entpy.com"
+    email_type = "user_email"
 
-        # load recipient list
+    def __init__(self, email_name=None, email_context=None, template_type=None, recipient_list=[], email_type=None, debug_only=False, email_from=False):
+
+        # setting recipient list
         self.email_recipient_list = recipient_list
+
+	# setting email type
 	if email_type == "admin_email":
-	    self.email_recipient_list = ['developer@entpy.com',]
-	else:
-	    # TODO: plz remove, only for debug
-	    self.email_recipient_list += ['developer@entpy.com',] 
+	    self.email_type = "admin_email"
+
+	# setting email from
+	if email_name in chain(self.available_email_name):
+	    if not email_from:
+		self.email_from = self.available_email_name[email_name].get('email_from', settings.DEFAULT_FROM_EMAIL)
+		# logger.info("email name: " + str(email_name) + " | email from: " + str(self.email_from))
+	    else:
+		self.email_from = email_from
+		# logger.info("email admin name: " + str(email_name) + " | email from: " + str(self.email_from))
 
         # setting email name and context
         self.email_name = email_name
@@ -84,14 +93,15 @@ class CustomEmailTemplate():
 
     def build_dear_block(self):
 	"""Function to build dear block"""
-	return_var = False
+	return_var = "Caro utente,"
 	first_name = self.email_context.get("first_name")
 	last_name = self.email_context.get("last_name")
 	if last_name:
 	    last_name = " " + last_name
 
 	if first_name:
-	    return_var = "Caro/a " + str(first_name)+str(last_name)+","
+	    # return_var = "Caro/a " + str(first_name)+str(last_name)+"," Dear First Name Last name,
+	    return_var = "Caro/a " + str(first_name) + "," # Dear First Name, <- now use this
 
 	return return_var
 
@@ -153,11 +163,11 @@ class CustomEmailTemplate():
 
 	# common email blocks
 	self.email_html_blocks["dear_block"] = self.build_dear_block()
-	self.email_html_blocks["main_title_block"] = "ecco le tua nuova password."
+	self.email_html_blocks["main_title_block"] = "ecco la tua nuova password."
 	# html text email blocks
 	self.email_html_blocks["html_main_text_block"] = """
 	    Abbiamo generato una nuova password...non la perdere!<br />
-	    Puoi accedere con le seguenti credenziali:<br />
+	    Puoi accedere con le seguenti credenziali:<br /><br />
 	    <ul>
 		<li><b>Email:</b> """ + str(self.email_context.get("email")) + """</li>
 		<li><b>Password:</b> """ + str(self.email_context.get("password")) + """</li>
@@ -412,10 +422,12 @@ class CustomEmailTemplate():
         """
 
 	# common email blocks
-	self.email_html_blocks["dear_block"] = "Yo amministratore,"
-	self.email_html_blocks["main_title_block"] = "qualcuno chiede aiuto."
+	self.email_html_blocks["dear_block"] = "Richesta di aiuto"
+	# self.email_html_blocks["main_title_block"] = "qualcuno chiede aiuto."
 	# html text email blocks
-	self.email_html_blocks["html_main_text_block"] = """
+	self.email_html_blocks["html_main_text_block"] = str(self.email_context.get("help_text")) + "<br />Email: " + str(self.email_context.get("email"))
+	"""
+	self.email_html_blocks["html_main_text_block"] = ""
             <table style="width: 100%;">
                 <tr>
                     <td>
@@ -424,7 +436,7 @@ class CustomEmailTemplate():
                 </tr>
                 <tr>
                     <td>
-                        """ + str(self.email_context.get("email")) + """
+                        "" + str(self.email_context.get("email")) + ""
                     </td>
                 </tr>
                 <tr>
@@ -434,7 +446,7 @@ class CustomEmailTemplate():
                 </tr>
                 <tr>
                     <td>
-                        """ + str(self.email_context.get("help_text")) + """
+                        "" + str(self.email_context.get("help_text")) + ""
                     </td>
                 </tr>
             </table>
@@ -457,7 +469,7 @@ class CustomEmailTemplate():
         """
 
 	# common email blocks
-	self.email_html_blocks["dear_block"] = "Yo amministratore,"
+	self.email_html_blocks["dear_block"] = "Bella zio,"
 	self.email_html_blocks["main_title_block"] = "qualcuno ha segnalato un utente."
 	# html text email blocks
 	self.email_html_blocks["html_main_text_block"] = """
@@ -563,15 +575,42 @@ class CustomEmailTemplate():
     def send_mail(self):
         """Function to send email"""
 	return_var = False
+	plain_text = self.get_plain_template()
+	html_text = self.get_html_template()
+
         # send email
-	if self.email_ready_to_send:
+	if self.email_type == 'user_email':
+	    if self.email_ready_to_send:
+		return_var = send_mail(
+		    subject=self.email_subject,
+		    message=plain_text,
+		    from_email=self.email_from,
+		    recipient_list=self.email_recipient_list,
+		    html_message=html_text,
+		)
+		logger.info("email inviata a " + str(self.email_recipient_list) + " | status: " + str(return_var))
+		send_debug_admin_email = True
+
+	# sending email to admin
+	# logger.info("@@@admin email: " + str(settings.ADMINS[0][1]))
+	if self.email_type == 'admin_email' or send_debug_admin_email:
 	    return_var = send_mail(
-		subject=self.email_subject,
-		message=self.get_plain_template(),
+		subject="<Django email system>" + self.email_subject,
+		message=plain_text,
 		from_email=self.email_from,
-		recipient_list=self.email_recipient_list,
-		html_message=self.get_html_template(),
+		recipient_list=[settings.ADMINS[0][1],],
+		html_message=html_text,
 	    )
-	    logger.info("email inviate: " + str(return_var) + " destinatari: " + str(self.email_recipient_list))
+	    pass
+	    """
+	    mail_admins_status = mail_admins(
+		subject=self.email_subject,
+		fail_silently=True,
+		message=plain_text,
+		html_message=html_text,
+	    )
+	    """
+
+	#logger.info("###invio la mail all'admin:  " + str(mail_admins_status) + "###")
 
         return return_var

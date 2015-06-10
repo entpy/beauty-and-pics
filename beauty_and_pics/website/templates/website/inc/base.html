@@ -269,7 +269,7 @@
 									<h4>Vincitore anno {{ contest_winner.contest__start_date|date:"Y" }}</h4>
 								</div>
 								<div class="winner_block_wrapper">
-									<div class="winner_block_name">{{ contest_winner.first_name }} {{ contest_winner.first_name }}</div>
+									<div class="winner_block_name">{{ contest_winner.first_name }} {{ contest_winner.last_name }}</div>
 									<div class="winner_block_img"><img alt="Vincitore concorso" src="{{ contest_winner.profile_thumbnail_image }}"></div>
 									<div class="winner_block_points">{{ contest_winner.points }} punti</div>
 									{% if contest_winner.user__id %}
