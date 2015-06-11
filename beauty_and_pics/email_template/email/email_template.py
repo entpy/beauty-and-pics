@@ -36,13 +36,34 @@ class CustomEmailTemplate():
 
     # available email name
     available_email_name = {
-	'recover_password_email' : { 'email_from' : settings.DEFAULT_NO_REPLY_FROM_EMAIL },
-	'signup_email' : { 'email_from' : settings.DEFAULT_NO_REPLY_FROM_EMAIL },
-	'help_request_email' : { 'email_from' : False },
-	'report_user_email' : { 'email_from' : False },
-	'contest_closed' : { 'email_from' : settings.DEFAULT_NO_REPLY_FROM_EMAIL },
-	'contest_opened' : { 'email_from' : settings.DEFAULT_NO_REPLY_FROM_EMAIL },
-	'contest_report' : { 'email_from' : settings.DEFAULT_NO_REPLY_FROM_EMAIL },
+	'recover_password_email' : {
+	    'email_from' : settings.NO_REPLY_EMAIL_ADDRESS,
+	    'email_to' : 'user_email' ,
+	},
+	'signup_email' : {
+	    'email_from' : settings.NO_REPLY_EMAIL_ADDRESS,
+	    'email_to' : 'user_email' ,
+	},
+	'contest_closed' : {
+	    'email_from' : settings.NO_REPLY_EMAIL_ADDRESS,
+	    'email_to' : 'user_email' ,
+	},
+	'contest_opened' : {
+	    'email_from' : settings.NO_REPLY_EMAIL_ADDRESS,
+	    'email_to' : 'user_email' ,
+	},
+	'contest_report' : {
+	    'email_from' : settings.NO_REPLY_EMAIL_ADDRESS,
+	    'email_to' : 'user_email' ,
+	},
+	'help_request_email' : {
+	    'email_from' : False,
+	    'email_to' : 'info_email' ,
+	},
+	'report_user_email' : {
+	    'email_from' : False,
+	    'email_to' : 'info_email' ,
+	},
    }
 
     # email template directory
@@ -57,25 +78,16 @@ class CustomEmailTemplate():
 
     email_ready_to_send = False
 
-    email_type = "user_email"
+    email_from = False,
+    email_to = False,
 
-    def __init__(self, email_name=None, email_context=None, template_type=None, recipient_list=[], email_type=None, debug_only=False, email_from=False):
+    def __init__(self, email_name=None, email_context=None, template_type=None, recipient_list=[], debug_only=False, email_from=False):
 
-        # setting recipient list
-        self.email_recipient_list = recipient_list
-
-	# setting email type
-	if email_type == "admin_email":
-	    self.email_type = "admin_email"
-
-	# setting email from
 	if email_name in chain(self.available_email_name):
-	    if not email_from:
-		self.email_from = self.available_email_name[email_name].get('email_from', settings.DEFAULT_FROM_EMAIL)
-		# logger.info("email name: " + str(email_name) + " | email from: " + str(self.email_from))
-	    else:
-		self.email_from = email_from
-		# logger.info("email admin name: " + str(email_name) + " | email from: " + str(self.email_from))
+	    # setting email from
+	    self.set_email_from_address(email_name=email_name, email_from_forced=email_from)
+	    # setting email to
+	    self.set_email_to_address(email_name=email_name, user_email=recipient_list)
 
         # setting email name and context
         self.email_name = email_name
@@ -90,6 +102,28 @@ class CustomEmailTemplate():
         # send email
         if not debug_only:
             self.send_mail()
+
+    def set_email_from_address(self, email_name, email_from_forced=False):
+	"""Function to set email to address"""
+	if email_from_forced:
+	    # force from email 
+	    self.email_from = email_from_forced
+	else:
+	    # read from email from email name dictionary
+	    self.email_from = self.available_email_name[email_name].get('email_from', settings.DEFAULT_FROM_EMAIL)
+
+	return True
+
+    def set_email_to_address(self, email_name, user_email=[]):
+	"""Function to set email from address"""
+	email_to_type = self.available_email_name[email_name].get('email_to')
+	if email_to_type == 'user_email':
+	    # take user email
+	    self.email_to = user_email
+	elif email_to_type == 'info_email':
+	    self.email_to = [settings.INFO_EMAIL_ADDRESS,]
+
+	return True
 
     def build_dear_block(self):
 	"""Function to build dear block"""
@@ -579,37 +613,35 @@ class CustomEmailTemplate():
 	html_text = self.get_html_template()
 
         # send email
-	if self.email_type == 'user_email':
-	    if self.email_ready_to_send:
-		return_var = send_mail(
-		    subject=self.email_subject,
-		    message=plain_text,
-		    from_email=self.email_from,
-		    recipient_list=self.email_recipient_list,
-		    html_message=html_text,
-		)
-		logger.info("email inviata a " + str(self.email_recipient_list) + " | status: " + str(return_var))
-		send_debug_admin_email = True
+	if self.email_ready_to_send:
+	    return_var = send_mail(
+		subject=self.email_subject,
+		message=plain_text,
+		from_email=self.email_from,
+		recipient_list=self.email_to,
+		html_message=html_text,
+	    )
+	    logger.info("email inviata a " + str(self.email_to) + " | stato invio: " + str(return_var) + " (1=ok)")
+	    send_debug_admin_email = True
 
 	# sending email to admin
 	# logger.info("@@@admin email: " + str(settings.ADMINS[0][1]))
-	if self.email_type == 'admin_email' or send_debug_admin_email:
+	if send_debug_admin_email:
 	    return_var = send_mail(
 		subject="<Django email system>" + self.email_subject,
 		message=plain_text,
 		from_email=self.email_from,
-		recipient_list=[settings.ADMINS[0][1],],
+		recipient_list=[settings.DEVELOPER_EMAIL_ADDRESS,],
 		html_message=html_text,
 	    )
-	    pass
-	    """
-	    mail_admins_status = mail_admins(
-		subject=self.email_subject,
-		fail_silently=True,
-		message=plain_text,
-		html_message=html_text,
-	    )
-	    """
+	"""
+	mail_admins_status = mail_admins(
+	    subject=self.email_subject,
+	    fail_silently=True,
+	    message=plain_text,
+	    html_message=html_text,
+	)
+	"""
 
 	#logger.info("###invio la mail all'admin:  " + str(mail_admins_status) + "###")
 

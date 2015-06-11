@@ -70,7 +70,6 @@ class ReportUserForm(forms.Form, FormCommonUtils):
                 email_name="report_user_email",
                 email_context=email_context,
                 template_type="user",
-                email_type="admin_email",
 		email_from=self.form_validated_data["email"],
             )
             return_var = True
