@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from django.core.mail import send_mail
+from django.core.mail import mail_admins
 from django.template.loader import render_to_string
 from django.template import Context, Template
 from django.conf import settings
@@ -626,6 +627,7 @@ class CustomEmailTemplate():
 
 	# sending email to admin
 	# logger.info("@@@admin email: " + str(settings.ADMINS[0][1]))
+	"""
 	if send_debug_admin_email:
 	    return_var = send_mail(
 		subject="<Django email system>" + self.email_subject,
@@ -637,11 +639,9 @@ class CustomEmailTemplate():
 	"""
 	mail_admins_status = mail_admins(
 	    subject=self.email_subject,
-	    fail_silently=True,
 	    message=plain_text,
 	    html_message=html_text,
 	)
-	"""
 
 	#logger.info("###invio la mail all'admin:  " + str(mail_admins_status) + "###")
 
