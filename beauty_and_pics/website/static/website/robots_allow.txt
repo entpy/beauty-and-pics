@@ -1,0 +1,6 @@
+# R* entropy system
+User-agent: *
+Disallow: 
+Disallow: /404/
+
+Sitemap: http://contest.entpy.com/sitemap.xml

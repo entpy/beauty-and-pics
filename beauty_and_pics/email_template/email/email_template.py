@@ -627,7 +627,6 @@ class CustomEmailTemplate():
 
 	# sending email to admin
 	# logger.info("@@@admin email: " + str(settings.ADMINS[0][1]))
-	"""
 	if send_debug_admin_email:
 	    return_var = send_mail(
 		subject="<Django email system>" + self.email_subject,
@@ -642,6 +641,7 @@ class CustomEmailTemplate():
 	    message=plain_text,
 	    html_message=html_text,
 	)
+	"""
 
 	#logger.info("###invio la mail all'admin:  " + str(mail_admins_status) + "###")
 

@@ -1,0 +1,3 @@
+# R* entropy system
+User-agent: *
+Disallow: /
