@@ -226,7 +226,7 @@ class ajaxManager():
         except VoteMetricWrongValueError:
             error_msg = "I valori per ogni metrica devono essere compresi tra 1 e 5."
         except ContestNotActiveError:
-            error_msg = "Non è possibile votare fino a che il contest non sarà aperto."
+            error_msg = "Non è possibile votare fino all'apertura del concorso."
         except UserAlreadyVotedError:
             error_msg = "Non puoi votare più volte lo stesso utente nell'arco di 48 ore."
         else:
