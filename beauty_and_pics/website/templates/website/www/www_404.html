@@ -1,0 +1,21 @@
+{% extends "website/inc/base_www.html" %}
+{% load staticfiles %}
+
+{# page title #}
+{% block title %}{{ site_name }} | errore 404{% endblock %}
+
+{# page description #}
+{% block description %}Pagina di errore 404.{% endblock %}
+
+{% block block0_0_title_h1 %}Errore 404{% endblock %}
+{% block block0_0_title_h4 %}{% endblock %}
+
+{% block block0_0_content %}
+<div class="centered_page generic_container generic_container1 second_color last_page_element_margin">
+	<div class="generic_container_block1 left_100">
+		<span class="readable_text2">
+			<p>La pagina richiesta non esiste. Torna in <a href="/index/">home</a>.</p>
+		</span>
+	</div>
+</div>
+{% endblock block0_0_content %}

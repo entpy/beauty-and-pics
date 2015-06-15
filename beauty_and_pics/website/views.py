@@ -2,7 +2,9 @@
 
 from django.shortcuts import render
 from django.http import HttpResponseRedirect, HttpResponse
+from django.template import RequestContext
 from django.contrib import messages
+from django.shortcuts import render_to_response
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib.auth import logout
 from django.views.decorators.csrf import ensure_csrf_cookie
@@ -482,3 +484,16 @@ def email_test(request, email_name, email_mode):
 
     return HttpResponse(email_content)
 # }}}
+def custom404_view(request):
+    """Custom 404 page"""
+    response = render_to_response('website/www/www_404.html', {}, context_instance=RequestContext(request))
+    response.status_code = 404
+
+    return response
+
+def custom500_view(request):
+    """Custom 500 page"""
+    response = render_to_response('website/www/www_500.html', {}, context_instance=RequestContext(request))
+    response.status_code = 500
+
+    return response

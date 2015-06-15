@@ -3,6 +3,9 @@ from django.contrib import admin
 from django.conf import settings
 from django.conf.urls.static import static
 
+handler404 = 'website.views.custom404_view'
+handler500 = 'website.views.custom500_view'
+
 urlpatterns = patterns('',
     # www 
     url(r'^$', 'website.views.www_index', name='www_index'),
