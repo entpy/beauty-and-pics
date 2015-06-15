@@ -45,7 +45,7 @@ class Contest_Type(models.Model):
 
     def create_default(self):
         """Function to create default contest types"""
-        # create man_contest, if not exists
+        # create man-contest, if not exists
 	try:
 	    Contest_Type.objects.get(code=project_constants.MAN_CONTEST)
 	except Contest_Type.DoesNotExist:
@@ -57,7 +57,7 @@ class Contest_Type(models.Model):
             Contest_Type_obj.save()
             logger.info("contest_type creato: " + str(project_constants.MAN_CONTEST))
 
-        # create woman_contest, if not exists
+        # create woman-contest, if not exists
 	try:
 	    Contest_Type.objects.get(code=project_constants.WOMAN_CONTEST)
 	except Contest_Type.DoesNotExist:

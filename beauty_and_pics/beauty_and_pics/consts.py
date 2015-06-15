@@ -13,9 +13,9 @@ class project_constants(object):
     # contest status }}}
 
     # contest types {{{
-    MAN_CONTEST = "man_contest"
+    MAN_CONTEST = "man-contest"
 
-    WOMAN_CONTEST = "woman_contest"
+    WOMAN_CONTEST = "woman-contest"
     # contest types }}}
 
     # account gender {{{

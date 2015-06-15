@@ -452,7 +452,7 @@ def email_test(request, email_name, email_mode):
         email_context = {
             "first_name": "Nome",
             "last_name": "Cognome",
-            "contest_type": "man_contest",
+            "contest_type": "man-contest",
             "email": "mail@mail.com",
             "password": "pass123",
             "user_email": "user_mail@mail.com",

@@ -139,7 +139,7 @@ class Contest(models.Model):
 
         # TODO: solo per debug, scriptizzarlo e inviarlo max 1 volta al mese
         # per ogni account
-        # account_obj.send_report_emails(contest_type="woman_contest")
+        # account_obj.send_report_emails(contest_type="woman-contest")
 
         # create contests
         self.__create_default_types()
