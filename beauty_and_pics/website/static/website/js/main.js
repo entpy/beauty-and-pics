@@ -25,15 +25,19 @@ var scroll_position = false;
 var return_position = false;
 var not_scroll = false;
 $(document).ready(function(){
-	$(document).on("click",".navbar-toggle", function(){
-		$(".toggle_navigation").toggle();
-	});
-
 	// calculate contest start/expiring date
 	manageContestTimedelta();
 
 	// write bootstrap modal inside body tag
 	bootstrapModalsObect.writeModalInsideBodyTag();
+
+	// showing fuck cookie bar (W EU)
+	lawCookieCompliance.createDivOnLoad();
+
+	// toggle navigation
+	$(document).on("click",".navbar-toggle", function(){
+		$(".toggle_navigation").toggle();
+	});
 
 	// modal in fase di apertura ma non ancora aperta
 	$(document).on('show.bs.modal', ".modal", function () {
@@ -63,6 +67,11 @@ $(document).ready(function(){
 			$(window).scrollTop(scroll_position);
 			not_scroll = false;
 		}
+	});
+
+	// hide law cookie bar on window scroll event
+	$(document).on('scroll', window, function() {
+		lawCookieCompliance.removeMe();
 	});
 });
 
@@ -1051,5 +1060,64 @@ var ajaxFormValidation = {
 			loadDataWrapper.performAjaxCall(ajaxCallData);
 		}
 		return true;
+	},
+};
+
+/* Object to manage law cookie div */
+// Creare's 'Implied Consent' EU Cookie Law Banner v:2.4
+// Conceived by Robert Kent, James Bavington & Tom Foyster
+var lawCookieCompliance = {
+	dropCookie : true, // false disables the Cookie, allowing you to style the banner
+	cookieDuration : 60, // Number of days before the cookie expires, and the banner reappears
+	cookieName : 'complianceCookie', // Name of our cookie
+	cookieValue : 'on', // Value of cookie
+
+	createDiv : function() {
+		var bodytag = document.getElementsByTagName('body')[0];
+		var div = document.createElement('div');
+		div.setAttribute('id', 'cookie-law');
+		div.innerHTML = '<p>Su questo sito utilizziamo cookie. Se vuoi saperne di più <a href="/cookies.php" rel="nofollow" title="Cookies Policy">clicca qui</a>. Effettuando un’azione di scroll o chiudendo questo banner, invece, presti il consenso all’uso di tutti i cookie. <a class="close-cookie-banner" href="javascript:void(0);" onclick="removeMe();"><span>X</span></a></p>';    
+		// bodytag.appendChild(div); // Adds the Cookie Law Banner just before the closing </body> tag
+		// or
+		bodytag.insertBefore(div, bodytag.firstChild); // Adds the Cookie Law Banner just after the opening <body> tag
+		document.getElementsByTagName('body')[0].className += ' cookiebanner'; //Adds a class tothe <body> tag when the banner is visible
+		createCookie(lawCookieCompliance.cookieName, lawCookieCompliance.cookieValue, lawCookieCompliance.cookieDuration); // Create the cookie
+	},
+
+	createCookie : function(name, value, days) {
+		if (days) {
+			var date = new Date();
+			date.setTime(date.getTime()+(days*24*60*60*1000)); 
+			var expires = "; expires="+date.toGMTString(); 
+		} else var expires = "";
+		if(lawCookieCompliance.dropCookie) { 
+			document.cookie = name+"="+value+expires+"; path=/"; 
+		}
+	},
+
+	checkCookie : function(name) {
+		var nameEQ = name + "=";
+		var ca = document.cookie.split(';');
+		for(var i=0;i < ca.length;i++) {
+			var c = ca[i];
+			while (c.charAt(0)==' ') c = c.substring(1,c.length);
+			if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length,c.length);
+		}
+		return null;
+	},
+
+	eraseCookie : function(name) {
+		createCookie(name,"",-1);
+	},
+
+	removeMe : function() {
+		var element = document.getElementById('cookie-law');
+		if(element) element.parentNode.removeChild(element);
+	},
+
+	createDivOnLoad : function() {
+		if(checkCookie(lawCookieCompliance.cookieName) != lawCookieCompliance.cookieValue){
+			createDiv(); 
+		}
 	},
 };
