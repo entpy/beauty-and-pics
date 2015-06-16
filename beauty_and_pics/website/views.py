@@ -47,6 +47,9 @@ def www_how_it_works(request):
 def www_privacy(request):
     return render(request, 'website/www/www_privacy.html', False)
 
+def www_cookie_policy(request):
+    return render(request, 'website/www/www_cookie_policy.html', False)
+
 def www_login(request):
     # if this is a POST request we need to process the form data
     if request.method == 'POST':

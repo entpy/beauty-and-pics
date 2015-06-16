@@ -16,9 +16,10 @@ urlpatterns = patterns('',
     url(r'^recupera-password/$', 'website.views.www_forgot_password', name='www_forgot_password'),
     url(r'^registrati/$', 'website.views.www_register', name='www_register'),
     url(r'^privacy/$', 'website.views.www_privacy', name='www_privacy'),
+    url(r'^cookie-policy/$', 'website.views.www_cookie_policy', name='www_cookie_policy'),
 
     # catwalk
-    url(r'^passerella/(?:(?P<contest_type>\w+)/)?$', 'website.views.catwalk_index', name='catwalk_index'),
+    url(r'^passerella/(?:(?P<contest_type>[a-z-]+)/)?$', 'website.views.catwalk_index', name='catwalk_index'),
     url(r'^passerella/dettaglio-utente/(?P<user_id>\d+)/$', 'website.views.catwalk_profile', name='catwalk_profile'),
     url(r'^passerella/richiesta-aiuto/$', 'website.views.catwalk_help', name='catwalk_help'),
     url(r'^passerella/segnalazione-utente/(?P<user_id>\d+)/$', 'website.views.catwalk_report_user', name='catwalk_report_user'),

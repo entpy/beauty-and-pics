@@ -1076,12 +1076,12 @@ var lawCookieCompliance = {
 		var bodytag = document.getElementsByTagName('body')[0];
 		var div = document.createElement('div');
 		div.setAttribute('id', 'cookie-law');
-		div.innerHTML = '<p>Su questo sito utilizziamo cookie. Se vuoi saperne di più <a href="/cookies.php" rel="nofollow" title="Cookies Policy">clicca qui</a>. Effettuando un’azione di scroll o chiudendo questo banner, invece, presti il consenso all’uso di tutti i cookie. <a class="close-cookie-banner" href="javascript:void(0);" onclick="removeMe();"><span>X</span></a></p>';    
+		div.innerHTML = '<p>Su questo sito utilizziamo i cookie. Per saperne di più <a href="/cookie-policy" rel="nofollow" title="Cookies Policy">clicca qui</a>. Continuando la navigazione presti il consenso all\' uso di tutti i cookie.&nbsp;&nbsp;<a class="close-cookie-banner" href="javascript:void(0);" onclick="lawCookieCompliance.removeMe();"><span>X</span></a></p>';    
 		// bodytag.appendChild(div); // Adds the Cookie Law Banner just before the closing </body> tag
 		// or
 		bodytag.insertBefore(div, bodytag.firstChild); // Adds the Cookie Law Banner just after the opening <body> tag
 		document.getElementsByTagName('body')[0].className += ' cookiebanner'; //Adds a class tothe <body> tag when the banner is visible
-		createCookie(lawCookieCompliance.cookieName, lawCookieCompliance.cookieValue, lawCookieCompliance.cookieDuration); // Create the cookie
+		this.createCookie(lawCookieCompliance.cookieName, lawCookieCompliance.cookieValue, lawCookieCompliance.cookieDuration); // Create the cookie
 	},
 
 	createCookie : function(name, value, days) {
@@ -1107,7 +1107,7 @@ var lawCookieCompliance = {
 	},
 
 	eraseCookie : function(name) {
-		createCookie(name,"",-1);
+		this.createCookie(name,"",-1);
 	},
 
 	removeMe : function() {
@@ -1116,8 +1116,8 @@ var lawCookieCompliance = {
 	},
 
 	createDivOnLoad : function() {
-		if(checkCookie(lawCookieCompliance.cookieName) != lawCookieCompliance.cookieValue){
-			createDiv(); 
+		if(this.checkCookie(lawCookieCompliance.cookieName) != lawCookieCompliance.cookieValue){
+			this.createDiv(); 
 		}
 	},
 };

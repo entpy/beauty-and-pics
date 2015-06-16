@@ -325,6 +325,7 @@ class Contest(models.Model):
         """Function to save contest_type identified into session"""
         return_var = False
         if contest_type:
+            # only if contest type exists
             if self.contest_type_exists_check(contest_type=str(contest_type)):
                 request.session['contest_type'] = str(contest_type)
                 return_var = True

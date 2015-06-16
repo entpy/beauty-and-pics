@@ -7,7 +7,7 @@
 
 /* header style {{{ */
 .header .logo_container { float: left; padding: 20px 0; width: 140px; }
-.logo_container img { width: 100%; }
+.logo_container img { width: 100%; height: auto; }
 .header .www_navigation { float: right; margin-right: 4%; min-width: 385px; }
 .header .navigation_container .navigation_item { float: left; margin-right: 3%; padding: 39px 5px; }
 .header .navigation_container .navigation_label { margin-right: 3px; }
