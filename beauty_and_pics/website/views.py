@@ -25,7 +25,7 @@ from custom_form_app.forms.help_request_form import *
 from custom_form_app.forms.report_user_form import *
 from custom_form_app.forms.upload_book_form import *
 from custom_form_app.forms.unsubscribe_form import *
-import logging
+import logging, time
 
 # Get an instance of a logger
 logger = logging.getLogger(__name__)
@@ -315,6 +315,9 @@ def profile_index(request, welcome):
     book_obj = Book()
     profile_image_url = book_obj.get_profile_image_url(user_id=autenticated_user_data["user_id"])
 
+    # current timestamp
+    current_timestamp = int(time.time())
+
     context = {
         "post" : request.POST,
         "profile_image_form": profile_image_form,
@@ -323,6 +326,7 @@ def profile_index(request, welcome):
         "user_id": autenticated_user_data.get("user_id"),
         "user_first_name": autenticated_user_data.get("first_name"),
         "welcome": welcome,
+        "current_timestamp": current_timestamp,
     }
 
     return render(request, 'website/profile/profile_index.html', context)

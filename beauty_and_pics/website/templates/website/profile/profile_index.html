@@ -92,7 +92,11 @@
 
 <script>
 	var page_loaded_timestamp = getCurrentTimestamp();
+	var timestamp_django = "{{ current_timestamp }}";
 	elementsListObject.addFilter("show_limit", 10);
+
+	console.log("timestamp js: " + page_loaded_timestamp);
+	console.log("timestamp django: " + timestamp_django);
 
 	$(document).ready(function(){
 		// upload profile image action
@@ -110,7 +114,10 @@
 		});
 
 		$(document).on("click",".loadMoreElementsAction", function(){
-			loadBookImages(page_loaded_timestamp);
+			elementsListObject.setElementsListType("photobook");
+			elementsListObject.addFilter("user_id", "{{ user_id }}");
+			elementsListObject.addFilter("page_loaded_timestamp", page_loaded_timestamp);
+			elementsListObject.getElementsList();
 
 			return false;
 		});
@@ -157,20 +164,8 @@
 		{% endif %}
 
 		// default click on load more elements button
-		// $(".loadMoreElementsAction").click();
-		// show book images on page load complete
-		loadBookImages();
+		$(".loadMoreElementsAction").click();
 	});
-
-	/* Function to load book images list */
-	function loadBookImages(page_timestamp) {
-		elementsListObject.setElementsListType("photobook");
-		elementsListObject.addFilter("user_id", "{{ user_id }}");
-		if (page_timestamp) {
-			elementsListObject.addFilter("page_loaded_timestamp", page_timestamp);
-		}
-		elementsListObject.getElementsList();
-	}
 
 	/* Function to show bootstrap welcome modal */
 	function showWelcomeModal(userFirstName) {
