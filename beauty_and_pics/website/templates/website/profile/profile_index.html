@@ -87,6 +87,8 @@
 	var page_loaded_timestamp = "{{ current_timestamp }}";
 	elementsListObject.addFilter("show_limit", 10);
 
+	console.log("timestamp page: " + page_loaded_timestamp);
+
 	$(document).ready(function(){
 		// upload profile image action
 		$(document).on("click",".uploadProfileImageClickAction", function(){
