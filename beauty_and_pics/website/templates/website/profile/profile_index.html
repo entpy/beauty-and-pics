@@ -110,10 +110,7 @@
 		});
 
 		$(document).on("click",".loadMoreElementsAction", function(){
-			elementsListObject.setElementsListType("photobook");
-			elementsListObject.addFilter("user_id", "{{ user_id }}");
-			elementsListObject.addFilter("page_loaded_timestamp", page_loaded_timestamp);
-			elementsListObject.getElementsList();
+			loadBookImages(page_loaded_timestamp);
 
 			return false;
 		});
@@ -160,8 +157,20 @@
 		{% endif %}
 
 		// default click on load more elements button
-		$(".loadMoreElementsAction").click();
+		// $(".loadMoreElementsAction").click();
+		// show book images on page load complete
+		loadBookImages();
 	});
+
+	/* Function to load book images list */
+	function loadBookImages(page_timestamp) {
+		elementsListObject.setElementsListType("photobook");
+		elementsListObject.addFilter("user_id", "{{ user_id }}");
+		if (page_timestamp) {
+			elementsListObject.addFilter("page_loaded_timestamp", page_timestamp);
+		}
+		elementsListObject.getElementsList();
+	}
 
 	/* Function to show bootstrap welcome modal */
 	function showWelcomeModal(userFirstName) {
