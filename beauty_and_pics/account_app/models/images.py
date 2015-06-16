@@ -102,7 +102,7 @@ class Book(models.Model):
             page_load_datetime = datetime.datetime.fromtimestamp(float(filters_list["page_loaded_timestamp"]))
         if user_id:
             if page_load_datetime:
-                return_var = Book.objects.values('image_id__id', 'image_id__thumbnail_image__image', 'image_id__image').filter(user__id=user_id, image_type=project_constants.IMAGE_TYPE["book"], upload_date__lt=page_load_datetime)
+                return_var = Book.objects.values('image_id__id', 'image_id__thumbnail_image__image', 'image_id__image').filter(user__id=user_id, image_type=project_constants.IMAGE_TYPE["book"], upload_date__lte=page_load_datetime)
             else:
                 return_var = Book.objects.values('image_id__id', 'image_id__thumbnail_image__image', 'image_id__image').filter(user__id=user_id, image_type=project_constants.IMAGE_TYPE["book"])
             # list orders
