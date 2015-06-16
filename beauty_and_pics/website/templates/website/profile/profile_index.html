@@ -81,22 +81,11 @@
 {# addictional page script #}
 <script src="{% static "website/js/vendor/jquery.form.js" %}"></script>
 <script src="{% static "website/js/vendor/cropper.min.js" %}"></script>
-
-{#<script src="{% static "website/js/vendor/jquery.ui.widget.js" %}"></script>#}
-{#<script src="{% static "website/js/vendor/jquery.iframe-transport.js" %}"></script>#}
-{#<script src="{% static "website/js/vendor/jquery.fileupload.js" %}"></script>#}
-
-{#<script src="{% static "website/js/vendor/jquery.nailthumb.1.1.min.js" %}"></script>#}
-{#<script src="{% static "website/js/vendor/imgLiquid-min.js" %}"></script>#}
 {{ profile_image_form.media }}
 
 <script>
-	var page_loaded_timestamp = getCurrentTimestamp();
-	var timestamp_django = "{{ current_timestamp }}";
+	var page_loaded_timestamp = "{{ current_timestamp }}";
 	elementsListObject.addFilter("show_limit", 10);
-
-	console.log("timestamp js: " + page_loaded_timestamp);
-	console.log("timestamp django: " + timestamp_django);
 
 	$(document).ready(function(){
 		// upload profile image action
