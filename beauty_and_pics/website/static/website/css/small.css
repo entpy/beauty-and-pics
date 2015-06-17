@@ -52,12 +52,10 @@
 .generic_container { width: 100%; }
 .generic_container2 { width: 95%; max-width: 450px; }
 .generic_container1 { width: 95%; max-width: 500px; }
-.generic_container1 .generic_container_block1 .left { width: 36%; margin-left: 2%; margin-right: 2%; }
-.generic_container1 .generic_container_block1 .left img { width: 95%; }
-.generic_container1 .generic_container_block1 .right { width: 60%; }
-.generic_container1 .generic_container_block2 .right { width: 36%; margin-left: 2%; margin-right: 2%; }
-.generic_container1 .generic_container_block2 .right img { width: 95%; }
-.generic_container1 .generic_container_block2 .left { width: 60%; }
+.generic_container1 .generic_container_block1 .left { }
+.generic_container1 .generic_container_block1 .right { width: 100%; }
+.generic_container1 .generic_container_block2 .right { }
+.generic_container1 .generic_container_block2 .left { width: 100%; }
 .generic_container1 .generic_container_block1 > .right > .top { padding-right: 10%; }
 .generic_container1 .generic_container_block2 > .left > .top { padding-left: 10%; }
 .generic_container1 .generic_container_block1 > .right > .bottom { padding-right: 10%; }
