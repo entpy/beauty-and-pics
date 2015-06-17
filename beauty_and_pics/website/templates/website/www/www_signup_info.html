@@ -1,0 +1,28 @@
+{% extends "website/inc/base_www.html" %}
+{% load staticfiles %}
+
+{# page title #}
+{% block title %}{{ site_name }} | come iscriversi{% endblock %}
+
+{# page description #}
+{% block description %}Come iscriversi al concorso: per partecipare occorre solo essere maggiorenni e inserire i dati richesti nella pagina di registrazione.{% endblock %}
+
+{% block block0_0_title_h1 %}Vuoi sfilare sulla passerella?{% endblock %}
+{% block block0_0_title_h4 %}Partecipa anche tu{% endblock %}
+
+{% block block0_0_content %}
+<div class="centered_page generic_container generic_container1 second_color last_page_element_margin">
+	<div class="generic_container_block generic_container_block1 left_100">
+		<div class="left">
+			<img src="{% static "website/img/come-iscriversi.png" %}" alt="Come iscriversi">
+		</div>
+		<div class="right">
+			<span class="readable_text2">
+				<h4>Come partecipare</h4>
+				<p>Vuoi metteri in gioco? La prossima o il prossimo mister {{ site_name }} potresti essere tu! Occorre solo essere maggiorenni. Per partecipare basta iscriversi cliccando sul pulsante "<a href="/registrati">Partecipa</a>", inserire i dati richiesti e caricare gli scatti fotografici migliori!</p><br />
+				<p>Per saperne di più sul concorso clicca <a href="/il-concorso">qui</a>.</p>
+			</span>
+		</div>
+	</div>
+</div>
+{% endblock block0_0_content %}

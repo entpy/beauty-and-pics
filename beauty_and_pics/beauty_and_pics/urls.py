@@ -10,19 +10,21 @@ urlpatterns = patterns('',
     # www 
     url(r'^$', 'website.views.www_index', name='www_index'),
     url(r'^index/$', 'website.views.www_index', name='www_index'),
-    url(r'^come-funziona/$', 'website.views.www_how_it_works', name='www_how_it_works'),
     url(r'^login/$', 'website.views.www_login', name='www_login'),
     url(r'^logout/$', 'website.views.www_logout', name='www_logout'),
     url(r'^recupera-password/$', 'website.views.www_forgot_password', name='www_forgot_password'),
     url(r'^registrati/$', 'website.views.www_register', name='www_register'),
     url(r'^privacy/$', 'website.views.www_privacy', name='www_privacy'),
     url(r'^cookie-policy/$', 'website.views.www_cookie_policy', name='www_cookie_policy'),
+    url(r'^come-funziona/$', 'website.views.www_how_it_works_info', name='www_how_it_works_info'),
+    url(r'^come-iscriversi/$', 'website.views.www_signup_info', name='www_signup_info'),
+    url(r'^il-concorso/$', 'website.views.www_contest_info', name='www_contest_info'),
 
     # catwalk
-    url(r'^passerella/(?:(?P<contest_type>[a-z-]+)/)?$', 'website.views.catwalk_index', name='catwalk_index'),
     url(r'^passerella/dettaglio-utente/(?P<user_id>\d+)/$', 'website.views.catwalk_profile', name='catwalk_profile'),
     url(r'^passerella/richiesta-aiuto/$', 'website.views.catwalk_help', name='catwalk_help'),
     url(r'^passerella/segnalazione-utente/(?P<user_id>\d+)/$', 'website.views.catwalk_report_user', name='catwalk_report_user'),
+    url(r'^passerella/(?:(?P<contest_type>[a-z-]+)/)?$', 'website.views.catwalk_index', name='catwalk_index'),
 
     # private profile
     url(r'^profilo/(?:(?P<welcome>\d+)/)?$', 'website.views.profile_index', name='profile_index'),

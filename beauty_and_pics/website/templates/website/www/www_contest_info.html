@@ -1,0 +1,28 @@
+{% extends "website/inc/base_www.html" %}
+{% load staticfiles %}
+
+{# page title #}
+{% block title %}{{ site_name }} | il concorso{% endblock %}
+
+{# page description #}
+{% block description %}{{ site_name }} è un concorso di bellezza online che permette e tutti di diventare una star del web.{% endblock %}
+
+{% block block0_0_title_h1 %}Il concorso{% endblock %}
+{% block block0_0_title_h4 %}Una rapida panoramica{% endblock %}
+
+{% block block0_0_content %}
+<div class="centered_page generic_container generic_container1 second_color last_page_element_margin">
+	<div class="generic_container_block generic_container_block1 left_100">
+		<div class="left">
+			<img src="{% static "website/img/come-funziona.png" %}" alt="Il concorso">
+		</div>
+		<div class="right">
+			<span class="readable_text2">
+				<h4>{{ site_name }}</h4>
+				<p>{{ site_name }} è il primo concorso di bellezza fatto a misura di web. Riprende le logiche di un concorso reale: una passerella permette ai concorrenti di "sfilare" per essere votati. Il concorso ha una durata di 11 mesi, al termine dei quali chi avrà totalizzato più punti verrà decretato miss/mister {{ site_name }}.</p>
+				<p>{{ site_name }} nasce per rendere i concorsi di bellezza più divertenti, interattivi e aperti a tutti.</p>
+			</span>
+		</div>
+	</div>
+</div>
+{% endblock block0_0_content %}

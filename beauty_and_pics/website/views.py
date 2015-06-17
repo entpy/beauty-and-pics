@@ -41,8 +41,14 @@ def check_if_is_a_catwalker_user(user):
 def www_index(request):
     return render(request, 'website/www/www_index.html', False)
 
-def www_how_it_works(request):
-    return render(request, 'website/www/www_come_funziona.html', False)
+def www_how_it_works_info(request):
+    return render(request, 'website/www/www_how_it_works_info.html', False)
+
+def www_signup_info(request):
+    return render(request, 'website/www/www_signup_info.html', False)
+
+def www_contest_info(request):
+    return render(request, 'website/www/www_contest_info.html', False)
 
 def www_privacy(request):
     return render(request, 'website/www/www_privacy.html', False)

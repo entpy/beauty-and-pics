@@ -1,0 +1,42 @@
+{% extends "website/inc/base_www.html" %}
+{% load staticfiles %}
+
+{# page title #}
+{% block title %}{{ site_name }} | come funziona{% endblock %}
+
+{# page description #}
+{% block description %}Come funziona {{ site_name }}. Una passerella "virtuale" permette ai modellie e alle modelle di sfilare per essere votati. Chi al termine del concorso avrà ottenuto più punti verrà decretato vincitore.{% endblock %}
+
+{% block block0_0_title_h1 %}Come funziona?{% endblock %}
+{% block block0_0_title_h4 %}E' molto semplice{% endblock %}
+
+{% block block0_0_content %}
+<div class="centered_page generic_container generic_container1 second_color last_page_element_margin">
+	<div class="generic_container_block generic_container_block2 left_100">
+		<div class="left">
+			<span class="readable_text2">
+				<h4>Per chi giudica</h4>
+				<p>Basta accedere alla passerella donna o alla passerella uomo per essere già al centro dell'azione. E' possibile votare i partecipanti sulla base delle loro fotografie caricate. Ogni votante non può essere votato più di una volta nell'arco di 48 ore.</p><br />
+
+				<h4>Per chi sfila</h4>
+				<p>Chi sfila sulla passerella ha come obiettivo quello di raccogliere più punti rispetto agli altri avversari. I punti si ricevono nella pagina profilo del modello o della modella, da cui si può sfogliare anche il relativo book fotografico.</p><br />
+
+				<h4>Le votazioni</h4>
+				<p>Ogni partecipante (modello o modella iscritta al concorso) è giudicato sulla base di tre metriche:
+					<ul>
+						<li><b>globale</b>: è una valutazione generica che valuta globalmente il partecipante</li>
+						<li><b>sorriso</b>: è una valutazione specifica che valuta esclusivamente il sorriso</li>
+						<li><b>sguardo</b>: è una valutazione specifica che valuta esclusivamente lo sguardo</li>
+					</ul>
+				</p><br />
+
+				<h4>Hai dubbi o domande?</h4>
+				<p>Se hai qualche dubbio o domanda su {{ site_name }}, clicca <a href="/passerella/richiesta-aiuto">qui</a>.</p>
+			</span>
+		</div>
+		<div class="right">
+			<img src="{% static "website/img/il-concorso.png" %}" alt="Come funziona">
+		</div>
+	</div>
+</div>
+{% endblock block0_0_content %}
