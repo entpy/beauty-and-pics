@@ -55,8 +55,6 @@ $(document).ready(function(){
 		if ($(".modal").css('position') === 'absolute') {
 			// scroll top page top
 			$(window).scrollTop(0);
-			// document.body.scrollTop = document.documentElement.scrollTop = 0;
-			//$(".modal-open").css("overflow", "auto");
 		}
 	});
 
@@ -71,7 +69,8 @@ $(document).ready(function(){
 
 	// hide law cookie bar on window scroll event
 	$(document).on('scroll', window, function() {
-		lawCookieCompliance.removeMe();
+		// per ora lo commento
+		// lawCookieCompliance.removeMe();
 	});
 });
 
@@ -1076,7 +1075,7 @@ var lawCookieCompliance = {
 		var bodytag = document.getElementsByTagName('body')[0];
 		var div = document.createElement('div');
 		div.setAttribute('id', 'cookie-law');
-		div.innerHTML = '<p>Su questo sito utilizziamo i cookie. Per saperne di più <a href="/cookie-policy" rel="nofollow" title="Cookies Policy">clicca qui</a>. Continuando la navigazione presti il consenso all\' uso di tutti i cookie.&nbsp;&nbsp;<a class="close-cookie-banner" href="javascript:void(0);" onclick="lawCookieCompliance.removeMe();"><span>X</span></a></p>';    
+		div.innerHTML = '<p>Su questo sito utilizziamo i cookie. Per saperne di più <a href="/cookie-policy" rel="nofollow" title="Cookies Policy">clicca qui</a>. Continuando la navigazione presti il consenso all\'uso di tutti i cookie.&nbsp;&nbsp;<a class="close-cookie-banner" href="javascript:void(0);" onclick="lawCookieCompliance.removeMe();"><span>X</span></a></p>';    
 		// bodytag.appendChild(div); // Adds the Cookie Law Banner just before the closing </body> tag
 		// or
 		bodytag.insertBefore(div, bodytag.firstChild); // Adds the Cookie Law Banner just after the opening <body> tag
