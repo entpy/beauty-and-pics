@@ -54,3 +54,11 @@
 	.header .www_navigation { min-width: 360px; margin-right: 1%; }
 	.header .www_navigation .navigation_item { margin-right: 1%; }
 }
+
+@media screen and (min-width: 940px) {
+    .header .navigation_container .navigation_item { padding: 39px 30px; }
+}
+
+@media screen and (min-width: 850px) and (max-width: 939px) {
+    .header .navigation_container .navigation_item { padding: 39px 17px; }
+}
