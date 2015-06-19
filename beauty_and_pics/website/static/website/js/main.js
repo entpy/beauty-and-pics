@@ -68,10 +68,10 @@ $(document).ready(function(){
 	});
 
 	// hide law cookie bar on window scroll event
-	$(document).on('scroll', window, function() {
-		// per ora lo commento
+	// per ora lo commento
+	/*$(document).on('scroll', window, function() {
 		// lawCookieCompliance.removeMe();
-	});
+	});*/
 });
 
 // Avoid `console` errors in browsers that lack a console.
@@ -1075,7 +1075,7 @@ var lawCookieCompliance = {
 		var bodytag = document.getElementsByTagName('body')[0];
 		var div = document.createElement('div');
 		div.setAttribute('id', 'cookie-law');
-		div.innerHTML = '<p>Su questo sito utilizziamo i cookie. Per saperne di più <a href="/cookie-policy" rel="nofollow" title="Cookies Policy">clicca qui</a>. Continuando la navigazione presti il consenso all\'uso di tutti i cookie.&nbsp;&nbsp;<a class="close-cookie-banner" href="javascript:void(0);" onclick="lawCookieCompliance.removeMe();"><span>X</span></a></p>';    
+		div.innerHTML = '<p>Su questo sito utilizziamo i cookie. Per saperne di più <a href="/cookie-policy" rel="nofollow" title="Cookies Policy">clicca qui</a>. Continuando la navigazione acconsenti al loro utilizzo.&nbsp;&nbsp;<a class="close-cookie-banner" href="javascript:void(0);" onclick="lawCookieCompliance.removeMe();"><span>X</span></a></p>';    
 		// bodytag.appendChild(div); // Adds the Cookie Law Banner just before the closing </body> tag
 		// or
 		bodytag.insertBefore(div, bodytag.firstChild); // Adds the Cookie Law Banner just after the opening <body> tag
