@@ -25,11 +25,12 @@ class project_constants(object):
     # account gender }}}
 
     # contest details {{{
+    # see here -> http://www.epochconverter.com/epoch/daynumbers.php
     # CONTEST_OPENING_DAYS = 35
     # XXX: debug, use this instead --^
-    CONTEST_OPENING_DAYS = 3
+    CONTEST_OPENING_DAYS = 30
 
-    CONTEST_EXPIRING_DAYS = 330
+    CONTEST_EXPIRING_DAYS = 165
     # contest details }}}
 
     # catwalk user group name
