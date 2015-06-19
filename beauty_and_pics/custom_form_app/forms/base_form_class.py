@@ -1,13 +1,14 @@
 # -*- coding: utf-8 -*-
 
 from django import forms
+from django.conf import settings
 from datetime import date
 from dateutil.relativedelta import *
 from account_app.models import *
 from website.exceptions import *
 from beauty_and_pics.consts import project_constants
 from itertools import chain
-import calendar, logging, json, sys, re
+import calendar, logging, json, sys, re, locale
 
 # force utf8 read data
 reload(sys);
@@ -36,6 +37,9 @@ class FormCommonUtils():
     request_data = False
 
     def __init__(self):
+	# setting locale
+	locale.setlocale(locale.LC_ALL, settings.LOCALE)
+
         # list of valid methods
 	FormCommonUtils.__valid_custom_validation_list += ('check_all_fields_valid',)
 	FormCommonUtils.__valid_custom_validation_list += ('check_user_is_adult',)

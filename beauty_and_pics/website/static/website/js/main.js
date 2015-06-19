@@ -74,6 +74,145 @@ $(document).ready(function(){
 	});*/
 });
 
+/**
+ * 	Author: Entpy Software <developer at entpy dot com>
+ * 	Version: 0.1.0
+ * 	- wrapper for ajax call
+ *  	- require jquery
+ */
+var loadDataWrapper = {
+
+	__idPage : "",
+	htmlLoaded : "",
+
+	setIdPage : function(pageId){
+		this.__idPage = pageId;
+		return this.__idPage;
+	},
+
+	getIdPage : function(){
+		return this.__idPage;
+	},
+
+	performAjaxCall : function(ajaxCallData){
+
+		// setting ajax call data
+		ajaxCallObj.setAjaxData(ajaxCallData);
+
+		// performing ajax call
+		ajaxCallObj.doAjaxCall();
+	},
+};
+
+// wrapper to save page data
+var saveDataWrapper = {
+
+	__idPage: "",
+
+	__setIdPage : function(pageId){
+		this.__idPage = pageId;
+		return this.__idPage;
+	},
+
+	getIdPage : function(){
+		return this.__idPage;
+	},
+
+};
+
+var ajaxCallObj = {
+
+	__url : "",
+	__type : "",
+	__data : "",
+	__cache : "",
+	__success : "",
+	__error : "",
+	__async: "",
+	__headers: "",
+
+	// common wrappers params
+	setAjaxDataEasy : function(){
+
+		this.__type = "POST";
+		this.__cache = false;
+		this.__async = true;
+
+		return true;
+	},
+
+	// setting ajax call params
+	setAjaxData : function(dataToSet){
+
+		// loading common wrappers params
+		this.setAjaxDataEasy();
+
+		if(dataToSet.url){
+			this.__url = dataToSet.url;
+		}
+
+		if(dataToSet.type){
+			this.__type = dataToSet.type;
+		}
+
+		if(dataToSet.data){
+			this.__data = dataToSet.data;
+		}
+
+		if(dataToSet.cache){
+			this.__cache = dataToSet.cache;
+		}
+
+		if(dataToSet.async === true || dataToSet.async === false){
+			this.__async = dataToSet.async;
+		}
+
+		if(dataToSet.success){
+			this.__success = dataToSet.success;
+		}
+
+		if(dataToSet.error){
+			this.__error = dataToSet.error;
+		}
+
+		if(dataToSet.headers){
+			this.__headers = dataToSet.headers;
+		}
+
+		return true;
+	},
+
+	// loading ajax call params
+	getAjaxData : function(){
+
+		return {
+			"url" : this.__url,
+			"type" : this.__type,
+			"async" : this.__async,
+			"data" : this.__data,
+			"cache" : this.__cache,
+			"success" : this.__success,
+			"error" : this.__error,
+			"headers" : this.__headers
+		};
+	},
+
+	// performing ajax call with previously data
+	doAjaxCall : function(){
+
+		$.ajax({
+			url: this.getAjaxData().url,
+			type: this.getAjaxData().type,
+			data: this.getAjaxData().data,
+			async: this.getAjaxData().async,
+			cache: this.getAjaxData().cache,
+			success: this.getAjaxData().success,
+			error: this.getAjaxData().error,
+			headers: this.getAjaxData().headers
+		});
+	}
+};
+
 // Avoid `console` errors in browsers that lack a console.
 (function() {
     var method;

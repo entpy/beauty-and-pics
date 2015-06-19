@@ -101,6 +101,7 @@ DATABASES = {
 # https://docs.djangoproject.com/en/1.7/topics/i18n/
 
 LANGUAGE_CODE = 'it-IT'
+LOCALE = 'it_IT.utf8'
 
 TIME_ZONE = 'Europe/Rome'
 
