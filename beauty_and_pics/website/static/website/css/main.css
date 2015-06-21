@@ -4,4 +4,4 @@
 
 @import url(big.css) screen and (min-width: 751px); /* big screen css layout */
 
-@import url(fix.css) screen and (min-width: 751px) and (max-width: 1199px); /* medium screen css layout fix  */
+@import url(fix.css) screen and (min-width: 751px) and (max-width: 1214px); /* medium screen css layout fix  */
