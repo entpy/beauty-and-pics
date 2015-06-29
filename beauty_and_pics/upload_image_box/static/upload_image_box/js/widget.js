@@ -1,3 +1,27 @@
+/*
+	The MIT License (MIT)
+
+	Copyright (c) 2015 entpy software
+
+	Permission is hereby granted, free of charge, to any person obtaining a copy
+	of this software and associated documentation files (the "Software"), to deal
+	in the Software without restriction, including without limitation the rights
+	to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+	copies of the Software, and to permit persons to whom the Software is
+	furnished to do so, subject to the following conditions:
+
+	The above copyright notice and this permission notice shall be included in all
+	copies or substantial portions of the Software.
+
+	THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+	IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+	FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+	AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+	LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+	OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+	SOFTWARE.
+*/
+
 /* uploaderImageBox widget to manage different modal type */
 var uploaderImageBox = {
 	// current opened modal window instance
@@ -386,14 +410,14 @@ var fileManager = {
 
 				// if exists perform a custom callback function (ie. to update a parent contenitor)
 				if (uploaderImageBox.modalWindowSettings["global_options"]["callback_function"].call()) {
-				    if (textStatus.hasOwnProperty("image_id")) {
-					    eval(uploaderImageBox.modalWindowSettings["global_options"]["callback_function"].call() + "('" + textStatus.image_id + "');");
-				    }
+					if (textStatus.hasOwnProperty("image_id")) {
+						eval(uploaderImageBox.modalWindowSettings["global_options"]["callback_function"].call() + "('" + textStatus.image_id + "');");
+					}
 				}
 			} else {
-			    // probably image cropped width/height wrong -> show base modal with error
-			    uploaderImageBox.openModalWindow("base_modal");
-			    uploaderImageBox.showModalWindowMsg("danger", textStatus.msg);
+				// probably image cropped width/height wrong -> show base modal with error
+				uploaderImageBox.openModalWindow("base_modal");
+				uploaderImageBox.showModalWindowMsg("danger", textStatus.msg);
 			}
 		});
 
@@ -445,8 +469,10 @@ $(document).on("click", ".cropImageClickAction", function(){
 		}
 	};
 
+
+	$("#" + uploaderImageBox.widgetId + "_modal").modal('hide');
 	// show upload modal to show upload status bar
-	uploaderImageBox.openModalWindow("moving_ball_modal");
+	// uploaderImageBox.openModalWindow("moving_ball_modal");
 
 	// ajax call with image id and crop data
 	fileManager.saveCroppedImage(ajaxCallData);
