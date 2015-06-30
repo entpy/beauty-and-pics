@@ -224,7 +224,7 @@ var uploaderImageBox = {
 		}
 	},
 
-	/* Function to show a message inside modal window, ex an error */
+	/* Function to show a message inside modal window, e.g. an error */
 	showModalWindowMsg: function(msgType, msg) {
 
 		var msgClass = "alert alert-info"; // default modal message class
