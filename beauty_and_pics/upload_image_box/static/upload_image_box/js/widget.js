@@ -152,7 +152,7 @@ var uploaderImageBox = {
 		modalTemplate += '<img style="max-width: 450px; max-height: 400px;" class="crop_image_tag" data-file-id="' + this.modalWindowSettings[modalType]["body"]["crop_image_id"] + '" src="' + this.modalWindowSettings[modalType]["body"]["crop_image_url"] + '">';
 		modalTemplate += '</div><br />';
 		if (this.modalWindowSettings[modalType]["footer"].hasOwnProperty("action_button")) {
-			modalTemplate += '<button type="button" class="btn btn-success cropImageClickAction">' + this.modalWindowSettings[modalType]["footer"]["action_button"]["label"].call() + '</button>';
+			modalTemplate += '<button class="btn btn-primary zoom-in" type="button">+</span></button><button class="btn btn-primary zoom-out" type="button">-</button>&nbsp;<button type="button" class="btn btn-success cropImageClickAction">' + this.modalWindowSettings[modalType]["footer"]["action_button"]["label"].call() + '</button>';
 		}
 		modalTemplate += '</div>';
 		modalTemplate += '</div>';
@@ -288,23 +288,43 @@ var uploaderImageBox = {
 	/* Function to init crop library */
 	cropperInit: function() {
 		// crop library -> http://fengyuanchen.github.io/cropper/
-		$("#" + this.widgetId).contents().find('.crop_image_tag').cropper({
+		$(this.getCropperElement()).cropper({
 			aspectRatio: 1 / 1,
-			autoCropArea: 0.9,
+			autoCropArea: 1,
 			// minCropBoxWidth: 200,
 			// minCropBoxHeight: 200,
+			// strict: true,
+			checkImageOrigin: false,
+			cropBoxMovable: false,
+			cropBoxResizable: false,
+			dragCrop: false,
+			doubleClickToggle: false,
+			rotatable: false			
+			/*
 			checkImageOrigin: false,
 			touchDragZoom: false,
-			strict: false,
 			guides: true,
-			highlight: false,
+			highlight: true,
 			dragCrop: false,
 			movable: false,
-			zoomable: false,
+			zoomable: true,
 			rotatable: false,
 			mouseWheelZoom: false,
 			resizable: false
+			*/
 		});
+	},
+
+	/* Function to retrieve cropper element */
+	getCropperElement: function() {
+		var return_var = false;
+		var cropperElement = $("#" + this.widgetId).contents().find(".crop_image_tag");
+
+		if ($(cropperElement).length) {
+			return_var = cropperElement;
+		}
+
+		return return_var;
 	},
 
 	/* Function to retrieve an option value */
@@ -361,7 +381,6 @@ var fileManager = {
 		$(".upload_image_box_form").ajaxForm(options); 
 		// submit hidden form
 		$(".upload_image_box_form").submit();
-		// reset hidden form
 	},
 
 	/* Function to load uploaded image inside modal window body */
@@ -388,7 +407,6 @@ var fileManager = {
 				uploaderImageBox.openModalWindow("preview_modal");
 			}
 		}
-
 	},
 
 	/* Function to perform an ajax call */
@@ -440,6 +458,18 @@ var fileManager = {
 	},
 };
 
+// function to send a file on "onChange" event
+function sendFileOnFormChange() {
+	// fix, per far funzionare su ie8, ho dovuto fare delle modifiche profonde al widget,
+	// rovinando così la purezza iniziale della sua infanzia
+	$("#" + uploaderImageBox.widgetId).contents().find('.modal-body').find(".upload_image_box_form").css("display", "none");
+	$("#" + uploaderImageBox.widgetId).contents().find('.modal-body').append(uploaderImageBox.__buildUploadModalBodyHtml());
+	// show uploaded image
+	fileManager.sendFile();
+
+	return false;
+}
+
 // Function to open modal window
 $(document).on("click", ".uploaderButtonClickAction", function(){
 	// set current widget id
@@ -454,8 +484,8 @@ $(document).on("click", ".uploaderButtonClickAction", function(){
 $(document).on("click", ".cropImageClickAction", function(){
 	// set current widget id
 	uploaderImageBox.autoSetWidgetId($(this));
-	var cropData = $("#" + uploaderImageBox.widgetId).contents().find(".crop_image_tag").cropper('getData')
-	var fileId = $("#" + uploaderImageBox.widgetId).contents().find(".crop_image_tag").data('fileId');
+	var cropData = $(uploaderImageBox.getCropperElement()).cropper('getData')
+	var fileId = $(uploaderImageBox.getCropperElement()).data('fileId');
 	var ajaxCallData = {
 		"url": uploaderImageBox.modalWindowSettings["crop_modal"]["hidden_form"]["action"],
 		"data": {
@@ -468,7 +498,6 @@ $(document).on("click", ".cropImageClickAction", function(){
 			"enable_crop" : true,
 		}
 	};
-
 
 	$("#" + uploaderImageBox.widgetId + "_modal").modal('hide');
 	// show upload modal to show upload status bar
@@ -484,7 +513,7 @@ $(document).on("click", ".cropImageClickAction", function(){
 $(document).on("click", ".confirmImageClickAction", function(){
 	// set current widget id
 	uploaderImageBox.autoSetWidgetId($(this));
-	var fileId = $("#" + uploaderImageBox.widgetId).contents().find(".crop_image_tag").data('fileId');
+	var fileId = $(uploaderImageBox.getCropperElement()).data('fileId');
 	var ajaxCallData = {
 		"url": uploaderImageBox.modalWindowSettings["crop_modal"]["hidden_form"]["action"],
 		"data": {
@@ -499,15 +528,16 @@ $(document).on("click", ".confirmImageClickAction", function(){
 	return false;
 });
 
-// function to send a file on "onChange" event
-function sendFileOnFormChange() {
-	// show show upload status bar
-	// fix, per far funzionare su ie8, ho dovuto fare delle modifiche profonde al widjet,
-	// rovinando così la purezza iniziale della sua infanzia
-	$("#" + uploaderImageBox.widgetId).contents().find('.modal-body').find(".upload_image_box_form").css("display", "none");
-	$("#" + uploaderImageBox.widgetId).contents().find('.modal-body').append(uploaderImageBox.__buildUploadModalBodyHtml());
-	// show uploaded image
-	fileManager.sendFile();
+// function to zoom image in
+$(document).on('click', '.zoom-in', function () {
+	$(uploaderImageBox.getCropperElement()).cropper('zoom', '0.1');
 
 	return false;
-}
+});
+
+// function to zoom image out
+$(document).on('click', '.zoom-out', function () {
+	$(uploaderImageBox.getCropperElement()).cropper('zoom', '-0.1');
+
+	return false;
+});
