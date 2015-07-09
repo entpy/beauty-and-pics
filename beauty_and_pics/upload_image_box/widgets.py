@@ -6,6 +6,7 @@ from django.core.files import File
 from django.utils.safestring import mark_safe
 from django.utils.translation import ugettext_lazy
 from django.core.files.images import get_image_dimensions
+from django.templatetags.static import static
 from upload_image_box.exceptions import *
 import imghdr
 
@@ -50,6 +51,7 @@ class UibUploaderInput(forms.ClearableFileInput):
                 'callback_function': '', # custom callback function
 		'enable_crop': True,
                 'widget_id': 'test_id', # only required field
+                'static_url': static(''),
 	}
 
         # overriding defaul attributes
@@ -57,7 +59,7 @@ class UibUploaderInput(forms.ClearableFileInput):
             self.default_attrs.update(attrs)
 
         self.uploader_button = self.default_attrs["default_uploader_button"]
-        self.modal_window_scheleton = '<div id="%(widget_id)s" class="modal_container" data-base-modal-title-text="%(base_modal_title_text)s" data-upload-modal-title-text="%(upload_modal_title_text)s" data-crop-modal-title-text="%(crop_modal_title_text)s" data-preview-modal-title-text="%(preview_modal_title_text)s" data-crop-action-button-text="%(crop_action_button_text)s" data-preview-action-button-text="%(preview_action_button_text)s" data-cancel-button-text="%(cancel_button_text)s" data-change-image-button-text="%(change_image_button_text)s" data-enable-crop="%(enable_crop)s" data-select-image-action-button-text="%(select_image_action_button_text)s" data-crop-modal-description-text="%(crop_modal_description_text)s" data-callback-function="%(callback_function)s" data-moving-ball-modal-title-text="%(moving_ball_modal_title_text)s"></div>'
+        self.modal_window_scheleton = '<div id="%(widget_id)s" class="modal_container" data-base-modal-title-text="%(base_modal_title_text)s" data-upload-modal-title-text="%(upload_modal_title_text)s" data-crop-modal-title-text="%(crop_modal_title_text)s" data-preview-modal-title-text="%(preview_modal_title_text)s" data-crop-action-button-text="%(crop_action_button_text)s" data-preview-action-button-text="%(preview_action_button_text)s" data-cancel-button-text="%(cancel_button_text)s" data-change-image-button-text="%(change_image_button_text)s" data-enable-crop="%(enable_crop)s" data-select-image-action-button-text="%(select_image_action_button_text)s" data-crop-modal-description-text="%(crop_modal_description_text)s" data-callback-function="%(callback_function)s" data-moving-ball-modal-title-text="%(moving_ball_modal_title_text)s" data-static-url="%(static_url)s"></div>'
         self.uploader_script = '<script type="text/javascript">$(function(){uploaderImageBox.init("%(widget_id)s");});</script>'
         # self.uploader_options = '<div class="' + str(self.default_attrs["widget_id"]) '_options" style="display: none!important"></div>'
         super(UibUploaderInput , self).__init__(attrs=None)

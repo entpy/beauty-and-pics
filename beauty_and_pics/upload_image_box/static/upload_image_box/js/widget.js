@@ -39,6 +39,8 @@ var uploaderImageBox = {
 	},
 	// current image zoom level (min level=0, max level=6, default=0)
 	zoomLevel: 0,
+	// static url
+	static_url: function() { return uploaderImageBox.getOptionValue("staticUrl"); },
 
 	/* Function to read options and write modal html inside "modal_container" container */
 	init: function(widgetId) {
@@ -145,7 +147,7 @@ var uploaderImageBox = {
 		modalTemplate += '<img style="max-width: 450px; max-height: 400px;" class="crop_image_tag" data-file-id="' + this.modalWindowSettings[modalType]["body"]["crop_image_id"] + '" src="' + this.modalWindowSettings[modalType]["body"]["crop_image_url"] + '">';
 		modalTemplate += '</div><br />';
 		if (this.modalWindowSettings[modalType]["footer"].hasOwnProperty("action_button")) {
-			modalTemplate += '<div><div><button class="btn btn-primary zoom-in" type="button">+</button>&nbsp;<button class="btn btn-primary zoom-out" type="button">-</button></div><div><button type="button" class="btn btn-success cropImageClickAction">' + this.modalWindowSettings[modalType]["footer"]["action_button"]["label"].call() + '</button></div></div>';
+			modalTemplate += '<div class="crop_buttons_container"><div class="zoom_button_container"><button class="btn btn-primary zoom-in" type="button"><img src="' + this.static_url() + '/upload_image_box/img/zoom-in.png" alt="zoom in"></button>&nbsp;<button class="btn btn-primary zoom-out" type="button"><img src="' + this.static_url() + '/upload_image_box/img/zoom-out.png" alt="zoom out"></button></div><div><button type="button" class="btn btn-success cropImageClickAction">' + this.modalWindowSettings[modalType]["footer"]["action_button"]["label"].call() + '</button></div></div>';
 		}
 		modalTemplate += '</div>';
 		modalTemplate += '</div>';
@@ -187,7 +189,7 @@ var uploaderImageBox = {
 			modalTemplate += '<button type="button" class="btn btn-default" data-dismiss="modal">' + this.modalWindowSettings[modalType]["footer"]["cancel"]["label"].call() + '</button>';
 		}
 		if (this.modalWindowSettings[modalType]["footer"].hasOwnProperty("change_image")) {
-			modalTemplate += '<button type="button" class="btn btn-primary uploaderButtonClickAction">' + this.modalWindowSettings[modalType]["footer"]["change_image"]["label"].call() + '</button>';
+			modalTemplate += '<button type="button" class="btn btn-default uploaderButtonClickAction">' + this.modalWindowSettings[modalType]["footer"]["change_image"]["label"].call() + '</button>';
 		}
 
 		return modalTemplate;
@@ -284,7 +286,7 @@ var uploaderImageBox = {
 		// crop library -> (http://fengyuanchen.github.io/cropper/)
 		$(this.getCropperElement()).cropper({
 			aspectRatio: 1 / 1,
-			autoCropArea: 1,
+			autoCropArea: 0.9,
 			checkImageOrigin: false,
 			cropBoxMovable: false,
 			cropBoxResizable: false,
