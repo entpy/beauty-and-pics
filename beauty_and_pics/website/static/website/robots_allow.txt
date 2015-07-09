@@ -2,5 +2,11 @@
 User-agent: *
 Disallow: 
 Disallow: /404/
+Disallow: /privacy/
+Disallow: /cookie-policy/
+Disallow: /email-test/
+Disallow: /admin/
+Disallow: /ajax/
+Disallow: /upload_image/
 
 Sitemap: http://contest.entpy.com/sitemap.xml

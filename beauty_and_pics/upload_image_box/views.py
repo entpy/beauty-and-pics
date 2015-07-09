@@ -29,11 +29,11 @@ def upload(request):
             # data = {'error': True, "msg": "Corrupted file", "error_code": CorruptedImageUIBError.get_error_code}
             pass
         except ImageSizeUIBError:
-	    data = {'error': True, "msg": "Immagine troppo piccola (deve essere almeno di 250x250 px)", "error_code": ImageDimensionsUIBError.get_error_code}
+	    data = {'error': True, "msg": "Dimensione del file troppo grossa (max = 4MB)", "error_code": ImageSizeUIBError.get_error_code}
             # data = {'error': True, "msg": "Please check your image size (max allowed = 4MB)", "error_code": ImageSizeUIBError.get_error_code}
             pass
         except ImageDimensionsUIBError:
-            data = {'error': True, "msg": "Controlla altezza e larghezza dell'immagine (deve essere almeno di 200x200 px)", "error_code": ImageDimensionsUIBError.get_error_code}
+            data = {'error': True, "msg": "Controlla altezza e larghezza dell'immagine (deve essere almeno di 250x250 px)", "error_code": ImageDimensionsUIBError.get_error_code}
             # data = {'error': True, "msg": "Please check your image dimensions (min allowed = 200x200)", "error_code": ImageDimensionsUIBError.get_error_code}
             pass
         except ImageExtensionUIBError:

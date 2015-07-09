@@ -50,7 +50,6 @@ class cropUploadedImages(models.Model):
             crop_info["rotate"] = int(float(request.POST.get("rotate", 0)))
             crop_info["enable_crop"] = request.POST.get("enable_crop")
 
-	    """
 	    logger.debug("=== crop info START ===")
 	    logger.debug("file_id: " + str(crop_info["file_id"]))
 	    logger.debug("height: " + str(crop_info["height"]))
@@ -59,7 +58,6 @@ class cropUploadedImages(models.Model):
 	    logger.debug("y: " + str(crop_info["y"]))
 	    logger.debug("rotate" + str(crop_info["rotate"]))
 	    logger.debug("=== crop info END ===")
-	    """
 
 	return crop_info
 

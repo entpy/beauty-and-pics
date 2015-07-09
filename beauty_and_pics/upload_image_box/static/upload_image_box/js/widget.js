@@ -1,3 +1,27 @@
+/*
+	The MIT License (MIT)
+
+	Copyright (c) 2015 entpy software
+
+	Permission is hereby granted, free of charge, to any person obtaining a copy
+	of this software and associated documentation files (the "Software"), to deal
+	in the Software without restriction, including without limitation the rights
+	to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+	copies of the Software, and to permit persons to whom the Software is
+	furnished to do so, subject to the following conditions:
+
+	The above copyright notice and this permission notice shall be included in all
+	copies or substantial portions of the Software.
+
+	THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+	IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+	FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+	AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+	LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+	OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+	SOFTWARE.
+*/
+
 /* uploaderImageBox widget to manage different modal type */
 var uploaderImageBox = {
 	// current opened modal window instance
@@ -6,13 +30,15 @@ var uploaderImageBox = {
 	widgetId: false,
 	// modal window settings, like buttons, content, titles, ecc...
 	modalWindowSettings: {
-		"base_modal": {"hidden_form": {"action": "/upload_image/upload/"}, "body": {"min-height": "200px", "html": function() { return uploaderImageBox.__buildBaseModalBodyHtml("base_modal"); }}, "header": {"title": function() { return uploaderImageBox.getOptionValue("baseModalTitleText"); }}, "footer": {"cancel": {"exists": true, "label": function() { return uploaderImageBox.getOptionValue("cancelButtonText");}}, "action_button": {"exists": true, "label": function() { return uploaderImageBox.getOptionValue("selectImageActionButtonText"); }}}},
+		"base_modal": {"hidden_form": {"action": "/upload_image/upload/"}, "body": {"min-height": "200px", "html": function() { return uploaderImageBox.__buildBaseModalBodyHtml("base_modal"); }}, "header": {"title": function() { return uploaderImageBox.getOptionValue("baseModalTitleText"); }}, "footer": {"cancel": {"exists": true, "label": function() { return uploaderImageBox.getOptionValue("cancelButtonText"); }}, "action_button": {"exists": true, "label": function() { return uploaderImageBox.getOptionValue("selectImageActionButtonText"); }}}},
 		"upload_modal": {"hidden_form": {"action": "/upload_image/upload/"}, "body": {"min-height": "200px", "html": function() { return uploaderImageBox.__buildUploadModalBodyHtml("upload_modal"); }}, "header": {"title": function() { return uploaderImageBox.getOptionValue("uploadModalTitleText"); }}, "footer": false},
 		"moving_ball_modal": { "body": {"min-height": "200px", "html": function() { return uploaderImageBox.__buildMovingBallModalBodyHtml("moving_ball_modal"); }}, "header": {"title": function() { return uploaderImageBox.getOptionValue("movingBallModalTitleText"); }}, "footer": false},
 		"crop_modal": {"hidden_form": {"action": "/upload_image/crop/"}, "body": {"min-height": "500px", "html": function() { return uploaderImageBox.__buildCropModalBodyHtml("crop_modal"); }, "crop_image_url": false, "crop_image_id": false, "modal_description_text": function() { return uploaderImageBox.getOptionValue("cropModalDescriptionText"); }}, "header": {"title": function() { return uploaderImageBox.getOptionValue("cropModalTitleText"); }}, "footer": {"cancel": {"exists": true, "label": function() { return uploaderImageBox.getOptionValue("cancelButtonText"); }}, "change_image": {"exists": true, "label": function() { return uploaderImageBox.getOptionValue("changeImageButtonText"); }}, "action_button": {"exists": true, "label": function() { return uploaderImageBox.getOptionValue("cropActionButtonText"); }}}},
 		"preview_modal": {"hidden_form": {"action": "/upload_image/crop/"}, "body": {"min-height": "500px", "html": function() { return uploaderImageBox.__buildPreviewModalBodyHtml("preview_modal"); }, "crop_image_url": false, "crop_image_id": false}, "header": {"title": function() { return uploaderImageBox.getOptionValue("previewModalTitleText"); }}, "footer": {"cancel": {"exists": true, "label": function() { return uploaderImageBox.getOptionValue("cancelButtonText"); }}, "change_image": {"exists": true, "label": function() { return uploaderImageBox.getOptionValue("changeImageButtonText"); }}, "action_button": {"exists": true, "label": function() { return uploaderImageBox.getOptionValue("previewActionButtonText"); }}}},
 		"global_options" : { "enable_crop": function() { return uploaderImageBox.getOptionValue("enableCrop"); }, "error_msg_container_class": "error_msg_container", "generic_msg_container_class": "generic_msg_container", "callback_function": function() { return uploaderImageBox.getOptionValue("callbackFunction"); }}
 	},
+	// current image zoom level (min level=0, max level=6, default=0)
+	zoomLevel: 0,
 
 	/* Function to read options and write modal html inside "modal_container" container */
 	init: function(widgetId) {
@@ -24,26 +50,20 @@ var uploaderImageBox = {
 	__writeModalTemplateInsideHtml: function(widgetId) {
 		// write html inside current widget id
 		$("#" + widgetId).html(this.__getModalTemplateHtml(widgetId));
-		// FIX per lo scorrimento della modal sui dispositivi mobile
-		// $("body").prepend(this.__getModalTemplateHtml(widgetId));
 	},
 
 	/* function to write an hidden form */
 	getTmpFileForm: function(formActionUrl) {
 		// write hidden form only if not already exists
 		var hiddenForm = '';
-		// hiddenForm += '<form class="upload_image_box_form" name="upload_image_box_form" enctype="multipart/form-data" action="" method="POST" style="position: absolute; left: -999999px; top: -999999px;">';
 		hiddenForm += '<form class="upload_image_box_form" name="upload_image_box_form" enctype="multipart/form-data" action="' + formActionUrl + '" method="POST">';
 		hiddenForm += '<input type="hidden" value="' + this.getCookie('csrftoken') + '" name="csrfmiddlewaretoken">';
-		// hiddenForm += '<input class="hiddenFormWidgetIdAction" type="hidden" value="" name="widget_id">';
-		// hiddenForm += '<input class="select_image_input" type="file" name="image" onchange="sendFileOnFormChange();" />';
 		hiddenForm += '<div class="btn btn-success chooseFileWrapperStyle">';
 		hiddenForm += '<span>Seleziona immagine</span>';
 		hiddenForm += '<input id="select_image_input" type="file" name="image" onchange="sendFileOnFormChange();" />';
 		hiddenForm += '</div>';
 		hiddenForm += '</form>';
 
-		// $("#" + widgetId).parents("form").after(hiddenForm);
 		return hiddenForm;
 	},
 
@@ -79,9 +99,6 @@ var uploaderImageBox = {
 		modalTemplate += this.getTmpFileForm(this.modalWindowSettings[modalType]["hidden_form"]["action"]);
 		modalTemplate += '</div>';
 		modalTemplate += '</div>';
-
-		// setting hidden form action url
-		// $(".upload_image_box_form").attr("action", )
 
 		return modalTemplate;
 	},
@@ -128,7 +145,7 @@ var uploaderImageBox = {
 		modalTemplate += '<img style="max-width: 450px; max-height: 400px;" class="crop_image_tag" data-file-id="' + this.modalWindowSettings[modalType]["body"]["crop_image_id"] + '" src="' + this.modalWindowSettings[modalType]["body"]["crop_image_url"] + '">';
 		modalTemplate += '</div><br />';
 		if (this.modalWindowSettings[modalType]["footer"].hasOwnProperty("action_button")) {
-			modalTemplate += '<button type="button" class="btn btn-success cropImageClickAction">' + this.modalWindowSettings[modalType]["footer"]["action_button"]["label"].call() + '</button>';
+			modalTemplate += '<div><div><button class="btn btn-primary zoom-in" type="button">+</button>&nbsp;<button class="btn btn-primary zoom-out" type="button">-</button></div><div><button type="button" class="btn btn-success cropImageClickAction">' + this.modalWindowSettings[modalType]["footer"]["action_button"]["label"].call() + '</button></div></div>';
 		}
 		modalTemplate += '</div>';
 		modalTemplate += '</div>';
@@ -200,7 +217,7 @@ var uploaderImageBox = {
 		}
 	},
 
-	/* Function to show a message inside modal window, ex an error */
+	/* Function to show a message inside modal window, e.g. an error */
 	showModalWindowMsg: function(msgType, msg) {
 
 		var msgClass = "alert alert-info"; // default modal message class
@@ -258,29 +275,36 @@ var uploaderImageBox = {
 				}
 			}
 		}
+
 		return cookieValue;
 	},
 
 	/* Function to init crop library */
 	cropperInit: function() {
-		// crop library -> http://fengyuanchen.github.io/cropper/
-		$("#" + this.widgetId).contents().find('.crop_image_tag').cropper({
+		// crop library -> (http://fengyuanchen.github.io/cropper/)
+		$(this.getCropperElement()).cropper({
 			aspectRatio: 1 / 1,
-			autoCropArea: 0.9,
-			// minCropBoxWidth: 200,
-			// minCropBoxHeight: 200,
+			autoCropArea: 1,
 			checkImageOrigin: false,
-			touchDragZoom: false,
-			strict: false,
-			guides: true,
-			highlight: false,
+			cropBoxMovable: false,
+			cropBoxResizable: false,
 			dragCrop: false,
-			movable: false,
-			zoomable: false,
-			rotatable: false,
-			mouseWheelZoom: false,
-			resizable: false
+			doubleClickToggle: false,
+			touchDragZoom: false,
+			rotatable: false			
 		});
+	},
+
+	/* Function to retrieve cropper element */
+	getCropperElement: function() {
+		var return_var = false;
+		var cropperElement = $("#" + this.widgetId).contents().find(".crop_image_tag");
+
+		if ($(cropperElement).length) {
+			return_var = cropperElement;
+		}
+
+		return return_var;
 	},
 
 	/* Function to retrieve an option value */
@@ -313,7 +337,7 @@ var uploaderImageBox = {
 
 /* Object to manage image crop */
 var fileManager = {
-	/* function to send a file via AJAX == submitting hidden form */
+	/* function to send a file via AJAX == submit hidden form */
 	sendFile: function() {
 		var bar = $('.bar');
 		var percent = $('.percent');
@@ -337,11 +361,12 @@ var fileManager = {
 		$(".upload_image_box_form").ajaxForm(options); 
 		// submit hidden form
 		$(".upload_image_box_form").submit();
-		// reset hidden form
 	},
 
 	/* Function to load uploaded image inside modal window body */
 	loadUploadedImage: function(responseText, statusText, xhr, $form) { 
+		// reset zoom level
+		uploaderImageBox.zoomLevel = 0;
 		// console.log('status: ' + statusText + '\n\nresponseText: \n');
 		responseText = $.parseJSON(responseText);
 		console.log(responseText);
@@ -364,7 +389,6 @@ var fileManager = {
 				uploaderImageBox.openModalWindow("preview_modal");
 			}
 		}
-
 	},
 
 	/* Function to perform an ajax call */
@@ -386,14 +410,16 @@ var fileManager = {
 
 				// if exists perform a custom callback function (ie. to update a parent contenitor)
 				if (uploaderImageBox.modalWindowSettings["global_options"]["callback_function"].call()) {
-				    if (textStatus.hasOwnProperty("image_id")) {
-					    eval(uploaderImageBox.modalWindowSettings["global_options"]["callback_function"].call() + "('" + textStatus.image_id + "');");
-				    }
+					if (textStatus.hasOwnProperty("image_id")) {
+						eval(uploaderImageBox.modalWindowSettings["global_options"]["callback_function"].call() + "('" + textStatus.image_id + "');");
+					}
 				}
+
+				$("#" + uploaderImageBox.widgetId + "_modal").modal('hide');
 			} else {
-			    // probably image cropped width/height wrong -> show base modal with error
-			    uploaderImageBox.openModalWindow("base_modal");
-			    uploaderImageBox.showModalWindowMsg("danger", textStatus.msg);
+				// probably image cropped width/height wrong -> show base modal with error
+				uploaderImageBox.openModalWindow("base_modal");
+				uploaderImageBox.showModalWindowMsg("danger", textStatus.msg);
 			}
 		});
 
@@ -408,13 +434,27 @@ var fileManager = {
 		this.performAjaxCall(ajaxCallData);
 	},
 
-	/* Function to check if device support file input */
-	detect_file_input_support: function() {
+	/* Function to check if device support file input */ 
+	// NOT USED
+	/*detect_file_input_support: function() {
 		var elem = document.createElement('input');
 		elem.type = 'file';
+
 		return !elem.disabled;
-	},
+	},*/
 };
+
+// function to send a file on "onChange" event
+function sendFileOnFormChange() {
+	// fix, per far funzionare su ie8, ho dovuto fare delle modifiche profonde al widget,
+	// rovinando così la purezza iniziale della sua infanzia
+	$("#" + uploaderImageBox.widgetId).contents().find('.modal-body').find(".upload_image_box_form").css("display", "none");
+	$("#" + uploaderImageBox.widgetId).contents().find('.modal-body').append(uploaderImageBox.__buildUploadModalBodyHtml());
+	// show uploaded image
+	fileManager.sendFile();
+
+	return false;
+}
 
 // Function to open modal window
 $(document).on("click", ".uploaderButtonClickAction", function(){
@@ -428,10 +468,11 @@ $(document).on("click", ".uploaderButtonClickAction", function(){
 
 // Function to save upload cropped area
 $(document).on("click", ".cropImageClickAction", function(){
+
 	// set current widget id
 	uploaderImageBox.autoSetWidgetId($(this));
-	var cropData = $("#" + uploaderImageBox.widgetId).contents().find(".crop_image_tag").cropper('getData')
-	var fileId = $("#" + uploaderImageBox.widgetId).contents().find(".crop_image_tag").data('fileId');
+	var cropData = $(uploaderImageBox.getCropperElement()).cropper('getData')
+	var fileId = $(uploaderImageBox.getCropperElement()).data('fileId');
 	var ajaxCallData = {
 		"url": uploaderImageBox.modalWindowSettings["crop_modal"]["hidden_form"]["action"],
 		"data": {
@@ -445,11 +486,17 @@ $(document).on("click", ".cropImageClickAction", function(){
 		}
 	};
 
-	// show upload modal to show upload status bar
+	// save cropped image closure
+	var saveCroppedImage = (function () {
+		fileManager.saveCroppedImage(ajaxCallData);
+	});
+
+	// show loader modal (while server upload cropped image to cloud)
 	uploaderImageBox.openModalWindow("moving_ball_modal");
 
 	// ajax call with image id and crop data
-	fileManager.saveCroppedImage(ajaxCallData);
+	// setTimeout(function() { saveCroppedImage(); }, 1000);
+	saveCroppedImage();
 
 	return false;
 });
@@ -458,7 +505,7 @@ $(document).on("click", ".cropImageClickAction", function(){
 $(document).on("click", ".confirmImageClickAction", function(){
 	// set current widget id
 	uploaderImageBox.autoSetWidgetId($(this));
-	var fileId = $("#" + uploaderImageBox.widgetId).contents().find(".crop_image_tag").data('fileId');
+	var fileId = $(uploaderImageBox.getCropperElement()).data('fileId');
 	var ajaxCallData = {
 		"url": uploaderImageBox.modalWindowSettings["crop_modal"]["hidden_form"]["action"],
 		"data": {
@@ -473,15 +520,40 @@ $(document).on("click", ".confirmImageClickAction", function(){
 	return false;
 });
 
-// function to send a file on "onChange" event
-function sendFileOnFormChange() {
-	// show show upload status bar
-	// fix, per far funzionare su ie8, ho dovuto fare delle modifiche profonde al widjet,
-	// rovinando così la purezza iniziale della sua infanzia
-	$("#" + uploaderImageBox.widgetId).contents().find('.modal-body').find(".upload_image_box_form").css("display", "none");
-	$("#" + uploaderImageBox.widgetId).contents().find('.modal-body').append(uploaderImageBox.__buildUploadModalBodyHtml());
-	// show uploaded image
-	fileManager.sendFile();
+// function to zoom image in
+$(document).on('click', '.zoom-in', function () {
+	$(uploaderImageBox.getCropperElement()).cropper('zoom', '0.1');
 
 	return false;
-}
+});
+
+// function to zoom image out
+$(document).on('click', '.zoom-out', function () {
+	$(uploaderImageBox.getCropperElement()).cropper('zoom', '-0.1');
+
+	return false;
+});
+
+$(document).on('zoomin.cropper', function (e) {
+	var return_var = true;
+	var cropperElement = $(uploaderImageBox.getCropperElement());
+	// check min image width and height -> (http://stackoverflow.com/questions/30051695/fengyuanchen-jquery-cropper-plugin-minimum-crop-validation)
+	var data = $(cropperElement).cropper('getCroppedCanvas');
+	// Analyze the result
+	if ((data.height <= 250 && data.width <= 250) || uploaderImageBox.zoomLevel > 5) {
+		// minimum size reached or max zoom level reached
+		return_var = false;
+	} else {
+		uploaderImageBox.zoomLevel += 1;
+	}
+
+	return return_var;
+});
+
+$(document).on('zoomout.cropper', function (e) {
+	if (uploaderImageBox.zoomLevel) {
+		uploaderImageBox.zoomLevel -= 1;
+	}
+
+	return true;
+});
