@@ -28,8 +28,8 @@ class UibUploaderInput(forms.ClearableFileInput):
     def __init__(self, attrs=None):
         # set valid checks
         self.max_file_size = 4*1024*1024 # 4MB
-        self.min_file_width = 200
-        self.min_file_height = 200
+        self.min_file_width = 250
+        self.min_file_height = 250
         self.mimetypes_allowed = ['jpeg', 'png',]
 
         # widget settings
