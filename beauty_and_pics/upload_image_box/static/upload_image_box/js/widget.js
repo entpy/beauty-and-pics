@@ -145,7 +145,7 @@ var uploaderImageBox = {
 		modalTemplate += '<img style="max-width: 450px; max-height: 400px;" class="crop_image_tag" data-file-id="' + this.modalWindowSettings[modalType]["body"]["crop_image_id"] + '" src="' + this.modalWindowSettings[modalType]["body"]["crop_image_url"] + '">';
 		modalTemplate += '</div><br />';
 		if (this.modalWindowSettings[modalType]["footer"].hasOwnProperty("action_button")) {
-			modalTemplate += '<button class="btn btn-primary zoom-in" type="button">+</button>&nbsp;<button class="btn btn-primary zoom-out" type="button">-</button>&nbsp;<button type="button" class="btn btn-success cropImageClickAction">' + this.modalWindowSettings[modalType]["footer"]["action_button"]["label"].call() + '</button>';
+			modalTemplate += '<div><div><button class="btn btn-primary zoom-in" type="button">+</button>&nbsp;<button class="btn btn-primary zoom-out" type="button">-</button></div><div><button type="button" class="btn btn-success cropImageClickAction">' + this.modalWindowSettings[modalType]["footer"]["action_button"]["label"].call() + '</button></div></div>';
 		}
 		modalTemplate += '</div>';
 		modalTemplate += '</div>';
