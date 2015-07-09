@@ -115,6 +115,10 @@ def www_forgot_password(request):
     return render(request, 'website/www/www_forgot_password.html', context)
 
 def www_register(request):
+    # if user already registered, redirect to profile page
+    if request.user.is_authenticated():
+	return HttpResponseRedirect('/profilo/')
+
     # if this is a POST request we need to process the form data
     if request.method == 'POST':
         # create a form instance and populate it with data from the request:
