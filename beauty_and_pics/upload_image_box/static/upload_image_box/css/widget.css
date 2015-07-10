@@ -1,6 +1,8 @@
-/*.uploader_button { border: 1px solid gray; cursor: pointer; text-align: center; width: 200px; }
-.uploader_button:hover { text-decoration: underline; }*/
+/* django upload-image-box widget style */
 
+.crop_image_tag { max-width: 450px; max-height: 400px; }
+
+/* moving ball style {{{ */
 #movingBallG{
 position:relative;
 width:50%;
@@ -125,10 +127,13 @@ left:0px;
 }
 
 }
+/* moving ball style }}} */
 
+/* progress bar style {{{ */
 .progress_loader { border: 1px solid #ddd; border-radius: 3px; margin: 20px auto; padding: 1px; position: relative; width: 100%; }
 .bar { background-color: #B4F5B4; width:0%; height:26px; border-radius: 3px; }
 .percent { position:absolute; display:inline-block; top:3px; left:48%; }
+/* progress bar style }}} */
 
 /* choose file button style {{{ */
 .chooseFileWrapperStyle {
@@ -157,5 +162,5 @@ left:0px;
 }
 /* choose file button style }}} */
 
-.crop_buttons_container { position: relative; z-index: 5; }
+.crop_buttons_container { background-color: #000000; position: relative; z-index: 5; }
 .crop_buttons_container .zoom_button_container { margin-bottom: 5px; }

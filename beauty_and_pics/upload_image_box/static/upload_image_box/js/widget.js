@@ -39,6 +39,8 @@ var uploaderImageBox = {
 	},
 	// current image zoom level (min level=0, max level=6, default=0)
 	zoomLevel: 0,
+	// the zoom max level
+	zoomMaxLevel: 5,
 	// static url
 	static_url: function() { return uploaderImageBox.getOptionValue("staticUrl"); },
 
@@ -92,10 +94,11 @@ var uploaderImageBox = {
 		modalTemplate += '<div class="' + this.modalWindowSettings["global_options"]["error_msg_container_class"] + '"></div><div class="' + this.modalWindowSettings["global_options"]["generic_msg_container_class"] + '"></div>'; // msg block
 		modalTemplate += '<div class="row">';
 		modalTemplate += '<div class="col-md-12 text-center">';
+		// check if browser support input[type="file"]
 		/*if (fileManager.detect_file_input_support()) {
 			modalTemplate += '<button type="button" class="btn btn-success fileSelectClickAction">' + this.modalWindowSettings[modalType]["footer"]["action_button"]["label"].call() + '</button>';
 		} else {
-			modalTemplate += '<div style="text-align: left;"><b>Attenzione</b>: il tuo dispositivo (smartphone, pc, tablet, ...) non supporta l\'upload dei file, provare cambiando dispositivo o con un altro browser.</div>';
+			modalTemplate += '<div style="text-align: left;"><b>Danger</b>: your device (smartphone, pc, tablet, ...) doesn't support file upload, try with another device or browser.</div>';
 		}*/
 
 		modalTemplate += this.getTmpFileForm(this.modalWindowSettings[modalType]["hidden_form"]["action"]);
@@ -144,7 +147,7 @@ var uploaderImageBox = {
 		modalTemplate += '<div class="row">';
 		modalTemplate += '<div class="col-md-12 text-center">';
 		modalTemplate += '<div class="cropper_container">';
-		modalTemplate += '<img style="max-width: 450px; max-height: 400px;" class="crop_image_tag" data-file-id="' + this.modalWindowSettings[modalType]["body"]["crop_image_id"] + '" src="' + this.modalWindowSettings[modalType]["body"]["crop_image_url"] + '">';
+		modalTemplate += '<img class="crop_image_tag" data-file-id="' + this.modalWindowSettings[modalType]["body"]["crop_image_id"] + '" src="' + this.modalWindowSettings[modalType]["body"]["crop_image_url"] + '">';
 		modalTemplate += '</div><br />';
 		if (this.modalWindowSettings[modalType]["footer"].hasOwnProperty("action_button")) {
 			modalTemplate += '<div class="crop_buttons_container"><div class="zoom_button_container"><button class="btn btn-primary zoom-in" type="button"><img src="' + this.static_url() + '/upload_image_box/img/zoom-in.png" alt="zoom in"></button>&nbsp;<button class="btn btn-primary zoom-out" type="button"><img src="' + this.static_url() + '/upload_image_box/img/zoom-out.png" alt="zoom out"></button></div><div><button type="button" class="btn btn-success cropImageClickAction">' + this.modalWindowSettings[modalType]["footer"]["action_button"]["label"].call() + '</button></div></div>';
@@ -161,7 +164,7 @@ var uploaderImageBox = {
 		modalTemplate += '<div class="row">';
 		modalTemplate += '<div class="col-md-12 text-center">';
 		modalTemplate += '<div class="cropper_container">';
-		modalTemplate += '<img style="max-width: 450px; max-height: 400px;" class="crop_image_tag" data-file-id="' + this.modalWindowSettings[modalType]["body"]["crop_image_id"] + '" src="' + this.modalWindowSettings[modalType]["body"]["crop_image_url"] + '">';
+		modalTemplate += '<img class="crop_image_tag" data-file-id="' + this.modalWindowSettings[modalType]["body"]["crop_image_id"] + '" src="' + this.modalWindowSettings[modalType]["body"]["crop_image_url"] + '">';
 		modalTemplate += '</div><br />';
 		if (this.modalWindowSettings[modalType]["footer"].hasOwnProperty("action_button")) {
 			modalTemplate += '<button type="button" class="btn btn-success confirmImageClickAction">' + this.modalWindowSettings[modalType]["footer"]["action_button"]["label"].call() + '</button>';
@@ -542,7 +545,7 @@ $(document).on('zoomin.cropper', function (e) {
 	// check min image width and height -> (http://stackoverflow.com/questions/30051695/fengyuanchen-jquery-cropper-plugin-minimum-crop-validation)
 	var data = $(cropperElement).cropper('getCroppedCanvas');
 	// Analyze the result
-	if ((data.height <= 250 && data.width <= 250) || uploaderImageBox.zoomLevel > 5) {
+	if ((data.height <= 250 && data.width <= 250) || uploaderImageBox.zoomLevel > uploaderImageBox.zoomMaxLevel) {
 		// minimum size reached or max zoom level reached
 		return_var = false;
 	} else {
