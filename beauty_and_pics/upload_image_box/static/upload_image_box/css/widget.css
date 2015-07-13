@@ -162,5 +162,5 @@ left:0px;
 }
 /* choose file button style }}} */
 
-.crop_buttons_container { background-color: #000000; position: relative; z-index: 5; }
+.crop_buttons_container { background-color: #ffffff; position: relative; z-index: 5; }
 .crop_buttons_container .zoom_button_container { margin-bottom: 5px; }
