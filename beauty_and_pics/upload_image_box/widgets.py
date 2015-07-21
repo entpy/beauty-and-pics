@@ -15,6 +15,29 @@ import logging
 # Get an instance of a logger
 logger = logging.getLogger(__name__)
 
+# imghdr fix to detect jpeg images
+"""
+def test_icc_profile_images(h, f):
+    if h.startswith('\xff\xd8') and h[6:17] == b'ICC_PROFILE':
+        return "jpeg"
+imghdr.tests.append(test_icc_profile_images)
+"""
+
+# imghdr fix to detect jpeg images -> (https://bugs.python.org/issue16512)
+def test_jpeg(h, f):
+    """JPEG data in JFIF or Exif format"""
+    if not h.startswith(b'\xff\xd8'):#Test empty files, and incorrect start of file
+        return None
+    else:
+        if f:#if we test a file, test end of jpeg
+            f.seek(-2,2)
+            if f.read(2).endswith(b'\xff\xd9'):
+                return 'jpeg'
+        else:#if we just test the header, consider this is a valid jpeg and not test end of file
+            return 'jpeg'
+
+imghdr.tests.append(test_jpeg)
+
 class UibUploaderInput(forms.ClearableFileInput):
 
     # override default ClearableFileInput data
