@@ -510,7 +510,7 @@ var bootstrapModalsObect = {
 		messageBlockTemplate += '<div class="col-md-12">';
 		messageBlockTemplate += '<p>';
 		messageBlockTemplate += '<h4>Ciao ' + userFirstName + ',</h4>';
-		messageBlockTemplate += 'benvenuta/o a <b>Beauty and Pics</b>, il contest più fico dell\'universo!<br />'
+		messageBlockTemplate += 'benvenuta/o su <b>Beauty and Pics</b>, il concorso più fico dell\'universo!<br />'
 		messageBlockTemplate += 'Ecco qualche dritta per iniziare: <ol class="welcome_list"><li><b>Carica</b> un\'immagine profilo.</li><li><b>Carica</b> almeno 5/6 immagini del book.</li><li><b>Chiedi</b> ai tuoi amici e parenti di votarti.</li></ol>';
 		messageBlockTemplate += 'Quindi aspetta i primi voti e tieni d\'occhio la classifica...pronta/o per diventare una star del web?';
 		messageBlockTemplate += '</p>';
@@ -653,7 +653,7 @@ var voteUserObject = {
 	smileVoteContainerClass : ".smile_vote",
 	lookVoteContainerClass : ".look_vote",
 	votationBlockErrorClassName : "votation_block_error",
-	messageBlockText : "Potrai votare nuovamente questo partecipante quando saranno passate 48 ore dalla tua votazione.",
+	messageBlockText : "Potrai votare nuovamente questo partecipante quando saranno passati 7 giorni dalla tua votazione.",
 	messageBlockClass : "msgTextAction",
 	messageContainerClass : ".msgContainerAction",
 	voteFormContainerClass : ".voteFormContainerAction",
@@ -718,7 +718,7 @@ var voteUserObject = {
 
 		if (!returnVar) {
 			// alert("Per poter votare devi esprimere un giudizio su ogni metrica!");
-		} else if (!confirm("Confermi il voto? Potrai ri-votare questa persona tra 48 ore!")) {
+		} else if (!confirm("Confermi il voto? Potrai ri-votare questa persona tra 7 giorni!")) {
 				returnVar = false;
 		}
 
