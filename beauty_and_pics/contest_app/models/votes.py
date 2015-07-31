@@ -150,8 +150,6 @@ class Vote(models.Model):
 		    user_instance = account_obj.get_user_about_id(user_id=votation_data["user_id"])
 		    contest_instance = contest_obj.get_active_contests_by_type(contest_type=user_instance.account.contest_type)
 
-		    # TODO: ^---| uno di questi valori qua sopra è vuoto e non si riesce a votare, capire qual'è!
-
 		    # perform vote
                     point_obj = Point()
 		    # global metric vote
@@ -163,7 +161,7 @@ class Vote(models.Model):
 
                     # saving that user voted this catwalker
 		    self.create_votation(user_id=user_id, ip_address=ip_address)
-		    logger.debug("VOTAZIONE EFFETTUATA!")
+		    logger.debug("VOTAZIONE EFFETTUATA da " + str(ip_address) + " per " + str(user_instance.email) + " (" + str(user_instance.id) + ")")
                     pass
 
         return True

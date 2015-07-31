@@ -40,7 +40,7 @@ class Point(models.Model):
             logger.debug("##inserimento punti##")
             logger.debug("points: " + str(points))
             logger.debug("metric_obj: " + str(metric_obj))
-            logger.debug("user_obj: " + str(user_obj))
+            logger.debug("user_id: " + str(user_obj.id))
             logger.debug("contest_obj: " + str(contest_obj))
             # add points
             point_obj = Point()
@@ -65,10 +65,3 @@ class Point(models.Model):
 
         # retrieve info 
 	return Point.objects.values('metric__name').filter(user__id=user_id, contest__contest_type=F('user__account__contest_type'), contest__status=project_constants.CONTEST_ACTIVE).annotate(total_points=Sum('points'), total_votes = Count('points'))
-
-    # TODO: implement this
-    def get_user_position(self, user_id=None):
-        """Function to retrieve the current user ranking"""
-        return_var = False
-
-        return return_var

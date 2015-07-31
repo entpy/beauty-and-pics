@@ -34,7 +34,8 @@ def check_if_is_a_catwalker_user(user):
     """ Function to check if user is a catwalker user """
     account_obj =  Account()
     is_catwalker_user = account_obj.check_if_logged_user_is_valid(request_user=user)
-    logger.debug("logged user is a catwalker user: " + str(is_catwalker_user))
+    if is_catwalker_user:
+        logger.debug("logged user IS a catwalker user, email: " + str(user.email) + " (id: " + str(user.id) + ")")
     return is_catwalker_user
 
 # www {{{
