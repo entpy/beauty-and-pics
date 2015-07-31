@@ -136,7 +136,7 @@ class CustomEmailTemplate():
 
 	if first_name:
 	    # return_var = "Caro/a " + str(first_name)+str(last_name)+"," Dear First Name Last name,
-	    return_var = "Caro/a " + str(first_name) + "," # Dear First Name, <- now use this
+	    return_var = "Ciao " + str(first_name) + "," # Dear First Name, <- now use this
 
 	return return_var
 
@@ -308,11 +308,10 @@ class CustomEmailTemplate():
 
 	# common email blocks
 	self.email_html_blocks["dear_block"] = self.build_dear_block()
-	self.email_html_blocks["main_title_block"] = "Beauty and Pics ha aperto il contest!"
+	self.email_html_blocks["main_title_block"] = "Beauty and Pics ha aperto il concorso!"
 	# html text email blocks
 	self.email_html_blocks["html_main_text_block"] = """
-            Beauty and Pics ti informa che il contest più atteso dell'anno è APERTO. Ecco
-            alcuni consigli su come acquisire punti per scalare la classifica!<br />
+            Beauty and Pics ti informa che il concorso più atteso dell'anno è APERTO. Ecco alcuni consigli su come acquisire punti per scalare la classifica!<br />
             <table style="width: 100%;">
                 <tr>
                     <td style="padding-top: 30px;">
@@ -341,11 +340,7 @@ class CustomEmailTemplate():
                 </tr>
                 <tr>
                     <td>
-                        Rendi il tuo profilo interessante caricando le
-                        immagini del book. PS: modificando spesso le tue
-                        immagini, aumentarai l'interesse della gente a tornare
-                        nel tuo profilo, aumentando le probabilità di ricevere
-                        dei voti!
+                        Rendi il tuo profilo interessante caricando le immagini del book. PS: modificando spesso le tue immagini, aumentarai l'interesse della gente a tornare nel tuo profilo, aumentando le probabilità di ricevere dei voti!
                     </td>
                 </tr>
             </table><br />
@@ -353,11 +348,11 @@ class CustomEmailTemplate():
         """
 	self.email_html_blocks["html_call_to_action_block"] = self.get_call_to_action_template(href=self.base_url + "/passerella/dettaglio-utente/" + str(self.email_context.get("user_id")) + "/", label="Visualizza il mio profilo")
 	# plain text email blocks
-	self.email_html_blocks["plain_main_text_block"] = "Beauty and Pics ti informa che il contest più atteso dell'anno è APERTO."
+	self.email_html_blocks["plain_main_text_block"] = "Beauty and Pics ti informa che il concorso più atteso dell'anno è APERTO."
 	self.email_html_blocks["plain_call_to_action_block"] = "Visualizza il mio profilo: " + self.base_url + "/passerella/dettaglio-utente/" + str(self.email_context.get("user_id")) + "/"
 
         # email subject
-        self.email_subject = "Beauty & Pics: il contest più atteso dell'anno è APERTO."
+        self.email_subject = "Beauty & Pics: il concorso più atteso dell'anno è APERTO."
 
         return True
 
@@ -370,20 +365,19 @@ class CustomEmailTemplate():
 
 	# common email blocks
 	self.email_html_blocks["dear_block"] = self.build_dear_block()
-	self.email_html_blocks["main_title_block"] = "Beauty and Pics ha chiuso il contest!"
+	self.email_html_blocks["main_title_block"] = "Beauty and Pics ha chiuso il concorso!"
 	# html text email blocks
 	self.email_html_blocks["html_main_text_block"] = """
-            Beauty and Pics ti informa che il contest è stato <b>CHIUSO</b>.<br /><br />
-            Vuoi sapere com'è finita? Accedi subito alla passerella per
-            scoprire il vincitore!
+            Beauty and Pics ti informa che il concorso è stato <b>CHIUSO</b>.<br /><br />
+            Vuoi sapere com'è finita? Accedi subito alla passerella per scoprire il vincitore.
         """
 	self.email_html_blocks["html_call_to_action_block"] = self.get_call_to_action_template(href=self.base_url + "/passerella/" + str(self.email_context.get("contest_type")) + "/", label="Accedi alla passerella")
 	# plain text email blocks
-	self.email_html_blocks["plain_main_text_block"] = "Beauty and Pics ti informa che il contest è stato CHIUSO."
+	self.email_html_blocks["plain_main_text_block"] = "Beauty and Pics ti informa che il concorso è stato CHIUSO."
 	self.email_html_blocks["plain_call_to_action_block"] = "Accedi alla passerella: " + self.base_url + "/passerella/" + str(self.email_context.get("contest_type")) + "/"
 
         # email subject
-        self.email_subject = "Beauty & Pics: contest è stato CHIUSO."
+        self.email_subject = "Beauty & Pics: il concorso è stato CHIUSO."
 
         return True
 
@@ -399,8 +393,8 @@ class CustomEmailTemplate():
 	self.email_html_blocks["main_title_block"] = "Beauty and Pics ti da il benvenuto!"
 	# html text email blocks
 	self.email_html_blocks["html_main_text_block"] = """
-	    Ciao e grazie per esserti registrata/o <b>""" + str(self.email_context.get("first_name")) + """</b>,<br />
-	    ecco alcuni consigli su come iniziare a scalare la classifica di Beauty and Pics!<br />
+	    Ciao e grazie per la tua registrazione <b>""" + str(self.email_context.get("first_name")) + """</b>,<br />
+	    ecco alcuni consigli per iniziare a scalare la classifica di Beauty and Pics.<br />
             <table style="width: 100%;">
                 <tr>
                     <td style="padding-top: 30px;">
@@ -409,7 +403,7 @@ class CustomEmailTemplate():
                 </tr>
                 <tr>
                     <td>
-                        Fatti notare caricando un'immagine profilo che possa attirare l'attenzione, questo invoglierà la gente a cliccare sul tuo profilo!
+                        Fatti notare caricando un'immagine profilo che sappia attirare l'attenzione, questo invoglierà la gente a cliccare sul tuo profilo.
                     </td>
                 </tr>
                 <tr>
@@ -419,11 +413,7 @@ class CustomEmailTemplate():
                 </tr>
                 <tr>
                     <td>
-                        Rendi il tuo profilo interessante caricando le
-                        immagini del book. PS: modificando spesso le tue
-                        immagini, aumentarai l'interesse della gente a tornare
-                        nel tuo profilo, aumentando le probabilità di ricevere
-                        dei voti!
+                        Rendi il tuo profilo interessante caricando le immagini del book, almeno 5 o 6. PS: modificando spesso le tue immagini, aumentarai l'interesse della gente a tornare nel tuo profilo.
                     </td>
                 </tr>
                 <tr>
@@ -441,7 +431,7 @@ class CustomEmailTemplate():
 	"""
 	self.email_html_blocks["html_call_to_action_block"] = self.get_call_to_action_template(href=self.base_url + "/passerella/richiesta-aiuto", label="Richiedi aiuto")
 	# plain text email blocks
-	self.email_html_blocks["plain_main_text_block"] = "Grazie per esserti registrato " + str(self.email_context.get("first_name")) + ".\nBeauty and Pics: il concorso più fico dell'universo."
+	self.email_html_blocks["plain_main_text_block"] = "Ciao e grazie per la tua registrazione " + str(self.email_context.get("first_name")) + ".\nBeauty and Pics: il concorso più fico dell'universo."
 	self.email_html_blocks["plain_call_to_action_block"] = "Richiedi aiuto: " + self.base_url + "/passerella/richiesta-aiuto"
 
         # email subject
