@@ -48,6 +48,7 @@ class ajaxManager():
 
     def check_if_action_is_valid(self):
         """Function to check if an ajax action is valid"""
+
         return self.ajax_action in self.__valid_action_list
 
     def check_if_is_post(self):
@@ -62,16 +63,15 @@ class ajaxManager():
         """Function to attach a cookie to response"""
         return_var = None
         if response and self.cookie_key:
-            # TODO: create cookie with expiring in = 48h (2 days)
-            response.set_cookie(key=self.cookie_key, value=self.cookie_value, max_age=self.cookie_expiring) # 172800 = seconds in 2 days
+            # cookie with expiring in time from next votation
+            response.set_cookie(key=self.cookie_key, value=self.cookie_value, max_age=self.cookie_expiring)
             return_var = response
-            # response.set_cookie(key='user_already_voted_' + str(user_id), value=True, max_age=172800) # 172800 = seconds in 2 days
 
         return response
 
     def perform_ajax_action(self):
         """Function to perform ajax action"""
-        # check if request method sia POST
+        # check if request method is POST
         if self.check_if_is_post():
             # check if ajax action is valid
             if self.check_if_action_is_valid():
@@ -92,6 +92,7 @@ class ajaxManager():
 
     def get_json_response(self):
         """Function to retrieve json response"""
+
         return self.__json_response
 
     def set_json_response(self, json_response=None):
@@ -228,12 +229,12 @@ class ajaxManager():
         except ContestNotActiveError:
             error_msg = "Non è possibile votare fino all'apertura del concorso."
         except UserAlreadyVotedError:
-            error_msg = "Non puoi votare più volte lo stesso utente nell'arco di 48 ore."
+            error_msg = "Non puoi votare più volte lo stesso utente nell'arco di 7 giorni."
         else:
             # votation performing seems ok, attach cookie to response
             self.cookie_key = project_constants.USER_ALREADY_VOTED_COOKIE_NAME + str(self.request.POST.get("user_id"))
             self.cookie_value = True
-            self.cookie_expiring = 172800
+            self.cookie_expiring = project_constants.SECONDS_BETWEEN_VOTATION
             pass
 
         if error_msg:

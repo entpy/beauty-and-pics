@@ -653,7 +653,7 @@ var voteUserObject = {
 	smileVoteContainerClass : ".smile_vote",
 	lookVoteContainerClass : ".look_vote",
 	votationBlockErrorClassName : "votation_block_error",
-	messageBlockText : "Potrai votare nuovamente questo partecipante quando saranno passate 48 ore dalla tua votazione.",
+	messageBlockText : "Potrai votare nuovamente questo partecipante quando saranno passati 7 giorni dalla tua votazione.",
 	messageBlockClass : "msgTextAction",
 	messageContainerClass : ".msgContainerAction",
 	voteFormContainerClass : ".voteFormContainerAction",
@@ -718,7 +718,7 @@ var voteUserObject = {
 
 		if (!returnVar) {
 			// alert("Per poter votare devi esprimere un giudizio su ogni metrica!");
-		} else if (!confirm("Confermi il voto? Potrai ri-votare questa persona tra 48 ore!")) {
+		} else if (!confirm("Confermi il voto? Potrai ri-votare questa persona tra 7 giorni!")) {
 				returnVar = false;
 		}
 
