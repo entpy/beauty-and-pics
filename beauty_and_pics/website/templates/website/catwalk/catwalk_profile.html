@@ -21,9 +21,14 @@
 
 {% block container4_content %}
 {# Facebook share {{{ #}
+<!--
 <div id="fb-root"></div>
 <script>
 (function(d, s, id) { var js, fjs = d.getElementsByTagName(s)[0]; if (d.getElementById(id)) return; js = d.createElement(s); js.id = id; js.src = "//connect.facebook.net/it_IT/sdk.js#xfbml=1&version=v2.4"; fjs.parentNode.insertBefore(js, fjs); }(document, 'script', 'facebook-jssdk'));
+</script>
+-->
+<script>
+(function(d, s, id){ var js, fjs = d.getElementsByTagName(s)[0]; if (d.getElementById(id)) {return;} js = d.createElement(s); js.id = id; js.src = "//connect.facebook.net/en_US/sdk.js"; fjs.parentNode.insertBefore(js, fjs); }(document, 'script', 'facebook-jssdk'));
 </script>
 {# Facebook share {{{ #}
 <div class="user_top_info_container">
@@ -65,7 +70,7 @@
 					<img alt="Condividi su Facebook" src="{% static "website/img/catwalk/facebook-share.png" %}">
 				</a>
 			</span>
-			<div class="fb-share-button" data-href="{{ absolute_uri }}" data-layout="link"></div>
+			{# <div class="fb-share-button" data-href="{{ absolute_uri }}" data-layout="link"></div> #}
 		</div>
 	</div>
 	<div class="right">
@@ -265,7 +270,8 @@
 
 		// share on Facebook action
 		$("body").on("click",".shareOnFacebookClickAction", function(){
-			alert("share on Facebook");
+			// alert("share on Facebook");
+			FB.ui({ method: 'share', href: '{{ absolute_uri }}' }, function(response){});
 
 			return false;
 		});

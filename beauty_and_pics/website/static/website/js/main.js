@@ -1259,3 +1259,12 @@ var lawCookieCompliance = {
 		}
 	},
 };
+
+// Facebook JavaScript SDK
+window.fbAsyncInit = function() {
+	FB.init({
+		appId : '932261456835509',
+		xfbml : true,
+		version : 'v2.4'
+	});
+};
