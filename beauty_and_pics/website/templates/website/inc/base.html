@@ -12,6 +12,10 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
 		<meta name="description" content="{% block description %}{% endblock description %}">
 
+		{# Open Graph metatags (es. Facebook) #}
+		{% block og_metatags %}
+		{% endblock og_metatags %}
+
 		<!-- For IE 9 and below. ICO should be 32x32 pixels in size -->
 		<!--[if IE]><link rel="shortcut icon" href="{% static "website/favicon.ico" %}"><![endif]-->
 		<!-- Touch Icons - iOS and Android 2.1+ 180x180 pixels in size. --> 

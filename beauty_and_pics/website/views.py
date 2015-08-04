@@ -199,6 +199,7 @@ def catwalk_profile(request, user_id):
         "profile_image_url" : profile_image_url,
         "user_already_favorite" : user_already_favorite,
         "user_is_authenticated" : request.user.is_authenticated,
+        "absolute_uri" : request.build_absolute_uri(),
     }
 
     return render(request, 'website/catwalk/catwalk_profile.html', context)

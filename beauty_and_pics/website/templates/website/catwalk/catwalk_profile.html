@@ -5,9 +5,23 @@
 
 {% block description %}Profilo utente: da qui puoi vedere il punteggio, la posizione e le foto del book di {{ user_info.first_name }} {{ user_info.last_name }}.{% endblock description %}
 
+{% block og_metatags %}
+<meta property="og:url" content="{{ absolute_uri }}" />
+<meta property="og:type" content="article" />
+<meta property="og:title" content="Vota {{ user_info.first_name }}" />
+<meta property="og:description" content="Beauty and Pics, il concorso di bellezza fatto a misura di web!" />
+<meta property="og:image" content="{{ profile_image_url }}" />
+{% endblock og_metatags %}
+
 {% block container4_title %}{{ user_info.first_name }} {{ user_info.last_name }}{% endblock container4_title %}
 
 {% block container4_content %}
+{# Facebook share {{{ #}
+<div id="fb-root"></div>
+<script>
+(function(d, s, id) { var js, fjs = d.getElementsByTagName(s)[0]; if (d.getElementById(id)) return; js = d.createElement(s); js.id = id; js.src = "//connect.facebook.net/it_IT/sdk.js#xfbml=1&version=v2.4"; fjs.parentNode.insertBefore(js, fjs); }(document, 'script', 'facebook-jssdk'));
+</script>
+{# Facebook share {{{ #}
 <div class="user_top_info_container">
 	<div class="user_top_info_block">
 		<span class="user_info_label">Età: </span>
@@ -33,11 +47,6 @@
 		</div>
 		<div class="bottom user_action_link_container">
 			<span>
-				<a class="user_action_link shareOnFacebookClickAction" href="#">
-					<img alt="Condividi su Facebook" src="{% static "website/img/catwalk/facebook-share.png" %}">
-				</a>
-			</span>
-			<span>
 				<a class="user_action_link addToFavoritesClickAction" href="#">
 					<img alt="Aggiungi ai preferiti" src="{% static "website/img/catwalk/aggiungi-a-preferiti.png" %}">
 				</a>
@@ -47,6 +56,12 @@
 					<img alt="Segnala utente" src="{% static "website/img/catwalk/segnala-utente.png" %}">
 				</a>
 			</span>
+			<span>
+				<a class="user_action_link shareOnFacebookClickAction" href="#">
+					<img alt="Condividi su Facebook" src="{% static "website/img/catwalk/facebook-share.png" %}">
+				</a>
+			</span>
+			<div class="fb-share-button" data-href="{{ absolute_uri }}" data-layout="link"></div>
 		</div>
 	</div>
 	<div class="right">
