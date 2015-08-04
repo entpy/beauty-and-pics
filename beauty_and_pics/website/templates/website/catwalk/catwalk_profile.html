@@ -6,11 +6,15 @@
 {% block description %}Profilo utente: da qui puoi vedere il punteggio, la posizione e le foto del book di {{ user_info.first_name }} {{ user_info.last_name }}.{% endblock description %}
 
 {% block og_metatags %}
+<meta property="og:locale" content="it_IT" />
 <meta property="og:url" content="{{ absolute_uri }}" />
-<meta property="og:type" content="article" />
+<meta property="og:type" content="profile" />
 <meta property="og:title" content="Vota {{ user_info.first_name }}" />
-<meta property="og:description" content="Beauty and Pics, il concorso di bellezza fatto a misura di web!" />
+<meta property="og:site_name" content="Beauty and Pics"/>
+<meta property="og:description" content="Beauty and Pics, il concorso di bellezza fatto a misura di web. Naviga tra la passerella e vota chi preferisci." />
 <meta property="og:image" content="{{ profile_image_url }}" />
+<meta property="og:image:width" content="300" />
+<meta property="og:image:height" content="300" />
 {% endblock og_metatags %}
 
 {% block container4_title %}{{ user_info.first_name }} {{ user_info.last_name }}{% endblock container4_title %}
