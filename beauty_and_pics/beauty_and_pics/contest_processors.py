@@ -16,6 +16,7 @@ def common_contest_processors(request):
     contest_obj = Contest()
     hall_of_fame_obj = HallOfFame()
     contest_type = contest_obj.get_contest_type_from_session(request=request)
+    logged_user_id = None
     logger.info("@@@current contest_type: " + str(contest_type))
 
     ### template context vars {{{ ###
@@ -36,6 +37,7 @@ def common_contest_processors(request):
     if autenticated_user_data.get("user_id"):
         # logger.debug("[TEMPLATE_PROCESSOR] user logged in (user id: " + str(autenticated_user_data["user_id"]) + ")")
         profile_thumbnail_image_url = book_obj.get_profile_thumbnail_image_url(user_id=autenticated_user_data["user_id"])
+        logged_user_id = autenticated_user_data.get("user_id")
     else:
         # logger.debug("[TEMPLATE_PROCESSOR] user NOT logged in")
         pass
@@ -48,4 +50,5 @@ def common_contest_processors(request):
             'user_is_authenticated': user_is_authenticated,
             'authenticated_user_contest_type': autenticated_user_data.get("contest_type"),
             'site_name': project_constants.SITE_NAME,
+            'logged_user_id': logged_user_id,
     }
