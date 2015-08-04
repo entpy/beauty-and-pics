@@ -1,9 +1,9 @@
 {% extends "website/inc/base_catwalk.html" %}
 {% load staticfiles %}
 
-{% block title %}{{ site_name }} | profilo utente{% endblock title %}
+{% block title %}{{ site_name }} | profilo di {{ user_info.first_name }} {{ user_info.last_name }}{% endblock title %}
 
-{% block description %}Profilo utente: da qui puoi vedere il punteggio, la posizione e le foto del book di un modello o di una modella. Potrai inoltre votare i tuoi preferiti.{% endblock description %}
+{% block description %}Profilo utente: da qui puoi vedere il punteggio, la posizione e le foto del book di {{ user_info.first_name }} {{ user_info.last_name }}.{% endblock description %}
 
 {% block container4_title %}{{ user_info.first_name }} {{ user_info.last_name }}{% endblock container4_title %}
 
@@ -32,6 +32,11 @@
 			<img alt="Imagine profilo" class="catwalk_user_main_image" src="{{ profile_image_url }}">
 		</div>
 		<div class="bottom user_action_link_container">
+			<span>
+				<a class="user_action_link shareOnFacebookClickAction" href="#">
+					<img alt="Condividi su Facebook" src="{% static "website/img/catwalk/facebook-share.png" %}">
+				</a>
+			</span>
 			<span>
 				<a class="user_action_link addToFavoritesClickAction" href="#">
 					<img alt="Aggiungi ai preferiti" src="{% static "website/img/catwalk/aggiungi-a-preferiti.png" %}">
@@ -235,6 +240,13 @@
 					addToFavorite('{{user_info.user_id}}');
 				}
 			{% endif %}
+
+			return false;
+		});
+
+		// share on Facebook action
+		$("body").on("click",".shareOnFacebookClickAction", function(){
+			alert("share on Facebook");
 
 			return false;
 		});
