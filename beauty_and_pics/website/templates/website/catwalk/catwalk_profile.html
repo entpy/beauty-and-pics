@@ -5,6 +5,7 @@
 
 {% block description %}Profilo utente: da qui puoi vedere il punteggio, la posizione e le foto del book di {{ user_info.first_name }} {{ user_info.last_name }}.{% endblock description %}
 
+{# Open Graph metatags #}
 {% block og_metatags %}
 <meta property="og:locale" content="it_IT" />
 <meta property="og:url" content="{{ absolute_uri }}" />
@@ -20,11 +21,11 @@
 {% block container4_title %}{{ user_info.first_name }} {{ user_info.last_name }}{% endblock container4_title %}
 
 {% block container4_content %}
-{# Facebook share {{{ #}
+{# Facebook SDK {{{ #}
 <script>
 (function(d, s, id){ var js, fjs = d.getElementsByTagName(s)[0]; if (d.getElementById(id)) {return;} js = d.createElement(s); js.id = id; js.src = "//connect.facebook.net/en_US/sdk.js"; fjs.parentNode.insertBefore(js, fjs); }(document, 'script', 'facebook-jssdk'));
 </script>
-{# Facebook share }}} #}
+{# Facebook SDK }}} #}
 <div class="user_top_info_container">
 	<div class="user_top_info_block">
 		<span class="user_info_label">Età: </span>
@@ -219,8 +220,10 @@
 
 		// perform vote action
 		$("body").on("click",".submitVoteButtonClickAction", function(){
+			$(this).hide();
 			voteUserObject.addParam("user_id", "{{ user_info.user_id }}");
 			voteUserObject.performVotingAction();
+			$(this).show();
 
 			return false;
 		});
@@ -283,16 +286,16 @@
 			addToFavoriteCustomAjaxAction.setActionName("add_favorite");
 			// success callback function
 			var successCallback = function(jsonResponse) {
-                // open success bootstrap modal
-                bootstrapModalsObect.showSuccessModal('L\'utente è stato aggiunto correttamente all\'elenco dei tuoi preferiti. <a href="/profilo/preferiti/" class="alert-link">Vai nella sezione preferiti</a> per visualizzare la lista completa.');
+				// open success bootstrap modal
+				bootstrapModalsObect.showSuccessModal('L\'utente è stato aggiunto all\'elenco dei tuoi preferiti. <a href="/profilo/preferiti/" class="alert-link">Vai nella sezione preferiti</a> per visualizzare la lista completa.');
 			};
 			addToFavoriteCustomAjaxAction.setAjaxSuccessCallbackFunction(successCallback);
 			// error callback function
 			var errorCallback = function(jsonResponse) {
 				if (jsonResponse.type == "already_added") {
 					// open alert bootstrap modal
-                    bootstrapModalsObect.showAlertModal('Utente già presente nell\'elenco dei tuoi preferiti. <a href="/profilo/preferiti/" class="alert-link">Vai nella sezione preferiti</a>.');
-                }
+					bootstrapModalsObect.showAlertModal('Utente già presente nell\'elenco dei tuoi preferiti. <a href="/profilo/preferiti/" class="alert-link">Vai nella sezione preferiti</a>.');
+				}
 			};
 			addToFavoriteCustomAjaxAction.setAjaxErrorCallbackFunction(errorCallback);
 			// perform ajax call to add favorite

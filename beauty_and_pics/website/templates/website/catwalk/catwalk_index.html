@@ -43,13 +43,13 @@
 {% endblock container4_content %}
 {% block custom_js %}
 <script>
-	elementsListObject.addFilter("show_limit", 10);
+	elementsListObject.addFilter("show_limit", 20);
 	$(document).ready(function(){
 		$("body").on("click",".setFilterAction", function(){
 			$(".setFilterAction").removeClass("active");
 			$(this).addClass("active");
 			elementsListObject.newElementList();
-			elementsListObject.addFilter("show_limit", 10);
+			elementsListObject.addFilter("show_limit", 20);
 			$(".loadMoreElementsAction").click();
 
 			return false;

@@ -33,7 +33,7 @@
 
 {% block custom_js %}
 <script>
-	elementsListObject.addFilter("show_limit", 10);
+	elementsListObject.addFilter("show_limit", 20);
 
 	$(document).ready(function(){
 		$("body").on("click",".loadMoreElementsAction", function(){
@@ -50,35 +50,35 @@
 				userId = $(this).data("imageId");
 			}
 
-            // ajax call to retrieve user info
-            retrieveUserInfo(userId);
+			// ajax call to retrieve user info
+			retrieveUserInfo(userId);
 
 			// open bootstrap modal
 			// bootstrapModalsObect.showFavoriteImageModal(profileImageUrl, userName, userPoints, userRanking);
 
-            return false;
+			return false;
 		});
 
-        /* Function to retrieve info about user (name, points, ranking) */
-        function retrieveUserInfo(userId) {
-            if (userId) {
-                // save image id
-                var retrieveUserInfoAjaxAction = customAjaxAction;
-                // serialize form
-                retrieveUserInfoAjaxAction.setAjaxCallParams("user_id=" + userId + "&");
-                // setting action name
-                retrieveUserInfoAjaxAction.setActionName("get_user_info");
-                // success callback function
-                var successCallback = function(jsonResponse) {
-                    // open bootstrap modal
-                    user_data = jsonResponse.user_info
-                    bootstrapModalsObect.showFavoriteUserModal(user_data.user_id, user_data.user_first_name, user_data.user_last_name, user_data.user_ranking, user_data.user_points, user_data.user_profile_image_url);
-                };
-                retrieveUserInfoAjaxAction.setAjaxSuccessCallbackFunction(successCallback);
-                // perform ajax call to save a new profile image
-                retrieveUserInfoAjaxAction.performAjaxAction();
-            }
-        }
+		/* Function to retrieve info about user (name, points, ranking) */
+		function retrieveUserInfo(userId) {
+			if (userId) {
+				// save image id
+				var retrieveUserInfoAjaxAction = customAjaxAction;
+				// serialize form
+				retrieveUserInfoAjaxAction.setAjaxCallParams("user_id=" + userId + "&");
+				// setting action name
+				retrieveUserInfoAjaxAction.setActionName("get_user_info");
+				// success callback function
+				var successCallback = function(jsonResponse) {
+					// open bootstrap modal
+					user_data = jsonResponse.user_info
+					bootstrapModalsObect.showFavoriteUserModal(user_data.user_id, user_data.user_first_name, user_data.user_last_name, user_data.user_ranking, user_data.user_points, user_data.user_profile_image_url);
+				};
+				retrieveUserInfoAjaxAction.setAjaxSuccessCallbackFunction(successCallback);
+				// perform ajax call to save a new profile image
+				retrieveUserInfoAjaxAction.performAjaxAction();
+			}
+		}
 
 		// default click on load more elements button
 		$(".loadMoreElementsAction").click();

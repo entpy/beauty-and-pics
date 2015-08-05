@@ -905,6 +905,8 @@ var elementsListObject = {
 	},
 
 	getElementsList : function() {
+		// hide "load more" button
+		elementsListObject.hideActionButton();
 		// reading csrfmiddlewaretoken from cookie
 		var csrftoken = readCsrftokenFromCookie();
 		var ajaxCallData = {
@@ -922,6 +924,8 @@ var elementsListObject = {
 					// TODO: in teoria il pulsante andrebbe nascosto al
 					//	 al giro prima!
 					elementsListObject.hideActionButton();
+				} else {
+					elementsListObject.showActionButton();
 				}
 
 				if (jsonResponse.elements_list_type == "catwalker") {
