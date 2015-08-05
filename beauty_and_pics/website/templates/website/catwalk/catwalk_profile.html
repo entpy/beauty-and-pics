@@ -208,7 +208,6 @@
 <script>
 	elementsListObject.addFilter("show_limit", 20);
 
-	$(".submitVoteButtonClickAction").addClass("display_none");
 	$(document).ready(function(){
 		// single vote type click
 		$("body").on("click",".voteTypeClick", function(){
@@ -221,10 +220,10 @@
 
 		// perform vote action
 		$("body").on("click",".submitVoteButtonClickAction", function(){
-			$(this).addClass("display_none");
+			$(".submitVoteButtonClickAction").addClass("display_none");
 			voteUserObject.addParam("user_id", "{{ user_info.user_id }}");
 			voteUserObject.performVotingAction();
-			$(this).removeClass("display_none");
+			$(".submitVoteButtonClickAction").removeClass("display_none");
 
 			return false;
 		});
