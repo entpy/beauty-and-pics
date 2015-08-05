@@ -658,6 +658,7 @@ var voteUserObject = {
 	messageContainerClass : ".msgContainerAction",
 	voteFormContainerClass : ".voteFormContainerAction",
 	ajaxCallUrl : "/ajax/", // the ajax call url
+	voteButtonClassName : ".submitVoteButtonClickAction", // vote button class name
 
 	/* Function to add a new AND filter */
 	addParam : function(paramName, paramValue) {
@@ -745,6 +746,8 @@ var voteUserObject = {
 	/* Function to perform a votation */
 	performVotingAction : function() {
 		if (this.checkVoteActionErrors()) {
+			// hide vote button
+			this.hideVoteButton();
 			// reading csrfmiddlewaretoken from cookie
 			var csrftoken = readCsrftokenFromCookie();
 			var ajaxCallData = {
@@ -787,6 +790,16 @@ var voteUserObject = {
 
 		// hide vote form
 		$(this.voteFormContainerClass).addClass("hide");
+	},
+
+	hideVoteButton : function() {
+	/* Function to hide action button */
+		$(this.voteButtonClassName).addClass("display_none");
+	},
+
+	showVoteButton : function() {
+	/* Function to show action button */
+		$(this.voteButtonClassName).removeClass("display_none");
 	},
 };
 
