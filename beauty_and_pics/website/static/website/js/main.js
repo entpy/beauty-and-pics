@@ -955,12 +955,12 @@ var elementsListObject = {
 
 	hideActionButton : function() {
 	/* Function to hide action button */
-		$(this.actionButtonClassName).hide();
+		$(this.actionButtonClassName).addClass("display_none");
 	},
 
 	showActionButton : function() {
 	/* Function to show action button */
-		$(this.actionButtonClassName).show();
+		$(this.actionButtonClassName).removeClass("display_none");
 	},
 
 	setBlocksNumberLimit : function() {
