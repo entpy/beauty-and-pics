@@ -220,10 +220,10 @@
 
 		// perform vote action
 		$("body").on("click",".submitVoteButtonClickAction", function(){
-			$(".submitVoteButtonClickAction").addClass("display_none");
-			voteUserObject.addParam("user_id", "{{ user_info.user_id }}");
+			$(this).addClass("display_none");
+			/*voteUserObject.addParam("user_id", "{{ user_info.user_id }}");
 			voteUserObject.performVotingAction();
-			$(".submitVoteButtonClickAction").removeClass("display_none");
+			$(this).removeClass("display_none");*/
 
 			return false;
 		});
