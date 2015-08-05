@@ -510,7 +510,7 @@ var bootstrapModalsObect = {
 		messageBlockTemplate += '<div class="col-md-12">';
 		messageBlockTemplate += '<p>';
 		messageBlockTemplate += '<h4>Ciao ' + userFirstName + ',</h4>';
-		messageBlockTemplate += 'benvenuta/o su <b>Beauty and Pics</b>, il concorso più fico dell\'universo!<br />'
+		messageBlockTemplate += 'questo è <b>Beauty and Pics</b>, il concorso più fico dell\'universo!<br />'
 		messageBlockTemplate += 'Ecco qualche dritta per iniziare: <ol class="welcome_list"><li><b>Carica</b> un\'immagine profilo.</li><li><b>Carica</b> almeno 5/6 immagini del book.</li><li><b>Chiedi</b> ai tuoi amici e parenti di votarti.</li></ol>';
 		messageBlockTemplate += 'Quindi aspetta i primi voti e tieni d\'occhio la classifica...pronta/o per diventare una star del web?';
 		messageBlockTemplate += '</p>';
