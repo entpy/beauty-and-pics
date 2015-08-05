@@ -750,7 +750,7 @@ var voteUserObject = {
 			var ajaxCallData = {
 				url : this.ajaxCallUrl,
 				data : $.param(this.getParamsList()) + "&ajax_action=perform_voting",
-				async : true,
+				async : false,
 				headers: { "X-CSRFToken": csrftoken },
 				success : function(jsonResponse) {
 					// functions to manage JSON response
@@ -921,8 +921,7 @@ var elementsListObject = {
 
 				// hide show more elements button
 				if (jsonResponse.elements_list.length == 0) {
-					// TODO: in teoria il pulsante andrebbe nascosto al
-					//	 al giro prima!
+					// TODO: in teoria il pulsante andrebbe nascosto al giro prima!
 					elementsListObject.hideActionButton();
 				} else {
 					elementsListObject.showActionButton();
