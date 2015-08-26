@@ -315,6 +315,27 @@ function writeCountdownContestStatusString(contestStatus) {
 	}
 }
 
+/* Function to retrieve info about user (name, points, ranking) */
+function retrieveUserInfo(userId) {
+	if (userId) {
+		// save image id
+		var retrieveUserInfoAjaxAction = customAjaxAction;
+		// serialize form
+		retrieveUserInfoAjaxAction.setAjaxCallParams("user_id=" + userId + "&");
+		// setting action name
+		retrieveUserInfoAjaxAction.setActionName("get_user_info");
+		// success callback function
+		var successCallback = function(jsonResponse) {
+			// open bootstrap modal
+			user_data = jsonResponse.user_info
+			bootstrapModalsObect.showFavoriteUserModal(user_data.user_id, user_data.user_first_name, user_data.user_last_name, user_data.user_ranking, user_data.user_points, user_data.user_profile_image_url);
+		};
+		retrieveUserInfoAjaxAction.setAjaxSuccessCallbackFunction(successCallback);
+		// perform ajax call to save a new profile image
+		retrieveUserInfoAjaxAction.performAjaxAction();
+	}
+}
+
 /* Function to write string at the countdown finish */
 function writeCountdownEndString(contestStatus) {
 	if (contestStatus == "active") {
@@ -949,6 +970,9 @@ var elementsListObject = {
 				} else if (jsonResponse.elements_list_type == "photobook") {
 					// build and write block into html
 					elementsListObject.writeHtmlBlock(elementsListObject.managePhotobookList(jsonResponse.elements_list));
+				} else if (jsonResponse.elements_list_type == "last_upload") {
+					// build and write block into html
+					elementsListObject.writeHtmlBlock(elementsListObject.manageFavoriteList(jsonResponse.elements_list));
 				}
 
 				// set blocks number limit

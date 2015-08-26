@@ -25,10 +25,11 @@
 <div class="row">
 	<div class="col-sm-12">
 		<ul class="nav nav-pills">
-			<li class="active setFilterAction" data-filter-name="latest_registered"><a href="#">Le new entry</a></li>
-			<li class="setFilterAction" data-filter-name="classification"><a href="#">La classifica</a></li>
-			<li class="setFilterAction" data-filter-name="most_beautiful_smile"><a href="#">Il sorriso più bello</a></li>
-			<li class="setFilterAction" data-filter-name="look_more_beautiful"><a href="#">Lo sguardo più bello</a></li>
+			<li class="active setFilterAction" data-list-type="catwalker" data-filter-name="latest_registered"><a href="#">Le new entry</a></li>
+			<li class="setFilterAction" data-list-type="last_upload"><a href="#">Ultimi caricamenti</a></li>
+			<li class="setFilterAction" data-list-type="catwalker" data-filter-name="classification"><a href="#">La classifica</a></li>
+			<li class="setFilterAction" data-list-type="catwalker" data-filter-name="most_beautiful_smile"><a href="#">Il sorriso più bello</a></li>
+			<li class="setFilterAction" data-list-type="catwalker" data-filter-name="look_more_beautiful"><a href="#">Lo sguardo più bello</a></li>
 		</ul>
 	</div>
 </div>
@@ -45,6 +46,22 @@
 <script>
 	elementsListObject.addFilter("show_limit", 20);
 	$(document).ready(function(){
+		// bootstrap modal on favorite click
+		$("body").on("click",".zoom-image", function(){
+			var userId = "";
+			if ($(this).attr("data-image-id")) {
+				userId = $(this).data("imageId");
+			}
+
+			// ajax call to retrieve user info
+			retrieveUserInfo(userId);
+
+			// open bootstrap modal
+			// bootstrapModalsObect.showFavoriteImageModal(profileImageUrl, userName, userPoints, userRanking);
+
+			return false;
+		});
+
 		$("body").on("click",".setFilterAction", function(){
 			$(".setFilterAction").removeClass("active");
 			$(this).addClass("active");
@@ -56,7 +73,7 @@
 		});
 
 		$(".loadMoreElementsAction").click(function(){
-			elementsListObject.setElementsListType("catwalker");
+			elementsListObject.setElementsListType($(".setFilterAction.active").data("listType"));
 			elementsListObject.addFilter("filter_name", $(".setFilterAction.active").data("filterName"));
 			elementsListObject.getElementsList();
 

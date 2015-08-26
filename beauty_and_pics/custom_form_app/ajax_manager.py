@@ -183,6 +183,22 @@ class ajaxManager():
                         "user_id": favorite_user["favorite_user__id"],
                         "thumbnail_image_url": book_obj.get_profile_thumbnail_image_url(user_id=favorite_user["favorite_user__id"]),
                 }),
+
+        # last upload section
+        if elements_list_type == "last_upload":
+            book_obj = Book()
+	    contest_obj = Contest()
+	    # contest_type = contest_obj.get_contest_type_from_session(request=self.request.authenticated_user_contest_type)
+            filtered_elements = book_obj.get_all_photobook_list(contest_type=contest_obj.get_contest_type_from_session(request=self.request), filters_list=self.request.POST)
+
+            for photobook_element in filtered_elements:
+                logger.debug("element list: " + str(photobook_element))
+		thumbnail_url = book_obj.get_image_url(book_image_id=photobook_element["image_id__thumbnail_image"])
+		if thumbnail_url:
+		    json_account_element.append({
+			    "user_id": photobook_element["user__id"],
+			    "thumbnail_image_url": book_obj.get_base_image_url() + thumbnail_url,
+		    }),
         """
         data = {
                 'success' : True,

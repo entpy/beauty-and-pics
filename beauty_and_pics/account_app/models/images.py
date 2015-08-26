@@ -112,6 +112,21 @@ class Book(models.Model):
 
         return return_var
 
+    # TODO
+    def get_all_photobook_list(self, contest_type=None, filters_list=None):
+        """Function to retrieve a list of photobook about all users ordered by date"""
+	if contest_type:
+	    return_var = Book.objects.values('user__id', 'image_id__thumbnail_image').filter(user__account__contest_type__code=contest_type)
+	else:
+	    return_var = Book.objects.values('user__id', 'image_id__thumbnail_image')
+	# list orders
+	return_var = return_var.order_by('-upload_date')
+	# list limits
+	if filters_list.get("start_limit") or filters_list.get("show_limit"):
+	    return_var = return_var[filters_list["start_limit"]:filters_list["show_limit"]]
+
+        return return_var
+
     def get_profile_image(self, user_id, thumbnail=False):
         """Function to retrieve profile image, if exists more profile image than take only last"""
         return_var = None
@@ -131,7 +146,7 @@ class Book(models.Model):
         return_var = None
         profile_image = self.get_profile_image(user_id=user_id)
 	if profile_image and profile_image["image_id__image"]:
-            return_var = settings.MEDIA_URL + profile_image["image_id__image"]
+            return_var = self.get_base_image_url() + profile_image["image_id__image"]
 
         # default profile image
         if not return_var and return_default:
@@ -144,13 +159,32 @@ class Book(models.Model):
         return_var = None
         profile_image = self.get_profile_image(user_id=user_id, thumbnail=True)
 	if profile_image and profile_image["image_id__thumbnail_image__image"]:
-            return_var = settings.MEDIA_URL + profile_image["image_id__thumbnail_image__image"]
+            return_var = self.get_base_image_url() + profile_image["image_id__thumbnail_image__image"]
 
         # default profile image
         if not return_var and return_default:
             return_var = static('website/img/catwalk/default_profile_image.jpg')
 
         return return_var
+
+    def get_image_url(self, book_image_id):
+        """Function to retrieve and image url from image id"""
+	logger.debug("id immagine: " + str(book_image_id))
+	return_var = None
+	try:
+	    image_obj = cropUploadedImages.objects.values('image').get(pk=book_image_id)
+	    logger.debug("immagine trovata")
+	    return_var = str(image_obj['image'])
+	except Book.DoesNotExist:
+	    logger.debug("immagine NON trovata")
+	    # image not found
+	    pass
+
+        return return_var
+
+    def get_base_image_url(self):
+	"""Function to retrieve base image url: http:www.hostimage.com/image_folder/"""
+	return settings.MEDIA_URL
 
 """
 	* id_image (PK)
