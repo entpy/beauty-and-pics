@@ -374,7 +374,7 @@ class ajaxManager():
             pass
         else:
             # retrieve contest user info
-            contest_account_info = account_obj.get_contest_account_info(user_id=user_id)
+            contest_account_info = account_obj.get_contest_account_info(user_id=user_id, contest_type=account_info["contest_type_code"])
             # retrieve profile image url
             profile_image_url = book_obj.get_profile_image_url(user_id=user_id)
             # response data

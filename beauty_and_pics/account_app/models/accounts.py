@@ -372,6 +372,7 @@ class Account(models.Model):
 		return_var["country"] = user_obj.account.country or ''
 		return_var["gender"] = user_obj.account.gender or ''
 		return_var["contest_type"] = user_obj.account.contest_type or ''
+		return_var["contest_type_code"] = user_obj.account.contest_type.code or ''
 		return_var["birthday_date"] = user_obj.account.birthday_date or ''
 		return_var["birthday_day"] = str(user_obj.account.birthday_date.day) or ''
 		return_var["birthday_month"] = str(user_obj.account.birthday_date.month) or ''
@@ -413,14 +414,7 @@ class Account(models.Model):
 
         # retrieve user ranking
         contest_account_info["ranking"] = self.get_user_contest_ranking(user_id=user_id, contest_type=contest_type)
-
         logger.debug("contest account info retrieved: " + str(contest_account_info))
-
-        # totale punti per ogni utente -> QUESTA FUNZIONE NON VA QUI
-        """
-        total_points = Point.objects.values('user__id').filter(contest__contest_type=F('user__account__contest_type'),
-                contest__status=project_constants.CONTEST_ACTIVE).annotate(totale=Sum('points'))
-        """
 
         return contest_account_info
 

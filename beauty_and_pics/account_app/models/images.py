@@ -112,13 +112,12 @@ class Book(models.Model):
 
         return return_var
 
-    # TODO
     def get_all_photobook_list(self, contest_type=None, filters_list=None):
         """Function to retrieve a list of photobook about all users ordered by date"""
 	if contest_type:
-	    return_var = Book.objects.values('user__id', 'image_id__thumbnail_image').filter(user__account__contest_type__code=contest_type)
+	    return_var = Book.objects.values('user__id', 'image_id__thumbnail_image').filter(user__account__contest_type__code=contest_type, image_type=project_constants.IMAGE_TYPE["book"])
 	else:
-	    return_var = Book.objects.values('user__id', 'image_id__thumbnail_image')
+	    return_var = Book.objects.values('user__id', 'image_id__thumbnail_image').filter(image_type=project_constants.IMAGE_TYPE["book"])
 	# list orders
 	return_var = return_var.order_by('-upload_date')
 	# list limits

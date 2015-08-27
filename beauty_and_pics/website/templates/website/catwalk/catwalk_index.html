@@ -25,8 +25,8 @@
 <div class="row">
 	<div class="col-sm-12">
 		<ul class="nav nav-pills">
-			<li class="active setFilterAction" data-list-type="catwalker" data-filter-name="latest_registered"><a href="#">Le new entry</a></li>
-			<li class="setFilterAction" data-list-type="last_upload"><a href="#">Ultimi caricamenti</a></li>
+			<li class="active setFilterAction" data-list-type="catwalker" data-filter-name="latest_registered" data-toggle="tooltip" data-placement="top" data-original-title="Lista di tutti i partecipanti ordinata dal più recente"><a href="#">Le new entry</a></li>
+			<li class="setFilterAction" data-list-type="last_upload" data-toggle="tooltip" data-placement="top" data-original-title="Le ultime immagini caricate nei book fotografici"><a href="#">Ultimi caricamenti</a></li>
 			<li class="setFilterAction" data-list-type="catwalker" data-filter-name="classification"><a href="#">La classifica</a></li>
 			<li class="setFilterAction" data-list-type="catwalker" data-filter-name="most_beautiful_smile"><a href="#">Il sorriso più bello</a></li>
 			<li class="setFilterAction" data-list-type="catwalker" data-filter-name="look_more_beautiful"><a href="#">Lo sguardo più bello</a></li>
@@ -46,6 +46,8 @@
 <script>
 	elementsListObject.addFilter("show_limit", 20);
 	$(document).ready(function(){
+		$('[data-toggle="tooltip"]').tooltip();
+
 		// bootstrap modal on favorite click
 		$("body").on("click",".zoom-image", function(){
 			var userId = "";

@@ -1,14 +1,12 @@
 TODO
 ----
- - script giornaliero che apra/chiuda i contest
- - script mensile che invii le mail di riepilogo se gli utente vogliono ricevere newsletter
-   e se la data dell'ultima newsletter è >= 1 mese
- - far funzionare il disiscriviti nella mail
- - localizzare
- - test sui vari browser
+Nella nuova funzionalità "Ultimi caricamenti" vengono visualizate più immagini per
+alcuni utenti, questo è dovuto al fatto che quando si carica una foto profilo non
+si elimina la precedente, in questo modo rimangono delle immagini profilo impilate,
+la più recente viene presa come profilo ma negli "ultimi caricamenti" vengono visualizzate
+anche le vecchie...che fare?
 
 BUG NOTI
 --------
- - se accedo alla pagina profilo di un utente che non esiste fare redirect in home page
  - nella pagina profilo per caricare le immagini, se si clicca sul bordo esterno dell'immagine non si
    apre la fancybox ma si va in cima alla pagina di scatto

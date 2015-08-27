@@ -506,7 +506,7 @@ var bootstrapModalsObect = {
 		messageBlockTemplate += '<div class="favorite_popup_info_container">';
 		messageBlockTemplate += '<div class="favorite_popup_name_container">' + userFirstName + ' ' + userLastName + '</div>';
 		if (userRanking) {
-		    messageBlockTemplate += '<div><span class="favorite_popup_ranking_value">' + userRanking + '</span> posizione</div>';
+		    messageBlockTemplate += '<div><span class="favorite_popup_ranking_value">' + userRanking + '</span>a posizione</div>';
 		}
 		messageBlockTemplate += '<div class="favorite_popup_points_container"><span class="favorite_popup_points_value">' + userPoints + '</span> punti</div>';
 		messageBlockTemplate += '</div>';
