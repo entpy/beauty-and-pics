@@ -503,6 +503,7 @@ def email_test(request, email_name, email_mode):
 
     return HttpResponse(email_content)
 # }}}
+# custom error pages {{{
 def custom404_view(request):
     """Custom 404 page"""
     response = render_to_response('website/www/www_404.html', {}, context_instance=RequestContext(request))
@@ -516,3 +517,10 @@ def custom500_view(request):
     response.status_code = 500
 
     return response
+# custom error pages }}}
+
+# landing pages {{{
+def landing_landing1(request):
+    """Landing page 1"""
+    return render(request, 'website/landing/landing1.html', False)
+# landing pages }}}

@@ -1,0 +1,235 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<html lang="it">
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+	<meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, user-scalable=0, width=device-width">
+	<meta name="description" content="Descrizione della pagina">
+	<title>Flati - Responsive App Landing</title>
+	<link href="{% static "website/landing/css/style.css" %}" rel="stylesheet">
+
+	<!-- For IE 9 and below. ICO should be 32x32 pixels in size -->
+	<!--[if IE]><link rel="shortcut icon" href="{% static "website/favicon.ico" %}"><![endif]-->
+	<!-- Touch Icons - iOS and Android 2.1+ 180x180 pixels in size. --> 
+	<link rel="apple-touch-icon-precomposed" href="{% static "website/apple-touch-icon-precomposed.png" %}">
+	<!-- Firefox, Chrome, Safari, IE 11+ and Opera. 196x196 pixels in size. -->
+	<link rel="icon" href="{% static "website/favicon.png" %}">
+
+	<!-- IE8 support of HTML5 elements and media queries -->
+	<!--[if lt IE 9]>
+	<script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+	<script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+	<![endif]-->
+</head>
+<body>
+	<div class="doc-loader"></div>
+	<!-- Header -->
+	<section id="intro">
+		<header>
+			<nav class="navbar navbar-default" role="navigation">
+				<div class="container">
+					<!-- Brand and toggle get grouped for better mobile display -->
+					<div class="container">
+						<div id="main-nav" class="navbar-collapse">
+							<ul class="social-links">
+								<a href="#">
+									<li class="fa fa-twitter"></li>
+								</a>
+								<!-- Twitter Link -->
+								<a href="#">
+									<li class="fa fa-facebook"></li>
+								</a>
+								<!-- Facebook Link -->
+								<a href="#">
+									<li class="fa fa-google-plus"></li>
+								</a>
+								<!-- Google+ Link -->
+							</ul>
+						</div>
+					</div>
+				</div>
+			</nav>
+		</header>
+		<div class="container">
+			<div class="intro-well wow animated bounceIn">
+				<div class="col-md-12">
+					<h1>Sei una modella e vuoi dimostrare a tutti la tua bellezza?</h1>
+					<h2>Promuovi gratuitamente la tua immagine con Beauty and Pics, il primo concorso di bellezza dove chi giudica è il pubblico.</h2>
+					<a class="btn btn-primary" href="#">
+						<li class="fa fa-apple fa-lg"></li>&nbsp;&nbsp;Maggiori informazioni
+					</a>
+				</div>
+			</div>
+		</div>
+		<!-- /container -->
+
+	</section>
+	<!--////////// FEATURES SECTION ////////// -->
+	<section id="features">
+		<div class="container wow fadeIn animated">
+			<h1>Come funziona?</h1>
+			<h2>Il funzionamento è molto sempliceLorem ipsum dolor sit amet, consectetur adipiscing elit. Nam scelerisque faucibus risus non iaculis. Fusce a augue ante, pellentesque pretium erat. Fusce in turpis in velit tempor pretium. Integer a leo libero.</h2>
+		</div>
+		<!-- /container -->
+		<div class="container">
+			<div class="row">
+				{# step1 #}
+				<div class="col-md-4 wow fadeInLeft animated" data-wow-delay="0.1s">
+					<div class="iconbox">
+						<div class="icn-1">Purchase Now</div>
+					</div>
+					<p class="icntitle">1.Registrati</p>
+					<p class="icnp">E' facile e veloce, inserisci i dati richesti per partecipare al concorso di bellezza.</p>
+				</div>
+
+				{# step2 #}
+				<div class="col-md-4 wow fadeInLeft animated" data-wow-delay="0.2s">
+					<div class="iconbox">
+						<div class="icn-2">Responsive</div>
+					</div>
+					<p class="icntitle">2.Carica foto</p>
+					<p class="icnp">Carica i tuoi scatti fotografici migliori e promuovi la tua immagine, in questo modo potrai ad ottenere tanti punti.</p>
+				</div>
+
+				{# step3 #}
+				<div class="col-md-4 wow fadeInLeft animated" data-wow-delay="0.3s">
+					<div class="iconbox">
+						<div class="icn-3">App of Year</div>
+					</div>
+					<p class="icntitle">3.Scala la classifica</p>
+					<p class="icnp">Se sarai apprezzata dal pubblico, inizierai a scalare la classifica...riuscirai ad arrivare al primo posto?</p>
+				</div>
+			</div>
+		</div>
+		<div class="more-features">
+			<div class="container wow fadeIn animated">
+				<h1>Caratteristiche</h1>
+			</div>
+			<div class="container">
+				<div class="col-sm-5">
+					<div class="features-left wow animated fadeInLeft" data-wow-delay="0.1s">
+						<div class="features-item">
+							<i class="fa fa-desktop icons_right hidden-sm"></i>
+							<div class="text-align-right">
+								<h4>Punti basati su 3 metriche</h4>
+								<p>Sguardo o sorriso, quale sarà la tua caratteristica più apprezzata? Scoprilo grazie al concorso.</p>
+							</div>
+							<!-- /text-align-right -->
+						</div>
+						<!-- /features-item -->
+
+						<div class="features-item">
+							<i class="fa fa-life-ring icons_right hidden-sm"></i>
+							<div class="text-align-right">
+								<h4>Diversi sottoconcorsi</h4>
+								<p>Oltre al concorso principale, verrà eletta Miss sorriso e Miss sguardo.</p>
+							</div>
+							<!-- /text-align-right -->
+						</div>
+						<!-- /features-item -->
+						<div class="features-item">
+							<i class="fa fa-sliders icons_right hidden-sm"></i>
+							<div class="text-align-right">
+								<h4>Crea il tuo book</h4>
+								<p>Crea il tuo book fotografico caricando tutte le fotografie che preferisci e quante ne vuoi.</p>
+							</div>
+							<!-- /text-align-right -->
+						</div>
+						<!-- /features-item -->
+					</div>
+					<!-- /features-left -->
+				</div>
+				<!-- /col-sm-4 -->
+
+				<div id="iphone" class="col-sm-2 hidden-xs wow animated fadeInUp" data-wow-delay="0.3s">
+					<img src="{% static "website/landing/img/iphone.png" %}" class="img-responsive" alt="iPhone">
+				</div>
+				<!-- /col-sm-4 -->
+
+				<div class="col-sm-5">
+					<div class="features-right wow animated fadeInRight" data-wow-delay="0.2s">
+						<div class="features-item">
+							<i class="fa fa-heart icons_left hidden-sm"></i>
+							<div class="text-align-left">
+								<h4>Aumenta la visibilità</h4>
+								<p>Aumenta la tua visibilità di modella raggiungendo i primi posti nella classifica.</p>
+							</div>
+							<!-- /text-align-left -->
+						</div>
+						<!-- /features-item -->
+
+						<div class="features-item">
+							<i class="fa fa-rocket icons_left hidden-sm"></i>
+							<div class="text-align-left">
+								<h4>Gratis</h4>
+								<p>Il servizio è completamente gratuito in tutte le sue parti, dalla registrazione al suo utilizzo.</p>
+							</div>
+							<!-- /text-align-left -->
+
+						</div>
+						<!-- /features-item -->
+						<div class="features-item">
+							<i class="fa fa-gift icons_left hidden-sm"></i>
+							<div class="text-align-left">
+								<h4>Vinci le nostre magliette</h4>
+								<p>Al termine del concorso, le prime 5 classificate, vinceranno le nostre fantastiche magliette.</p>
+							</div>
+							<!-- /text-align-left -->
+						</div>
+						<!-- /features-item -->
+					</div>
+					<!-- /features-right -->
+				</div>
+				<!-- /col-sm-4 -->
+			</div>
+			<!-- /container -->
+		</div>
+		<!-- /more-features -->
+	</section>
+
+	<!-- Footer -->
+	<footer>
+		<p>Made with passion</p>
+	</footer>
+
+	<!-- Javascript loading -->
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+	<script src="{% static "website/landing/js/bootstrap.js" %}"></script>
+	<script src="{% static "website/landing/js/wow.min.js" %}"></script>
+	<script src="{% static "website/landing/js/main.js" %}"></script>
+</body>
+</html>
+
+		<!--
+Landing3
+Metti in mostra il tuo book fotografico, carica quante foto vuoi e scopri
+la fotografia più bella.
+
+Landing2
+Sei una modella e vuoi dimostrare a tutti la tua bellezza?
+Promuovi gratuitamente la tua immagine con
+Beauty and Pics, il primo concorso di bellezza dove chi giudica è il
+pubblico.
+
+Segui queste 3 semplici mosse:
+1) Registrati
+2) Carica i tuoi scatti fotografici migliori
+3) Promuovi la tua immagine e attendi i voti del pubblico
+
+Inoltre, per i primi 5 classificati, in regalo le magliette personalizzate del concorso.
+| Maggiori informazioni |
+
+Landing2
+Hai sempre sognato di sfilare su una passerella come una vera modella
+e mettere in mostra la tua bellezza? 
+Beauty and Pics è il concorso che ti permette di farlo.
+
+Sfida i tuoi amici in una gara all'ultimo...scatto, con 3 semplici mosse:
+1) Registrati
+2) Carica i tuoi scatti fotografici migliori
+3) Promuovi la tua immagine e attendi i voti del pubblico
+
+Inoltre, per i primi 5 classificati, in regalo le magliette personalizzate del concorso.
+| Maggiori informazioni |
+-->

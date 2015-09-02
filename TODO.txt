@@ -4,7 +4,12 @@ Nella nuova funzionalità "Ultimi caricamenti" vengono visualizate più immagini
 alcuni utenti, questo è dovuto al fatto che quando si carica una foto profilo non
 si elimina la precedente, in questo modo rimangono delle immagini profilo impilate,
 la più recente viene presa come profilo ma negli "ultimi caricamenti" vengono visualizzate
-anche le vecchie...che fare?
+anche le vecchie...che fare? (risolto mostrando solo le immagini del book)
+
+- landing page
+- sistema di messaggistica
+- pagina per acquisire crediti (es. condividendo su facebook)
+- sezione per mostrare gli utenti ordinati in base ai crediti
 
 BUG NOTI
 --------
