@@ -6,8 +6,8 @@
 	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
 	<meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, user-scalable=0, width=device-width">
 	<meta name="description" content="Descrizione della pagina">
-	<title>Flati - Responsive App Landing</title>
-	<link href="{% static "website/landing/css/style.css" %}" rel="stylesheet">
+	<title>Il concorso di bellezza online per modelle</title>
+	<link href="{% static "website/landing1/css/style.css" %}" rel="stylesheet">
 
 	<!-- For IE 9 and below. ICO should be 32x32 pixels in size -->
 	<!--[if IE]><link rel="shortcut icon" href="{% static "website/favicon.ico" %}"><![endif]-->
@@ -23,25 +23,24 @@
 	<![endif]-->
 </head>
 <body>
-	<div class="doc-loader"></div>
+	<div class="page-loader"></div>
 	<!-- Header -->
 	<section id="intro">
 		<header>
 			<nav class="navbar navbar-default" role="navigation">
 				<div class="container">
-					<!-- Brand and toggle get grouped for better mobile display -->
 					<div class="container">
 						<div id="main-nav" class="navbar-collapse">
 							<ul class="social-links">
-								<a href="#">
+								<a href="#" target="_blank">
 									<li class="fa fa-twitter"></li>
 								</a>
 								<!-- Twitter Link -->
-								<a href="#">
+								<a href="#" target="_blank">
 									<li class="fa fa-facebook"></li>
 								</a>
 								<!-- Facebook Link -->
-								<a href="#">
+								<a href="#" target="_blank">
 									<li class="fa fa-google-plus"></li>
 								</a>
 								<!-- Google+ Link -->
@@ -63,40 +62,36 @@
 				</div>
 			</div>
 		</div>
-		<!-- /container -->
-
 	</section>
-	<!--////////// FEATURES SECTION ////////// -->
+	<!-- Features section -->
 	<section id="features">
 		<div class="container wow fadeIn animated">
-			<h1>Come funziona?</h1>
-			<h2>Il funzionamento è molto sempliceLorem ipsum dolor sit amet, consectetur adipiscing elit. Nam scelerisque faucibus risus non iaculis. Fusce a augue ante, pellentesque pretium erat. Fusce in turpis in velit tempor pretium. Integer a leo libero.</h2>
+			<h1>In breve</h1>
+			<h2>Il concorso di bellezza online che ti permette di scoprire quanto realmente sei apprezzata dal pubblico, tutto con 3 semplici mosse.</h2>
 		</div>
 		<!-- /container -->
 		<div class="container">
 			<div class="row">
-				{# step1 #}
+				<!-- Step 1 -->
 				<div class="col-md-4 wow fadeInLeft animated" data-wow-delay="0.1s">
 					<div class="iconbox">
-						<div class="icn-1">Purchase Now</div>
+						<div class="icn-1">Registrati</div>
 					</div>
 					<p class="icntitle">1.Registrati</p>
 					<p class="icnp">E' facile e veloce, inserisci i dati richesti per partecipare al concorso di bellezza.</p>
 				</div>
-
-				{# step2 #}
+				<!-- Step 2 -->
 				<div class="col-md-4 wow fadeInLeft animated" data-wow-delay="0.2s">
 					<div class="iconbox">
-						<div class="icn-2">Responsive</div>
+						<div class="icn-2">Carica foto</div>
 					</div>
 					<p class="icntitle">2.Carica foto</p>
 					<p class="icnp">Carica i tuoi scatti fotografici migliori e promuovi la tua immagine, in questo modo potrai ad ottenere tanti punti.</p>
 				</div>
-
-				{# step3 #}
+				<!-- Step 3 -->
 				<div class="col-md-4 wow fadeInLeft animated" data-wow-delay="0.3s">
 					<div class="iconbox">
-						<div class="icn-3">App of Year</div>
+						<div class="icn-3">Scala la classifica</div>
 					</div>
 					<p class="icntitle">3.Scala la classifica</p>
 					<p class="icnp">Se sarai apprezzata dal pubblico, inizierai a scalare la classifica...riuscirai ad arrivare al primo posto?</p>
@@ -110,90 +105,72 @@
 			<div class="container">
 				<div class="col-sm-5">
 					<div class="features-left wow animated fadeInLeft" data-wow-delay="0.1s">
+						<!-- feature point -->
 						<div class="features-item">
 							<i class="fa fa-desktop icons_right hidden-sm"></i>
 							<div class="text-align-right">
 								<h4>Punti basati su 3 metriche</h4>
 								<p>Sguardo o sorriso, quale sarà la tua caratteristica più apprezzata? Scoprilo grazie al concorso.</p>
 							</div>
-							<!-- /text-align-right -->
 						</div>
-						<!-- /features-item -->
-
+						<!-- feature point -->
 						<div class="features-item">
 							<i class="fa fa-life-ring icons_right hidden-sm"></i>
 							<div class="text-align-right">
 								<h4>Diversi sottoconcorsi</h4>
-								<p>Oltre al concorso principale, verrà eletta Miss sorriso e Miss sguardo.</p>
+								<p>Oltre al concorso principale, verrà eletta una Miss sorriso e una Miss sguardo.</p>
 							</div>
-							<!-- /text-align-right -->
 						</div>
-						<!-- /features-item -->
+						<!-- feature point -->
 						<div class="features-item">
 							<i class="fa fa-sliders icons_right hidden-sm"></i>
 							<div class="text-align-right">
 								<h4>Crea il tuo book</h4>
 								<p>Crea il tuo book fotografico caricando tutte le fotografie che preferisci e quante ne vuoi.</p>
 							</div>
-							<!-- /text-align-right -->
 						</div>
-						<!-- /features-item -->
 					</div>
-					<!-- /features-left -->
 				</div>
-				<!-- /col-sm-4 -->
-
 				<div class="col-sm-5  col-md-offset-2">
 					<div class="features-right wow animated fadeInRight" data-wow-delay="0.2s">
+						<!-- feature point -->
 						<div class="features-item">
 							<i class="fa fa-heart icons_left hidden-sm"></i>
 							<div class="text-align-left">
 								<h4>Aumenta la visibilità</h4>
-								<p>Aumenta la tua visibilità di modella raggiungendo i primi posti nella classifica.</p>
+								<p>Aumenta gratuitamente la tua visibilità di modella raggiungendo i primi posti nella classifica.</p>
 							</div>
-							<!-- /text-align-left -->
 						</div>
-						<!-- /features-item -->
-
+						<!-- feature point -->
 						<div class="features-item">
 							<i class="fa fa-rocket icons_left hidden-sm"></i>
 							<div class="text-align-left">
 								<h4>Gratis</h4>
-								<p>Il servizio è completamente gratuito in tutte le sue parti, dalla registrazione al suo utilizzo.</p>
+								<p>Il servizio è completamente gratuito in tutte le sue parti, dalla registrazione fino al suo utilizzo.</p>
 							</div>
-							<!-- /text-align-left -->
-
 						</div>
-						<!-- /features-item -->
+						<!-- feature point -->
 						<div class="features-item">
 							<i class="fa fa-gift icons_left hidden-sm"></i>
 							<div class="text-align-left">
-								<h4>Vinci le nostre magliette</h4>
-								<p>Al termine del concorso, le prime 5 classificate, vinceranno le nostre fantastiche magliette.</p>
+								<h4>Premi esclusivi</h4>
+								<p>Al termine del concorso, le prime 5 classificate, vinceranno le nostre fantastiche magliette personalizzate.</p>
 							</div>
-							<!-- /text-align-left -->
 						</div>
-						<!-- /features-item -->
 					</div>
-					<!-- /features-right -->
 				</div>
-				<!-- /col-sm-4 -->
 			</div>
-			<!-- /container -->
 		</div>
-		<!-- /more-features -->
 	</section>
-
 	<!-- Footer -->
 	<footer>
 		<p>Made with passion</p>
 	</footer>
-
 	<!-- Javascript loading -->
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
-	<script src="{% static "website/landing/js/bootstrap.js" %}"></script>
-	<script src="{% static "website/landing/js/wow.min.js" %}"></script>
-	<script src="{% static "website/landing/js/main.js" %}"></script>
+	<script src="{% static "website/landing1/js/bootstrap.js" %}"></script>
+	<script src="{% static "website/landing1/js/wow.min.js" %}"></script>
+	<script src="{% static "website/landing1/js/main.js" %}"></script>
 </body>
 </html>
 

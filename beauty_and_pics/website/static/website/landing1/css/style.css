@@ -3,8 +3,7 @@
 @import 'bootstrap-theme.css';
 @import 'animate.css';
 
-/* ========== GENERAL STYLES ========== */
-
+/* General styles */
 body {
 	font-size: 13px;
 	color: #222;
@@ -12,7 +11,7 @@ body {
 	font-family: sans-serif;
 	font-weight: 400;
 }
-.doc-loader{
+.page-loader{
 	position: fixed; 
 	left: 0; 
 	top: 0; 
@@ -23,7 +22,7 @@ body {
 	z-index: 100000;
 }
 
-.doc-loader td{
+.page-loader td{
 	vertical-align: middle;
 	text-align: center;
 	background-color: #fff;
@@ -55,34 +54,30 @@ header {
 	text-decoration: none;
 	color: #222222;
 }
-.centered
-{
+.centered {
     text-align:center;
 }
 @media (min-width: 1200px) {
-  .container {
-    width: 970px;
-   }
+	.container {
+		width: 970px;
+	}
 }
 
-/* ========== INTRO ========== */
-
+/* Intro */
 #intro {
 	width: 100%;
 	z-index: 1;
 	background-image: url("../img/dettagli-concorso.jpg");
-);
 	background-position: center top;
 	background-repeat: no-repeat;
 	background-attachment: fixed;
 	background-size: cover;
 	padding: 0;
 	padding-bottom: 140px;
-
 }
 #intro h1 {
 	font-family: sans-serif;
-	font-size: 62px;
+	font-size: 60px;
 	line-height: 62px;
 	font-weight: 300;
 	letter-spacing: 1.5px;
@@ -109,7 +104,7 @@ header {
 	z-index: 100;
 	padding-top: 70px;
 }
-/* ========== FEATURES ========== */
+/* Features */
 #features {
 	width: 100%;
 	background-color: #fff;
@@ -236,8 +231,8 @@ header {
 	background-color: #fff;
 	position: relative;
 	-webkit-border-radius: 28px 28px;
-    -moz-border-radius: 28px 28px;
-    border-radius: 28px 28px;
+	-moz-border-radius: 28px 28px;
+	border-radius: 28px 28px;
 	transition: all .50s ease-in-out;
 	-moz-transition: all .50s ease-in-out;
 	-webkit-transition: all .50s ease-in-out;
@@ -253,7 +248,7 @@ header {
 	margin:10px 0 40px 25px;
 }
 
-/* ========== FOOTER ========== */
+/* Footer */
 footer {
 	background: #34495e;
 	color: #fff;
@@ -264,42 +259,41 @@ footer p {
 	font-size: 15px;
 	line-height: 20px;
 }
-/* ========== MEDIA QUIRIES ========== */
+/* Media quiries */
 @media screen and (max-width:500px) {
-header {
-	padding-top: 20px;
-}
-#intro {
-	padding-bottom: 50px;
-}
-#intro h1 {
-	font-size: 18px;
-	line-height: 22px;
-}
-#intro h2 {
-	font-size: 14px;
-	line-height: 18px;
-}
-.intro-well{
-	padding-top: 0;
-}
-#features {
-	padding-top: 50px;
-}
-.more-features {
-	padding-top: 50px;
-	padding-bottom: 50px;
-}
-.features-right {
-	padding-top: 0;
-}
-.features-left {
-	padding-top: 0;
-}
-.social-links {
-	padding-left: 0;
-}
-
+	header {
+		padding-top: 20px;
+	}
+	#intro {
+		padding-bottom: 50px;
+	}
+	#intro h1 {
+		font-size: 18px;
+		line-height: 22px;
+	}
+	#intro h2 {
+		font-size: 14px;
+		line-height: 18px;
+	}
+	.intro-well{
+		padding-top: 0;
+	}
+	#features {
+		padding-top: 50px;
+	}
+	.more-features {
+		padding-top: 50px;
+		padding-bottom: 50px;
+	}
+	.features-right {
+		padding-top: 0;
+	}
+	.features-left {
+		padding-top: 0;
+	}
+	.social-links {
+		padding-left: 0;
+	}
 }
 @media only screen and (device-width: 990px){
 	.intro-well {
@@ -315,36 +309,36 @@ header {
 }
 @media all and (width: 768px) {
 	.container {
-	max-width: 730px !important;
+		max-width: 730px !important;
 	}
 	#intro {
-	padding-bottom: 100px;
+		padding-bottom: 100px;
 	}
 	.intro-well {
-	padding-top: 20px;
+		padding-top: 20px;
 	}
 	#intro h1 {
-	font-size: 48px;
-	line-height: 48px;
+		font-size: 48px;
+		line-height: 48px;
 	}
 	#intro h2 {
-	font-size: 18px;
-	line-height: 22px;
+		font-size: 18px;
+		line-height: 22px;
 	}
 	#iphone {
-	padding-top: 30px;
+		padding-top: 30px;
 	}
 	.features-right {
-	padding-top: 30px;
+		padding-top: 30px;
 	}
 	.features-left {
-	padding-top: 30px;
+		padding-top: 30px;
 	}	
 	.more-features {
-	padding-top: 15px;
-	padding-bottom: 50px;
+		padding-top: 15px;
+		padding-bottom: 50px;
 	}
 	.icnp {
-	padding-bottom: 20px;
+		padding-bottom: 20px;
 	}
 }
