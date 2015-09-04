@@ -521,6 +521,9 @@ def custom500_view(request):
 
 # landing pages {{{
 def landing_landing1(request):
-    """Landing page 1"""
+    """Landing page 1 - concorso per modelle"""
     return render(request, 'website/landing/landing1.html', False)
+def landing_landing2(request):
+    """Landing page 2 - tendenze moda"""
+    return render(request, 'website/landing/landing2.html', False)
 # landing pages }}}

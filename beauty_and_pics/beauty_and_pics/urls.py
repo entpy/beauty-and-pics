@@ -49,6 +49,7 @@ urlpatterns = patterns('',
     # url(r'^example_upload_image/', include('upload_image_box.example.urls', namespace="example_upload_image_box")),
 
     # landing pages
-    url(r'^concorso-per-modelle/$', 'website.views.landing_landing1', name='landing_landing1'),
+    url(r'^l/concorso-per-modelle/$', 'website.views.landing_landing1', name='landing_landing1'),
+    url(r'^l/evento-tendenze-moda/$', 'website.views.landing_landing2', name='landing_landing2'),
 
 ) + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT) + static(settings.MEDIA_URL_TMP, document_root=settings.MEDIA_ROOT)
