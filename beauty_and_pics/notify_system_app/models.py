@@ -16,8 +16,14 @@ sys.setdefaultencoding("utf8")
 logger = logging.getLogger(__name__)
 
 class Notify(models.Model):
+
+    # notify type selection
+    NOTIFY_EMAIL = 1
+    NOTIFY_WEBPUSH = 2
+    NOTIFY_TYPE = ((NOTIFY_EMAIL, 'Notify via email'), (NOTIFY_WEBPUSH, 'Notify via webpush'),)
+
     notify_id = models.AutoField(primary_key=True)
-    type = models.ForeignKey(NotifyType)  # email, webpush
+    type = models.IntegerField(choices=NOTIFY_TYPE, default=NOTIFY_WEBPUSH)
     creation_date = models.DateTimeField(auto_now_add=True)
     title = models.CharField(max_length=100)
     message = models.CharField(max_length=500)
@@ -41,7 +47,7 @@ class Notify(models.Model):
     def mark_notify_as_read(self, notify_id, user_id):
         return True
 
-    # function to count notify to read about a user
+    # function to count notify not read about a user
     def count_notify_to_read(self, user_id):
         return True
 
@@ -50,12 +56,12 @@ class Notify(models.Model):
         return True
 
     # function to retrieve a list of notify about a user
-    def notify_list(self, filters, user_id):
+    def user_notify_list(self, filters, user_id):
         return True
 
-
+"""
 # la notifica può essere inviata via mail o vista solo sul sito (tipo push)
-class NotifyType(models.Model):
+class Notify_Type(models.Model):
     notify_type_id = models.AutoField(primary_key=True)
     description = models.CharField(max_length=100, null=True)
 
@@ -64,10 +70,11 @@ class NotifyType(models.Model):
 
     def __unicode__(self):
         return str(self.description)
+"""
 
 # se è presente una riga qua, la notifica è stata letta dall'utente
 # valido solo per le notifiche sul sito
-class UserNotify(models.Model):
+class User_Notify(models.Model):
     user_notify_id = models.AutoField(primary_key=True)
     user = models.ForeignKey(User)
     notify = models.ForeignKey(Notify)
