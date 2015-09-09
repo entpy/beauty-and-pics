@@ -1,0 +1,129 @@
+{% extends "admin/base_site.html" %}
+{% load i18n admin_urls admin_static admin_modify admin_list %}
+
+{% block extrahead %}
+{{ block.super }}
+<script type="text/javascript" src="/static/admin/js/jquery.js"></script>
+<script type="text/javascript" src="/static/admin/js/jquery.init.js"></script>
+<script type="text/javascript" src="{% url 'admin:jsi18n' %}"></script>
+<script type="text/javascript" src="/static/admin/js/core.js"></script>
+{{ adminform.media }}
+{% endblock %}
+{% block extrastyle %}
+{{ block.super }}
+<link rel="stylesheet" type="text/css" href="{% static "admin/css/changelists.css" %}" />
+<link rel="stylesheet" type="text/css" href="{% static "admin/css/forms.css" %}" />
+<style>
+	.promo_image_container img {
+		max-height: 60px;
+		max-width: 70px;
+	}
+</style>
+{% endblock %}
+
+{% block coltype %}colM{% endblock %}
+
+{% block bodyclass %}change-list{% endblock %}
+
+{% if not is_popup %}
+{% block breadcrumbs %}
+<div class="breadcrumbs">
+<a href="{% url 'admin:index' %}">{% trans 'Home' %}</a>
+&rsaquo;
+{{ app_name }}
+</div>
+{% endblock %}
+{% endif %}
+
+{% block sidebar %}{% endblock %}
+
+{% block content %}
+<div id="content-main">
+	notify id: {{ notify_id }}
+
+	{# email notify recipients #}
+	<div class="module" id="changelist">
+		<h2>Seleziona destinatari</h2>
+		<div class="result">
+			<table id="result_list">
+				<thead>
+					<tr>
+						<th class="action-checkbox-column" scope="col">
+							<div class="text"><span>Seleziona</span></div>
+							<div class="clear"></div>
+						</th>
+						<th class="column-__str__" scope="col">
+							<div class="text"><span>Email</span></div>
+							<div class="clear"></div>
+						</th>
+						<th class="column-__str__" scope="col">
+							<div class="text"><span>Nome</span></div>
+							<div class="clear"></div>
+						</th>
+						<th class="column-__str__" scope="col">
+							<div class="text"><span>Cognome</span></div>
+							<div class="clear"></div>
+						</th>
+					</tr>
+				</thead>
+				<tbody>
+					{% for contact in contacts %}
+						<tr class="row2">
+							<td class="action-checkbox"><input type="checkbox" name="contacts[]" class="action-select" value="{{ contact.id }}" /></td>
+							<th><label>{{ contact.user.email }}</label></th>
+							<th><label>{{ contact.user.first_name }}</label></th>
+							<th><label>{{ contact.user.last_name }}</label></th>
+						</tr>
+					{% endfor %}
+				</tbody>
+			</table>
+		</div>
+	</div>
+	<div class="pagination">
+		<span class="step-links">
+			{% if contacts.has_previous %}
+				<a href="?page={{ contacts.previous_page_number }}">previous</a>
+			{% endif %}
+
+			<span class="current">
+			Page {{ contacts.number }} of {{ contacts.paginator.num_pages }}.
+			</span>
+
+			{% if contacts.has_next %}
+				<a href="?page={{ contacts.next_page_number }}">next</a>
+			{% endif %}
+		</span>
+	</div>
+
+	<form action="" method="post" >{% block form_top %}{% endblock %}
+		<div>
+		{% if errors %}
+			<p class="errornote">
+				{% if errors|length == 1 %}{% trans "Please correct the error below." %}{% else %}{% trans "Please correct the errors below." %}{% endif %}
+			</p>
+			{{ adminform.form.non_field_errors }}
+		{% endif %}
+
+		{% block field_sets %}
+			<div>
+				<fieldset class="module aligned ">
+					<h2>Dettagli notifica</h2>
+					{% for fieldset in adminform %}
+						<div class="form-row">
+							<div>
+								{{ fieldset.errors }}
+								<label class="{% if fieldset.field.required %}required{% endif %}" for="{{ fieldset.field.id_for_label }}">{{ fieldset.field.label }}</label>
+								{{ fieldset }}
+							</div>
+						</div>
+					{% endfor %}
+				</fieldset>
+		{% endblock %}
+
+		<div class="submit-row">
+			<input type="submit" name="_save" class="default" value="Crea notifica">
+		</div>
+	</form>
+</div>
+
+{% endblock %}

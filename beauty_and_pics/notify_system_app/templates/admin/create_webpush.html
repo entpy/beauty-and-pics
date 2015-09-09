@@ -1,0 +1,110 @@
+{% extends "admin/base_site.html" %}
+{% load i18n admin_urls admin_static admin_modify %}
+
+{% block extrahead %}{{ block.super }}
+<script type="text/javascript" src="/static/admin/js/jquery.js"></script>
+<script type="text/javascript" src="/static/admin/js/jquery.init.js"></script>
+<script type="text/javascript" src="{% url 'admin:jsi18n' %}"></script>
+<script type="text/javascript" src="/static/admin/js/core.js"></script>
+{{ adminform.media }}
+{% endblock %}
+{% block extrastyle %}{{ block.super }}
+<link rel="stylesheet" type="text/css" href="{% static "admin/css/forms.css" %}" />
+<style>
+	.promo_image_container img {
+		max-height: 60px;
+		max-width: 70px;
+	}
+</style>
+{% endblock %}
+
+{% block coltype %}colM{% endblock %}
+
+{% block bodyclass %}{{ opts.app_label }}-{{ opts.object_name.lower }} change-form{% endblock %}
+
+{% if not is_popup %}
+{% block breadcrumbs %}
+<div class="breadcrumbs">
+<a href="{% url 'admin:index' %}">{% trans 'Home' %}</a>
+&rsaquo;
+{{ app_name }}
+</div>
+{% endblock %}
+{% endif %}
+
+{% block sidebar %}{% endblock %}
+
+{% block content %}
+<div id="content-main">
+{% block object-tools %}
+{% if change %}{% if not is_popup %}
+  <ul class="object-tools">
+    {% block object-tools-items %}
+    <li>
+        {% url opts|admin_urlname:'history' original.pk|admin_urlquote as history_url %}
+        <a href="{% add_preserved_filters history_url %}" class="historylink">{% trans "History" %}</a>
+    </li>
+    {% if has_absolute_url %}<li><a href="{% url 'admin:view_on_site' content_type_id original.pk %}" class="viewsitelink">{% trans "View on site" %}</a></li>{% endif%}
+    {% endblock %}
+  </ul>
+{% endif %}{% endif %}
+{% endblock %}
+
+<form enctype="multipart/form-data" action="" method="post" id="{{ opts.model_name }}_form">{% csrf_token %}{% block form_top %}{% endblock %}
+<div>
+{% if is_popup %}<input type="hidden" name="_popup" value="1" />{% endif %}
+{% if save_on_top %}{% block submit_buttons_top %}{% submit_row %}{% endblock %}{% endif %}
+{% if errors %}
+    <p class="errornote">
+    {% if errors|length == 1 %}{% trans "Please correct the error below." %}{% else %}{% trans "Please correct the errors below." %}{% endif %}
+    </p>
+    {{ adminform.form.non_field_errors }}
+{% endif %}
+
+{% block field_sets %}
+	<div>
+		<fieldset class="module aligned ">
+			<h2>Dettagli notifica</h2>
+			{% for fieldset in adminform %}
+				<div class="form-row">
+					<div>
+						{{ fieldset.errors }}
+						<label class="{% if fieldset.field.required %}required{% endif %}" for="{{ fieldset.field.id_for_label }}">{{ fieldset.field.label }}</label>
+						{{ fieldset }}
+					</div>
+				</div>
+			{% endfor %}
+		</fieldset>
+		<fieldset class="module aligned">
+			<h2>Manda anche via...</h2>
+			<div class="form-row field-is_active">
+				<div class="checkbox-row">
+					<input type="checkbox" name="send_via_email" id="id_send_via_email" value="1"><label for="id_send_via_email" class="vCheckboxLabel">Email</label>
+					<p class="help">Indica se inviare la webpush anche via email (i destinatari saranno selezionabili nello step successivo).</p>
+				</div>
+			</div>
+		</fieldset>
+{% endblock %}
+
+{% block after_field_sets %}{% endblock %}
+
+{% block inline_field_sets %}
+	{% for inline_admin_formset in inline_admin_formsets %}
+		{% include inline_admin_formset.opts.template %}
+	{% endfor %}
+{% endblock %}
+
+{% block after_related_objects %}{% endblock %}
+
+{# {% block submit_buttons_bottom %}{% submit_row %}{% endblock %} #}
+{% if adminform.first_field and add %}
+   <script type="text/javascript">document.getElementById("{{ adminform.first_field.id_for_label }}").focus();</script>
+{% endif %}
+
+{# JavaScript for prepopulated fields #}
+{# {% prepopulated_fields_js %} #}
+<div class="submit-row">
+<input type="submit" name="_save" class="default" value="Crea notifica">
+</div>
+</form></div>
+{% endblock %}

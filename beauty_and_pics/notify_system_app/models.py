@@ -18,26 +18,38 @@ logger = logging.getLogger(__name__)
 class Notify(models.Model):
 
     # notify type selection
+    """
     NOTIFY_EMAIL = 1
     NOTIFY_WEBPUSH = 2
     NOTIFY_TYPE = ((NOTIFY_EMAIL, 'Notify via email'), (NOTIFY_WEBPUSH, 'Notify via webpush'),)
+    """
 
     notify_id = models.AutoField(primary_key=True)
-    type = models.IntegerField(choices=NOTIFY_TYPE, default=NOTIFY_WEBPUSH)
+    # type = models.IntegerField(choices=NOTIFY_TYPE, default=NOTIFY_WEBPUSH)
     creation_date = models.DateTimeField(auto_now_add=True)
     title = models.CharField(max_length=100)
-    message = models.CharField(max_length=500)
-    action_url = models.CharField(max_length=100, null=True)
+    message = models.TextField()
+    action_url = models.CharField(max_length=100, null=True, blank=True)
 
     class Meta:
         app_label = 'notify_system_app'
 
     def __unicode__(self):
-        return str(self.title)
+        return str(self.notify_id) + ' ' + str(self.title)
 
     # function to create a notify
     def create_notify(self, data):
-        return True
+        return_var = False
+
+        if data.get("title") and data.get("message"):
+            notify_obj = Notify()
+            notify_obj.title = data.get("title")
+            notify_obj.message = data.get("message")
+            notify_obj.action_url = data.get("action_url")
+            notify_obj.save()
+            return_var.notify_id
+
+        return return_var
 
     # function to send a notify to a recipents list
     def send_notify_via_mail(self, notify_id, recipients_list):

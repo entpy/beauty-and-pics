@@ -1,7 +1,12 @@
 from django.conf.urls import patterns, include, url
 from django.contrib import admin
+from adminplus.sites import AdminSitePlus
 from django.conf import settings
 from django.conf.urls.static import static
+
+# admin to add custom view
+admin.site = AdminSitePlus()
+admin.autodiscover()
 
 handler404 = 'website.views.custom404_view'
 handler500 = 'website.views.custom500_view'
