@@ -59,21 +59,32 @@ def create_webpush(request, *args, **kwargs):
 
 def send_email_notify(request, *args, **kwargs):
     # if this is a POST request we need to process the form data
-    if request.method == 'POST':
-        # create a form instance and populate it with data from the request:
-        form = NotifyForm(request.POST)
-        # check whether it's valid:
-        if form.is_valid():
-            # process the data in form.cleaned_data as required
-            # form.save()
-            # redirect to a new URL with success message:
-            messages.add_message(request, messages.SUCCESS, 'La notifica è stata inviata con successo')
-            return HttpResponseRedirect('/admin/send-email-notify')
+    # convertito in intero perche la request è in unicode u'
+    # e il controllo non avrebbe funzionato senza conversione:
+    # u'0 o u'1 risultano veri entrambi
+    if request.method == 'POST' and int(request.POST.get('validate_notify_details')):
+	# create a form instance and populate it with data from the request:
+	form = NotifyForm(request.POST)
+	# check whether it's valid:
+	if form.is_valid():
+	    # process the data in form.cleaned_data as required
+	    # form.save()
+	    # redirect to a new URL with success message:
+	    messages.add_message(request, messages.SUCCESS, 'La notifica è stata inviata con successo')
+	    return HttpResponseRedirect('/admin/send-email-notify')
 
     # if a GET (or any other method) we'll create a blank form
     else:
-        request.session['checked_users'] = {}
-        form = NotifyForm()
+	initial_value = {
+	    "title": request.POST.get('title', ''),
+	    "message": request.POST.get('message', ''),
+	    "action_url": request.POST.get('action_url', ''),
+	}
+        form = NotifyForm(initial=initial_value)
+
+    # clear checked user session
+    if not request.method == 'POST':
+	request.session['checked_users'] = {}
 
     # show paginator
     notify_obj = Notify()
@@ -97,13 +108,11 @@ def send_email_notify(request, *args, **kwargs):
             # retrieving checked list from current view (only checkbox that are shown from paginator current view)
             senders_dictionary = notify_obj.get_checkbox_dictionary(paginator.page(old_viewed_page), checked_contacts)
 
-            # logger.error("senders dictionary: " + str(senders_dictionary))
             # saving or removing checked/unchecked checkbox from db
             request.session['checked_users'] = notify_obj.set_campaign_user(senders_dictionary=senders_dictionary, request=request)
 
-    """2""" # retrieving all checked checkbox for current promotion
+    # retrieving all checked checkbox
     campaign_contacts_list = notify_obj.get_account_list(request=request)
-    logger.debug("elementi ceccati: " + str(campaign_contacts_list))
 
     try:
         contacts = paginator.page(page)

@@ -47,6 +47,7 @@
 	contatti in sessione: {{ campaign_contacts_list }}<br />
 	<form action="" method="post" >{% block form_top %}{% endblock %}
 		{% csrf_token %}
+		<input type="hidden" class="validate_notify_details_input" name="validate_notify_details" value="0">
 		<input type="hidden" name="current_page" value="{{ contacts.number }}">
 		{% if contacts.has_previous %}
 			<input type="hidden" name="previously_page" value="{{ contacts.previous_page_number }}">
@@ -209,6 +210,8 @@
 
 			if (confirm('Stai per inviare la notifica, continuare?')) {
 				returnVar = true;
+				// enable notify details check
+				django.jQuery(".validate_notify_details_input").val("1");
 			}
 
 			return returnVar;
