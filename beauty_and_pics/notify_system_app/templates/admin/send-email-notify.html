@@ -18,6 +18,9 @@
 		max-height: 60px;
 		max-width: 70px;
 	}
+	.addictional_recipients_block {
+		display: none;
+	}
 </style>
 {% endblock %}
 
@@ -39,73 +42,117 @@
 
 {% block content %}
 <div id="content-main">
-	notify id: {{ notify_id }}
-
-	{# email notify recipients #}
-	<div class="module" id="changelist">
-		<h2>Seleziona destinatari</h2>
-		<div class="result">
-			<table id="result_list">
-				<thead>
-					<tr>
-						<th class="action-checkbox-column" scope="col">
-							<div class="text"><span>Seleziona</span></div>
-							<div class="clear"></div>
-						</th>
-						<th class="column-__str__" scope="col">
-							<div class="text"><span>Email</span></div>
-							<div class="clear"></div>
-						</th>
-						<th class="column-__str__" scope="col">
-							<div class="text"><span>Nome</span></div>
-							<div class="clear"></div>
-						</th>
-						<th class="column-__str__" scope="col">
-							<div class="text"><span>Cognome</span></div>
-							<div class="clear"></div>
-						</th>
-					</tr>
-				</thead>
-				<tbody>
-					{% for contact in contacts %}
-						<tr class="row2">
-							<td class="action-checkbox"><input type="checkbox" name="contacts[]" class="action-select" value="{{ contact.id }}" /></td>
-							<th><label>{{ contact.user.email }}</label></th>
-							<th><label>{{ contact.user.first_name }}</label></th>
-							<th><label>{{ contact.user.last_name }}</label></th>
-						</tr>
-					{% endfor %}
-				</tbody>
-			</table>
-		</div>
-	</div>
-	<div class="pagination">
-		<span class="step-links">
-			{% if contacts.has_previous %}
-				<a href="?page={{ contacts.previous_page_number }}">previous</a>
-			{% endif %}
-
-			<span class="current">
-			Page {{ contacts.number }} of {{ contacts.paginator.num_pages }}.
-			</span>
-
-			{% if contacts.has_next %}
-				<a href="?page={{ contacts.next_page_number }}">next</a>
-			{% endif %}
-		</span>
-	</div>
-
+	notify id: {{ notify_id }}<br />
+	contatti: {{ checked_contacts }}<br />
+	contatti in sessione: {{ campaign_contacts_list }}<br />
 	<form action="" method="post" >{% block form_top %}{% endblock %}
+		{% csrf_token %}
+		<input type="hidden" name="current_page" value="{{ contacts.number }}">
+		{% if contacts.has_previous %}
+			<input type="hidden" name="previously_page" value="{{ contacts.previous_page_number }}">
+		{% endif %}
+		{% if contacts.has_next %}
+			<input type="hidden" name="next_page" value="{{ contacts.next_page_number }}">
+		{% endif %}
 		<div>
-		{% if errors %}
+			{% if errors %}
 			<p class="errornote">
 				{% if errors|length == 1 %}{% trans "Please correct the error below." %}{% else %}{% trans "Please correct the errors below." %}{% endif %}
 			</p>
 			{{ adminform.form.non_field_errors }}
-		{% endif %}
+			{% endif %}
 
-		{% block field_sets %}
+			{% block field_sets %}
 			<div>
+				{# email notify recipients {{{ #}
+				<fieldset class="module aligned">
+					<h2>Manda a tutti i destinatari</h2>
+					<div class="form-row field-is_active">
+						<div class="checkbox-row">
+							<input type="checkbox" class="send_all_recipients" name="send_all_recipients" id="id_send_all_recipients" value="1"><label for="id_send_all_recipients" class="vCheckboxLabel">Manda a tutti</label>
+							<p class="help send_all_recipients_warning">(WARNING) Invia la notifica a tutti i destinatari presenti nel database.</p>
+						</div>
+					</div>
+
+					<div class="recipient_selection_block">
+						<h3>Seleziona destinatari</h3>
+						<div class="module" id="changelist">
+							<div class="result">
+								<table id="result_list">
+									<thead>
+										<tr>
+											<th class="action-checkbox-column" scope="col">
+												<div class="text"><span>Seleziona</span></div>
+												<div class="clear"></div>
+											</th>
+											<th class="column-__str__" scope="col">
+												<div class="text"><span>Email</span></div>
+												<div class="clear"></div>
+											</th>
+											<th class="column-__str__" scope="col">
+												<div class="text"><span>Nome</span></div>
+												<div class="clear"></div>
+											</th>
+											<th class="column-__str__" scope="col">
+												<div class="text"><span>Cognome</span></div>
+												<div class="clear"></div>
+											</th>
+										</tr>
+									</thead>
+									<tbody>
+										{% for contact in contacts %}
+											<tr class="row2">
+												<td class="action-checkbox"><input type="checkbox" name="contacts[]" {% if contact.user.id in campaign_contacts_list %}checked="checked"{% endif %} class="action-select" value="{{ contact.user.id }}" /></td>
+												<th><label>{{ contact.user.email }}</label></th>
+												<th><label>{{ contact.user.first_name }}</label></th>
+												<th><label>{{ contact.user.last_name }}</label></th>
+											</tr>
+										{% endfor %}
+									</tbody>
+								</table>
+							</div>
+						</div>
+						{# elements list navigation {{{ #}
+						<div class="pagination">
+							<span class="step-links">
+								{% if contacts.has_previous %}
+									<input type="submit" name="previous" value="Pagina precedente"/>
+								{% endif %}
+
+								<span class="current">
+								Pagina {{ contacts.number }} di {{ contacts.paginator.num_pages }}.
+								</span>
+
+								{% if contacts.has_next %}
+									<input type="submit" name="next" value="Pagina successiva"/>
+								{% endif %}
+							</span>
+						</div>
+						{# elements list navigation }}} #}
+					</div>
+					{# addictional recipoents block {{{ #}
+					<h2>Destinatari aggiuntivi</h2>
+					<div class="form-row field-is_active">
+						<div class="checkbox-row">
+							<input type="checkbox" class="addictional_recipients_checkbox_action" name="addictional_recipients_checkbox" id="id_addictional_recipients_checkbox" value="1"><label for="id_addictional_recipients_checkbox" class="vCheckboxLabel">Aggiungi destinatari</label>
+							<p class="help">Ti permette di inserire degli indirizzi email addizionali che riceveranno la notifica.</p>
+						</div>
+					</div>
+					<div class="addictional_recipients_block">
+						<h3>Inserisci le email aggiuntive separate da ';' (punto e virgola)</h3>
+						<div class="form-row">
+							<div>
+								
+								<label for="id_addictional_recipients_emails" class="required">Destinatari aggiuntivi</label>
+								<textarea rows="5" name="addictional_recipients_emails" id="id_addictional_recipients_emails" cols="40"></textarea>
+							</div>
+						</div>
+					</div>
+					{# addictional recipoents block }}} #}
+				</fieldset>
+				{# email notify recipients {{{ #}
+
+				{# notify title and content {{{ #}
 				<fieldset class="module aligned ">
 					<h2>Dettagli notifica</h2>
 					{% for fieldset in adminform %}
@@ -118,12 +165,74 @@
 						</div>
 					{% endfor %}
 				</fieldset>
-		{% endblock %}
+				{# notify title and content }}} #}
+			</div>
+			{% endblock %}
+		</div>
 
 		<div class="submit-row">
-			<input type="submit" name="_save" class="default" value="Crea notifica">
+			<p class="deletelink-box"><a class="deletelink reset_form_action" href="/admin/send-email-notify/{{ notify_id }}">Azzera tutto</a></p>
+			<input type="submit" name="_save" class="default submit_form_action" value="Invia notifica">
 		</div>
 	</form>
 </div>
 
+<script>
+	django.jQuery(document).ready(function(){
+		send_all_recipients_block();
+		addictional_recipients_block();
+
+		// send all recipients checkbox
+		django.jQuery("body").on("click", ".send_all_recipients", function(){
+			send_all_recipients_block();
+		});
+
+		// add addictional recipients checkbox
+		django.jQuery("body").on("click", ".addictional_recipients_checkbox_action", function(){
+			addictional_recipients_block();
+		});
+
+		// reset form action
+		django.jQuery("body").on("click", ".reset_form_action", function(){
+			returnVar = false;
+
+			if (confirm('Stai per perdere tutte le informazioni inserite, continuare?')) {
+				returnVar = true;
+			}
+
+			return returnVar;
+		});
+
+		// submit form action
+		django.jQuery("body").on("click", ".submit_form_action", function(){
+			returnVar = false;
+
+			if (confirm('Stai per inviare la notifica, continuare?')) {
+				returnVar = true;
+			}
+
+			return returnVar;
+		});
+
+		function send_all_recipients_block() {
+			if (django.jQuery(".send_all_recipients").is(":checked")) {
+				django.jQuery(".recipient_selection_block").hide();
+				django.jQuery(".send_all_recipients_warning").css("font-weight", "bold");
+				django.jQuery(".send_all_recipients_warning").css("color", "#000");
+			} else {
+				django.jQuery(".recipient_selection_block").show();
+				django.jQuery(".send_all_recipients_warning").css("font-weight", "normal");
+				django.jQuery(".send_all_recipients_warning").css("color", "#999");
+			}
+		}
+
+		function addictional_recipients_block() {
+			if (django.jQuery(".addictional_recipients_checkbox_action").is(":checked")) {
+				django.jQuery(".addictional_recipients_block").show();
+			} else {
+				django.jQuery(".addictional_recipients_block").hide();
+			}
+		}
+	});
+</script>
 {% endblock %}
