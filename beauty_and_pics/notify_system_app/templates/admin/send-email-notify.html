@@ -103,7 +103,7 @@
 									<tbody>
 										{% for contact in contacts %}
 											<tr class="row2">
-												<td class="action-checkbox"><input type="checkbox" name="contacts[]" {% if contact.user.id in campaign_contacts_list %}checked="checked"{% endif %} class="action-select" value="{{ contact.user.id }}" /></td>
+												<td class="action-checkbox"><input type="checkbox" name="contacts[]" {% if contact.user.email in campaign_contacts_list %}checked="checked"{% endif %} class="action-select" value="{{ contact.user.email }}" /></td>
 												<th><label>{{ contact.user.email }}</label></th>
 												<th><label>{{ contact.user.first_name }}</label></th>
 												<th><label>{{ contact.user.last_name }}</label></th>
