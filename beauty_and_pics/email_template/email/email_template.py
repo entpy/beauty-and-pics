@@ -65,6 +65,10 @@ class CustomEmailTemplate():
 	    'email_from' : False,
 	    'email_to' : 'info_email' ,
 	},
+	'custom_notify_email' : {
+	    'email_from' : settings.NO_REPLY_EMAIL_ADDRESS,
+	    'email_to' : 'user_email' ,
+	},
    }
 
     # email template directory
@@ -567,6 +571,29 @@ class CustomEmailTemplate():
 
         return True
 
+    def custom_notify_email(self):
+        """
+        Email custom notify creation
+        Context vars required:
+        ->    ['title','message','action_url']
+        """
+
+	# common email blocks
+	self.email_html_blocks["dear_block"] = ""
+	self.email_html_blocks["main_title_block"] = str(self.email_context.get("title"))
+	# html text email blocks
+	self.email_html_blocks["html_main_text_block"] = str(self.email_context.get("message"))
+
+        if str(self.email_context.get("action_url")):
+            self.email_html_blocks["html_call_to_action_block"] = self.get_call_to_action_template(str(self.email_context.get("action_url")), label="Informazioni aggiuntive")
+	# plain text email blocks
+	self.email_html_blocks["plain_main_text_block"] = str(self.email_context.get("message"))
+	self.email_html_blocks["plain_call_to_action_block"] = "Informazioni aggiuntive: " + str(self.email_context.get("action_url"))
+
+        # email subject
+        self.email_subject = str(self.email_context.get("title"))
+
+        return True
     """Functions to create email inner block }}}"""
 
     def get_random_tip(self):

@@ -5,11 +5,11 @@ from django.shortcuts import render
 from django.contrib import messages
 from django.http import HttpResponseRedirect
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from beauty_and_pics.consts import project_constants
 from notify_system_app.models import Notify
 from notify_system_app.models import User_Notify
 from notify_system_app.forms import NotifyForm
 from account_app.models.accounts import Account
-from beauty_and_pics.consts import project_constants
 import sys, logging
 
 # force utf8 read data
@@ -58,6 +58,23 @@ def create_webpush(request, *args, **kwargs):
     return render(request, 'admin/create_webpush.html', context)
 
 def send_email_notify(request, *args, **kwargs):
+    notify_obj = Notify()
+    notify_retrieved = {}
+    # clear checked user session
+    if not request.method == 'POST':
+	request.session['checked_users'] = {}
+
+    # show paginator
+    contact_list = Account.objects.filter(user__groups__name=project_constants.CATWALK_GROUP_NAME)
+    paginator = Paginator(contact_list, 3) # Show 25 contacts per page
+    checked_contacts = None
+
+    # save checked elements into session
+    request.session['checked_users'] = notify_obj.save_checked_elemets(paginator=paginator, request=request)
+
+    # retrieving all checked checkbox
+    campaign_contacts_list = notify_obj.get_account_list(request=request)
+
     # if this is a POST request we need to process the form data
     # convertito in intero perche la request è in unicode u'
     # e il controllo non avrebbe funzionato senza conversione:
@@ -67,52 +84,40 @@ def send_email_notify(request, *args, **kwargs):
 	form = NotifyForm(request.POST)
 	# check whether it's valid:
 	if form.is_valid():
-	    # process the data in form.cleaned_data as required
-	    # form.save()
+            # TODO: prelevo l'elenco delle mail selezionate e quelle inserite
+            # a mano, tutte messe assieme in un'unica lista, fare funzione
+            """
+            addictional_email_list = []
+            if str(request.POST.get('addictional_recipients_emails')):
+                addictional_email_string = str(request.POST.get('addictional_recipients_emails'))
+                for element in addictional_email_string.split(';'):
+                    addictional_email_list.append(element)
+
+            # concat selected emails with addictional emails
+            recipients_list = campaign_contacts_list + addictional_email_list
+            """
+
+            recipients_list = notify_obj.create_recipients_list(retrieve_all_users=int(request.POST.get('send_all_recipients', 0)), campaign_contacts_list=campaign_contacts_list, addictional_email_string=str(request.POST.get('addictional_recipients_emails')))
+            logger.debug("### elenco destinatari: " + str(recipients_list))
+
+            # send notify email with custom email template object app ;)
+            notify_obj.send_notify_via_mail(notify_data=request.POST, recipients_list=recipients_list)
+
 	    # redirect to a new URL with success message:
 	    messages.add_message(request, messages.SUCCESS, 'La notifica è stata inviata con successo')
 	    return HttpResponseRedirect('/admin/send-email-notify')
 
     # if a GET (or any other method) we'll create a blank form
     else:
-	initial_value = {
-	    "title": request.POST.get('title', ''),
-	    "message": request.POST.get('message', ''),
-	    "action_url": request.POST.get('action_url', ''),
-	}
+        # create initial form value
+        initial_value = notify_obj.build_form_initial_value(request=request, kwargs=kwargs)
         form = NotifyForm(initial=initial_value)
-
-    # clear checked user session
-    if not request.method == 'POST':
-	request.session['checked_users'] = {}
-
-    # show paginator
-    notify_obj = Notify()
-    contact_list = Account.objects.filter(user__groups__name=project_constants.CATWALK_GROUP_NAME)
-    paginator = Paginator(contact_list, 3) # Show 25 contacts per page
-    checked_contacts = None
 
     # retrieving new page number
     if (request.POST.get('next', '')):
             page = request.POST.get('next_page')
     else:
             page = request.POST.get('previously_page')
-
-    # retrieving old page number
-    old_viewed_page = request.POST.get('current_page')
-
-    # inserisco/rimuovo gli id dalla sessione
-    if request.POST and old_viewed_page:
-            checked_contacts = request.POST.getlist('contacts[]')
-
-            # retrieving checked list from current view (only checkbox that are shown from paginator current view)
-            senders_dictionary = notify_obj.get_checkbox_dictionary(paginator.page(old_viewed_page), checked_contacts)
-
-            # saving or removing checked/unchecked checkbox from db
-            request.session['checked_users'] = notify_obj.set_campaign_user(senders_dictionary=senders_dictionary, request=request)
-
-    # retrieving all checked checkbox
-    campaign_contacts_list = notify_obj.get_account_list(request=request)
 
     try:
         contacts = paginator.page(page)
@@ -139,7 +144,7 @@ def send_email_notify(request, *args, **kwargs):
 admin.site.register(Notify, NotifyAdmin)
 admin.site.register(User_Notify)
 admin.site.register_view('create-webpush', 'Create webpush', view=create_webpush)
-admin.site.register_view('send-email-notify/(?:(?P<notify_id>\d+)/)?', 'Send email notify', view=send_email_notify)
+admin.site.register_view('send-email-notify/(?:(?P<notify_id>.+)/)?', 'Send email notify', view=send_email_notify)
 
 """
 TODO:
