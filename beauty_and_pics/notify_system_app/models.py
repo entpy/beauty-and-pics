@@ -187,7 +187,7 @@ class Notify(models.Model):
         return_var = []
         addictional_email_list = []
 
-        # TODO fare qui
+        # all users email
         if retrieve_all_users:
             all_contacts_list = Account.objects.values('user__email').filter(user__groups__name=project_constants.CATWALK_GROUP_NAME)
 	    for single_contact in all_contacts_list:
@@ -202,14 +202,6 @@ class Notify(models.Model):
         return_var = campaign_contacts_list + addictional_email_list
 
         return return_var
-
-    # function to mark a notify as read
-    def mark_notify_as_read(self, notify_id, user_id):
-        return True
-
-    # function to count notify not read about a user
-    def count_notify_to_read(self, user_id):
-        return True
 
     # function to retrieve info (title, description, ecc...) about a notify id
     def get_notify_info(self, notify_id):
@@ -228,22 +220,26 @@ class Notify(models.Model):
 
         return return_var
 
+    # function to count notify not read about a user
+    def count_notify_to_read(self, user_id):
+        return_var = 0
+        # total notify number
+        total_notify_number = Notify.objects.count()
+        # read notify about this user
+        total_read_notify = User_Notify.objects.filter(user__id=user_id).count()
+
+        if total_notify_number:
+            return_var = total_notify_number - total_read_notify
+
+        return return_var
+
+    # function to mark a notify as read
+    def mark_notify_as_read(self, notify_id, user_id):
+        return True
+
     # function to retrieve a list of notify about a user
     def user_notify_list(self, filters, user_id):
         return True
-
-"""
-# la notifica può essere inviata via mail o vista solo sul sito (tipo push)
-class Notify_Type(models.Model):
-    notify_type_id = models.AutoField(primary_key=True)
-    description = models.CharField(max_length=100, null=True)
-
-    class Meta:
-        app_label = 'notify_system_app'
-
-    def __unicode__(self):
-        return str(self.description)
-"""
 
 # se è presente una riga qua, la notifica è stata letta dall'utente
 # valido solo per le notifiche sul sito

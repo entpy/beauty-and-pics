@@ -84,19 +84,7 @@ def send_email_notify(request, *args, **kwargs):
 	form = NotifyForm(request.POST)
 	# check whether it's valid:
 	if form.is_valid():
-            # TODO: prelevo l'elenco delle mail selezionate e quelle inserite
-            # a mano, tutte messe assieme in un'unica lista, fare funzione
-            """
-            addictional_email_list = []
-            if str(request.POST.get('addictional_recipients_emails')):
-                addictional_email_string = str(request.POST.get('addictional_recipients_emails'))
-                for element in addictional_email_string.split(';'):
-                    addictional_email_list.append(element)
-
-            # concat selected emails with addictional emails
-            recipients_list = campaign_contacts_list + addictional_email_list
-            """
-
+            # create recipients list
             recipients_list = notify_obj.create_recipients_list(retrieve_all_users=int(request.POST.get('send_all_recipients', 0)), campaign_contacts_list=campaign_contacts_list, addictional_email_string=str(request.POST.get('addictional_recipients_emails')))
             logger.debug("### elenco destinatari: " + str(recipients_list))
 
@@ -152,4 +140,10 @@ TODO:
  - Sezione per inviare notifiche via mail a determinati utenti
  - Per inviare le webpush anche via mail, arrivare in pagina con l'id webpush
    e precompilare il form.
+
+Visualizzazione sulla piattaforma:
+ - messaggio di alert alla nuova notifica webpush
+ - pagina per visualizzare le notifiche ordinate per data, a blocchi di n e se
+   lette o no
+ - pagina dettaglio notifica con il contenuto della webpush
 """

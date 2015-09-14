@@ -31,8 +31,11 @@ $(document).ready(function(){
 	// write bootstrap modal inside body tag
 	bootstrapModalsObect.writeModalInsideBodyTag();
 
-	// showing fuck cookie bar (W EU)
+	// show fucking cookie bar (W EU)
 	lawCookieCompliance.createDivOnLoad();
+
+	// check notify to read
+	count_notify_to_read();
 
 	// toggle navigation
 	$(document).on("click",".navbar-toggle", function(){
@@ -334,6 +337,24 @@ function retrieveUserInfo(userId) {
 		// perform ajax call to save a new profile image
 		retrieveUserInfoAjaxAction.performAjaxAction();
 	}
+}
+
+/* Function to count notify not read */
+function count_notify_to_read() {
+	// save image id
+	var ajaxObject = customAjaxAction;
+	// setting action name
+	retrieveUserInfoAjaxAction.setActionName("count_unread_notify");
+	// success callback function
+	var successCallback = function(jsonResponse) {
+		// open bootstrap modal
+		unread_notify_total = jsonResponse.unread_notify_total
+		// bootstrapModalsObect.showFavoriteUserModal(user_data.user_id, user_data.user_first_name, user_data.user_last_name, user_data.user_ranking, user_data.user_points, user_data.user_profile_image_url);
+		alert("notifiche non lette: " + unread_notify_total);
+	};
+	retrieveUserInfoAjaxAction.setAjaxSuccessCallbackFunction(successCallback);
+	// perform ajax call to save a new profile image
+	retrieveUserInfoAjaxAction.performAjaxAction();
 }
 
 /* Function to write string at the countdown finish */

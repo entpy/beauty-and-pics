@@ -17,6 +17,7 @@ from contest_app.models.votes import Vote
 from account_app.models import *
 from contest_app.models import Contest
 from upload_image_box.models import cropUploadedImages
+from notify_system_app.models import Notify
 from website.exceptions import *
 import logging, json
 
@@ -40,6 +41,7 @@ class ajaxManager():
         self.__valid_action_list += ('delete_image',)
         self.__valid_action_list += ('add_favorite',)
         self.__valid_action_list += ('get_user_info',)
+        self.__valid_action_list += ('count_unread_notify',)
 
         # retrieve action to perform
         self.ajax_action = request.POST.get("ajax_action")
@@ -389,6 +391,23 @@ class ajaxManager():
             data = {'success' : True, "user_info" : response_data}
 
         # build JSON response
+        json_data_string = json.dumps(data)
+        self.set_json_response(json_response=json_data_string)
+
+        return True
+
+    def count_unread_notify(self):
+        """Function to count unread notify"""
+        logger.debug("ajax_function: @@get_user_info@@")
+        logger.debug("parametri della chiamata: " + str(self.request.POST))
+
+        # current logged user id
+        user_id = self.request.user.id
+
+        notify_obj = Notify()
+        unread_notify_number = notify_obj.count_notify_to_read(user_id=user_id)
+
+        data = {'success' : True, 'unread_notify_total': unread_notify_number}
         json_data_string = json.dumps(data)
         self.set_json_response(json_response=json_data_string)
 
