@@ -271,7 +271,7 @@ def catwalk_report_user(request, user_id):
     return render(request, 'website/catwalk/catwalk_report_user.html', context)
 
 @login_required
-def profile_unsubscribe(request):
+def profile_preferences(request):
 
     account_obj = Account()
     user_obj = account_obj.get_user_about_id(user_id=request.user.id)
@@ -304,7 +304,7 @@ def profile_unsubscribe(request):
         "enable_receive_contest_report": enable_receive_contest_report,
     }
 
-    return render(request, 'website/profile/profile_unsubscribe.html', context)
+    return render(request, 'website/profile/profile_preferences.html', context)
 # }}}
 
 # private profile {{{
@@ -460,6 +460,17 @@ def profile_area51(request):
     }
 
     return render(request, 'website/profile/profile_area51.html', context)
+
+@login_required
+@user_passes_test(check_if_is_a_catwalker_user)
+def profile_notify(request):
+
+    # TODO: elenco delle notifiche per l'utente loggato con data >= data
+    # creazione utente, per ogni notifica guardo se è stata letta o no
+    context = {
+    }
+
+    return render(request, 'website/profile/profile_notify.html', context)
 # }}}
 
 # test email {{{

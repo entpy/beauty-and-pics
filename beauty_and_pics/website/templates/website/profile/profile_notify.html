@@ -1,0 +1,40 @@
+{% extends "website/inc/base_profile.html" %}
+{% load staticfiles %}
+
+{% block title %}{{ site_name }} | notifiche e aggiornamenti{% endblock %}
+
+{% block description %}Notifiche e aggiornamenti: in questa pagina vengono mostrate le notifiche e gli aggiornamenti di {{ site_name }}.{% endblock %}
+
+{% block container4_title %}{% endblock %}
+
+{# navigation tabs active element #}
+{% block container4_navigation_profile_notify %}active{% endblock %}
+
+{% block container4_content %}
+<div class="row">
+	<div class="col-md-12">
+		<h3>Notifiche</h3>
+	</div>
+	<div class="col-md-12">
+		<div class="alert alert-info">
+			<p>Notifiche e aggiornamenti sulla piattaforma {{ site_name }} sono visualizzabili in questa sezione.</p>
+		</div>
+	</div>
+</div>
+{% endblock container4_content %}
+{% block custom_js %}
+<script>
+	$(document).ready(function(){
+		$(".submitButtonClickAction").click(function(event){
+			// preventing default click event
+			event.preventDefault();
+			// serialize form data
+			ajaxFormValidation.callData["data"] = $(".ajax_form").serialize();
+			// performing ajax call
+			ajaxFormValidation.validateForm();
+
+			return true;
+		});
+	});
+</script>
+{% endblock custom_js %}

@@ -34,9 +34,6 @@ $(document).ready(function(){
 	// show fucking cookie bar (W EU)
 	lawCookieCompliance.createDivOnLoad();
 
-	// check notify to read
-	count_notify_to_read();
-
 	// toggle navigation
 	$(document).on("click",".navbar-toggle", function(){
 		$(".toggle_navigation").toggle();
@@ -339,24 +336,6 @@ function retrieveUserInfo(userId) {
 	}
 }
 
-/* Function to count notify not read */
-function count_notify_to_read() {
-	// save image id
-	var ajaxObject = customAjaxAction;
-	// setting action name
-	retrieveUserInfoAjaxAction.setActionName("count_unread_notify");
-	// success callback function
-	var successCallback = function(jsonResponse) {
-		// open bootstrap modal
-		unread_notify_total = jsonResponse.unread_notify_total
-		// bootstrapModalsObect.showFavoriteUserModal(user_data.user_id, user_data.user_first_name, user_data.user_last_name, user_data.user_ranking, user_data.user_points, user_data.user_profile_image_url);
-		alert("notifiche non lette: " + unread_notify_total);
-	};
-	retrieveUserInfoAjaxAction.setAjaxSuccessCallbackFunction(successCallback);
-	// perform ajax call to save a new profile image
-	retrieveUserInfoAjaxAction.performAjaxAction();
-}
-
 /* Function to write string at the countdown finish */
 function writeCountdownEndString(contestStatus) {
 	if (contestStatus == "active") {
@@ -559,6 +538,30 @@ var bootstrapModalsObect = {
 		messageBlockTemplate += '</div>';
 		$(".bootstrap_modal").find('.modal-title').html("Benvenuta/o al concorso!");
 		$(".bootstrap_modal").find('.modal-footer').html('<button type="button" class="btn btn-success" data-dismiss="modal">Si, iniziamo!</button>');
+		$(".bootstrap_modal").find('.modal-body').html(messageBlockTemplate);
+		this.showBootstrapModal();
+
+		return false;
+	},
+
+	/* Function to build and show system notify modal */
+	showSystemNotifyModal: function(userFirstName, notifyToRead) {
+		this.resetBootstrapModal();
+		var messageBlockTemplate = '';
+		messageBlockTemplate += '<div class="row">';
+		messageBlockTemplate += '<div class="col-md-12">';
+		messageBlockTemplate += '<p>';
+		messageBlockTemplate += '<h4>Ciao ' + userFirstName + ',</h4>';
+		if (notifyToRead == 1) {
+			messageBlockTemplate += 'hai <b>' + notifyToRead + '</b> nuova notifica ';
+		} else {
+			messageBlockTemplate += 'hai <b>' + notifyToRead + '</b> nuove notifiche ';
+		}
+		messageBlockTemplate += 'di <b>Beauty and Pics</b> da leggere.<br />'
+		messageBlockTemplate += '</p>';
+		messageBlockTemplate += '</div>';
+		$(".bootstrap_modal").find('.modal-title').html("Sistema di notifiche");
+		$(".bootstrap_modal").find('.modal-footer').html('<button type="button" class="btn btn-default" data-dismiss="modal">Chiudi</button><a href="/profilo/notifiche/" class="btn btn-success">Leggi ora</a>');
 		$(".bootstrap_modal").find('.modal-body').html(messageBlockTemplate);
 		this.showBootstrapModal();
 

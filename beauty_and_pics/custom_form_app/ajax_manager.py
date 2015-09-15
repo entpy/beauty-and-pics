@@ -401,13 +401,33 @@ class ajaxManager():
         logger.debug("ajax_function: @@get_user_info@@")
         logger.debug("parametri della chiamata: " + str(self.request.POST))
 
+        account_obj = Account()
+        notify_obj = Notify()
+
         # current logged user id
         user_id = self.request.user.id
 
-        notify_obj = Notify()
-        unread_notify_number = notify_obj.count_notify_to_read(user_id=user_id)
+        # retrieve user info
+        try:
+            account_info = account_obj.custom_user_id_data(user_id=user_id)
+        except Account.DoesNotExist:
+            # user id doesn't exists
+            data = {'error' : True, 'message': "Id utente non esistente: " + str(user_id)}
+            pass
+        else:
+            # count unread notify number
+            unread_notify_number = notify_obj.count_notify_to_read(user_id=user_id)
 
-        data = {'success' : True, 'unread_notify_total': unread_notify_number}
+            # block popup reopen on page reload
+            self.request.session['USER_NOTIFY_POPUP_ALREADY_SHOWN'] = True
+
+            # build json response
+            data = {
+                    'success' : True,
+                    'unread_notify_total': unread_notify_number,
+                    'user_first_name' : account_info["first_name"],
+            }
+
         json_data_string = json.dumps(data)
         self.set_json_response(json_response=json_data_string)
 

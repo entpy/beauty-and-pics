@@ -43,6 +43,7 @@
 </div>
 {% endblock container4_content %}
 {% block custom_js %}
+{{ block.super }}
 <script>
 	elementsListObject.addFilter("show_limit", 20);
 	$(document).ready(function(){

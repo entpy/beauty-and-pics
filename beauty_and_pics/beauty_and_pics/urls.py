@@ -37,7 +37,8 @@ urlpatterns = patterns('',
     url(r'^profilo/preferiti/$', 'website.views.profile_favorites', name='profile_favorites'),
     url(r'^profilo/statistiche/$', 'website.views.profile_stats', name='profile_stats'),
     url(r'^profilo/zona-proibita/$', 'website.views.profile_area51', name='profile_area51'),
-    url(r'^profilo/disiscriviti/$', 'website.views.profile_unsubscribe', name='profile_unsubscribe'),
+    url(r'^profilo/preferenze/$', 'website.views.profile_preferences', name='profile_preferences'),
+    url(r'^profilo/notifiche/$', 'website.views.profile_notify', name='profile_notify'),
 
     # email test
     url(r'^email-test/(?P<email_name>\w+)/(?P<email_mode>\w+)/$', 'website.views.email_test', name='email_test'),

@@ -38,8 +38,9 @@
 {% block container4_navigation_profile_data %}{% endblock %}
 {% block container4_navigation_profile_favorites %}{% endblock %}
 {% block container4_navigation_profile_stats %}{% endblock %}
+{% block container4_navigation_profile_preferences %}{% endblock %}
+{% block container4_navigation_profile_notify %}{% endblock %}
 {% block container4_navigation_profile_area51 %}{% endblock %}
-{% block container4_navigation_profile_unsubscribe %}{% endblock %}
 
 {# container content #}
 {% block container4_content %}{% endblock %}
@@ -57,7 +58,12 @@
 {% endblock catwalk_tip %}
 
 {# custom page js #}
-{% block custom_js %}{% endblock %}
+{% block custom_js %}
+{{ block.super }}
+{% if not user_notify_popup_already_shown %}
+<script src="{% static "notify_system_app/js/notify.js" %}"></script>
+{% endif %}
+{% endblock custom_js %}
 
 {# custom page css #}
 {% block custom_css %}{% endblock %}

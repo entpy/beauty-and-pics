@@ -38,7 +38,12 @@
 {% block catwalk_tip %}{% endblock %}
 
 {# custom page js #}
-{% block custom_js %}{% endblock %}
+{% block custom_js %}
+{{ block.super }}
+{% if not user_notify_popup_already_shown %}
+<script src="{% static "notify_system_app/js/notify.js" %}"></script>
+{% endif %}
+{% endblock custom_js %}
 
 {# return to catwalk block #}
 {% block return_to_catwalk_block %}

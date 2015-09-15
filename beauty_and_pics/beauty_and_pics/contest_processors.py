@@ -28,6 +28,8 @@ def common_contest_processors(request):
     contest_info = contest_obj.get_contest_info_about_type(contest_type=contest_type)
     # last contest winner
     contest_winner = hall_of_fame_obj.get_last_active_contest_winner(contest_type=contest_type)
+    # if the user already shown the notify popup
+    user_notify_popup_already_shown = False
     ### template context vars }}} ###
 
     # check if user is authenticated
@@ -38,6 +40,7 @@ def common_contest_processors(request):
         # logger.debug("[TEMPLATE_PROCESSOR] user logged in (user id: " + str(autenticated_user_data["user_id"]) + ")")
         profile_thumbnail_image_url = book_obj.get_profile_thumbnail_image_url(user_id=autenticated_user_data["user_id"])
         logged_user_id = autenticated_user_data.get("user_id")
+        user_notify_popup_already_shown = request.session.get('USER_NOTIFY_POPUP_ALREADY_SHOWN', False)
     else:
         # logger.debug("[TEMPLATE_PROCESSOR] user NOT logged in")
         pass
@@ -51,4 +54,5 @@ def common_contest_processors(request):
             'authenticated_user_contest_type': autenticated_user_data.get("contest_type"),
             'site_name': project_constants.SITE_NAME,
             'logged_user_id': logged_user_id,
+            'user_notify_popup_already_shown': user_notify_popup_already_shown,
     }
