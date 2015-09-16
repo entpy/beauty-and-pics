@@ -21,20 +21,22 @@
 		</div>
 	</div>
 </div>
+<div class="text-center">
+	<a class="btn btn-success loadMoreElementsAction" href="#">Carica altre</a>
+</div>
 {% endblock container4_content %}
 {% block custom_js %}
 <script>
+	elementsListObject.addFilter("show_limit", 5);
 	$(document).ready(function(){
-		$(".submitButtonClickAction").click(function(event){
-			// preventing default click event
-			event.preventDefault();
-			// serialize form data
-			ajaxFormValidation.callData["data"] = $(".ajax_form").serialize();
-			// performing ajax call
-			ajaxFormValidation.validateForm();
+		$(".loadMoreElementsAction").click(function(){
+			elementsListObject.setElementsListType("notify");
+			elementsListObject.getElementsList();
 
-			return true;
+			return false;
 		});
+
+		$(".loadMoreElementsAction").click();
 	});
 </script>
 {% endblock custom_js %}

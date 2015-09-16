@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from django.db import models
+from django.db.models import F
 from django.contrib.auth.models import User
 from datetime import date
 from dateutil.relativedelta import *
@@ -226,20 +227,34 @@ class Notify(models.Model):
         # total notify number
         total_notify_number = Notify.objects.count()
         # read notify about this user
-        total_read_notify = User_Notify.objects.filter(user__id=user_id).count()
+        total_read_notify = User_Notify.objects.filter(user__id=user_id, notify__creation_date__gte=F('user__account__creation_date')).count()
 
         if total_notify_number:
             return_var = total_notify_number - total_read_notify
 
         return return_var
 
-    # function to mark a notify as read
+    # TODO: check this function
     def mark_notify_as_read(self, notify_id, user_id):
+        """Function to mark a notify as read"""
+        user_notify_obj = User_Notify()
+        user_notify_obj.user = user_id
+        user_notify_obj.notify = notify_id
+        user_notify_obj.save()
+
         return True
 
     # function to retrieve a list of notify about a user
-    def user_notify_list(self, filters, user_id):
-        return True
+    def user_notify_list(self, user_id, filters_list=None):
+
+        # TODO: work on this
+        return_var = User_Notify.objects.values('notify__title', 'notify__message', 'notify__action_url', 'notify__creation_date', 'user_notify_id').filter(user__id=user_id, notify__creation_date__gte=F('user__account__creation_date'))
+        return_var = return_var.order_by('-notify__creation_date')
+
+        if filters_list.get("start_limit") and filters_list.get("show_limit"):
+            return_var = return_var[filters_list["start_limit"]:filters_list["show_limit"]]
+
+        return return_var
 
 # se è presente una riga qua, la notifica è stata letta dall'utente
 # valido solo per le notifiche sul sito

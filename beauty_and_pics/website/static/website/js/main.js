@@ -852,7 +852,7 @@ var voteUserObject = {
 var elementsListObject = {
 	__elementsListFilters : {
 		"user_id" : null, // required in "favorites" and "book" elementsListType
-		"elements_list_type" : null, // catwalker, favorite, photobook
+		"elements_list_type" : null, // catwalker, favorite, photobook, notify
 		"start_limit" : 0, // element retrieving start limit
 		"show_limit" : 1, // number of element retrieved per call
 		"filter_name" : null, // main filter (Es. latest_registered, classification, ecc...)
@@ -997,6 +997,10 @@ var elementsListObject = {
 				} else if (jsonResponse.elements_list_type == "last_upload") {
 					// build and write block into html
 					elementsListObject.writeHtmlBlock(elementsListObject.manageFavoriteList(jsonResponse.elements_list));
+				} else if (jsonResponse.elements_list_type == "notify") {
+					// TODO build and write block into html
+					// elementsListObject.writeHtmlBlock(elementsListObject.manageFavoriteList(jsonResponse.elements_list));
+					console.log(jsonResponse.elements_list);
 				}
 
 				// set blocks number limit
