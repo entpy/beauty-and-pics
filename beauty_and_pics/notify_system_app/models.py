@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from django.db import models
-from django.db.models import Q, F, Count
+from django.db.models import Q, F
 from django.contrib.auth.models import User
 from datetime import date
 from dateutil.relativedelta import *
@@ -204,20 +204,26 @@ class Notify(models.Model):
 
         return return_var
 
-    # function to retrieve info (title, description, ecc...) about a notify id
-    def get_notify_info(self, notify_id):
-        return_var = {}
-
+    def get_notify_instance(self, notify_id):
+        """Function to retrieve notify instance"""
+        return_var = None
+ 
         try:
-            notify_obj = Notify.objects.get(pk=notify_id)
+            return_var = Notify.objects.get(pk=notify_id)
         except Notify.DoesNotExist:
             pass
-        else:
-            return_var['notify_id'] = notify_obj.notify_id
-            return_var['creation_date'] = notify_obj.creation_date
-            return_var['title'] = notify_obj.title
-            return_var['message'] = notify_obj.message
-            return_var['action_url'] = notify_obj.action_url
+
+        return return_var
+
+    # function to retrieve info (title, description, ecc...) about a notify id
+    def get_notify_info(self, notify_instance):
+        return_var = {}
+
+        return_var['notify_id'] = notify_instance.notify_id
+        return_var['creation_date'] = notify_instance.creation_date
+        return_var['title'] = notify_instance.title
+        return_var['message'] = notify_instance.message
+        return_var['action_url'] = notify_instance.action_url
 
         return return_var
 
@@ -234,29 +240,63 @@ class Notify(models.Model):
 
         return return_var
 
-    # TODO: check this function
-    def mark_notify_as_read(self, notify_id, user_id):
-        """Function to mark a notify as read"""
-        user_notify_obj = User_Notify()
-        user_notify_obj.user = user_id
-        user_notify_obj.notify = notify_id
-        user_notify_obj.save()
+    def mark_notify_as_read(self, notify_instance, user_instance):
+        """Function to mark a notify as read, only if not already exists"""
 
-        return True
+        return_var = False
+
+        try:
+            User_Notify.objects.get(notify=notify_instance, user=user_instance)
+        except User_Notify.DoesNotExist:
+            user_notify_obj = User_Notify()
+            user_notify_obj.user = user_instance
+            user_notify_obj.notify = notify_instance
+            user_notify_obj.save()
+            return_var = True
+
+        return return_var
 
     # function to retrieve a list of notify about a user
     def user_notify_list(self, user_id, filters_list=None):
 
-        # TODO: work on this
-	"""
-        return_var = User_Notify.objects.values('notify__title', 'notify__message', 'notify__action_url', 'notify__creation_date', 'user_notify_id')
-        return_var = return_var.filter(user__id=user_id, notify__creation_date__gte=F('user__account__creation_date'))
-        return_var = return_var.order_by('-notify__creation_date')
-	"""
-        return_var = Notify.objects.filter(Q(user_notify__user=user_id) | Q(user_notify__user_notify_id__isnull=True)).select_related('title', 'user_notify__user_notify_id')
+        # eseguo una left join di User_Notify in Notify filtrando per user_id
+        """
+        SELECT `notify_system_app_notify`.`title`, `notify_system_app_notify`.`creation_date`, `notify_system_app_user_notify`.`user_notify_id`
+        FROM `notify_system_app_notify`
+        LEFT OUTER JOIN `notify_system_app_user_notify` ON ( `notify_system_app_notify`.`notify_id` = `notify_system_app_user_notify`.`notify_id` )
+        WHERE (
+                `notify_system_app_user_notify`.`user_id` = 2 OR
+                `notify_system_app_user_notify`.`user_notify_id` IS NULL
+              );
+        """
+        return_var = Notify.objects.filter(Q(user_notify__user=user_id) | Q(user_notify__user_notify_id__isnull=True)).values('notify_id', 'title', 'creation_date', 'user_notify__user_notify_id').order_by('-notify_id')
 
-        #if filters_list.get("start_limit") and filters_list.get("show_limit"):
-            #return_var = return_var[filters_list["start_limit"]:filters_list["show_limit"]]
+        if filters_list.get("start_limit") and filters_list.get("show_limit"):
+            return_var = return_var[filters_list["start_limit"]:filters_list["show_limit"]]
+
+        return list(return_var)
+
+    def check_if_show_notify(self, user_id, notify_date):
+        """Check if a notify could be shown -> (notify_date >= user_creation_date)"""
+        return_var = False
+        account_obj = Account()
+
+        # retrieve account info
+        user_info = account_obj.get_user_about_id(user_id=user_id)
+        # retrieve user join date
+        account_creation_date = user_info.account.creation_date
+
+        # log some fucking stuff
+        logger.info("data creazione account (id=" + str(user_id) + "): " + str(account_creation_date))
+        logger.info("data creazione notifica: " + str(notify_date))
+
+        # diff_between_dates = relativedelta(account_creation_date, notify_date)
+        if notify_date >= account_creation_date:
+            # la notifica è più recente o uguale all'account
+            return_var = True
+        else:
+            # l'account creato è più recente della notifica
+            pass
 
         return return_var
 

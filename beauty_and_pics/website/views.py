@@ -25,6 +25,7 @@ from custom_form_app.forms.help_request_form import *
 from custom_form_app.forms.report_user_form import *
 from custom_form_app.forms.upload_book_form import *
 from custom_form_app.forms.unsubscribe_form import *
+from notify_system_app.models import Notify
 import logging, time
 
 # Get an instance of a logger
@@ -464,13 +465,34 @@ def profile_area51(request):
 @login_required
 @user_passes_test(check_if_is_a_catwalker_user)
 def profile_notify(request):
+    """View to show notify list"""
+    return render(request, 'website/profile/profile_notify.html', False)
 
-    # TODO: elenco delle notifiche per l'utente loggato con data >= data
-    # creazione utente, per ogni notifica guardo se è stata letta o no
+@login_required
+@user_passes_test(check_if_is_a_catwalker_user)
+def profile_notify_details(request, notify_id):
+    """View to show a single notify details"""
+
+    notify_obj = Notify()
+    account_obj = Account()
+
+    # retrieve user instance
+    user_instance = account_obj.get_user_about_id(user_id=request.user.id)
+    # retrieve notify instance
+    notify_instance = notify_obj.get_notify_instance(notify_id=notify_id)
+    # retrieve notify details
+    notify_details = notify_obj.get_notify_info(notify_instance=notify_instance)
+    # mark notify as read
+    notify_obj.mark_notify_as_read(notify_instance=notify_instance, user_instance=user_instance)
+
     context = {
+            'notify_creation_date' : notify_details['creation_date'],
+            'notify_title' : notify_details['title'],
+            'notify_message' : notify_details['message'],
+            'notify_action_url' : notify_details['action_url'],
     }
 
-    return render(request, 'website/profile/profile_notify.html', context)
+    return render(request, 'website/profile/profile_notify_details.html', context)
 # }}}
 
 # test email {{{

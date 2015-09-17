@@ -3,6 +3,7 @@
 from django.shortcuts import render
 from django.http import HttpResponse
 from django.conf import settings
+from django.utils import formats
 from custom_form_app.forms.base_form_class import *
 from custom_form_app.forms.register_form import *
 from custom_form_app.forms.password_recover import *
@@ -205,21 +206,21 @@ class ajaxManager():
         # user notify section
         if elements_list_type == "notify":
             notify_obj = Notify()
-	    # contest_type = contest_obj.get_contest_type_from_session(request=self.request.authenticated_user_contest_type)
-            json_account_element = notify_obj.user_notify_list(user_id=self.request.user.id, filters_list=self.request.POST)
+            # retrieve user notify
+            filtered_elements = notify_obj.user_notify_list(user_id=self.request.user.id, filters_list=self.request.POST)
+            # retrieve user creation data
 
-            """
-            json_account_element = book_obj.get_all_photobook_list(contest_type=contest_obj.get_contest_type_from_session(request=self.request), filters_list=self.request.POST)
+            if filtered_elements:
+                for notify in filtered_elements:
+                    # se la notifica è stata creata dopo l'utente allora gliela faccio visualizzare
+                    if notify_obj.check_if_show_notify(user_id=self.request.user.id, notify_date=notify["creation_date"]):
+                        json_account_element.append({
+                                "notify_id": str(notify["notify_id"]),
+                                "title": str(notify["title"]),
+                                "creation_date": str(formats.date_format(notify["creation_date"], "SHORT_DATE_FORMAT")),
+                                "already_read": str(notify["user_notify__user_notify_id"] or ''),
+                        }),
 
-            for photobook_element in filtered_elements:
-                logger.debug("element list: " + str(photobook_element))
-		thumbnail_url = book_obj.get_image_url(book_image_id=photobook_element["image_id__thumbnail_image"])
-		if thumbnail_url:
-		    json_account_element.append({
-			    "user_id": photobook_element["user__id"],
-			    "thumbnail_image_url": book_obj.get_base_image_url() + thumbnail_url,
-		    }),
-            """
         """
         data = {
                 'success' : True,
@@ -233,7 +234,7 @@ class ajaxManager():
         """
 
         data = {'success' : True, 'elements_list_type': elements_list_type, 'elements_list': json_account_element,}
-        json_data_string = json.dumps(data)
+        json_data_string = json.dumps(data) # INFO: se la query non è stata eseguita precedente (tramite list, loop, ecc...) questo fa un botto di chiamate al db inutili
         self.set_json_response(json_response=json_data_string)
 
         return True

@@ -6843,6 +6843,7 @@ a.list-group-item-danger.active:focus {
 .pagination > li > a:hover, .pagination > li > span:hover, .pagination > .active > a, .pagination > .active > span, .pagination > .active > a:hover, .pagination > .active > span:hover, .pagination > .active > a:focus, .pagination > .active > span:focus { background-color: #217dbb; }
 .navbar-toggle { cursor: pointer; margin: 0px; }
 .nav-pills > li + li { margin: 0px; }
+.table a.alert-link { color: transparent; text-decoration: none; }
 /*.nav > li > a, h3, .h3, .alert { margin-left: 5px; margin-right: 5px; }*/
 
 /* new bootstrap column {{{ */

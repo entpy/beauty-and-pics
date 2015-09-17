@@ -860,6 +860,7 @@ var elementsListObject = {
 	ajaxCallUrl : "/ajax/", // the ajax call url
 	bootstrapBlockSize : null, // the bootstrap block size for display
 	blocksContainerClassName : ".image_grid_container", // the block container class inside html page
+	tableBlocksContainerClassName : ".table_body_block_container", // the block container class inside html page
 	actionButtonClassName : ".loadMoreElementsAction", // load more button class name
 
 	/* Function to reset all filters */
@@ -998,9 +999,8 @@ var elementsListObject = {
 					// build and write block into html
 					elementsListObject.writeHtmlBlock(elementsListObject.manageFavoriteList(jsonResponse.elements_list));
 				} else if (jsonResponse.elements_list_type == "notify") {
-					// TODO build and write block into html
-					// elementsListObject.writeHtmlBlock(elementsListObject.manageFavoriteList(jsonResponse.elements_list));
-					console.log(jsonResponse.elements_list);
+					// build and write table blocks into html
+					elementsListObject.writeTableHtmlBlock(elementsListObject.manageTableElementsList(jsonResponse.elements_list));
 				}
 
 				// set blocks number limit
@@ -1071,6 +1071,17 @@ var elementsListObject = {
 		return $(items);
 	},
 
+	manageTableElementsList : function(elementsList) {
+	/* Function to retrieve an html blocks list, this must be appended to html page */
+		var items = "";
+		$.each(elementsList, function(index, singleElement) {
+			items += elementsListObject.getSingleHtmlNotifyTableBlock(singleElement.notify_id, singleElement.title, singleElement.creation_date, singleElement.already_read);
+		});
+
+		// return jQuery object
+		return $(items);
+	},
+
 	managePhotobookList : function(elementsList) {
 	/* Function to retrieve an html blocks list, this must be appended to html page */
 		var items = "";
@@ -1113,6 +1124,22 @@ var elementsListObject = {
 		return returnVar;
 	},
 
+	getSingleHtmlNotifyTableBlock : function(notifyId, notifyTitle, notifyCreationDate, notifyAlreadyRead) {
+	/* Function to build notify table html blocks */
+
+		returnVar = "";
+
+		if (notifyTitle && notifyId) {
+			if (notifyAlreadyRead) {
+				returnVar = '<tr><td>' + notifyTitle + '</td><td>' + notifyCreationDate + '</td><td><a class="alert-link" href="/profilo/notifiche/' + notifyId + '"><span class="label label-default">letta</span></a></td></tr>';
+			} else {
+				returnVar = '<tr><td>' + notifyTitle + '</td><td>' + notifyCreationDate + '</td><td><a class="alert-link" href="/profilo/notifiche/' + notifyId + '"><span class="label label-success">da leggere</span></a></td></tr>';
+			}
+		}
+
+		return returnVar;
+	},
+
 	getBlockSize : function() {
 	/* Function to retrieve bootstrap block size */
 		// setting bootstrap block size
@@ -1133,6 +1160,13 @@ var elementsListObject = {
 		// console.log(htmlBlocksList);
 		// alert("blocchi 'scritti' con successo" + this.blocksContainerClassName);
 		$(this.blocksContainerClassName).append(htmlBlocksList);
+	},
+
+	writeTableHtmlBlock : function(htmlBlocksList) {
+	/* function to append blocks into html container */
+		// console.log(htmlBlocksList);
+		// alert("blocchi 'scritti' con successo" + this.blocksContainerClassName);
+		$(this.tableBlocksContainerClassName).append(htmlBlocksList);
 	},
 };
 

@@ -136,11 +136,11 @@ LOGGING = {
     },
     'formatters': {
         'verbose': {
-            'format': '%(levelname)s %(asctime)s %(module)s:%(lineno)s %(funcName)s %(process)d %(thread)d %(message)s',
+            'format': '%(name)s:%(lineno)s %(levelname)s %(asctime)s %(funcName)s %(process)d %(thread)d %(message)s',
             'datefmt' : "%d/%b/%Y %H:%M:%S"
         },
         'simple': {
-            'format': '%(levelname)s %(asctime)s %(module)s:%(lineno)s %(message)s',
+            'format': '%(name)s %(levelname)s %(asctime)s %(message)s',
             'datefmt' : "%d/%b/%Y %H:%M:%S"
         },
     },
@@ -149,19 +149,21 @@ LOGGING = {
         'console_debug': {
             'level': 'DEBUG',
             'class': 'logging.StreamHandler',
+            'formatter': 'verbose',
         },
         # Send info messages to local file
         'file_info':{
             'level':'INFO',
             'class': 'logging.FileHandler',
             'filename': '/tmp/bep_debug.log',
-            'formatter': 'verbose',
+            'formatter': 'simple',
         },
         # Warning messages are sent to admin emails
         'mail_warning': {
             'level': 'WARNING',
             'filters': ['require_debug_false'],
             'class': 'django.utils.log.AdminEmailHandler',
+            'formatter': 'verbose',
         },
         # Critical errors are sent to local file
         'file_error': {
