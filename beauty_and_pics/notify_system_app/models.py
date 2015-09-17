@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from django.db import models
-from django.db.models import F
+from django.db.models import Q, F, Count
 from django.contrib.auth.models import User
 from datetime import date
 from dateutil.relativedelta import *
@@ -248,11 +248,15 @@ class Notify(models.Model):
     def user_notify_list(self, user_id, filters_list=None):
 
         # TODO: work on this
-        return_var = User_Notify.objects.values('notify__title', 'notify__message', 'notify__action_url', 'notify__creation_date', 'user_notify_id').filter(user__id=user_id, notify__creation_date__gte=F('user__account__creation_date'))
+	"""
+        return_var = User_Notify.objects.values('notify__title', 'notify__message', 'notify__action_url', 'notify__creation_date', 'user_notify_id')
+        return_var = return_var.filter(user__id=user_id, notify__creation_date__gte=F('user__account__creation_date'))
         return_var = return_var.order_by('-notify__creation_date')
+	"""
+        return_var = Notify.objects.filter(Q(user_notify__user=user_id) | Q(user_notify__user_notify_id__isnull=True)).select_related('title', 'user_notify__user_notify_id')
 
-        if filters_list.get("start_limit") and filters_list.get("show_limit"):
-            return_var = return_var[filters_list["start_limit"]:filters_list["show_limit"]]
+        #if filters_list.get("start_limit") and filters_list.get("show_limit"):
+            #return_var = return_var[filters_list["start_limit"]:filters_list["show_limit"]]
 
         return return_var
 
