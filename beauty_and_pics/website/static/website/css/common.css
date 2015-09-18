@@ -160,6 +160,10 @@ ul.grid_container li img:hover { opacity: 0.5; }
 .main_photo_edit_container_wrapper > .right { padding-left: 0px; }
 
 .welcome_list { margin: 10px 0px; }
+
+/* notify details page */
+.notify_details_container { min-height: 300px; }
+.table a.table_action_link { text-decoration: none; }
 /* profile section }}} */
 
 /* classification block style {{{ */

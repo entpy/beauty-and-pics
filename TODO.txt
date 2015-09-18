@@ -15,3 +15,9 @@ BUG NOTI
 --------
  - nella pagina profilo per caricare le immagini, se si clicca sul bordo esterno dell'immagine non si
    apre la fancybox ma si va in cima alla pagina di scatto
+
+QUERY PER CONVERSIONE utf-8 (da eseguire per ogni tabella)
+ALTER TABLE `auth_user` CONVERT TO CHARACTER SET utf8 COLLATE utf8_general_ci;
+
+QUERY PER CONVERSIONE utf-8 (da eseguire per il db)
+ALTER DATABASE `bep` DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci

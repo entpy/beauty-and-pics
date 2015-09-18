@@ -20,18 +20,11 @@ logger = logging.getLogger(__name__)
 
 class Notify(models.Model):
 
-    # notify type selection
-    """
-    NOTIFY_EMAIL = 1
-    NOTIFY_WEBPUSH = 2
-    NOTIFY_TYPE = ((NOTIFY_EMAIL, 'Notify via email'), (NOTIFY_WEBPUSH, 'Notify via webpush'),)
-    """
-
     notify_id = models.AutoField(primary_key=True)
-    # type = models.IntegerField(choices=NOTIFY_TYPE, default=NOTIFY_WEBPUSH)
     creation_date = models.DateTimeField(auto_now_add=True)
     title = models.CharField(max_length=100)
     message = models.TextField()
+    action_title = models.CharField(max_length=20, null=True, blank=True)
     action_url = models.CharField(max_length=100, null=True, blank=True)
 
     class Meta:
@@ -48,6 +41,7 @@ class Notify(models.Model):
             notify_obj = Notify()
             notify_obj.title = data.get("title")
             notify_obj.message = data.get("message")
+            notify_obj.action_title = data.get("action_title")
             notify_obj.action_url = data.get("action_url")
             notify_obj.save()
             return_var.notify_id
@@ -159,6 +153,7 @@ class Notify(models.Model):
 	return_var = {
 	    "title": request.POST.get('title', notify_retrieved.get('title')),
 	    "message": request.POST.get('message', notify_retrieved.get('message')),
+	    "action_title": request.POST.get('action_title', notify_retrieved.get('action_title')),
 	    "action_url": request.POST.get('action_url', notify_retrieved.get('action_url')),
 	}
 
@@ -170,6 +165,7 @@ class Notify(models.Model):
         email_context = {
             "title" : str(notify_data.get('title')),
             "message" : str(notify_data.get('message')),
+            "action_title": str(notify_data.get('action_title')),
             "action_url": str(notify_data.get('action_url')),
         }
 
@@ -223,6 +219,7 @@ class Notify(models.Model):
         return_var['creation_date'] = notify_instance.creation_date
         return_var['title'] = notify_instance.title
         return_var['message'] = notify_instance.message
+        return_var['action_title'] = notify_instance.action_title
         return_var['action_url'] = notify_instance.action_url
 
         return return_var

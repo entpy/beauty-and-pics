@@ -1,9 +1,9 @@
 {% extends "website/inc/base_profile.html" %}
 {% load staticfiles %}
 
-{% block title %}{{ site_name }} | notifiche e aggiornamenti{% endblock %}
+{% block title %}{{ site_name }} | {{ notify_message }}{% endblock %}
 
-{% block description %}Notifiche e aggiornamenti: in questa pagina vengono mostrate le notifiche e gli aggiornamenti di {{ site_name }}.{% endblock %}
+{% block description %}{{ notify_title }}{% endblock %}
 
 {% block container4_title %}{% endblock %}
 
@@ -13,46 +13,20 @@
 {% block container4_content %}
 <div class="row">
 	<div class="col-md-12">
-		<h3>Notifiche</h3>
-	</div>
-	<div class="col-md-12">
-		<div class="alert alert-info">
-			<p>titolo notifica: {{ notify_title }}</p>
-		</div>
+		<h3>{{ notify_title }} [<a href="/profilo/notifiche/#anchor_notify_list">Torna indietro</a>]</h3>
 	</div>
 </div>
 <div class="row">
 	<div class="col-md-12">
-		<table class="table table-striped table-hover ">
-			<thead>
-				<tr>
-					<th>Titolo</th>
-					<th>Data</th>
-					<th>Stato</th>
-				</tr>
-			</thead>
-			<tbody class="table_body_block_container">
-			{# this will be populated with JavaScript #}
-			</tbody>
-		</table>
+		<div class="notify_details_container">
+		<p class="text-muted">Pubblicata il {{ notify_creation_date | date:"DATE_FORMAT" }}</p>
+		<p>{{ notify_message }}</p>
+		{% if notify_action_url %}
+			<div class="text-center">
+				<a class="btn btn-success" href="{{ notify_action_url }}">{{ notify_action_title | default:"Ulteriori informazioni" }}</a>
+			</div>
+		{% endif %}
+		</div>
 	</div>
 </div>
-<div class="text-center">
-	<a class="btn btn-success loadMoreElementsAction" href="#">Carica altre</a>
-</div>
 {% endblock container4_content %}
-{% block custom_js %}
-<script>
-	elementsListObject.addFilter("show_limit", 1);
-	$(document).ready(function(){
-		$(".loadMoreElementsAction").click(function(){
-			elementsListObject.setElementsListType("notify");
-			elementsListObject.getElementsList();
-
-			return false;
-		});
-
-		$(".loadMoreElementsAction").click();
-	});
-</script>
-{% endblock custom_js %}

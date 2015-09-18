@@ -135,7 +135,7 @@ admin.site.register_view('create-webpush', 'Create webpush', view=create_webpush
 admin.site.register_view('send-email-notify/(?:(?P<notify_id>.+)/)?', 'Send email notify', view=send_email_notify)
 
 """
-TODO:
+Creazione notifiche:
  - Form per l'inserimento della webpush
  - Sezione per inviare notifiche via mail a determinati utenti
  - Per inviare le webpush anche via mail, arrivare in pagina con l'id webpush
@@ -143,7 +143,7 @@ TODO:
 
 Visualizzazione sulla piattaforma:
  - messaggio di alert alla nuova notifica webpush
- - pagina per visualizzare le notifiche ordinate per data, a blocchi di n e se
-   lette o no
+ - pagina per visualizzare le notifiche ordinate per data, a blocchi di 'n'
+   e se lette o no
  - pagina dettaglio notifica con il contenuto della webpush
 """

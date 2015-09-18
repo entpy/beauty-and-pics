@@ -489,6 +489,7 @@ def profile_notify_details(request, notify_id):
             'notify_creation_date' : notify_details['creation_date'],
             'notify_title' : notify_details['title'],
             'notify_message' : notify_details['message'],
+            'notify_action_title' : notify_details['action_title'],
             'notify_action_url' : notify_details['action_url'],
     }
 
