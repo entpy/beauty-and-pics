@@ -46,6 +46,7 @@ INSTALLED_APPS = (
     'upload_image_box',
     'notify_system_app',
     'adminplus',
+    'ckeditor',
 )
 
 MIDDLEWARE_CLASSES = (

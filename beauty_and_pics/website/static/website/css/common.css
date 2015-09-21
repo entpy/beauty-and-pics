@@ -164,6 +164,7 @@ ul.grid_container li img:hover { opacity: 0.5; }
 /* notify details page */
 .notify_details_container { min-height: 300px; }
 .table a.table_action_link { text-decoration: none; }
+.notify_back_link { font-size: 13px; }
 /* profile section }}} */
 
 /* classification block style {{{ */

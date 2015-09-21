@@ -13,13 +13,13 @@
 {% block container4_content %}
 <div class="row">
 	<div class="col-md-12">
-		<h3>{{ notify_title }} [<a href="/profilo/notifiche/#anchor_notify_list">Torna indietro</a>]</h3>
+		<h3>{{ notify_title }} <span class="notify_back_link">[<a href="/profilo/notifiche/#anchor_notify_list">Torna indietro</a>]</span></h3>
 	</div>
 </div>
 <div class="row">
 	<div class="col-md-12">
 		<div class="notify_details_container">
-		<p class="text-muted">Pubblicata il {{ notify_creation_date | date:"DATE_FORMAT" }}</p>
+		<p class="text-muted">Pubblicato il {{ notify_creation_date | date:"DATE_FORMAT" }}</p>
 		<p>{{ notify_message }}</p>
 		{% if notify_action_url %}
 			<div class="text-center">

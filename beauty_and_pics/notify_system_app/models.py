@@ -9,6 +9,7 @@ from website.exceptions import *
 from beauty_and_pics.consts import project_constants
 from email_template.email.email_template import *
 from account_app.models.accounts import Account
+from ckeditor.fields import RichTextField
 import sys, logging
 
 # force utf8 read data
@@ -23,7 +24,7 @@ class Notify(models.Model):
     notify_id = models.AutoField(primary_key=True)
     creation_date = models.DateTimeField(auto_now_add=True)
     title = models.CharField(max_length=100)
-    message = models.TextField()
+    message = RichTextField()
     action_title = models.CharField(max_length=20, null=True, blank=True)
     action_url = models.CharField(max_length=100, null=True, blank=True)
 
