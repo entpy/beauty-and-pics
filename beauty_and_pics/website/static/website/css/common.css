@@ -46,6 +46,7 @@ textarea { resize: none; }
 .second_color { background-color: #1A242F; }
 .navigation_container a { color: white; }
 .link_color { color: #18bc9c; }
+.notify_details_container p a { color:  #2c3e50; }
 
 /* header */
 .header { display: inline-block; width: 100%; }
@@ -162,9 +163,11 @@ ul.grid_container li img:hover { opacity: 0.5; }
 .welcome_list { margin: 10px 0px; }
 
 /* notify details page */
-.notify_details_container { min-height: 300px; }
+.notify_details_container { margin-top: 40px; min-height: 300px; }
+.notify_details_container p a { text-decoration: underline; }
+.notify_details_container .btn { margin-top: 20px; }
 .table a.table_action_link { text-decoration: none; }
-.notify_back_link { font-size: 13px; }
+.notify_back_link { font-size: 13px; margin-left: 10px; }
 /* profile section }}} */
 
 /* classification block style {{{ */

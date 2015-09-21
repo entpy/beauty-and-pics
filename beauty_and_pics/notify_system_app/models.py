@@ -25,7 +25,7 @@ class Notify(models.Model):
     creation_date = models.DateTimeField(auto_now_add=True)
     title = models.CharField(max_length=100)
     message = RichTextField()
-    action_title = models.CharField(max_length=20, null=True, blank=True)
+    action_title = models.CharField(max_length=40, null=True, blank=True)
     action_url = models.CharField(max_length=100, null=True, blank=True)
 
     class Meta:
@@ -146,8 +146,10 @@ class Notify(models.Model):
         notify_retrieved = {}
         try:
             if int(kwargs.get('notify_id') or 0):
+		# retrieve notify instance
+		notify_instance = notify_obj.get_notify_instance(notify_id=kwargs.get('notify_id'))
                 # prelevo i dati della notifica per precompilarla nel form
-                notify_retrieved = notify_obj.get_notify_info(notify_id=kwargs.get('notify_id'))
+                notify_retrieved = notify_obj.get_notify_info(notify_instance=notify_instance)
         except ValueError:
             pass
 

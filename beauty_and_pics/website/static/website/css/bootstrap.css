@@ -6844,6 +6844,7 @@ a.list-group-item-danger.active:focus {
 .navbar-toggle { cursor: pointer; margin: 0px; }
 .nav-pills > li + li { margin: 0px; }
 .table a.alert-link { color: transparent; text-decoration: none; }
+hr { border-color: #dcdcdc; }
 /*.nav > li > a, h3, .h3, .alert { margin-left: 5px; margin-right: 5px; }*/
 
 /* new bootstrap column {{{ */

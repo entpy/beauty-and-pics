@@ -1,26 +1,28 @@
 {% extends "website/inc/base_profile.html" %}
 {% load staticfiles %}
 
-{% block title %}{{ site_name }} | {{ notify_message }}{% endblock %}
+{% block title %}{{ site_name }} | {{ notify_title }}{% endblock %}
 
 {% block description %}{{ notify_title }}{% endblock %}
 
 {% block container4_title %}{% endblock %}
 
-{# navigation tabs active element #}
-{% block container4_navigation_profile_notify %}active{% endblock %}
+{# hide navigation block #}
+{% block container4_navigation %}{% endblock %}
 
 {% block container4_content %}
 <div class="row">
 	<div class="col-md-12">
-		<h3>{{ notify_title }} <span class="notify_back_link">[<a href="/profilo/notifiche/#anchor_notify_list">Torna indietro</a>]</span></h3>
+		<h3>{{ notify_title }} <span class="notify_back_link">[<a href="/profilo/notifiche/">Mostra tutte le notifiche</a>]</span></h3>
 	</div>
 </div>
 <div class="row">
 	<div class="col-md-12">
+		<div class="text-right">
+		    <p class="text-muted">Pubblicato il {{ notify_creation_date | date:"DATE_FORMAT" }}</p>
+		</div>
 		<div class="notify_details_container">
-		<p class="text-muted">Pubblicato il {{ notify_creation_date | date:"DATE_FORMAT" }}</p>
-		<p>{{ notify_message }}</p>
+		<p>{{ notify_message | safe }}</p>
 		{% if notify_action_url %}
 			<div class="text-center">
 				<a class="btn btn-success" href="{{ notify_action_url }}">{{ notify_action_title | default:"Ulteriori informazioni" }}</a>
