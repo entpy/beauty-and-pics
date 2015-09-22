@@ -70,6 +70,12 @@
 .classification_block { width: 100%; }
 
 .profile_image_container .profile_image { width: 100%; max-width: 250px; margin: 0 auto; }
+
+/* notify details page */
+.notify_details_container { margin-top: 25px; }
+.notify_back_link { display: block; margin: 13px 0 0; }
+.publish_date_container { text-align: left; }
+
 /* profile section }}} */
 
 .generic_container8 .left { margin-bottom: 25px; text-align: center; }

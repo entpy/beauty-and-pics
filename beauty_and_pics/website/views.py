@@ -31,13 +31,25 @@ import logging, time
 # Get an instance of a logger
 logger = logging.getLogger(__name__)
 
+# view decorators {{{
 def check_if_is_a_catwalker_user(user):
-    """ Function to check if user is a catwalker user """
+    """ Function to detect if user is a catwalker user """
     account_obj =  Account()
     is_catwalker_user = account_obj.check_if_logged_user_is_valid(request_user=user)
     if is_catwalker_user:
         logger.debug("logged user IS a catwalker user, email: " + str(user.email) + " (id: " + str(user.id) + ")")
+
     return is_catwalker_user
+
+def check_if_is_staff_user(user):
+    """ Function to detect if user is a staff user """
+    account_obj =  Account()
+    is_staff_user = account_obj.check_if_logged_user_is_staff(request_user=user)
+    if is_staff_user:
+        logger.debug("staff user onboard, email: " + str(user.email) + " (id: " + str(user.id) + ")")
+
+    return is_staff_user
+# view decorators }}}
 
 # www {{{
 def www_index(request):
@@ -466,7 +478,16 @@ def profile_area51(request):
 @user_passes_test(check_if_is_a_catwalker_user)
 def profile_notify(request):
     """View to show notify list"""
-    return render(request, 'website/profile/profile_notify.html', False)
+    notify_obj = Notify()
+
+    # check if exist valid notify
+    exist_valid_notify = notify_obj.exist_valid_notify(user_id=request.user.id)
+
+    context = {
+            'exist_valid_notify' : exist_valid_notify,
+    }
+
+    return render(request, 'website/profile/profile_notify.html', context)
 
 @login_required
 @user_passes_test(check_if_is_a_catwalker_user)
@@ -497,6 +518,8 @@ def profile_notify_details(request, notify_id):
 # }}}
 
 # test email {{{
+@login_required
+@user_passes_test(check_if_is_staff_user)
 def email_test(request, email_name, email_mode):
     """View to test email template object"""
 

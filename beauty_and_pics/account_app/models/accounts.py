@@ -94,7 +94,7 @@ class Account(models.Model):
         return return_var
 
     def check_if_logged_user_is_valid(self, request_user):
-	"""Function to check if current logged in user is a catwalker user"""
+	"""Function to detect if current logged in user is a catwalker user"""
 	return_var = False
 	if request_user.is_authenticated:
 	    try:
@@ -108,6 +108,18 @@ class Account(models.Model):
 		pass
 	    else:
 		return_var = True
+
+	return return_var
+
+    def check_if_logged_user_is_staff(self, request_user):
+        """Function to detect if current user is a staff user"""
+	return_var = False
+	if request_user.is_staff:
+            # staff user
+            return_var = True
+        else:
+            # other user type
+            pass
 
 	return return_var
 

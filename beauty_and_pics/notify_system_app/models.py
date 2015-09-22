@@ -34,8 +34,8 @@ class Notify(models.Model):
     def __unicode__(self):
         return str(self.notify_id) + ' ' + str(self.title)
 
-    # function to create a notify
     def create_notify(self, data):
+        """Function to create a notify"""
         return_var = False
 
         if data.get("title") and data.get("message"):
@@ -50,78 +50,78 @@ class Notify(models.Model):
         return return_var
 
     def set_campaign_user(self, senders_dictionary, request):
-            """
-            Function to set (or unset) accounts to receive a promotion.
-            This function works like this:
-                { "id_account" : 1 } => to enable
-                { "id_account" : 0 } => to disable
+        """
+        Function to set (or unset) accounts to receive a promotion.
+        This function works like this:
+            { "id_account" : 1 } => to enable
+            { "id_account" : 0 } => to disable
 
-            So, for example, if you works with a dictionary like this:
-                { "4" : 1, "5" : 1, "6" : 0, "7" : 1, "8" : 0 }
-            You can create previously dictionary with "Campaign.get_senders_dictionary()" function.
+        So, for example, if you works with a dictionary like this:
+            { "4" : 1, "5" : 1, "6" : 0, "7" : 1, "8" : 0 }
+        You can create previously dictionary with "Campaign.get_senders_dictionary()" function.
 
-            Users 4, 5, 7 will be enabled, while users 6, 8 will be disabled.
-            Enabled or disable means row added or removed from db with
-            "add_campaign_user" or "remove_campaign_user" functions.
-            Return True on success
-            """
+        Users 4, 5, 7 will be enabled, while users 6, 8 will be disabled.
+        Enabled or disable means row added or removed from db with
+        "add_campaign_user" or "remove_campaign_user" functions.
+        Return True on success
+        """
 
-            if not request.session.get('checked_users'):
-                request.session['checked_users'] = {}
+        if not request.session.get('checked_users'):
+            request.session['checked_users'] = {}
 
-            if senders_dictionary:
-                for key, value in senders_dictionary.iteritems():
-                    if value:
-                        request.session['checked_users'][str(key)] = 1
-                        logger.debug("aggiungo in sessione: " + str(key))
-                    else:
-                        request.session['checked_users'][str(key)] = 0
-                        logger.debug("rimuovo dalla sessione: " + str(key))
+        if senders_dictionary:
+            for key, value in senders_dictionary.iteritems():
+                if value:
+                    request.session['checked_users'][str(key)] = 1
+                    logger.debug("aggiungo in sessione: " + str(key))
+                else:
+                    request.session['checked_users'][str(key)] = 0
+                    logger.debug("rimuovo dalla sessione: " + str(key))
 
-            logger.debug("set_campaign_user, checked_users in SESSION: " + str(request.session['checked_users']))
-            return request.session['checked_users']
+        logger.debug("set_campaign_user, checked_users in SESSION: " + str(request.session['checked_users']))
+        return request.session['checked_users']
 
     def get_checkbox_dictionary(self, paginator_element_list=False, checked_elements=False):
-            """
-            Function to render a senders dictionary like this:
-            { "mail1@mail.com" : 1, "mail2@mail.com" : 1, "mail3@mail.com" : 0, "mail4@mail.com" : 1, "mail5@mail.com" : 0 }
-            Return a checkbox status dictionary on success
+        """
+        Function to render a senders dictionary like this:
+        { "mail1@mail.com" : 1, "mail2@mail.com" : 1, "mail3@mail.com" : 0, "mail4@mail.com" : 1, "mail5@mail.com" : 0 }
+        Return a checkbox status dictionary on success
 
-            paginator_element_list: all objects in current view (list)
-            checked_elements: all checkbox select in current view (list)
-            (string) -> es <input type="checkbox" name="checkbox_name[23]" value="1"> 23 is the unique database model ID, like id_account
-            """
+        paginator_element_list: all objects in current view (list)
+        checked_elements: all checkbox select in current view (list)
+        (string) -> es <input type="checkbox" name="checkbox_name[23]" value="1"> 23 is the unique database model ID, like id_account
+        """
 
-            checkbox_dictionary = {}
+        checkbox_dictionary = {}
 
-            for element in paginator_element_list:
-                # logger.debug("get_checkbox_dictionary, element: " + str(element.user.id))
-                # se element è contenuto in checked_elements allora ok
-                if (str(element.user.email) in checked_elements):
-                    checkbox_dictionary[element.user.email] = 1
-                else:
-                    checkbox_dictionary[element.user.email] = 0
+        for element in paginator_element_list:
+            # logger.debug("get_checkbox_dictionary, element: " + str(element.user.id))
+            # se element è contenuto in checked_elements allora ok
+            if (str(element.user.email) in checked_elements):
+                checkbox_dictionary[element.user.email] = 1
+            else:
+                checkbox_dictionary[element.user.email] = 0
 
-            # logger.error("models.py, get_senders_dictionary: " + str(checkbox_dictionary))
-            logger.debug("get_checkbox_dictionary, checkbox_dictionary: " + str(checkbox_dictionary))
+        # logger.error("models.py, get_senders_dictionary: " + str(checkbox_dictionary))
+        logger.debug("get_checkbox_dictionary, checkbox_dictionary: " + str(checkbox_dictionary))
 
-            return checkbox_dictionary
+        return checkbox_dictionary
 
     def get_account_list(self, request):
-            """
-            Function to retrieve all checked account from session
-            Return an account id list on success
-            """
+        """
+        Function to retrieve all checked account from session
+        Return an account id list on success
+        """
 
-            return_var = []
+        return_var = []
 
-            if request.session.get('checked_users'):
-                for key, value in request.session.get('checked_users').iteritems():
-                    if value:
-                        logger.debug("[get_account_list], single_elements: key=" + str(key) + " value=" + str(value))
-                        return_var.append(str(key))
+        if request.session.get('checked_users'):
+            for key, value in request.session.get('checked_users').iteritems():
+                if value:
+                    logger.debug("[get_account_list], single_elements: key=" + str(key) + " value=" + str(value))
+                    return_var.append(str(key))
 
-            return return_var
+        return return_var
 
     def save_checked_elemets(self, paginator, request = {}):
         """Function to save into session checked elements from djago paginator"""
@@ -214,8 +214,8 @@ class Notify(models.Model):
 
         return return_var
 
-    # function to retrieve info (title, description, ecc...) about a notify id
     def get_notify_info(self, notify_instance):
+        """Function to retrieve info (title, description, ecc...) about a notify id"""
         return_var = {}
 
         return_var['notify_id'] = notify_instance.notify_id
@@ -227,16 +227,39 @@ class Notify(models.Model):
 
         return return_var
 
-    # function to count notify not read about a user
     def count_notify_to_read(self, user_id):
+        """Function to count notify not read about a user"""
         return_var = 0
         # total notify number
-        total_notify_number = Notify.objects.count()
+        total_notify_number = self.count_valid_notify(user_id=user_id)
         # read notify about this user
         total_read_notify = User_Notify.objects.filter(user__id=user_id, notify__creation_date__gte=F('user__account__creation_date')).count()
 
         if total_notify_number:
             return_var = total_notify_number - total_read_notify
+
+        return return_var
+
+    def count_valid_notify(self, user_id):
+        """Function to count total valid notify for user_id"""
+        return_var = 0
+        account_obj = Account()
+
+        # retrieve account info
+        user_info = account_obj.get_user_about_id(user_id=user_id)
+        # retrieve user join date
+        account_creation_date = user_info.account.creation_date
+        # total notify number
+        return_var = Notify.objects.filter(Q(creation_date__gte=account_creation_date)).count()
+
+        return return_var
+
+    def exist_valid_notify(self, user_id):
+        """Function to check if exist valid notify"""
+        return_var = False
+
+        if self.count_valid_notify(user_id=user_id) > 0:
+            return_var = True
 
         return return_var
 
@@ -256,8 +279,8 @@ class Notify(models.Model):
 
         return return_var
 
-    # function to retrieve a list of notify about a user
     def user_notify_list(self, user_id, filters_list=None):
+        """Function to retrieve a list of notify about a user"""
 
         # eseguo una left join di User_Notify in Notify filtrando per user_id
         """

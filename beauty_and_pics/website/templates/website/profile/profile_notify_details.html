@@ -18,14 +18,14 @@
 </div>
 <div class="row">
 	<div class="col-md-12">
-		<div class="text-right">
+		<div class="publish_date_container">
 		    <p class="text-muted">Pubblicato il {{ notify_creation_date | date:"DATE_FORMAT" }}</p>
 		</div>
 		<div class="notify_details_container">
 		<p>{{ notify_message | safe }}</p>
 		{% if notify_action_url %}
 			<div class="text-center">
-				<a class="btn btn-success" href="{{ notify_action_url }}">{{ notify_action_title | default:"Ulteriori informazioni" }}</a>
+				<a target="_blank" class="btn btn-success" href="{{ notify_action_url }}">{{ notify_action_title | default:"Ulteriori informazioni" }}</a>
 			</div>
 		{% endif %}
 		</div>

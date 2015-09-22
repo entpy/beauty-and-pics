@@ -168,6 +168,7 @@ ul.grid_container li img:hover { opacity: 0.5; }
 .notify_details_container .btn { margin-top: 20px; }
 .table a.table_action_link { text-decoration: none; }
 .notify_back_link { font-size: 13px; margin-left: 10px; }
+.publish_date_container { text-align: right; }
 /* profile section }}} */
 
 /* classification block style {{{ */
