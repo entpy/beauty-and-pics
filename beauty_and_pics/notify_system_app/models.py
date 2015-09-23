@@ -279,26 +279,22 @@ class Notify(models.Model):
 
         return return_var
 
-    def user_notify_list(self, user_id, filters_list=None):
+    def user_notify_list(self, account_creation_date, filters_list=None):
         """Function to retrieve a list of notify about a user"""
 
         # eseguo una left join di User_Notify in Notify filtrando per user_id
         """
-        SELECT `notify_system_app_notify`.`title`, `notify_system_app_notify`.`creation_date`, `notify_system_app_user_notify`.`user_notify_id`
-        FROM `notify_system_app_notify`
-        LEFT OUTER JOIN `notify_system_app_user_notify` ON ( `notify_system_app_notify`.`notify_id` = `notify_system_app_user_notify`.`notify_id` )
-        WHERE (
-                `notify_system_app_user_notify`.`user_id` = 2 OR
-                `notify_system_app_user_notify`.`user_notify_id` IS NULL
-              );
+	    SELECT "notify_system_app_notify"."notify_id", "notify_system_app_notify"."title", "notify_system_app_notify"."creation_date", "notify_system_app_user_notify"."user_notify_id" 
+	    FROM "notify_system_app_notify"
+	    LEFT OUTER JOIN "notify_system_app_user_notify" ON ( "notify_system_app_notify"."notify_id" = "notify_system_app_user_notify"."notify_id" )
+	    WHERE "notify_system_app_notify"."creation_date" >= '2015-09-21 23:45:00.342532'
+	    ORDER BY "notify_system_app_notify"."notify_id" DESC LIMIT 10;
         """
-        return_var = Notify.objects.filter(Q(user_notify__user=user_id) | Q(user_notify__user_notify_id__isnull=True)).values('notify_id', 'title', 'creation_date', 'user_notify__user_notify_id').order_by('-notify_id')
-        """ TODO ^-- quella sopra sembra molto ottimizzabile (testare quella sotto)
         return_var = Notify.objects.filter(Q(creation_date__gte=account_creation_date)).values('notify_id', 'title', 'creation_date', 'user_notify__user_notify_id').order_by('-notify_id')
-        """
 
         if filters_list.get("start_limit") and filters_list.get("show_limit"):
-            return_var = return_var[filters_list["start_limit"]:filters_list["show_limit"]]
+	    show_limit = int(filters_list["show_limit"]) + 1 # trick per nascondere il pulsante "carica altri"
+            return_var = return_var[filters_list["start_limit"]:show_limit]
 
         return list(return_var)
 

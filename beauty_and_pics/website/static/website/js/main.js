@@ -979,11 +979,17 @@ var elementsListObject = {
 				console.log(jsonResponse);
 
 				// hide show more elements button
-				if (jsonResponse.elements_list.length == 0) {
+				/*if (jsonResponse.elements_list.length == 0) {
 					// TODO: in teoria il pulsante andrebbe nascosto al giro prima!
 					elementsListObject.hideActionButton();
 				} else {
 					elementsListObject.showActionButton();
+				}*/
+				alert("mostro pulsante: " + jsonResponse.show_load_button);
+				if (jsonResponse.show_load_button) {
+				    elementsListObject.showActionButton();
+				} else {
+				    elementsListObject.hideActionButton();
 				}
 
 				if (jsonResponse.elements_list_type == "catwalker") {

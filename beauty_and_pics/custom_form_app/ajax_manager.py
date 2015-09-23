@@ -142,6 +142,8 @@ class ajaxManager():
         Account_obj = Account()
         elements_list_type = self.request.POST.get("elements_list_type")
         json_account_element = []
+	show_load_button = False
+	limit_list = False
 
         # catwalker section
         if elements_list_type == "catwalker":
@@ -206,23 +208,36 @@ class ajaxManager():
         # user notify section
         if elements_list_type == "notify":
             notify_obj = Notify()
+
+	    # retrieve account info
+	    user_info = Account_obj.get_user_about_id(user_id=self.request.user.id)
+	    # retrieve user join date
+	    account_creation_date = user_info.account.creation_date
+
             # retrieve user notify
-            filtered_elements = notify_obj.user_notify_list(user_id=self.request.user.id, filters_list=self.request.POST)
+            filtered_elements = notify_obj.user_notify_list(account_creation_date=account_creation_date, filters_list=self.request.POST)
+	    logger.debug("len: " + str(len(filtered_elements)))
+	    logger.debug("show limit: " + str(self.request.POST["show_limit"]))
+	    if len(filtered_elements) > int(self.request.POST["show_limit"]):
+		show_load_button = True
+		limit_list = -1
+	    else:
+		limit_list = len(filtered_elements)
             # TODO: tiro fuori filtered_elements + 1 e li controllo con
             # filtered elements, se ce n'è uno in più non nascondo il
             # pulsante, altrimento lo nascondo
             # retrieve user creation data
 
             if filtered_elements:
-                for notify in filtered_elements:
+                for notify in filtered_elements[:limit_list]:
                     # se la notifica è stata creata dopo l'utente allora gliela faccio visualizzare
-                    if notify_obj.check_if_show_notify(user_id=self.request.user.id, notify_date=notify["creation_date"]):
-                        json_account_element.append({
-                                "notify_id": str(notify["notify_id"]),
-                                "title": str(notify["title"]),
-                                "creation_date": str(formats.date_format(notify["creation_date"], "SHORT_DATE_FORMAT")),
-                                "already_read": str(notify["user_notify__user_notify_id"] or ''),
-                        }),
+                    # if notify_obj.check_if_show_notify(user_id=self.request.user.id, notify_date=notify["creation_date"]):
+		    json_account_element.append({
+			"notify_id": str(notify["notify_id"]),
+			"title": str(notify["title"]),
+			"creation_date": str(formats.date_format(notify["creation_date"], "SHORT_DATE_FORMAT")),
+			"already_read": str(notify["user_notify__user_notify_id"] or ''),
+		    }),
 
         """
         data = {
@@ -236,7 +251,7 @@ class ajaxManager():
                 }
         """
 
-        data = {'success' : True, 'elements_list_type': elements_list_type, 'elements_list': json_account_element,}
+        data = {'success' : True, 'elements_list_type': elements_list_type, 'elements_list': json_account_element, 'show_load_button': show_load_button,}
         json_data_string = json.dumps(data) # INFO: se la query non è stata eseguita precedente (tramite list, loop, ecc...) questo fa un botto di chiamate al db inutili
         self.set_json_response(json_response=json_data_string)
 
@@ -302,7 +317,7 @@ class ajaxManager():
         image_data["image_type"] = self.request.POST.get("image_type")
         image_data["user"] = self.request.user
 
-        # TODO: proseguire con i controlli (forse, è tardi per pensarci)
+        # proseguire con i controlli (forse, è tardi per pensarci) -> tempo dopo -> fatto
         try:
             saved_image_obj = book_obj.save_book_image(image_data=image_data)
             saved_image_url = saved_image_obj.image_id.image.url

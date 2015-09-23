@@ -48,7 +48,7 @@
 {% block custom_js %}
 {{ block.super }}
 <script>
-	elementsListObject.addFilter("show_limit", 10);
+	elementsListObject.addFilter("show_limit", 5);
 	$(document).ready(function(){
 		$(".loadMoreElementsAction").click(function(){
 			elementsListObject.setElementsListType("notify");
