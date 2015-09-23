@@ -293,6 +293,9 @@ class Notify(models.Model):
               );
         """
         return_var = Notify.objects.filter(Q(user_notify__user=user_id) | Q(user_notify__user_notify_id__isnull=True)).values('notify_id', 'title', 'creation_date', 'user_notify__user_notify_id').order_by('-notify_id')
+        """ TODO ^-- quella sopra sembra molto ottimizzabile (testare quella sotto)
+        return_var = Notify.objects.filter(Q(creation_date__gte=account_creation_date)).values('notify_id', 'title', 'creation_date', 'user_notify__user_notify_id').order_by('-notify_id')
+        """
 
         if filters_list.get("start_limit") and filters_list.get("show_limit"):
             return_var = return_var[filters_list["start_limit"]:filters_list["show_limit"]]
