@@ -208,6 +208,9 @@ class ajaxManager():
             notify_obj = Notify()
             # retrieve user notify
             filtered_elements = notify_obj.user_notify_list(user_id=self.request.user.id, filters_list=self.request.POST)
+            # TODO: tiro fuori filtered_elements + 1 e li controllo con
+            # filtered elements, se ce n'è uno in più non nascondo il
+            # pulsante, altrimento lo nascondo
             # retrieve user creation data
 
             if filtered_elements:
