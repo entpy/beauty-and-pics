@@ -75,26 +75,36 @@ class ajaxManager():
     def return_valid_filtered_list(self, filtered_list, show_limit):
         """Restituisco la lista filtrata in base al numero di elementi rimasti da caricare"""
         show_limit = int(show_limit)
+        return_var = []
         if self.check_if_exists_more_elements(filtered_list=filtered_list, show_limit=show_limit):
             # se esistono ancora elementi da caricare mi fermo al penultimo
-            # elemento nella lista -> limite = -1
-            limit_list = -1
+            # elemento nella lista -> limite = -1. Es ci sono 7 elementi in db
+            # ma ne ho richesti 5 (e quindi filtered_list ne contiene 5+1)
+            return_var = filtered_list[:-1]
         else:
             # se non esistono ulteriori elementi da caricare prelevo tutti gli
-            # elementi rimanenti nella lista -> limite = len(filtered_list)
-            limit_list = len(filtered_list)
+            # elementi rimanenti nella lista, quindi sono al di sotto del
+            # limite di visualizzazione. Es. ci sono 3 elementi in db ma ne ho
+            # chiesti 5
+            return_var = filtered_list
 
-        return filtered_list[:limit_list]
+        return return_var
 
     def check_if_exists_more_elements(self, filtered_list, show_limit):
-        """Controllo se esistono ancora possibili elementi da caricare"""
+        """
+        Controllo se esistono ancora possibili elementi da caricare
+        "filtered_list" è la lista con n+1 elementi, se contiene più
+        elementi del limite imposto, allora esistono ulteriori elementi
+        caricabili (Es. elementi_filtrati 6, limite visualizzazione 5,
+        6 > 5 quindi esistono ulteriori elementi).
+        """
         show_limit = int(show_limit)
         exists_more_elements = False
         # TODO: debuggare e rimuovere i log
         logger.debug("len: " + str(len(filtered_list)))
         logger.debug("show limit: " + str(show_limit-1))
         if len(filtered_list) > int(show_limit-1):
-            # esistono ulteriori elementi da caricare, quindi mostro il pulsante "load more"
+            # esistono ulteriori elementi da caricare (quindi mostro il pulsante "load more")
             exists_more_elements = True
 
         return exists_more_elements
@@ -289,7 +299,7 @@ class ajaxManager():
         """
 
         # check if show or hide "load more" button
-        if self.check_if_exists_more_elements(filtered_list=filtered_list, show_limit=self.request.POST["show_limit"]):
+        if self.check_if_exists_more_elements(filtered_list=filtered_list, show_limit=filters_list["show_limit"]):
             show_load_button = True
 
         data = {'success' : True, 'elements_list_type': elements_list_type, 'elements_list': json_account_element, 'show_load_button': show_load_button,}

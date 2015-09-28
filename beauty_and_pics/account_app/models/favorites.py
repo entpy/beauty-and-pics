@@ -73,7 +73,7 @@ class Favorite(models.Model):
             # list orders
             return_var = return_var.order_by('-id_favorite')
             # list limits
-            return_var = return_var[filters_list["start_limit"]:filters_list["show_limit"]]
+            return_var = list(return_var[filters_list["start_limit"]:filters_list["show_limit"]])
 
         return return_var
 

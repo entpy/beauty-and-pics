@@ -108,7 +108,7 @@ class Book(models.Model):
             # list orders
             return_var = return_var.order_by('-image_id__id')
             # list limits
-            return_var = return_var[filters_list["start_limit"]:filters_list["show_limit"]]
+            return_var = list(return_var[filters_list["start_limit"]:filters_list["show_limit"]])
 
         return return_var
 
@@ -124,7 +124,7 @@ class Book(models.Model):
 	if filters_list.get("start_limit") or filters_list.get("show_limit"):
 	    return_var = return_var[filters_list["start_limit"]:filters_list["show_limit"]]
 
-        return return_var
+        return list(return_var)
 
     def get_profile_image(self, user_id, thumbnail=False):
         """Function to retrieve profile image, if exists more profile image than take only last"""

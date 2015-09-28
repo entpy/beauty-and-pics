@@ -763,7 +763,6 @@ var voteUserObject = {
 		// look votation check }}}
 
 		if (!returnVar) {
-			// alert("Per poter votare devi esprimere un giudizio su ogni metrica!");
 		} else if (!confirm("Confermi il voto? Potrai ri-votare questa persona tra 7 giorni!")) {
 				returnVar = false;
 		}
@@ -978,14 +977,7 @@ var elementsListObject = {
 				console.log("==========risultato chiamata==========");
 				console.log(jsonResponse);
 
-				// hide show more elements button
-				/*if (jsonResponse.elements_list.length == 0) {
-					// TODO: in teoria il pulsante andrebbe nascosto al giro prima!
-					elementsListObject.hideActionButton();
-				} else {
-					elementsListObject.showActionButton();
-				}*/
-				alert("mostro pulsante: " + jsonResponse.show_load_button);
+				// show or hide "load more" button
 				if (jsonResponse.show_load_button) {
 				    elementsListObject.showActionButton();
 				} else {
