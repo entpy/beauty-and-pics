@@ -124,12 +124,15 @@ class Account(models.Model):
 	return return_var
 
     def delete_user(self, user_id=None, logged_user_id=None):
-        """Function to delete user"""
+        """Function to delete a user and all related data"""
         if user_id and logged_user_id:
             if user_id == logged_user_id:
                 try:
                     user_obj = User.objects.get(pk=user_id)
+                    deleted_user_email = user_obj.email
                     user_obj.delete()
+                    # sad moment
+                    logger.debug("DELETE user o.O -> id: " + str(user_id) + " | email: " + str(deleted_user_email))
                 except User.DoesNotExist:
                     raise UserDeleteDoesNotExistsError
             else:
