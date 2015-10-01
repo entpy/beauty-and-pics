@@ -847,13 +847,14 @@ var voteUserObject = {
 	},
 };
 
-/* Object to retrieve a filtered list of elements (user or photo book) */
+/* Object to retrieve a filtered list of elements (user, photo book, favorites, notify) */
 var elementsListObject = {
 	__elementsListFilters : {
 		"user_id" : null, // required in "favorites" and "book" elementsListType
 		"elements_list_type" : null, // catwalker, favorite, photobook, notify
 		"start_limit" : 0, // element retrieving start limit
-		"show_limit" : 1, // number of element retrieved per call
+		"show_limit" : 1, // element retrieving stop limit
+		"elements_per_call" : 1, // number of element retrieved per call
 		"filter_name" : null, // main filter (Es. latest_registered, classification, ecc...)
 	}, // list of AND filters */
 	ajaxCallUrl : "/ajax/", // the ajax call url
@@ -868,6 +869,7 @@ var elementsListObject = {
 		this.__elementsListFilters["elements_list_type"] = null;
 		this.__elementsListFilters["start_limit"] = 0;
 		this.__elementsListFilters["show_limit"] = 1;
+		this.__elementsListFilters["elements_per_call"] = 1;
 		this.__elementsListFilters["filter_name"] = null;
 	},
 
@@ -910,8 +912,22 @@ var elementsListObject = {
 	/* Function to retrieve list of AND filters */
 	getElementsListFilters : function() { return this.__elementsListFilters; },
 
+	/* Function to set element show limit */
+	setElementsPerCall : function(elementsPerCall) {
+		if (elementsPerCall) {
+			// retrieve previously added filters
+			var existing_filters = this.getElementsListFilters();
+			existing_filters["elements_per_call"] = elementsPerCall;
+			existing_filters["show_limit"] = elementsPerCall;
+			// setting new filters object
+			this.setElementsListFilters(existing_filters);
+		}
+
+		return true;
+	},
+
 	/* Function to set element start limit */
-	setStartLimit : function(startLimit) {
+	/*setStartLimit : function(startLimit) {
 		if (startLimit) {
 			// retrieve previously added filters
 			var existing_filters = this.getElementsListFilters();
@@ -924,7 +940,7 @@ var elementsListObject = {
 	},
 
 	/* Function to set element show limit */
-	setShowLimit : function(showLimit) {
+	/*setShowLimit : function(showLimit) {
 		if (showLimit) {
 			// retrieve previously added filters
 			var existing_filters = this.getElementsListFilters();
@@ -934,7 +950,7 @@ var elementsListObject = {
 		}
 
 		return true;
-	},
+	},*/
 
 	/* Function to set user id */
 	setUserId : function(userId) {
@@ -1129,7 +1145,7 @@ var elementsListObject = {
 
 		if (notifyTitle && notifyId) {
 			// action to read notify
-			var actionLink = '/profilo/messaggi/' + notifyId;
+			var actionLink = '/profilo/notifiche/' + notifyId;
 			if (notifyAlreadyRead) {
 				returnVar = '<tr><td><a class="table_action_link " href="' + actionLink + '">' + notifyTitle + '</a></td><td class="display_only_big">' + notifyCreationDate + '</td><td class="text-center"><a class="alert-link" href="' + actionLink + '"><span class="label label-default">letta</span></a></td></tr>';
 			} else {

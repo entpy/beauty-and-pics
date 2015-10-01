@@ -181,6 +181,7 @@ class ajaxManager():
 	show_load_button = False
         elements_list_type = filters_list.get("elements_list_type")
         filters_list["show_limit"] = int(filters_list["show_limit"]) + 1 # trick to hide "load more" button
+        filters_list["elements_per_call"] = int(filters_list["elements_per_call"]) + 1 # trick to hide "load more" button
 
         # catwalker section
         if elements_list_type == "catwalker":
@@ -192,7 +193,7 @@ class ajaxManager():
             # se ce un elemento in più non nascondo il pulsante, altrimenti lo nascondo
             filtered_list = account_obj.get_filtered_accounts_list(filters_list=filters_list, contest_type=contest_obj.get_contest_type_from_session(request=self.request))
             # return a valid filtered list, trick to hide "load more" button
-            valid_filtered_list = self.return_valid_filtered_list(filtered_list=filtered_list, show_limit=filters_list["show_limit"])
+            valid_filtered_list = self.return_valid_filtered_list(filtered_list=filtered_list, show_limit=filters_list["elements_per_call"])
 
             for user_info in valid_filtered_list:
                 logger.debug("element list: " + str(user_info))
@@ -212,7 +213,7 @@ class ajaxManager():
             # se ce un elemento in più non nascondo il pulsante, altrimenti lo nascondo
             filtered_list = book_obj.get_photobook_list(user_id=user_id, filters_list=filters_list)
             # return a valid filtered list, trick to hide "load more" button
-            valid_filtered_list = self.return_valid_filtered_list(filtered_list=filtered_list, show_limit=filters_list["show_limit"])
+            valid_filtered_list = self.return_valid_filtered_list(filtered_list=filtered_list, show_limit=filters_list["elements_per_call"])
 
             for image in valid_filtered_list:
                 logger.debug("element list: " + str(image))
@@ -232,7 +233,7 @@ class ajaxManager():
             # se ce un elemento in più non nascondo il pulsante, altrimenti lo nascondo
             filtered_list = favorite_obj.get_favorites_list(user_id=user_id, filters_list=filters_list)
             # return a valid filtered list, trick to hide "load more" button
-            valid_filtered_list = self.return_valid_filtered_list(filtered_list=filtered_list, show_limit=filters_list["show_limit"])
+            valid_filtered_list = self.return_valid_filtered_list(filtered_list=filtered_list, show_limit=filters_list["elements_per_call"])
 
             for favorite_user in valid_filtered_list:
                 logger.debug("element list: " + str(favorite_user))
@@ -250,7 +251,7 @@ class ajaxManager():
             # se ce un elemento in più non nascondo il pulsante, altrimenti lo nascondo
             filtered_list = book_obj.get_all_photobook_list(contest_type=contest_obj.get_contest_type_from_session(request=self.request), filters_list=filters_list)
             # return a valid filtered list, trick to hide "load more" button
-            valid_filtered_list = self.return_valid_filtered_list(filtered_list=filtered_list, show_limit=filters_list["show_limit"])
+            valid_filtered_list = self.return_valid_filtered_list(filtered_list=filtered_list, show_limit=filters_list["elements_per_call"])
 
             for photobook_element in valid_filtered_list:
                 logger.debug("element list: " + str(photobook_element))
@@ -273,7 +274,7 @@ class ajaxManager():
             # se ce un elemento in più non nascondo il pulsante, altrimenti lo nascondo
             filtered_list = notify_obj.user_notify_list(account_creation_date=account_creation_date, filters_list=filters_list)
             # return a valid filtered list, trick to hide "load more button"
-            valid_filtered_list = self.return_valid_filtered_list(filtered_list=filtered_list, show_limit=filters_list["show_limit"])
+            valid_filtered_list = self.return_valid_filtered_list(filtered_list=filtered_list, show_limit=filters_list["elements_per_call"])
 
             if valid_filtered_list:
                 for notify in valid_filtered_list:
@@ -299,7 +300,7 @@ class ajaxManager():
         """
 
         # check if show or hide "load more" button
-        if self.check_if_exists_more_elements(filtered_list=filtered_list, show_limit=filters_list["show_limit"]):
+        if self.check_if_exists_more_elements(filtered_list=filtered_list, show_limit=filters_list["elements_per_call"]):
             show_load_button = True
 
         data = {'success' : True, 'elements_list_type': elements_list_type, 'elements_list': json_account_element, 'show_load_button': show_load_button,}

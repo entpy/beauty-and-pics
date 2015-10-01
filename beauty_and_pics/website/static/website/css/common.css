@@ -209,5 +209,5 @@ ul.grid_container li img:hover { opacity: 0.5; }
 .grid_button_1:hover { color: #fff; }
 .grid_button_1 > span { display: inline-block; width: 100%; }
 .grid_button_1 > .grid_button_image { margin-top: 15px; margin-bottom: 20px; }
-.grid_button_1 > .grid_button_image > img { }
+.grid_button_1 > .grid_button_image > img { height: 70px; }
 .grid_button_1 > .grid_button_label { margin-bottom: 15px; }

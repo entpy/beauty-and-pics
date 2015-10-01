@@ -206,7 +206,8 @@
 
 {% block custom_js %}
 <script>
-	elementsListObject.addFilter("show_limit", 20);
+	// set elements retrieved per call
+	elementsListObject.setElementsPerCall(5);
 
 	$(document).ready(function(){
 		// single vote type click
