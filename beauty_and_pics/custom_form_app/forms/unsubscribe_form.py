@@ -20,8 +20,8 @@ logger = logging.getLogger(__name__)
 
 class UnsubscribeForm(forms.Form, FormCommonUtils):
 
-    receive_weekly_report = forms.BooleanField(label='Voglio ricevere il report settimanale', required=False)
-    contest_report = forms.BooleanField(label='Voglio ricevere il report annuale del concorso', required=False)
+    receive_weekly_report = forms.BooleanField(label="Avvisami settimanalmente sull'andamento del concorso", required=False)
+    contest_report = forms.BooleanField(label="Avvisami annualmente all'apertura e alla chiusura del concorso", required=False)
 
     # list of validator for this form
     custom_validation_list = (

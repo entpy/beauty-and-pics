@@ -1128,10 +1128,12 @@ var elementsListObject = {
 		returnVar = "";
 
 		if (notifyTitle && notifyId) {
+			// action to read notify
+			var actionLink = '/profilo/messaggi/' + notifyId;
 			if (notifyAlreadyRead) {
-				returnVar = '<tr><td><a class="table_action_link " href="/profilo/notifiche/' + notifyId + '">' + notifyTitle + '</a></td><td class="display_only_big">' + notifyCreationDate + '</td><td class="text-center"><a class="alert-link" href="/profilo/notifiche/' + notifyId + '"><span class="label label-default">letta</span></a></td></tr>';
+				returnVar = '<tr><td><a class="table_action_link " href="' + actionLink + '">' + notifyTitle + '</a></td><td class="display_only_big">' + notifyCreationDate + '</td><td class="text-center"><a class="alert-link" href="' + actionLink + '"><span class="label label-default">letta</span></a></td></tr>';
 			} else {
-				returnVar = '<tr><td><a class="table_action_link" href="/profilo/notifiche/' + notifyId + '">' + notifyTitle + '</a></td><td class="display_only_big">' + notifyCreationDate + '</td><td class="text-center"><a class="alert-link" href="/profilo/notifiche/' + notifyId + '"><span class="label label-success">da leggere</span></a></td></tr>';
+				returnVar = '<tr><td><a class="table_action_link" href="' + actionLink + '">' + notifyTitle + '</a></td><td class="display_only_big">' + notifyCreationDate + '</td><td class="text-center"><a class="alert-link" href="' + actionLink + '"><span class="label label-success">da leggere</span></a></td></tr>';
 			}
 		}
 

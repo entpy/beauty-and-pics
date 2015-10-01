@@ -282,42 +282,6 @@ def catwalk_report_user(request, user_id):
     }
 
     return render(request, 'website/catwalk/catwalk_report_user.html', context)
-
-@login_required
-def profile_preferences(request):
-
-    account_obj = Account()
-    user_obj = account_obj.get_user_about_id(user_id=request.user.id)
-
-    # check which notify are enabled
-    enable_receive_weekly_report = account_obj.check_bitmask(b1=user_obj.account.newsletters_bitmask, b2=project_constants.WEEKLY_REPORT_EMAIL_BITMASK)
-    enable_receive_contest_report = account_obj.check_bitmask(b1=user_obj.account.newsletters_bitmask, b2=project_constants.CONTEST_REPORT_EMAIL_BITMASK)
-
-    # if this is a POST request we need to process the form data
-    if request.method == 'POST':
-        # create a form instance and populate it with data from the request:
-        form = UnsubscribeForm(request.POST)
-        form.set_current_request(request=request)
-
-        # check whether it's valid:
-        if form.is_valid() and form.form_actions():
-            messages.add_message(request, messages.SUCCESS, 'Le preferenze sono state salvate con successo.')
-            # redirect to user profile
-            return HttpResponseRedirect('/profilo/disiscriviti/')
-
-    # if a GET (or any other method) we'll create a blank form
-    else:
-        # pre-prepopulate post dictionary with current user data
-        form = UnsubscribeForm()
-
-    context = {
-        "post" : request.POST,
-        "form": form,
-        "enable_receive_weekly_report": enable_receive_weekly_report,
-        "enable_receive_contest_report": enable_receive_contest_report,
-    }
-
-    return render(request, 'website/profile/profile_preferences.html', context)
 # }}}
 
 # private profile {{{
@@ -373,7 +337,7 @@ def profile_data(request):
 
         # check whether it's valid:
         if form.is_valid() and form.form_actions():
-            messages.add_message(request, messages.SUCCESS, 'Tutte le informazioni sono state salvate correttamente')
+            messages.add_message(request, messages.SUCCESS, 'Tutte le informazioni sono state salvate correttamente.')
             # redirect to user profile
             return HttpResponseRedirect('/profilo/dati-personali/')
 
@@ -445,7 +409,7 @@ def profile_area51(request):
 
         # check whether it's valid:
         if form.is_valid() and form.form_actions():
-            messages.add_message(request, messages.SUCCESS, 'Tutte le informazioni sono state salvate correttamente')
+            messages.add_message(request, messages.SUCCESS, 'Tutte le informazioni sono state salvate correttamente.')
             # redirect to user profile
             return HttpResponseRedirect('/profilo/zona-proibita/')
 
@@ -515,6 +479,51 @@ def profile_notify_details(request, notify_id):
     }
 
     return render(request, 'website/profile/profile_notify_details.html', context)
+
+@login_required
+@user_passes_test(check_if_is_a_catwalker_user)
+def profile_preferences(request):
+    """View to show preference page"""
+
+    return render(request, 'website/profile/profile_preferences.html', False)
+
+@login_required
+@user_passes_test(check_if_is_a_catwalker_user)
+def profile_advise(request):
+    """View to show advise page"""
+
+    account_obj = Account()
+    user_obj = account_obj.get_user_about_id(user_id=request.user.id)
+
+    # check which notify are enabled
+    enable_receive_weekly_report = account_obj.check_bitmask(b1=user_obj.account.newsletters_bitmask, b2=project_constants.WEEKLY_REPORT_EMAIL_BITMASK)
+    enable_receive_contest_report = account_obj.check_bitmask(b1=user_obj.account.newsletters_bitmask, b2=project_constants.CONTEST_REPORT_EMAIL_BITMASK)
+
+    # if this is a POST request we need to process the form data
+    if request.method == 'POST':
+        # create a form instance and populate it with data from the request:
+        form = UnsubscribeForm(request.POST)
+        form.set_current_request(request=request)
+
+        # check whether it's valid:
+        if form.is_valid() and form.form_actions():
+            messages.add_message(request, messages.SUCCESS, 'Tutte le informazioni sono state salvate correttamente.')
+            # redirect to user profile
+            return HttpResponseRedirect('/profilo/avvisi/')
+
+    # if a GET (or any other method) we'll create a blank form
+    else:
+        # pre-prepopulate post dictionary with current user data
+        form = UnsubscribeForm()
+
+    context = {
+        "post" : request.POST,
+        "form": form,
+        "enable_receive_weekly_report": enable_receive_weekly_report,
+        "enable_receive_contest_report": enable_receive_contest_report,
+    }
+
+    return render(request, 'website/profile/profile_advise.html', context)
 # }}}
 
 # test email {{{

@@ -1,0 +1,97 @@
+{% extends "website/inc/base_profile.html" %}
+{% load staticfiles %}
+
+{% block title %}{{ site_name }} | avvisi{% endblock %}
+
+{% block description %}Avvisi: seleziona quali avvisi vuoi ricevere.{% endblock %}
+
+{% block container4_title %}Preferenze{% endblock %}
+
+{# navigation tabs active element #}
+{% block container4_navigation_profile_preferences %}active{% endblock %}
+
+{% block container4_content %}
+<div class="row">
+	<div class="col-md-12">
+		<h3>Avvisi via email</h3>
+	</div>
+	<div class="col-md-12">
+		<div class="alert alert-info">
+			<p>Non vuoi più ricevere le nostre email? Seleziona quali avvisi non ti interessano e salva le modifiche.</p>
+		</div>
+	</div>
+	<div class="col-md-12">
+		{# messages block #}
+		<div class="error_container"></div>
+		{% if form.errors or messages %}
+			<div class="server_msg_container">
+				{% if form.errors %}
+					<div class="alert alert-danger">
+						<h4>Uhm qualcosa non va!</h4>
+						<ul>
+							{% for form_error in form.non_field_errors %}
+								<li>{{ form_error }}</li>
+							{% endfor %}
+						</ul>
+					</div>
+				{% else %}
+					<div class="alert alert-success">
+						<h4>Ottimo!</h4>
+						{% for message in messages %}
+							<div>{{ message }}</div>
+						{% endfor %}
+					</div>
+				{% endif %}
+			</div>
+		{% endif %}
+		<form class="form-horizontal ajax_form" method="post" action="">
+			{% csrf_token %}
+			<input type="hidden" name="form_class" value="UnsubscribeForm">
+			<fieldset class="col-md-12">
+				<div class="form-group {% if form.receive_weekly_report.errors %}has-error{% endif %}">
+					<div class="col-sm-offset-2 col-sm-10">
+						<div class="checkbox custom_checkbox">
+							<label for="{{ form.receive_weekly_report.id_for_label }}">
+								<input class="vertical_align_top" name="{{ form.receive_weekly_report.name }}" id="{{ form.receive_weekly_report.id_for_label }}" value="1" {% if enable_receive_weekly_report %}checked="checked"{% endif %} type="checkbox">
+								{{ form.receive_weekly_report.label }}
+							</label>
+						</div>
+					</div>
+				</div>
+				<div class="form-group {% if form.contest_report.errors %}has-error{% endif %}">
+					<div class="col-sm-offset-2 col-sm-10">
+						<div class="checkbox custom_checkbox">
+							<label for="{{ form.contest_report.id_for_label }}">
+								<input class="vertical_align_top" name="{{ form.contest_report.name }}" id="{{ form.contest_report.id_for_label }}" value="1" {% if enable_receive_contest_report %}checked="checked"{% endif %} type="checkbox">
+								{{ form.contest_report.label }}
+							</label>
+						</div>
+					</div>
+				</div>
+				<div class="form-group">
+					<div class="col-sm-offset-2 col-sm-10">
+						<button type="submit" class="btn btn-success submitButtonClickAction">Salva le modifiche</button>
+					</div>
+				</div>
+			</fieldset>
+		</form>
+	</div>
+</div>
+{% endblock container4_content %}
+
+{% block custom_js %}
+<script>
+	$(document).ready(function(){
+		$(".submitButtonClickAction").click(function(event){
+			// preventing default click event
+			event.preventDefault();
+			// serialize form data
+			ajaxFormValidation.callData["data"] = $(".ajax_form").serialize();
+			// performing ajax call
+			ajaxFormValidation.validateForm();
+
+			return true;
+		});
+	});
+</script>
+{% endblock custom_js %}

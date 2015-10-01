@@ -8,6 +8,7 @@ from django.conf.urls.static import static
 admin.site = AdminSitePlus()
 admin.autodiscover()
 
+# errors
 handler404 = 'website.views.custom404_view'
 handler500 = 'website.views.custom500_view'
 
@@ -38,6 +39,7 @@ urlpatterns = patterns('',
     url(r'^profilo/statistiche/$', 'website.views.profile_stats', name='profile_stats'),
     url(r'^profilo/zona-proibita/$', 'website.views.profile_area51', name='profile_area51'),
     url(r'^profilo/preferenze/$', 'website.views.profile_preferences', name='profile_preferences'),
+    url(r'^profilo/avvisi/$', 'website.views.profile_advise', name='profile_advise'),
     url(r'^profilo/notifiche/(?:(?P<notify_id>\d+)/)$', 'website.views.profile_notify_details', name='profile_notify_details'),
     url(r'^profilo/notifiche/$', 'website.views.profile_notify', name='profile_notify'),
 

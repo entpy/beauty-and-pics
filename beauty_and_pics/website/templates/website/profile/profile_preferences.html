@@ -3,7 +3,7 @@
 
 {% block title %}{{ site_name }} | notifiche{% endblock %}
 
-{% block description %}Preferenze: in questa sezione puoi impostare le preferenze della piattaforma.{% endblock %}
+{% block description %}Preferenze: in questa pagina puoi gestire il tuo account.{% endblock %}
 
 {% block container4_title %}Preferenze{% endblock %}
 
@@ -13,92 +13,48 @@
 {% block container4_content %}
 <div class="row">
 	<div class="col-md-12">
-		<h3>Notifiche</h3>
+		<h3>Preferenze</h3>
 	</div>
 	<div class="col-md-12">
 		<div class="alert alert-info">
-			<p>Stanco di ricevere le nostre notifiche? Seleziona quali notifiche vuoi ricevere.</p>
+			<p>In questa pagina puoi gestire il tuo account. Passa con il mouse sopra ad una sezione per visualizzare una breve descrizione.</p>
 		</div>
 	</div>
-	<div>
-		<ul>
-			<li>dati utente</li>
-			<li>notifiche email</li>
-			<li>zona proibita</li>
-		</ul>
+</div>
+{# preferences block {{{ #}
+<div class="row">
+	<div class="col-xs-6 col-md-3">
+		<a href="/profilo/dati-personali/" class="thumbnail grid_button_1" data-toggle="tooltip" data-placement="top" data-original-title="Da qui puoi aggiungere/modificare alcune informazioni sul tuo account">
+			<span class="grid_button_image">
+				<img src="{% static "website/img/preferences_account_info.png" %}" alt="dati personali">
+			</span>
+			<span class="grid_button_label">Dati personali</span>
+		</a>
 	</div>
-	<div class="col-md-12">
-		{# messages block #}
-		<div class="error_container"></div>
-		{% if form.errors or messages %}
-			<div class="server_msg_container">
-				{% if form.errors %}
-					<div class="alert alert-danger">
-						<h4>Uhm qualcosa non va!</h4>
-						<ul>
-							{% for form_error in form.non_field_errors %}
-								<li>{{ form_error }}</li>
-							{% endfor %}
-						</ul>
-					</div>
-				{% else %}
-					<div class="alert alert-success">
-						<h4>Ottimo!</h4>
-						{% for message in messages %}
-							<div>{{ message }}</div>
-						{% endfor %}
-					</div>
-				{% endif %}
-			</div>
-		{% endif %}
-		<form class="form-horizontal ajax_form" method="post" action="">
-			{% csrf_token %}
-			<input type="hidden" name="form_class" value="UnsubscribeForm">
-			<fieldset class="col-md-12">
-				<div class="form-group {% if form.receive_weekly_report.errors %}has-error{% endif %}">
-					<div class="col-sm-offset-2 col-sm-10">
-						<div class="checkbox custom_checkbox">
-							<label for="{{ form.receive_weekly_report.id_for_label }}">
-								<input class="vertical_align_top" name="{{ form.receive_weekly_report.name }}" id="{{ form.receive_weekly_report.id_for_label }}" value="1" {% if enable_receive_weekly_report %}checked="checked"{% endif %} type="checkbox">
-								{{ form.receive_weekly_report.label }}
-							</label>
-						</div>
-					</div>
-				</div>
-				<div class="form-group {% if form.contest_report.errors %}has-error{% endif %}">
-					<div class="col-sm-offset-2 col-sm-10">
-						<div class="checkbox custom_checkbox">
-							<label for="{{ form.contest_report.id_for_label }}">
-								<input class="vertical_align_top" name="{{ form.contest_report.name }}" id="{{ form.contest_report.id_for_label }}" value="1" {% if enable_receive_contest_report %}checked="checked"{% endif %} type="checkbox">
-								{{ form.contest_report.label }}
-							</label>
-						</div>
-					</div>
-				</div>
-				<div class="form-group">
-					<div class="col-sm-offset-2 col-sm-10">
-						<button type="submit" class="btn btn-success submitButtonClickAction">Salva le modifiche</button>
-					</div>
-				</div>
-			</fieldset>
-		</form>
+	<div class="col-xs-6 col-md-3">
+		<a href="/profilo/avvisi/" class="thumbnail grid_button_1" data-toggle="tooltip" data-placement="top" data-original-title="Da qui puoi abilitare o disabilitare gli avvisi">
+			<span class="grid_button_image">
+				<img src="{% static "website/img/preferences_notify.png" %}" alt="avvisi">
+			</span>
+			<span class="grid_button_label">Avvisi</span>
+		</a>
+	</div>
+	<div class="col-xs-6 col-md-3">
+		<a href="/profilo/zona-proibita/" class="thumbnail grid_button_1" data-toggle="tooltip" data-placement="top" data-original-title="Da qui puoi eseguire operazioni amministrative sul tuo account">
+			<span class="grid_button_image">
+				<img src="{% static "website/img/preferences_area51.png" %}" alt="zona proibita">
+			</span>
+			<span class="grid_button_label">Zona proibita</span>
+		</a>
 	</div>
 </div>
+{# preferences block }}} #}
 {% endblock container4_content %}
 
 {% block custom_js %}
 <script>
 	$(document).ready(function(){
-		$(".submitButtonClickAction").click(function(event){
-			// preventing default click event
-			event.preventDefault();
-			// serialize form data
-			ajaxFormValidation.callData["data"] = $(".ajax_form").serialize();
-			// performing ajax call
-			ajaxFormValidation.validateForm();
-
-			return true;
-		});
+		$('[data-toggle="tooltip"]').tooltip();
 	});
 </script>
 {% endblock custom_js %}
