@@ -45,7 +45,7 @@
 {% block custom_js %}
 {{ block.super }}
 <script>
-	elementsListObject.addFilter("show_limit", 20);
+	elementsListObject.setElementsPerCall(5);
 	$(document).ready(function(){
 		$('[data-toggle="tooltip"]').tooltip();
 
@@ -69,7 +69,7 @@
 			$(".setFilterAction").removeClass("active");
 			$(this).addClass("active");
 			elementsListObject.newElementList();
-			elementsListObject.addFilter("show_limit", 20);
+			elementsListObject.setElementsPerCall(5);
 			$(".loadMoreElementsAction").click();
 
 			return false;
