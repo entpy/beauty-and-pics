@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 
 # contest processor to manage common vars
-from django.utils.dateparse import parse_datetime
 from account_app.models.accounts import *
 from account_app.models.images import *
 from contest_app.models.contests import *
@@ -44,20 +43,9 @@ def common_contest_processors(request):
         profile_thumbnail_image_url = book_obj.get_profile_thumbnail_image_url(user_id=autenticated_user_data["user_id"])
         logged_user_id = autenticated_user_data.get("user_id")
 
-	# check if user notify popup must be shown: if show_date < (now - timedelta 60) -> show user notify popup
-	try:
-	    if parse_datetime(request.session.get('USER_NOTIFY_POPUP_SHOW_TIMESTAMP')) < timezone.now():
-		logger.debug("USER_NOTIFY_POPUP_SHOW_TIMESTAMP minore di now")
-		check_user_notify = True
-	    else:
-		logger.debug("USER_NOTIFY_POPUP_SHOW_TIMESTAMP check non passato")
-	except TypeError:
-	   # USER_NOTIFY_POPUP_SHOW_TIMESTAMP does not already exists (first time)
-	   check_user_notify = True
-
-	if check_user_notify == True:
-	    # write current timestamp into sessione to notify the popup opening
-	    request.session['USER_NOTIFY_POPUP_SHOW_TIMESTAMP'] = str(timezone.now() + timedelta(seconds=10))
+	# check if user notify popup must be shown: if not exists cookie -> show user notify popup
+        if not request.COOKIES.get(project_constants.USER_NOTIFY_POPUP_SHOWN_COOKIE_NAME):
+            check_user_notify = True
     else:
         # logger.debug("[TEMPLATE_PROCESSOR] user NOT logged in")
         pass

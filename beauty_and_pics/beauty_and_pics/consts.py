@@ -52,5 +52,9 @@ class project_constants(object):
 
     SITE_NAME = "Beauty and Pics"
 
+    # cookie naming: _bp_firstletter_
     USER_ALREADY_VOTED_COOKIE_NAME = "_uav_"
+
+    USER_NOTIFY_POPUP_SHOWN_COOKIE_NAME = "_bp_unpsk_"
+    USER_NOTIFY_POPUP_SHOWN_COOKIE_EXPIRING_SECONDS = 10 # cookie expiring in seconds
     # newsletters bitmask }}}

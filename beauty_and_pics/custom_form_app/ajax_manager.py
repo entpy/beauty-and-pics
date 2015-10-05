@@ -511,13 +511,10 @@ class ajaxManager():
             # count unread notify number
             unread_notify_number = notify_obj.count_notify_to_read(user_id=user_id)
 
-	    # TODO: cookie con now + x secondi per non mostrare il popup
-            # votation performing seems ok, attach cookie to response
-            # self.cookie_key = project_constants.USER_ALREADY_VOTED_COOKIE_NAME + str(self.request.POST.get("user_id"))
-            # self.cookie_value = True
-            # self.cookie_expiring = project_constants.SECONDS_BETWEEN_VOTATION
-            # block popup reopen on page reload
-            # self.request.session['USER_NOTIFY_POPUP_ALREADY_SHOWN'] = True
+            # set cookie to not show user notify popup for next x seconds
+            self.cookie_key = project_constants.USER_NOTIFY_POPUP_SHOWN_COOKIE_NAME
+            self.cookie_value = True
+            self.cookie_expiring = project_constants.USER_NOTIFY_POPUP_SHOWN_COOKIE_EXPIRING_SECONDS
 
             # build json response
             data = {

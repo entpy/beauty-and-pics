@@ -282,19 +282,22 @@ class Notify(models.Model):
     def user_notify_list(self, account_creation_date, user_id, filters_list=None):
         """Function to retrieve a list of valid notify about a user"""
 
+        # appilcare una AND come condizione della left join non era possibile
+        # con Django, la query è stata quindi scritta direttamente in SQL (per
+        # postgreSQL e MySQL)
 	raw_sql = """
 	SELECT
-	    "notify_system_app_notify"."notify_id",
-	    "notify_system_app_notify"."creation_date",
-	    "notify_system_app_notify"."title",
-	    "notify_system_app_notify"."message",
-	    "notify_system_app_notify"."action_title",
-	    "notify_system_app_notify"."action_url",
-	    "notify_system_app_user_notify"."user_notify_id"
-	FROM "notify_system_app_notify" 
-	LEFT JOIN "notify_system_app_user_notify" ON ( "notify_system_app_notify"."notify_id" = "notify_system_app_user_notify"."notify_id" ) AND "notify_system_app_user_notify"."user_id" = %(user_id)s 
-	WHERE "notify_system_app_notify"."creation_date" >= %(account_creation_date)s
-	ORDER BY "notify_system_app_notify"."notify_id" DESC
+	    `notify_system_app_notify`.`notify_id`,
+	    `notify_system_app_notify`.`creation_date`,
+	    `notify_system_app_notify`.`title`,
+	    `notify_system_app_notify`.`message`,
+	    `notify_system_app_notify`.`action_title`,
+	    `notify_system_app_notify`.`action_url`,
+	    `notify_system_app_user_notify`.`user_notify_id`
+	FROM `notify_system_app_notify`
+	LEFT JOIN `notify_system_app_user_notify` ON (`notify_system_app_notify`.`notify_id` = `notify_system_app_user_notify`.`notify_id` ) AND `notify_system_app_user_notify`.`user_id` = %(user_id)s 
+	WHERE `notify_system_app_notify`.`creation_date` >= %(account_creation_date)s
+	ORDER BY `notify_system_app_notify`.`notify_id` DESC
 	"""
 
 	# con le query raw gli slice non vengono aplicati a livello di db, quindi 
@@ -308,8 +311,8 @@ class Notify(models.Model):
 	return_var = Notify.objects.raw(raw_sql, {
 	    "user_id": user_id, 
 	    "account_creation_date": account_creation_date,
-	    "start_limit": filters_list.get("start_limit"),
-	    "show_limit": filters_list.get("show_limit"),
+	    "start_limit": int(filters_list.get("start_limit") or 0),
+	    "show_limit": int(filters_list.get("show_limit") or 0),
 	})
 
 	# performing query
