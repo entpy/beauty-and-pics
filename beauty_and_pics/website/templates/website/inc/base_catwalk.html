@@ -40,7 +40,7 @@
 {# custom page js #}
 {% block custom_js %}
 {{ block.super }}
-{% if not user_notify_popup_already_shown %}
+{% if check_user_notify %}
 <script src="{% static "notify_system_app/js/notify.js" %}"></script>
 {% endif %}
 {% endblock custom_js %}

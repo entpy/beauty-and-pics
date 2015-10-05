@@ -265,14 +265,15 @@ class ajaxManager():
         # user notify section
         if elements_list_type == "notify":
             notify_obj = Notify()
+	    user_id = self.request.user.id
 	    # retrieve account info
-	    user_info = account_obj.get_user_about_id(user_id=self.request.user.id)
+	    user_info = account_obj.get_user_about_id(user_id=user_id)
 	    # retrieve user join date
 	    account_creation_date = user_info.account.creation_date
 
             # tiro fuori filtered_list + 1 e la controllo con filtered_list,
             # se ce un elemento in più non nascondo il pulsante, altrimenti lo nascondo
-            filtered_list = notify_obj.user_notify_list(account_creation_date=account_creation_date, filters_list=filters_list)
+            filtered_list = notify_obj.user_notify_list(account_creation_date=account_creation_date, user_id=user_id, filters_list=filters_list)
             # return a valid filtered list, trick to hide "load more button"
             valid_filtered_list = self.return_valid_filtered_list(filtered_list=filtered_list, show_limit=filters_list["elements_per_call"])
 
@@ -281,10 +282,10 @@ class ajaxManager():
                     # se la notifica è stata creata dopo l'utente allora gliela faccio visualizzare
                     # if notify_obj.check_if_show_notify(user_id=self.request.user.id, notify_date=notify["creation_date"]):
 		    json_account_element.append({
-			"notify_id": str(notify["notify_id"]),
-			"title": str(notify["title"]),
-			"creation_date": str(formats.date_format(notify["creation_date"], "SHORT_DATE_FORMAT")),
-			"already_read": str(notify["user_notify__user_notify_id"] or ''),
+			"notify_id": str(notify.notify_id),
+			"title": str(notify.title),
+			"creation_date": str(formats.date_format(notify.creation_date, "SHORT_DATE_FORMAT")),
+			"already_read": str(notify.user_notify_id or ''),
 		    }),
 
         """
@@ -510,8 +511,13 @@ class ajaxManager():
             # count unread notify number
             unread_notify_number = notify_obj.count_notify_to_read(user_id=user_id)
 
+	    # TODO: cookie con now + x secondi per non mostrare il popup
+            # votation performing seems ok, attach cookie to response
+            # self.cookie_key = project_constants.USER_ALREADY_VOTED_COOKIE_NAME + str(self.request.POST.get("user_id"))
+            # self.cookie_value = True
+            # self.cookie_expiring = project_constants.SECONDS_BETWEEN_VOTATION
             # block popup reopen on page reload
-            self.request.session['USER_NOTIFY_POPUP_ALREADY_SHOWN'] = True
+            # self.request.session['USER_NOTIFY_POPUP_ALREADY_SHOWN'] = True
 
             # build json response
             data = {

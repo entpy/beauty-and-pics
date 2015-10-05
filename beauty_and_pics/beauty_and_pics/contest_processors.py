@@ -1,4 +1,7 @@
+# -*- coding: utf-8 -*-
+
 # contest processor to manage common vars
+from django.utils.dateparse import parse_datetime
 from account_app.models.accounts import *
 from account_app.models.images import *
 from contest_app.models.contests import *
@@ -28,8 +31,8 @@ def common_contest_processors(request):
     contest_info = contest_obj.get_contest_info_about_type(contest_type=contest_type)
     # last contest winner
     contest_winner = hall_of_fame_obj.get_last_active_contest_winner(contest_type=contest_type)
-    # if the user already shown the notify popup
-    user_notify_popup_already_shown = False
+    # shown user notify popup
+    check_user_notify = False
     ### template context vars }}} ###
 
     # check if user is authenticated
@@ -40,7 +43,21 @@ def common_contest_processors(request):
         # logger.debug("[TEMPLATE_PROCESSOR] user logged in (user id: " + str(autenticated_user_data["user_id"]) + ")")
         profile_thumbnail_image_url = book_obj.get_profile_thumbnail_image_url(user_id=autenticated_user_data["user_id"])
         logged_user_id = autenticated_user_data.get("user_id")
-        user_notify_popup_already_shown = request.session.get('USER_NOTIFY_POPUP_ALREADY_SHOWN', False)
+
+	# check if user notify popup must be shown: if show_date < (now - timedelta 60) -> show user notify popup
+	try:
+	    if parse_datetime(request.session.get('USER_NOTIFY_POPUP_SHOW_TIMESTAMP')) < timezone.now():
+		logger.debug("USER_NOTIFY_POPUP_SHOW_TIMESTAMP minore di now")
+		check_user_notify = True
+	    else:
+		logger.debug("USER_NOTIFY_POPUP_SHOW_TIMESTAMP check non passato")
+	except TypeError:
+	   # USER_NOTIFY_POPUP_SHOW_TIMESTAMP does not already exists (first time)
+	   check_user_notify = True
+
+	if check_user_notify == True:
+	    # write current timestamp into sessione to notify the popup opening
+	    request.session['USER_NOTIFY_POPUP_SHOW_TIMESTAMP'] = str(timezone.now() + timedelta(seconds=10))
     else:
         # logger.debug("[TEMPLATE_PROCESSOR] user NOT logged in")
         pass
@@ -54,5 +71,5 @@ def common_contest_processors(request):
             'authenticated_user_contest_type': autenticated_user_data.get("contest_type"),
             'site_name': project_constants.SITE_NAME,
             'logged_user_id': logged_user_id,
-            'user_notify_popup_already_shown': user_notify_popup_already_shown,
+            'check_user_notify': check_user_notify,
     }

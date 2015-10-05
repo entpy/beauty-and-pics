@@ -279,23 +279,43 @@ class Notify(models.Model):
 
         return return_var
 
-    def user_notify_list(self, account_creation_date, filters_list=None):
-        """Function to retrieve a list of notify about a user"""
+    def user_notify_list(self, account_creation_date, user_id, filters_list=None):
+        """Function to retrieve a list of valid notify about a user"""
 
-        # eseguo una left join di User_Notify in Notify filtrando per data creazione account (il risultato è la query sotto)
-        """
-	    SELECT "notify_system_app_notify"."notify_id", "notify_system_app_notify"."title", "notify_system_app_notify"."creation_date", "notify_system_app_user_notify"."user_notify_id" 
-	    FROM "notify_system_app_notify"
-	    LEFT OUTER JOIN "notify_system_app_user_notify" ON ( "notify_system_app_notify"."notify_id" = "notify_system_app_user_notify"."notify_id" )
-	    WHERE "notify_system_app_notify"."creation_date" >= '2015-09-21 23:45:00.342532'
-	    ORDER BY "notify_system_app_notify"."notify_id" DESC LIMIT 10;
-        """
-        return_var = Notify.objects.filter(Q(creation_date__gte=account_creation_date)).values('notify_id', 'title', 'creation_date', 'user_notify__user_notify_id').order_by('-notify_id')
+	raw_sql = """
+	SELECT
+	    "notify_system_app_notify"."notify_id",
+	    "notify_system_app_notify"."creation_date",
+	    "notify_system_app_notify"."title",
+	    "notify_system_app_notify"."message",
+	    "notify_system_app_notify"."action_title",
+	    "notify_system_app_notify"."action_url",
+	    "notify_system_app_user_notify"."user_notify_id"
+	FROM "notify_system_app_notify" 
+	LEFT JOIN "notify_system_app_user_notify" ON ( "notify_system_app_notify"."notify_id" = "notify_system_app_user_notify"."notify_id" ) AND "notify_system_app_user_notify"."user_id" = %(user_id)s 
+	WHERE "notify_system_app_notify"."creation_date" >= %(account_creation_date)s
+	ORDER BY "notify_system_app_notify"."notify_id" DESC
+	"""
 
+	# con le query raw gli slice non vengono aplicati a livello di db, quindi 
+	# tramite limit e offset ma a livello di python, quindi se non sono int viene
+	# ritornato un errore, questo spiega il comportamento diverso da questa lista
+	# a quella dei catwalker, per far funzionare questa query correttamente
+	# sono state concatenate la "limit" e la "offset"
         if filters_list.get("start_limit") and filters_list.get("show_limit"):
-            return_var = return_var[filters_list["start_limit"]:filters_list["show_limit"]]
+	    raw_sql += " LIMIT %(show_limit)s OFFSET %(start_limit)s"
 
-        return list(return_var)
+	return_var = Notify.objects.raw(raw_sql, {
+	    "user_id": user_id, 
+	    "account_creation_date": account_creation_date,
+	    "start_limit": filters_list.get("start_limit"),
+	    "show_limit": filters_list.get("show_limit"),
+	})
+
+	# performing query
+        return_var = list(return_var)
+
+        return return_var
 
     def check_if_show_notify(self, user_id, notify_date):
         """Check if a notify could be shown -> (notify_date >= user_creation_date)"""

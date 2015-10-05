@@ -509,6 +509,7 @@ class Account(models.Model):
             return_var = return_var[filters_list["start_limit"]:filters_list["show_limit"]]
 
         #logger.debug("@@@: " + str(return_var))
+	# performing query
         return_var = list(return_var)
 
         return return_var
