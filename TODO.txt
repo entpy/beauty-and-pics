@@ -17,10 +17,36 @@ BUG NOTI
    apre la fancybox ma si va in cima alla pagina di scatto
 
 QUERY PER CONVERSIONE utf-8 (da eseguire per il db)
+###
 ALTER DATABASE `bep` DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci
+###
 
 QUERY PER CONVERSIONE utf-8 (da eseguire per ogni tabella)
+###
+ALTER TABLE `account_app_account` CONVERT TO CHARACTER SET utf8 COLLATE utf8_general_ci;
+ALTER TABLE `account_app_book` CONVERT TO CHARACTER SET utf8 COLLATE utf8_general_ci;
+ALTER TABLE `account_app_favorite` CONVERT TO CHARACTER SET utf8 COLLATE utf8_general_ci;
+ALTER TABLE `auth_group` CONVERT TO CHARACTER SET utf8 COLLATE utf8_general_ci;
+ALTER TABLE `auth_group_permissions` CONVERT TO CHARACTER SET utf8 COLLATE utf8_general_ci;
+ALTER TABLE `auth_permission` CONVERT TO CHARACTER SET utf8 COLLATE utf8_general_ci;
 ALTER TABLE `auth_user` CONVERT TO CHARACTER SET utf8 COLLATE utf8_general_ci;
+ALTER TABLE `auth_user_groups` CONVERT TO CHARACTER SET utf8 COLLATE utf8_general_ci;
+ALTER TABLE `auth_user_user_permissions` CONVERT TO CHARACTER SET utf8 COLLATE utf8_general_ci;
+ALTER TABLE `contest_app_contest` CONVERT TO CHARACTER SET utf8 COLLATE utf8_general_ci;
+ALTER TABLE `contest_app_contest_type` CONVERT TO CHARACTER SET utf8 COLLATE utf8_general_ci;
+ALTER TABLE `contest_app_halloffame` CONVERT TO CHARACTER SET utf8 COLLATE utf8_general_ci;
+ALTER TABLE `contest_app_metric` CONVERT TO CHARACTER SET utf8 COLLATE utf8_general_ci;
+ALTER TABLE `contest_app_point` CONVERT TO CHARACTER SET utf8 COLLATE utf8_general_ci;
+ALTER TABLE `contest_app_vote` CONVERT TO CHARACTER SET utf8 COLLATE utf8_general_ci;
+ALTER TABLE `django_admin_log` CONVERT TO CHARACTER SET utf8 COLLATE utf8_general_ci;
+ALTER TABLE `django_content_type` CONVERT TO CHARACTER SET utf8 COLLATE utf8_general_ci;
+ALTER TABLE `django_cron_cronjoblog` CONVERT TO CHARACTER SET utf8 COLLATE utf8_general_ci;
+ALTER TABLE `django_migrations` CONVERT TO CHARACTER SET utf8 COLLATE utf8_general_ci;
+ALTER TABLE `django_session` CONVERT TO CHARACTER SET utf8 COLLATE utf8_general_ci;
+ALTER TABLE `upload_image_box_cropuploadedimages` CONVERT TO CHARACTER SET utf8 COLLATE utf8_general_ci;
+ALTER TABLE `upload_image_box_tmpuploadedimages` CONVERT TO CHARACTER SET utf8 COLLATE utf8_general_ci;
+###
+
 
 Sezione preferenze fatta a piastrelle (stile win 8 :O :O :O :O :O:O)
 	(ricezione email notifiche, zona proibita, informazioni utente)

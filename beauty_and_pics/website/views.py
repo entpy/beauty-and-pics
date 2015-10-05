@@ -482,10 +482,10 @@ def profile_notify_details(request, notify_id):
 
 @login_required
 @user_passes_test(check_if_is_a_catwalker_user)
-def profile_preferences(request):
-    """View to show preference page"""
+def profile_control_panel(request):
+    """View to show control panel page"""
 
-    return render(request, 'website/profile/profile_preferences.html', False)
+    return render(request, 'website/profile/profile_control_panel.html', False)
 
 @login_required
 @user_passes_test(check_if_is_a_catwalker_user)
