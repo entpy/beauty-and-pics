@@ -192,7 +192,7 @@
 				<div class="col-sm-12 image_grid_container"></div>
 			</div>
 			<div class="text-center">
-				<a class="btn btn-success loadMoreElementsAction" href="#">Carica altre</a>
+				<a class="btn btn-success loadMoreElementsAction" href="#">Mostra altre foto</a>
 			</div>
 			{# image grid block }}} #}
 		</div>
@@ -253,9 +253,9 @@
 			{% if not user_is_authenticated %}
 				bootstrapModalsObect.showPerformLoginModal();
 			{% elif user_already_favorite %}
-				bootstrapModalsObect.showAlertModal('Utente già presente nell\'elenco dei tuoi preferiti. <a href="/profilo/preferiti/" class="alert-link">Vai nella sezione preferiti</a>.');
+				bootstrapModalsObect.showAlertModal('Partecipante già presente nell\'elenco dei tuoi preferiti. <a href="/profilo/preferiti/" class="alert-link">Vai nella sezione preferiti</a>.');
 			{% else %}
-				if (confirm("Vuoi aggiungere l'utente all'elenco dei tuoi preferiti?")) {
+				if (confirm("Vuoi aggiungere il partecipante all'elenco dei tuoi preferiti?")) {
 					addToFavorite('{{user_info.user_id}}');
 				}
 			{% endif %}
@@ -286,14 +286,14 @@
 			// success callback function
 			var successCallback = function(jsonResponse) {
 				// open success bootstrap modal
-				bootstrapModalsObect.showSuccessModal('L\'utente è stato aggiunto all\'elenco dei tuoi preferiti. <a href="/profilo/preferiti/" class="alert-link">Vai nella sezione preferiti</a> per visualizzare la lista completa.');
+				bootstrapModalsObect.showSuccessModal('Il partecipante è stato aggiunto all\'elenco dei tuoi preferiti. <a href="/profilo/preferiti/" class="alert-link">Vai nella sezione preferiti</a> per visualizzare la lista completa.');
 			};
 			addToFavoriteCustomAjaxAction.setAjaxSuccessCallbackFunction(successCallback);
 			// error callback function
 			var errorCallback = function(jsonResponse) {
 				if (jsonResponse.type == "already_added") {
 					// open alert bootstrap modal
-					bootstrapModalsObect.showAlertModal('Utente già presente nell\'elenco dei tuoi preferiti. <a href="/profilo/preferiti/" class="alert-link">Vai nella sezione preferiti</a>.');
+					bootstrapModalsObect.showAlertModal('Partecipante già presente nell\'elenco dei tuoi preferiti. <a href="/profilo/preferiti/" class="alert-link">Vai nella sezione preferiti</a>.');
 				}
 			};
 			addToFavoriteCustomAjaxAction.setAjaxErrorCallbackFunction(errorCallback);
