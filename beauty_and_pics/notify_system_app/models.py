@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from django.db import models
+from django.db import models, connection
 from django.db.models import Q, F
 from django.contrib.auth.models import User
 from datetime import date
@@ -280,25 +280,47 @@ class Notify(models.Model):
         return return_var
 
     def user_notify_list(self, account_creation_date, user_id, filters_list=None):
-        """Function to retrieve a list of valid notify about a user"""
-
-        # appilcare una AND come condizione della left join non era possibile
+        """
+	Function to retrieve a list of valid notify about a user
+        # applicare una AND come condizione della left join non era possibile
         # con Django, la query è stata quindi scritta direttamente in SQL (per
         # postgreSQL e MySQL)
-	raw_sql = """
-	SELECT
-	    `notify_system_app_notify`.`notify_id`,
-	    `notify_system_app_notify`.`creation_date`,
-	    `notify_system_app_notify`.`title`,
-	    `notify_system_app_notify`.`message`,
-	    `notify_system_app_notify`.`action_title`,
-	    `notify_system_app_notify`.`action_url`,
-	    `notify_system_app_user_notify`.`user_notify_id`
-	FROM `notify_system_app_notify`
-	LEFT JOIN `notify_system_app_user_notify` ON (`notify_system_app_notify`.`notify_id` = `notify_system_app_user_notify`.`notify_id` ) AND `notify_system_app_user_notify`.`user_id` = %(user_id)s 
-	WHERE `notify_system_app_notify`.`creation_date` >= %(account_creation_date)s
-	ORDER BY `notify_system_app_notify`.`notify_id` DESC
 	"""
+
+        cursor = connection.cursor()
+
+	# aver utilizzato diversi db è stato bello e pessimo allo stesso modo
+	# ovviamente le due query sono uguali, cambiano solo gli " e '
+        if connection.vendor == "postgresql":
+	    raw_sql = """
+	    SELECT
+		"notify_system_app_notify"."notify_id",
+		"notify_system_app_notify"."creation_date",
+		"notify_system_app_notify"."title",
+		"notify_system_app_notify"."message",
+		"notify_system_app_notify"."action_title",
+		"notify_system_app_notify"."action_url",
+		"notify_system_app_user_notify"."user_notify_id"
+	    FROM "notify_system_app_notify"
+	    LEFT JOIN "notify_system_app_user_notify" ON ("notify_system_app_notify"."notify_id" = "notify_system_app_user_notify"."notify_id" ) AND "notify_system_app_user_notify"."user_id" = %(user_id)s 
+	    WHERE "notify_system_app_notify"."creation_date" >= %(account_creation_date)s
+	    ORDER BY "notify_system_app_notify"."notify_id" DESC
+	    """
+        else:
+	    raw_sql = """
+	    SELECT
+		`notify_system_app_notify`.`notify_id`,
+		`notify_system_app_notify`.`creation_date`,
+		`notify_system_app_notify`.`title`,
+		`notify_system_app_notify`.`message`,
+		`notify_system_app_notify`.`action_title`,
+		`notify_system_app_notify`.`action_url`,
+		`notify_system_app_user_notify`.`user_notify_id`
+	    FROM `notify_system_app_notify`
+	    LEFT JOIN `notify_system_app_user_notify` ON (`notify_system_app_notify`.`notify_id` = `notify_system_app_user_notify`.`notify_id` ) AND `notify_system_app_user_notify`.`user_id` = %(user_id)s 
+	    WHERE `notify_system_app_notify`.`creation_date` >= %(account_creation_date)s
+	    ORDER BY `notify_system_app_notify`.`notify_id` DESC
+	    """
 
 	# con le query raw gli slice non vengono aplicati a livello di db, quindi 
 	# tramite limit e offset ma a livello di python, quindi se non sono int viene

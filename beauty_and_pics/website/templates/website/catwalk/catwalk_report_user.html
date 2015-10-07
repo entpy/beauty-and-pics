@@ -66,6 +66,7 @@
 </div>
 {% endblock container4_content %}
 {% block custom_js %}
+{{ block.super }}
 <script>
 	$(document).ready(function(){
 		$(".submitButtonClickAction").click(function(event){

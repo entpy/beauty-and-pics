@@ -81,6 +81,7 @@
 {% endblock container4_content %}
 
 {% block custom_js %}
+{{ block.super }}
 <script>
 	$(function(){
 		$('[data-toggle="tooltip"]').tooltip();

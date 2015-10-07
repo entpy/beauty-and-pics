@@ -56,5 +56,5 @@ class project_constants(object):
     USER_ALREADY_VOTED_COOKIE_NAME = "_uav_"
 
     USER_NOTIFY_POPUP_SHOWN_COOKIE_NAME = "_bp_unpsk_"
-    USER_NOTIFY_POPUP_SHOWN_COOKIE_EXPIRING_SECONDS = 10 # cookie expiring in seconds
+    USER_NOTIFY_POPUP_SHOWN_COOKIE_EXPIRING_SECONDS = 60*60 # cookie expiring in seconds (60s * 60m = 1 hour)
     # newsletters bitmask }}}

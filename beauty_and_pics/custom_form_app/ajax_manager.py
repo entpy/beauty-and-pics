@@ -101,8 +101,6 @@ class ajaxManager():
         show_limit = int(show_limit)
         exists_more_elements = False
         # TODO: debuggare e rimuovere i log
-        logger.debug("len: " + str(len(filtered_list)))
-        logger.debug("show limit: " + str(show_limit-1))
         if len(filtered_list) > int(show_limit-1):
             # esistono ulteriori elementi da caricare (quindi mostro il pulsante "load more")
             exists_more_elements = True
@@ -301,6 +299,8 @@ class ajaxManager():
         """
 
         # check if show or hide "load more" button
+        logger.debug("len: " + str(len(filtered_list)))
+        logger.debug("show limit: " + str(filters_list["elements_per_call"]-1))
         if self.check_if_exists_more_elements(filtered_list=filtered_list, show_limit=filters_list["elements_per_call"]):
             show_load_button = True
 

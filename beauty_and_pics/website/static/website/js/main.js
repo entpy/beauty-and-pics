@@ -551,7 +551,7 @@ var bootstrapModalsObect = {
 		messageBlockTemplate += '<div class="row">';
 		messageBlockTemplate += '<div class="col-md-12">';
 		messageBlockTemplate += '<p>';
-		messageBlockTemplate += '<h4>Ciao ' + userFirstName + ',</h4>';
+		messageBlockTemplate += '<h4>' + userFirstName + ',</h4>';
 		if (notifyToRead == 1) {
 			messageBlockTemplate += 'hai <b>' + notifyToRead + '</b> nuova notifica ';
 		} else {
