@@ -575,7 +575,7 @@ class CustomEmailTemplate():
         """
         Email custom notify creation
         Context vars required:
-        ->    ['title','message','action_url']
+        ->    ['title','message','action_title','action_url']
         """
 
 	# common email blocks
@@ -583,12 +583,12 @@ class CustomEmailTemplate():
 	self.email_html_blocks["main_title_block"] = str(self.email_context.get("title"))
 	# html text email blocks
 	self.email_html_blocks["html_main_text_block"] = str(self.email_context.get("message"))
-
-        if str(self.email_context.get("action_url")):
-            self.email_html_blocks["html_call_to_action_block"] = self.get_call_to_action_template(str(self.email_context.get("action_url")), label="Informazioni aggiuntive")
-	# plain text email blocks
 	self.email_html_blocks["plain_main_text_block"] = str(self.email_context.get("message"))
-	self.email_html_blocks["plain_call_to_action_block"] = "Informazioni aggiuntive: " + str(self.email_context.get("action_url"))
+
+        call_to_action_title = self.email_context.get("action_url") or 'Informazioni aggiuntive'
+        if str(self.email_context.get("action_url")):
+            self.email_html_blocks["html_call_to_action_block"] = self.get_call_to_action_template(str(self.email_context.get("action_url")), label=str(call_to_action_title))
+            self.email_html_blocks["plain_call_to_action_block"] = str(call_to_action_title) + ": " + str(self.email_context.get("action_url"))
 
         # email subject
         self.email_subject = str(self.email_context.get("title"))
