@@ -1,11 +1,13 @@
 from django.shortcuts import render
 from django.http import HttpResponse
+from django.views.decorators.http import require_POST, require_GET
 from custom_form_app.ajax_manager import ajaxManager
 import logging, json
 
 # Get an instance of a logger
 logger = logging.getLogger(__name__)
 
+@require_POST
 def ajax_action(request):
     """ View to perform an action as function via javascript aka AJAX call"""
 

@@ -100,7 +100,6 @@ class ajaxManager():
         """
         show_limit = int(show_limit)
         exists_more_elements = False
-        # TODO: debuggare e rimuovere i log
         if len(filtered_list) > int(show_limit-1):
             # esistono ulteriori elementi da caricare (quindi mostro il pulsante "load more")
             exists_more_elements = True
@@ -188,7 +187,7 @@ class ajaxManager():
             book_obj = Book()
 
             # tiro fuori filtered_list + 1 e la controllo con filtered_list,
-            # se ce un elemento in più non nascondo il pulsante, altrimenti lo nascondo
+            # se c'e' un elemento in più non nascondo il pulsante, altrimenti lo nascondo
             filtered_list = account_obj.get_filtered_accounts_list(filters_list=filters_list, contest_type=contest_obj.get_contest_type_from_session(request=self.request))
             # return a valid filtered list, trick to hide "load more" button
             valid_filtered_list = self.return_valid_filtered_list(filtered_list=filtered_list, show_limit=filters_list["elements_per_call"])

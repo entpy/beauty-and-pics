@@ -20,7 +20,7 @@ class Area51Form(forms.Form, FormCommonUtils):
 
     email = forms.CharField(label='Email', max_length=75, required=True)
     password = forms.CharField(label='Password', max_length=100, required=True)
-    current_password = forms.CharField(label='Password corrente', max_length=100, required=True)
+    current_password = forms.CharField(label='Password attuale', max_length=100, required=True)
 
     # list of validator for this form
     custom_validation_list = (
