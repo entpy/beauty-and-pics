@@ -66,7 +66,7 @@ def send_email_notify(request, *args, **kwargs):
 
     # show paginator
     contact_list = Account.objects.filter(user__groups__name=project_constants.CATWALK_GROUP_NAME)
-    paginator = Paginator(contact_list, 3) # Show 25 contacts per page
+    paginator = Paginator(contact_list, 10) # Show 25 contacts per page
     checked_contacts = None
 
     # save checked elements into session
