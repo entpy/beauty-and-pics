@@ -9,6 +9,7 @@ from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib.auth import logout
 from django.views.decorators.csrf import ensure_csrf_cookie
 from account_app.models.accounts import *
+from account_app.models.favorites import *
 from contest_app.models.contests import *
 from contest_app.models.contest_types import *
 from contest_app.models.votes import Vote
@@ -344,8 +345,7 @@ def profile_data(request):
     # if a GET (or any other method) we'll create a blank form
     else:
         # pre-prepopulate post dictionary with current user data
-        account_obj =  Account()
-        request.POST = account_obj.get_autenticated_user_data(request=request)
+        request.POST = autenticated_user_data
         form = AccountEditForm()
 
     context = {
@@ -364,7 +364,15 @@ def profile_favorites(request):
     contest_obj = Contest()
     contest_obj.set_contest_type(request=request, contest_type=autenticated_user_data["contest_type"])
 
-    return render(request, 'website/profile/profile_favorites.html', False)
+    # check if exists favorites about this account
+    favorite_obj = Favorite()
+    favorite_exists = favorite_obj.count_favorites_about_user_id(user_id=autenticated_user_data["user_id"])
+
+    context = {
+        "favorite_exists" : favorite_exists,
+    }
+
+    return render(request, 'website/profile/profile_favorites.html', context)
 
 @login_required
 @user_passes_test(check_if_is_a_catwalker_user)
@@ -425,8 +433,7 @@ def profile_area51(request):
     # if a GET (or any other method) we'll create a blank form
     else:
         # pre-prepopulate post dictionary with current user data
-        account_obj =  Account()
-        request.POST = account_obj.get_autenticated_user_data(request=request)
+        request.POST = autenticated_user_data
         form = Area51Form()
         delete_user_form = DeleteUserForm()
 
@@ -442,9 +449,16 @@ def profile_area51(request):
 @user_passes_test(check_if_is_a_catwalker_user)
 def profile_notify(request):
     """View to show notify list"""
-    notify_obj = Notify()
+    # retrieve info about current logged in user
+    account_obj = Account()
+    account_info = account_obj.get_autenticated_user_data(request=request)
+
+    # set current contest_type
+    contest_obj = Contest()
+    contest_obj.set_contest_type(request=request, contest_type=account_info["contest_type"])
 
     # check if exist valid notify
+    notify_obj = Notify()
     exist_valid_notify = notify_obj.exist_valid_notify(user_id=request.user.id)
 
     context = {
@@ -457,9 +471,14 @@ def profile_notify(request):
 @user_passes_test(check_if_is_a_catwalker_user)
 def profile_notify_details(request, notify_id):
     """View to show a single notify details"""
-
     notify_obj = Notify()
+    # retrieve info about current logged in user
     account_obj = Account()
+    account_info = account_obj.get_autenticated_user_data(request=request)
+
+    # set current contest_type
+    contest_obj = Contest()
+    contest_obj.set_contest_type(request=request, contest_type=account_info["contest_type"])
 
     # retrieve user instance
     user_instance = account_obj.get_user_about_id(user_id=request.user.id)
@@ -484,6 +503,13 @@ def profile_notify_details(request, notify_id):
 @user_passes_test(check_if_is_a_catwalker_user)
 def profile_control_panel(request):
     """View to show control panel page"""
+    # retrieve info about current logged in user
+    account_obj = Account()
+    account_info = account_obj.get_autenticated_user_data(request=request)
+
+    # set current contest_type
+    contest_obj = Contest()
+    contest_obj.set_contest_type(request=request, contest_type=account_info["contest_type"])
 
     return render(request, 'website/profile/profile_control_panel.html', False)
 
@@ -491,8 +517,14 @@ def profile_control_panel(request):
 @user_passes_test(check_if_is_a_catwalker_user)
 def profile_advise(request):
     """View to show advise page"""
-
+    # retrieve info about current logged in user
     account_obj = Account()
+    account_info = account_obj.get_autenticated_user_data(request=request)
+
+    # set current contest_type
+    contest_obj = Contest()
+    contest_obj.set_contest_type(request=request, contest_type=account_info["contest_type"])
+
     user_obj = account_obj.get_user_about_id(user_id=request.user.id)
 
     # check which notify are enabled

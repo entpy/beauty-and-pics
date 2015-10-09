@@ -22,12 +22,16 @@
 	</div>
 </div>
 {# image grid block {{{ #}
+{% if favorite_exists %}
 <div class="row">
 	<div class="col-sm-12 margin_top_15 image_grid_container"></div>
 </div>
 <div class="text-center">
 	<a class="btn btn-success loadMoreElementsAction" href="#">Mostra altri preferiti</a>
 </div>
+{% else %}
+<p>Non hai aggiunto ancora nessun preferito.</p>
+{% endif %}
 {# image grid block }}} #}
 {% endblock container4_content %}
 
@@ -35,7 +39,7 @@
 {{ block.super }}
 <script>
 	// set elements retrieved per call
-	elementsListObject.setElementsPerCall(5);
+	elementsListObject.setElementsPerCall(20);
 
 	$(document).ready(function(){
 		$("body").on("click",".loadMoreElementsAction", function(){
@@ -58,8 +62,10 @@
 			return false;
 		});
 
-		// default click on load more elements button
-		$(".loadMoreElementsAction").click();
+		{% if favorite_exists %}
+			// default click on load more elements button
+			$(".loadMoreElementsAction").click();
+		{% endif %}
 	});
 </script>
 {% endblock custom_js %}

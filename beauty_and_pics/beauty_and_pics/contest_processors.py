@@ -36,18 +36,21 @@ def common_contest_processors(request):
 
     # check if user is authenticated
     user_is_authenticated = account_obj.check_if_logged_user_is_valid(request_user=request.user)
-
+    # retrieve authenticated user data
     autenticated_user_data = account_obj.get_autenticated_user_data(request=request)
     if autenticated_user_data.get("user_id"):
-        # logger.debug("[TEMPLATE_PROCESSOR] user logged in (user id: " + str(autenticated_user_data["user_id"]) + ")")
+        # user LOGGED in
+        # retrieve logged user profile thumbnail url
         profile_thumbnail_image_url = book_obj.get_profile_thumbnail_image_url(user_id=autenticated_user_data["user_id"])
+        # retrieve logged user id
         logged_user_id = autenticated_user_data.get("user_id")
+        # retrieve logged user favorites exist
 
 	# check if user notify popup must be shown: if not exists cookie -> show user notify popup
         if not request.COOKIES.get(project_constants.USER_NOTIFY_POPUP_SHOWN_COOKIE_NAME):
             check_user_notify = True
     else:
-        # logger.debug("[TEMPLATE_PROCESSOR] user NOT logged in")
+        # user NOT LOGGED in
         pass
 
     return {

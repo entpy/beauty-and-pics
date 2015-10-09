@@ -45,10 +45,11 @@
 <p>Non è stata pubblicata ancora nessuna notifica.</p>
 {% endif %}
 {% endblock container4_content %}
+
 {% block custom_js %}
 <script>
 	// set elements retrieved per call
-	elementsListObject.setElementsPerCall(5);
+	elementsListObject.setElementsPerCall(20);
 
 	$(document).ready(function(){
 		$(".loadMoreElementsAction").click(function(){
@@ -59,6 +60,7 @@
 		});
 
 		{% if exist_valid_notify %}
+			// default click on load more elements button
 			$(".loadMoreElementsAction").click();
 		{% endif %}
 	});
