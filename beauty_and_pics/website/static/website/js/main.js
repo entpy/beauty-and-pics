@@ -561,7 +561,7 @@ var bootstrapModalsObect = {
 		messageBlockTemplate += '</p>';
 		messageBlockTemplate += '</div>';
 		$(".bootstrap_modal").find('.modal-title').html("Sistema di notifiche");
-		$(".bootstrap_modal").find('.modal-footer').html('<button type="button" class="btn btn-default" data-dismiss="modal">Chiudi</button><a href="/profilo/notifiche/" class="btn btn-success">Leggi ora</a>');
+		$(".bootstrap_modal").find('.modal-footer').html('<button type="button" class="btn btn-default" data-dismiss="modal">Ricorda in seguito</button><a href="/profilo/notifiche/" class="btn btn-success">Leggi ora</a>');
 		$(".bootstrap_modal").find('.modal-body').html(messageBlockTemplate);
 		this.showBootstrapModal();
 
