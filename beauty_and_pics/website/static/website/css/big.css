@@ -97,3 +97,6 @@ ul.grid_container_three li { width: 30.84% }
 /* classification block style {{{ */
 .classification_block { width: 230px; }
 /* classification block style }}} */
+
+/* grid buttons style */
+.grid_button_1 { margin-bottom: 20px; }
