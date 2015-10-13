@@ -42,6 +42,7 @@ urlpatterns = patterns('',
     url(r'^profilo/avvisi/$', 'website.views.profile_advise', name='profile_advise'),
     url(r'^profilo/notifiche/(?:(?P<notify_id>\d+)/)$', 'website.views.profile_notify_details', name='profile_notify_details'),
     url(r'^profilo/notifiche/$', 'website.views.profile_notify', name='profile_notify'),
+    url(r'^profilo/ottieni-punti/$', 'website.views.profile_gain_points', name='profile_gain_points'),
 
     # email test
     url(r'^email-test/(?P<email_name>\w+)/(?P<email_mode>\w+)/$', 'website.views.email_test', name='email_test'),

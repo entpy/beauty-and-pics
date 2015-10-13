@@ -8,6 +8,7 @@ from django.shortcuts import render_to_response
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib.auth import logout
 from django.views.decorators.csrf import ensure_csrf_cookie
+from django.conf import settings
 from account_app.models.accounts import *
 from account_app.models.favorites import *
 from contest_app.models.contests import *
@@ -556,6 +557,27 @@ def profile_advise(request):
     }
 
     return render(request, 'website/profile/profile_advise.html', context)
+
+@login_required
+@user_passes_test(check_if_is_a_catwalker_user)
+def profile_gain_points(request):
+    """View to show gain more points page"""
+    # retrieve info about current logged in user
+    account_obj = Account()
+    account_info = account_obj.get_autenticated_user_data(request=request)
+
+    # set current contest_type
+    contest_obj = Contest()
+    contest_obj.set_contest_type(request=request, contest_type=account_info["contest_type"])
+
+    profile_page_url = settings.SITE_URL + "/passerella/dettaglio-utente/" + str(request.user.id)
+
+    context = {
+        "profile_page_url" : profile_page_url,
+        "share_text" : "Votatemi su: ",
+    }
+
+    return render(request, 'website/profile/profile_gain_points.html', context)
 # }}}
 
 # test email {{{
