@@ -484,7 +484,10 @@ def profile_notify_details(request, notify_id):
     # retrieve user instance
     user_instance = account_obj.get_user_about_id(user_id=request.user.id)
     # retrieve notify instance
-    notify_instance = notify_obj.get_notify_instance(notify_id=notify_id)
+    notify_instance = notify_obj.get_notify_instance(notify_id=notify_id, user_id=request.user.id)
+    if not notify_instance:
+	# notify doesn't exists or belong to another user
+	return HttpResponseRedirect('/profilo/notifiche/')
     # retrieve notify details
     notify_details = notify_obj.get_notify_info(notify_instance=notify_instance)
     # mark notify as read
