@@ -326,7 +326,7 @@ class Notify(models.Model):
 	    FROM `notify_system_app_notify`
 	    LEFT JOIN `notify_system_app_user_notify` ON (`notify_system_app_notify`.`notify_id` = `notify_system_app_user_notify`.`notify_id` ) AND `notify_system_app_user_notify`.`user_id` = %(user_id)s 
 	    WHERE `notify_system_app_notify`.`creation_date` >= %(account_creation_date)s
-	    AND ("notify_system_app_notify"."user_id" = %(user_id)s OR "notify_system_app_notify"."user_id" IS NULL)
+	    AND (`notify_system_app_notify`.`user_id` = %(user_id)s OR `notify_system_app_notify`.`user_id` IS NULL)
 	    ORDER BY `notify_system_app_notify`.`notify_id` DESC
 	    """
 
