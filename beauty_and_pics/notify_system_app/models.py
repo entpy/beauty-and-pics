@@ -22,6 +22,7 @@ logger = logging.getLogger(__name__)
 class Notify(models.Model):
 
     notify_id = models.AutoField(primary_key=True)
+    user = models.ForeignKey(User, null=True, blank=True)
     creation_date = models.DateTimeField(auto_now_add=True)
     title = models.CharField(max_length=100)
     message = RichTextField()
@@ -203,12 +204,15 @@ class Notify(models.Model):
 
         return return_var
 
-    def get_notify_instance(self, notify_id):
+    def get_notify_instance(self, notify_id, user_id=None):
         """Function to retrieve notify instance"""
         return_var = None
  
         try:
-            return_var = Notify.objects.get(pk=notify_id)
+	    if user_id:
+		return_var = Notify.objects.get(Q(user__id=user_id) | Q(user__id__isnull=True), pk=notify_id)
+	    else:
+		return_var = Notify.objects.get(pk=notify_id)
         except Notify.DoesNotExist:
             pass
 
@@ -233,7 +237,9 @@ class Notify(models.Model):
         # total notify number
         total_notify_number = self.count_valid_notify(user_id=user_id)
         # read notify about this user
-        total_read_notify = User_Notify.objects.filter(user__id=user_id, notify__creation_date__gte=F('user__account__creation_date')).count()
+        # total_read_notify = User_Notify.objects.filter(user__id=user_id, notify__creation_date__gte=F('user__account__creation_date')).count()
+	# TODO: ho inserito Q per filtrare l'id account, ma non dovrebbe servire 
+        total_read_notify = User_Notify.objects.filter((Q(notify__user__id=user_id) | Q(notify__user__id__isnull=True)), user__id=user_id, notify__creation_date__gte=F('user__account__creation_date')).count()
 
         if total_notify_number:
             return_var = total_notify_number - total_read_notify
@@ -250,7 +256,7 @@ class Notify(models.Model):
         # retrieve user join date
         account_creation_date = user_info.account.creation_date
         # total notify number
-        return_var = Notify.objects.filter(Q(creation_date__gte=account_creation_date)).count()
+        return_var = Notify.objects.filter((Q(user__id=user_id) | Q(user__id__isnull=True)), Q(creation_date__gte=account_creation_date)).count()
 
         return return_var
 
@@ -290,7 +296,7 @@ class Notify(models.Model):
         cursor = connection.cursor()
 
 	# aver utilizzato diversi db è stato bello e pessimo allo stesso modo
-	# ovviamente le due query sono uguali, cambiano solo gli " e '
+	# ovviamente le due query sono uguali, cambiano solo gli " in '
         if connection.vendor == "postgresql":
 	    raw_sql = """
 	    SELECT
@@ -304,6 +310,7 @@ class Notify(models.Model):
 	    FROM "notify_system_app_notify"
 	    LEFT JOIN "notify_system_app_user_notify" ON ("notify_system_app_notify"."notify_id" = "notify_system_app_user_notify"."notify_id" ) AND "notify_system_app_user_notify"."user_id" = %(user_id)s 
 	    WHERE "notify_system_app_notify"."creation_date" >= %(account_creation_date)s
+	    AND ("notify_system_app_notify"."user_id" = %(user_id)s OR "notify_system_app_notify"."user_id" IS NULL)
 	    ORDER BY "notify_system_app_notify"."notify_id" DESC
 	    """
         else:
@@ -319,11 +326,12 @@ class Notify(models.Model):
 	    FROM `notify_system_app_notify`
 	    LEFT JOIN `notify_system_app_user_notify` ON (`notify_system_app_notify`.`notify_id` = `notify_system_app_user_notify`.`notify_id` ) AND `notify_system_app_user_notify`.`user_id` = %(user_id)s 
 	    WHERE `notify_system_app_notify`.`creation_date` >= %(account_creation_date)s
+	    AND ("notify_system_app_notify"."user_id" = %(user_id)s OR "notify_system_app_notify"."user_id" IS NULL)
 	    ORDER BY `notify_system_app_notify`.`notify_id` DESC
 	    """
 
-	# con le query raw gli slice non vengono aplicati a livello di db, quindi 
-	# tramite limit e offset ma a livello di python, quindi se non sono int viene
+	# con le query raw gli slice non vengono aplicati a livello di db, ma 
+	# tramite limit e offset a livello di python, quindi se non sono int viene
 	# ritornato un errore, questo spiega il comportamento diverso da questa lista
 	# a quella dei catwalker, per far funzionare questa query correttamente
 	# sono state concatenate la "limit" e la "offset"
@@ -342,8 +350,10 @@ class Notify(models.Model):
 
         return return_var
 
+    #TODO: obsoleta
+    """
     def check_if_show_notify(self, user_id, notify_date):
-        """Check if a notify could be shown -> (notify_date >= user_creation_date)"""
+        ""Check if a notify could be shown -> (notify_date >= user_creation_date)""
         return_var = False
         account_obj = Account()
 
@@ -365,6 +375,7 @@ class Notify(models.Model):
             pass
 
         return return_var
+    """
 
 # se è presente una riga qua, la notifica è stata letta dall'utente
 # valido solo per le notifiche sul sito
