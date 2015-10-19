@@ -284,14 +284,14 @@ class CustomEmailTemplate():
                 </table><br />
             """
 
-        self.email_html_blocks["html_main_text_block"] += 'Stanco di ricevere queste email? <a target="_blank" href="' + self.base_url + '/profilo/disiscriviti/">Disiscriviti</a>.'
+        self.email_html_blocks["html_main_text_block"] += 'Stanco di ricevere queste email? <a target="_blank" href="' + self.base_url + '/profilo/avvisi/">Disiscriviti</a>.'
 
 	# plain text email blocks
 	self.email_html_blocks["plain_main_text_block"] = """
             Ti riepiloghiamo le informazioni principali del contest. \n
             Punti: """ + str(self.email_context.get("points")) + """\n
             Posizione: """ + str(self.email_context.get("ranking")) + """\n
-            Stanco di ricevere queste email? Disiscriviti: """ + self.base_url + '/profilo/disiscriviti/' + """
+            Stanco di ricevere queste email? Disiscriviti: """ + self.base_url + '/profilo/avvisi/' + """
         """
 
         # call to action blocks
