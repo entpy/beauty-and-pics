@@ -170,6 +170,9 @@ ul.grid_container li img:hover { opacity: 0.5; }
 .table a.table_action_link { text-decoration: none; }
 .notify_back_link { font-size: 13px; margin-left: 10px; }
 .publish_date_container { text-align: right; }
+
+/* gain more points page */
+.profile_share_url_container { display: inline-block; overflow: auto; width: 100%; }
 /* profile section }}} */
 
 /* classification block style {{{ */
@@ -206,7 +209,7 @@ ul.grid_container li img:hover { opacity: 0.5; }
 .winner_block_wrapper .winner_block_button { margin-top: 25px; }
 
 /* grid buttons style */
-.grid_button_1 { background-color: #e4e4e4; text-align: center; }
+.grid_button_1 { background-color: #e4e4e4; border-radius: 4px; -moz-border-radius: 4px; text-align: center; }
 .grid_button_1:hover { color: #fff; }
 .grid_button_1 > span { display: inline-block; width: 100%; }
 .grid_button_1 > .grid_button_image { margin-top: 15px; margin-bottom: 20px; }
