@@ -137,7 +137,7 @@ class Contest(models.Model):
         metric_obj = Metric()
         metric_obj.metrics_manager()
 
-        # TODO: solo per debug, scriptizzarlo e inviarlo max 1 volta al mese
+        # solo per debug, scriptizzarlo e inviarlo max 1 volta al mese
         # per ogni account
         # account_obj.send_report_emails(contest_type="woman-contest")
 
