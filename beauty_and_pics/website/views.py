@@ -581,6 +581,24 @@ def profile_gain_points(request):
     }
 
     return render(request, 'website/profile/profile_gain_points.html', context)
+
+@login_required
+@user_passes_test(check_if_is_a_catwalker_user)
+def profile_photoboard(request):
+    """View to show photo board page"""
+    # retrieve info about current logged in user
+    account_obj = Account()
+    account_info = account_obj.get_autenticated_user_data(request=request)
+
+    # set current contest_type
+    contest_obj = Contest()
+    contest_obj.set_contest_type(request=request, contest_type=account_info["contest_type"])
+
+
+    context = {
+    }
+
+    return render(request, 'website/profile/profile_photoboard.html', context)
 # }}}
 
 # test email {{{

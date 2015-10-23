@@ -2,7 +2,7 @@
 
 from django.db import models
 from django.contrib.auth.models import User
-from contest_app.models.contest_types import Contest
+from contest_app.models.contest_types import Contest, Contest_Type
 from .settings import *
 import logging
 
@@ -13,7 +13,7 @@ logger_app_prefix = "image_contest_app"
 class ImageContest(models.Model):
     id_image_contest = models.AutoField(primary_key=True)
     contest = models.ForeignKey(Contest) # woman contest or man contest
-    title = models.CharField(max_length=200) # contest title, ex. "Best pics contest!"
+    title = models.CharField(max_length=200, null=True) # contest title, ex. "Best pics contest!"
     type = models.CharField(max_length=50) # contest type, ex. best_photo
     status = models.IntegerField(default=0) # (0 attivo per la votazione, 1 chiuso, 2 terminato => non considerarlo più)
     creation_date = models.DateTimeField(auto_now_add=True) # contest creation date
@@ -33,12 +33,46 @@ class ImageContest(models.Model):
         """
         return True
 
-    def __close_expired_contests(self):
-        # chiudo i contest scaduti e salvo tutto in ImageContestHallOfFame
+    def __terminate_expired_contests(self):
+        """
+        itero su tutti i concorsi chiusi (status=1)
+            se la data corrente è >= della scadenza
+                - termino il concorso (settando lo status=2  |1 -> 2|)
+                - salvo tutto in ImageContestHallOfFame
+        """
+        image_contest_list = ImageContest.objects.filter(status=ICA_CONTEST_TYPE_CLOSED)
+        for image_contest in image_contest_list:
+            if timezone.now() >= contest.expiring:
+                # TODO: save into ImageContestHallOfFame
+                pass
+
+        Contest.objects.filter(status=ICA_CONTEST_TYPE_CLOSED, expiring__lte=timezone.now()).update(status=ICA_CONTEST_TYPE_FINISHED)
+
         return True
 
     def __create_contests(self):
         # creo i nuovi image contest, uno per il man contest e l'altro per il woman contest
+        """
+        Itero sui concorsi attivi (per ora "uomo" e "donna")
+            Se per ogni tipo non esiste il concorso attivo o in fase di
+            apertura (con concorso.status!=0 o concorso.status=1)
+                - creo il concorso, ponendo come start_date "+ 1 mese" a partire dalla data attuale
+                  e mettendo lo status a 0 (default)
+        """
+        Contest_obj = new Contest()
+        active_contests_list = Contest_obj.get_all_active_contests()
+        for active_contests in active_contests_list:
+            if not ImageContest.objects.filter(contest=active_contests, status=ICA_CONTEST_TYPE_ACTIVE).count():
+                # no active image contests, must be create a new one
+                ImageContest_obj = ImageContest(
+                    contest = active_contests,
+                    type = ICA_CONTEST_TYPE_BEST_PHOTO,
+                    like_limit = ICA_LIKE_LIMIT,
+                )
+                ImageContest_obj.save()
+                # send an email
+                logger.info("image contest creato: " + str(ImageContest_obj))
+
         return True
 
 class ImageContestImage(models.Model):
@@ -75,14 +109,14 @@ class ImageContestImage(models.Model):
         # check if like limit is reached, then perfoming "trigger_like_limit_reach" function
         return True
 
-    def show_contest_all_images(self, current_contest):
+    def show_contest_all_images(self, current_contest, type):
         """
         ex. -> current_contest = woman_contest
         select images where ImageContest.contest = current_contest and status=0
         """
         return True
 
-    def show_closed_contest_image(self, current_contest):
+    def show_closed_contest_image(self, current_contest, type):
         """
         ex. -> current_contest = woman_contest
         select images where ImageContest.contest = current_contest and status=1
