@@ -567,12 +567,39 @@ var bootstrapModalsObect = {
 
 		return false;
 	},
+
+	/* Function to build and show add image to photoboard bootstrap modal */
+	showAddImageToPhotoboard: function(imageUrl, imageId) {
+		if (imageUrl && imageId) {
+			this.resetBootstrapModal();
+			var messageBlockTemplate = '';
+			messageBlockTemplate += '<div class="row">';
+			messageBlockTemplate += '<div class="col-md-12">';
+			messageBlockTemplate += '<p>';
+			messageBlockTemplate += 'Stai per inserire la seguente immagine nella bacheca, confermi?'
+			messageBlockTemplate += '</p>';
+			messageBlockTemplate += '</div>';
+			messageBlockTemplate += '</div>';
+			messageBlockTemplate += '<div class="row"><div class="col-sm-4 col-sm-offset-4">' + this.getImageHtmlBlock(imageUrl) + '</div></div>';
+			$(".bootstrap_modal").find('.modal-title').html("Conferma");
+			$(".bootstrap_modal").find('.modal-footer').html('<button type="button" class="btn btn-default" data-dismiss="modal">Annulla</button><button type="button" class="btn btn-success addImageToPhotoboardAction" data-image-id="' + imageId + '" data-dismiss="modal">Conferma</button>');
+			$(".bootstrap_modal").find('.modal-body').html(messageBlockTemplate);
+			this.showBootstrapModal();
+		}
+
+		return false;
+	},
 	/* custom bootstrap modal functions }}} */
 
-	getImageHtmlBlock: function(imageUrl) {
+	/* modal image block, with must be a size: eg. '100%' or '129px' or '12em' ecc... */
+	getImageHtmlBlock: function(imageUrl, width) {
 		var templateBlock = false;
+		var imageWidth = "100%";
+		if (width) {
+			imageWidth = width;
+		}
 		if (imageUrl) {
-			templateBlock = '<img style="width: 100%;" alt="" src="' + imageUrl + '">';
+			templateBlock = '<img style="width: ' + imageWidth + ';" alt="" src="' + imageUrl + '">';
 		}
 
 		return templateBlock;

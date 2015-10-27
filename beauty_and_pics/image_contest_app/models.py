@@ -2,19 +2,18 @@
 
 from django.db import models
 from django.contrib.auth.models import User
-from contest_app.models.contest_types import Contest, Contest_Type
+from django.utils import timezone
+from contest_app.models import Contest
+from upload_image_box.models import cropUploadedImages 
 from .settings import *
 import logging
 
 # Get an instance of a logger
 logger = logging.getLogger(__name__)
-logger_app_prefix = "image_contest_app"
 
 class ImageContest(models.Model):
     id_image_contest = models.AutoField(primary_key=True)
     contest = models.ForeignKey(Contest) # woman contest or man contest
-    title = models.CharField(max_length=200, null=True) # contest title, ex. "Best pics contest!"
-    type = models.CharField(max_length=50) # contest type, ex. best_photo
     status = models.IntegerField(default=0) # (0 attivo per la votazione, 1 chiuso, 2 terminato => non considerarlo più)
     creation_date = models.DateTimeField(auto_now_add=True) # contest creation date
     expiring = models.DateTimeField(null=True) # contest expiring
@@ -26,11 +25,14 @@ class ImageContest(models.Model):
     def __unicode__(self):
         return str(self.id_image_contest) + " " + str(self.type) + " " + str(self.creation_date)
 
-    def manage_image_contest(self):
-        """
-        Chiudo i contest che sono da chiudere
-        Creo i contest che sono da aprire
-        """
+    def image_contest_manager(self):
+        """Function to manage image contests"""
+        # logger.info("image contest manager")
+        # close expired image contests
+        self.__terminate_expired_contests()
+        # create new image contests
+        self.__create_contests()
+
         return True
 
     def __terminate_expired_contests(self):
@@ -40,13 +42,12 @@ class ImageContest(models.Model):
                 - termino il concorso (settando lo status=2  |1 -> 2|)
                 - salvo tutto in ImageContestHallOfFame
         """
-        image_contest_list = ImageContest.objects.filter(status=ICA_CONTEST_TYPE_CLOSED)
+        image_contest_list = ImageContest.objects.filter(status=ICA_CONTEST_TYPE_CLOSED, expiring__lte=timezone.now())
         for image_contest in image_contest_list:
-            if timezone.now() >= contest.expiring:
-                # TODO: save into ImageContestHallOfFame
-                pass
+            # TODO: save into ImageContestHallOfFame
+            pass
 
-        Contest.objects.filter(status=ICA_CONTEST_TYPE_CLOSED, expiring__lte=timezone.now()).update(status=ICA_CONTEST_TYPE_FINISHED)
+        ImageContest.objects.filter(status=ICA_CONTEST_TYPE_CLOSED, expiring__lte=timezone.now()).update(status=ICA_CONTEST_TYPE_FINISHED)
 
         return True
 
@@ -59,28 +60,37 @@ class ImageContest(models.Model):
                 - creo il concorso, ponendo come start_date "+ 1 mese" a partire dalla data attuale
                   e mettendo lo status a 0 (default)
         """
-        Contest_obj = new Contest()
+        Contest_obj = Contest()
         active_contests_list = Contest_obj.get_all_active_contests()
         for active_contests in active_contests_list:
-            if not ImageContest.objects.filter(contest=active_contests, status=ICA_CONTEST_TYPE_ACTIVE).count():
+            if not ImageContest.objects.filter(contest=active_contests, status=ICA_CONTEST_TYPE_ACTIVE).exists():
                 # no active image contests, must be create a new one
                 ImageContest_obj = ImageContest(
                     contest = active_contests,
-                    type = ICA_CONTEST_TYPE_BEST_PHOTO,
                     like_limit = ICA_LIKE_LIMIT,
                 )
                 ImageContest_obj.save()
-                # send an email
-                logger.info("image contest creato: " + str(ImageContest_obj))
+                logger.info("image contest creato")
 
         return True
 
+    def get_image_contest_about_user(self, user_obj=None):
+        """Function to retrieve image_contest about user_obj"""
+        return_var = False
+        try:
+            ImageContest_obj = ImageContest.objects.get(contest__contest_type_id=user_obj.account.contest_type, status=ICA_CONTEST_TYPE_ACTIVE)
+        except ImageContest.DoesNotExist:
+            pass
+        else:
+            return_var = ImageContest_obj
+
+        return return_var
+
 class ImageContestImage(models.Model):
     id_image_contest_image = models.AutoField(primary_key=True)
-    user = models.ForeignKey(User, null=True, on_delete=models.SET_NULL) # related user
+    user = models.ForeignKey(User) # related user
     image_contest = models.ForeignKey(ImageContest) # related image contest
-    image = models.ImageField(max_length=500, null=True) # user image path
-    thumbnail_image = models.ImageField(max_length=500, null=True) # user thumbnail image path
+    image = models.ForeignKey(cropUploadedImages) # user image path
     like = models.IntegerField(default=0) # image's like
 
     class Meta:
@@ -89,15 +99,31 @@ class ImageContestImage(models.Model):
     def __unicode__(self):
         return str(self.id_image_contest_image) + " " + str(self.image.image.url)
 
+    # TODO
     def add_contest_image(self, data):
-        # add image_contest_image element
-        return True
+        """Function to add image_contest_image element"""
+        return_var = False
+        """
+            'user_obj' : user_obj,
+            'user_contest_obj' : user_contest_obj,
+            'image_obj' : image_obj,
+        """
+        if data.get('user_obj') and data.get('user_contest_obj') and data.get('image_obj'):
+            ImageContestImage_obj = ImageContestImage(
+                user = data.get('user_obj'), # related user
+                image_contest = data.get('user_contest_obj'), # related image contest
+                image = data.get('image_obj'), # user image path
+            )
+            # saving object
+            return_var = ImageContestImage_obj.save()
+
+        return return_var
 
     def remove_contest_image(self, id_image_contest_image):
         # remove image_contest_image element
         return True
 
-    def add_image_like(self, id_image_contest_image, like=1)
+    def add_image_like(self, id_image_contest_image, like=1):
         # add a like (+1) to image
         return True
 
@@ -129,8 +155,8 @@ class ImageContestHallOfFame(models.Model):
     image_contest = models.ForeignKey(ImageContest) # related image contest
     first_name = models.CharField(max_length=50, null=True) # winner user name
     last_name = models.CharField(max_length=50, null=True) # winner user last name
-    image = models.ImageField(max_length=500, null=True) # winner user image path
-    thumbnail_image = models.ImageField(max_length=500, null=True) # winner user thumbnail image path
+    image_url = models.ImageField(max_length=500, null=True) # winner user image path
+    thumbnail_image_url = models.ImageField(max_length=500, null=True) # winner user thumbnail image path
 
     class Meta:
         app_label = 'image_contest_app'

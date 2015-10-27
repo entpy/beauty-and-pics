@@ -43,6 +43,7 @@ class ajaxManager():
         self.__valid_action_list += ('add_favorite',)
         self.__valid_action_list += ('get_user_info',)
         self.__valid_action_list += ('count_unread_notify',)
+        self.__valid_action_list += ('add_image_to_photoboard',)
 
         # retrieve action to perform
         self.ajax_action = request.POST.get("ajax_action")
@@ -82,11 +83,13 @@ class ajaxManager():
             # ma ne ho richesti 5 (e quindi filtered_list ne contiene 5+1)
             return_var = filtered_list[:-1]
         else:
-            # se non esistono ulteriori elementi da caricare prelevo tutti gli
-            # elementi rimanenti nella lista, quindi sono al di sotto del
-            # limite di visualizzazione. Es. ci sono 3 elementi in db ma ne ho
-            # chiesti 5
-            return_var = filtered_list
+            # se la lista NON è vuota
+            if filtered_list:
+                # se non esistono ulteriori elementi da caricare prelevo tutti gli
+                # elementi rimanenti nella lista, quindi sono al di sotto del
+                # limite di visualizzazione. Es. ci sono 3 elementi in db ma ne ho
+                # chiesti 5
+                return_var = filtered_list
 
         return return_var
 
@@ -100,9 +103,11 @@ class ajaxManager():
         """
         show_limit = int(show_limit)
         exists_more_elements = False
-        if len(filtered_list) > int(show_limit-1):
-            # esistono ulteriori elementi da caricare (quindi mostro il pulsante "load more")
-            exists_more_elements = True
+        # check if exists elements (can be an enpty list)
+        if filtered_list:
+            if len(filtered_list) > int(show_limit-1):
+                # esistono ulteriori elementi da caricare (quindi mostro il pulsante "load more")
+                exists_more_elements = True
 
         return exists_more_elements
 
@@ -297,19 +302,19 @@ class ajaxManager():
                 }
         """
 
-        # check if show or hide "load more" button
-        logger.debug("len: " + str(len(filtered_list)))
-        logger.debug("show limit: " + str(filters_list["elements_per_call"]-1))
-        if self.check_if_exists_more_elements(filtered_list=filtered_list, show_limit=filters_list["elements_per_call"]):
-            show_load_button = True
+        # if exists elements
+        if filtered_list:
+            logger.debug("len: " + str(len(filtered_list)))
+            logger.debug("show limit: " + str(filters_list["elements_per_call"]-1))
+            # check if show or hide "load more" button
+            if self.check_if_exists_more_elements(filtered_list=filtered_list, show_limit=filters_list["elements_per_call"]):
+                show_load_button = True
 
         data = {'success' : True, 'elements_list_type': elements_list_type, 'elements_list': json_account_element, 'show_load_button': show_load_button,}
         json_data_string = json.dumps(data) # WARNING: se la query non è stata eseguita precedente (tramite list, loop, ecc...) questo fa un botto di chiamate al db inutili
         self.set_json_response(json_response=json_data_string)
 
         return True
-    ##
-    ##
 
     def perform_voting(self):
         """Function to vote a catwalker"""
@@ -521,6 +526,48 @@ class ajaxManager():
                     'unread_notify_total': unread_notify_number,
                     'user_first_name' : account_info["first_name"],
             }
+
+        json_data_string = json.dumps(data)
+        self.set_json_response(json_response=json_data_string)
+
+        return True
+
+    def add_image_to_photoboard(self):
+        """Function to add a photo to photoboard"""
+        from image_contest_app.models import *
+        from image_contest_app.settings import *
+
+        logger.debug("ajax_function: @@add_image_to_photoboard@@")
+        logger.debug("parametri della chiamata: " + str(self.request.POST))
+
+        book_image_id = self.request.POST.get("book_image_id")
+
+        account_obj = Account()
+        contest_obj = Contest()
+        ImageContest_obj = ImageContest()
+        ImageContestImage_obj = ImageContestImage()
+        cropUploadedImages_obj = cropUploadedImages()
+
+        # retrieve logged user_obj
+        user_obj = self.request.user
+        # retrieve user contest_obj
+        user_contest_obj = ImageContest_obj.get_image_contest_about_user(user_obj=user_obj)
+        # retrieve selected image_obj
+        image_obj = cropUploadedImages_obj.get_image_obj_from_id(book_image_id=book_image_id)
+        # add picture to photobiard
+        data = {
+            'user_obj' : user_obj,
+            'user_contest_obj' : user_contest_obj,
+            'image_obj' : image_obj,
+        }
+
+        ImageContestImage_obj.add_contest_image(data=data)
+
+        # build json response
+        data = {
+                'success' : True,
+                'like_limit' : ICA_LIKE_LIMIT,
+        }
 
         json_data_string = json.dumps(data)
         self.set_json_response(json_response=json_data_string)

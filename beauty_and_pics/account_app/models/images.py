@@ -173,11 +173,12 @@ class Book(models.Model):
 	try:
 	    image_obj = cropUploadedImages.objects.values('image').get(pk=book_image_id)
 	    logger.debug("immagine trovata")
-	    return_var = str(image_obj['image'])
-	except Book.DoesNotExist:
+	except cropUploadedImages.DoesNotExist:
 	    logger.debug("immagine NON trovata")
 	    # image not found
 	    pass
+        else:
+            return_var = str(image_obj['image'])
 
         return return_var
 

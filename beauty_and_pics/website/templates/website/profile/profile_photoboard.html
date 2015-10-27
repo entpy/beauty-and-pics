@@ -10,10 +10,6 @@
 {# navigation tabs active element #}
 {% block container4_navigation_profile_index %}active{% endblock %}
 
-{% block custom_css %}
-<link rel="stylesheet" href="{% static "website/css/cropper.min.css" %}">
-{% endblock %}
-
 {% block container4_content %}
 <div class="row">
 	<div class="col-sm-12">
@@ -37,13 +33,12 @@
 {% endblock container4_content %}
 {% block custom_js %}
 {{ block.super }}
+<script src="{% static "notify_system_app/js/notify.js" %}"></script>
 <script>
 	// set elements retrieved per call
 	elementsListObject.setElementsPerCall(20);
 
 	$(document).ready(function(){
-		// default click on load more elements button
-		$(".loadMoreElementsAction").click();
 
 		// show more elements action
 		$(document).on("click",".loadMoreElementsAction", function(){
@@ -70,15 +65,46 @@
 
 			return false;
 		});
+
+		// adding selected image to photoboard click action
+		$(document).on("click",".addImageToPhotoboardAction", function(){
+			var imageId = "";
+			if ($(this).attr("data-image-id")) {
+				imageId = $(this).data("imageId");
+			}
+
+			addImageToPhotoboard(imageId);
+
+			return false;
+		});
+
+		// default click on load more elements button
+		$(".loadMoreElementsAction").click();
 	});
 
-	function addImageToPhotoboard(imageId, imageContestType, imageContestContest) {
-		/**
-		imageId = current viewed image id
-		imageContestType = image contest type, ie. "best_photo"
-		imageContestContest = current contest, ie. "woman_contest" or "man_contest"
-		*/
+	// adding selected image to photoboard
+	function addImageToPhotoboard(imageId) {
+		if (imageId) {
+			alert("image id: " + imageId);
 
+			var addImageToPhotoboardCustomAjaxAction = customAjaxAction;
+			// serialize form
+			addImageToPhotoboardCustomAjaxAction.setAjaxCallParams("book_image_id=" + imageId + "&");
+			// setting action name
+			addImageToPhotoboardCustomAjaxAction.setActionName("add_image_to_photoboard");
+			// success callback function
+			var successCallback = function(jsonResponse) {
+				// like limit
+				var like_limit = jsonResponse.like_limit;
+				// open success bootstrap modal
+				bootstrapModalsObect.showSuccessModal('Immagine inserita correttamente nella bacheca. Condividi la foto il più possibile per ottenere i <b>' + like_limit + '</b> mi piace ed ottenere il posto nella passerella!');
+			};
+			addImageToPhotoboardCustomAjaxAction.setAjaxSuccessCallbackFunction(successCallback);
+			// perform ajax call to add favorite
+			addImageToPhotoboardCustomAjaxAction.performAjaxAction();
+		}
+
+		return true;
 	}
 </script>
 {% endblock custom_js %}

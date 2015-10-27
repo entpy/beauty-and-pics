@@ -185,7 +185,7 @@ class Contest(models.Model):
     def get_all_active_contests(self):
         """Function to retrieve all active constests"""
         return_var = False
-        return_var = Contest.objects.filter(status=project_constants.CONTEST_ACTIVE):
+        return_var = Contest.objects.filter(status=project_constants.CONTEST_ACTIVE)
         return return_var
 
     def get_active_contests_end_time(self, update_contests=False):

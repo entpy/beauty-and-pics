@@ -594,8 +594,8 @@ def profile_photoboard(request):
     contest_obj = Contest()
     contest_obj.set_contest_type(request=request, contest_type=account_info["contest_type"])
 
-
     context = {
+        "user_id": account_info.get("user_id"),
     }
 
     return render(request, 'website/profile/profile_photoboard.html', context)

@@ -315,6 +315,21 @@ class cropUploadedImages(models.Model):
 
 	return return_var
 
+    def get_image_obj_from_id(self, book_image_id):
+        """Function to retrieve and image obj from an image id"""
+	logger.debug("id immagine: " + str(book_image_id))
+	return_var = None
+	try:
+	    image_obj = cropUploadedImages.objects.get(pk=book_image_id)
+	except cropUploadedImages.DoesNotExist:
+	    # image not found
+	    pass
+        else:
+            return_var = image_obj
+
+        return return_var
+
+
 class tmpUploadedImages(models.Model):
     image = models.ImageField(max_length=500, upload_to=get_image_path)
     upload_date = models.DateTimeField(auto_now=True)
