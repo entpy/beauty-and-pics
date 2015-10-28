@@ -5,6 +5,7 @@ from django.contrib.auth.models import User
 from django.utils import timezone
 from contest_app.models import Contest
 from upload_image_box.models import cropUploadedImages 
+from image_contest_app.exceptions import *
 from .settings import *
 import logging
 
@@ -76,7 +77,7 @@ class ImageContest(models.Model):
 
     def get_image_contest_about_user(self, user_obj=None):
         """Function to retrieve image_contest about user_obj"""
-        return_var = False
+        return_var = None
         try:
             ImageContest_obj = ImageContest.objects.get(contest__contest_type_id=user_obj.account.contest_type, status=ICA_CONTEST_TYPE_ACTIVE)
         except ImageContest.DoesNotExist:
@@ -92,57 +93,76 @@ class ImageContestImage(models.Model):
     image_contest = models.ForeignKey(ImageContest) # related image contest
     image = models.ForeignKey(cropUploadedImages) # user image path
     like = models.IntegerField(default=0) # image's like
+    visits = models.IntegerField(default=0) # image's visits
 
     class Meta:
         app_label = 'image_contest_app'
+        unique_together = (("user", "image_contest", "image"),)
 
     def __unicode__(self):
         return str(self.id_image_contest_image) + " " + str(self.image.image.url)
 
-    # TODO
+    # TODO se inserisco valori duplicati wtf succede?
     def add_contest_image(self, data):
         """Function to add image_contest_image element"""
         return_var = False
         """
-            'user_obj' : user_obj,
-            'user_contest_obj' : user_contest_obj,
-            'image_obj' : image_obj,
+        data = {'user_obj', 'image_user_contest_obj', 'image_obj',}
         """
-        if data.get('user_obj') and data.get('user_contest_obj') and data.get('image_obj'):
-            ImageContestImage_obj = ImageContestImage(
-                user = data.get('user_obj'), # related user
-                image_contest = data.get('user_contest_obj'), # related image contest
-                image = data.get('image_obj'), # user image path
-            )
-            # saving object
-            return_var = ImageContestImage_obj.save()
+        if not data.get('user_obj') or not data.get('image_user_contest_obj') or not data.get('image_obj'):
+            # raise an exception
+            raise AddImageContestImageFieldMissignError
+
+        ImageContestImage_obj = ImageContestImage(
+            user = data.get('user_obj'), # related user obj
+            image_contest = data.get('image_user_contest_obj'), # related image contest obj
+            image = data.get('image_obj'), # image obj
+        )
+        # saving object
+        return_var = ImageContestImage_obj.save()
 
         return return_var
 
-    def remove_contest_image(self, id_image_contest_image):
-        # remove image_contest_image element
-        return True
+    # TODO
+    def remove_contest_image(self, id_image_contest_image, user_id):
+        """Function to remove id_image_contest_image about user_id"""
+        return_var = False
+        try:
+            ImageContestImage_obj = ImageContestImage.objects.get(id_image_contest_image=id_image_contest_image, user__id=user_id)
+        except ImageContestImage.DoesNotExist:
+            raise RemoveImageContestImageError
+        else:
+            logger.debug("DELETE ImageContestImage -> id: " + str(ImageContestImage_obj.id) + " | email: " + str(ImageContestImage_obj.user.email))
+            ImageContestImage_obj.delete()
+            return_var = True
 
+        return return_var
+
+    # TODO
     def add_image_like(self, id_image_contest_image, like=1):
         # add a like (+1) to image
         return True
 
+    # TODO
     def trigger_like_limit_reach(self, id_image_contest_image):
         # action performed when like limit is reached
         return True
 
+    # TODO
     def check_like_limit(self, id_image_contest_image):
         # check if like limit is reached, then perfoming "trigger_like_limit_reach" function
         return True
 
-    def show_contest_all_images(self, current_contest, type):
+    # TODO
+    def show_contest_all_images(self, current_contest):
         """
         ex. -> current_contest = woman_contest
         select images where ImageContest.contest = current_contest and status=0
         """
         return True
 
-    def show_closed_contest_image(self, current_contest, type):
+    # TODO
+    def show_closed_contest_image(self, current_contest):
         """
         ex. -> current_contest = woman_contest
         select images where ImageContest.contest = current_contest and status=1
@@ -164,6 +184,7 @@ class ImageContestHallOfFame(models.Model):
     def __unicode__(self):
         return str(self.id_image_contest_hall_of_fame)
 
+    # TODO
     def add_contest_hall_of_fame(self, data):
         # add image_contest_hall_of_fame element
         return True

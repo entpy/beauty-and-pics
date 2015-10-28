@@ -44,6 +44,7 @@ class ajaxManager():
         self.__valid_action_list += ('get_user_info',)
         self.__valid_action_list += ('count_unread_notify',)
         self.__valid_action_list += ('add_image_to_photoboard',)
+        self.__valid_action_list += ('remove_image_from_photoboard',)
 
         # retrieve action to perform
         self.ajax_action = request.POST.get("ajax_action")
@@ -536,6 +537,7 @@ class ajaxManager():
         """Function to add a photo to photoboard"""
         from image_contest_app.models import *
         from image_contest_app.settings import *
+        from image_contest_app.exceptions import *
 
         logger.debug("ajax_function: @@add_image_to_photoboard@@")
         logger.debug("parametri della chiamata: " + str(self.request.POST))
@@ -551,23 +553,59 @@ class ajaxManager():
         # retrieve logged user_obj
         user_obj = self.request.user
         # retrieve user contest_obj
-        user_contest_obj = ImageContest_obj.get_image_contest_about_user(user_obj=user_obj)
+        image_user_contest_obj = ImageContest_obj.get_image_contest_about_user(user_obj=user_obj)
         # retrieve selected image_obj
         image_obj = cropUploadedImages_obj.get_image_obj_from_id(book_image_id=book_image_id)
-        # add picture to photobiard
+        # add picture to photoboard
         data = {
             'user_obj' : user_obj,
-            'user_contest_obj' : user_contest_obj,
+            'image_user_contest_obj' : image_user_contest_obj,
             'image_obj' : image_obj,
         }
 
-        ImageContestImage_obj.add_contest_image(data=data)
+        try:
+            savedImageContestImage_obj = ImageContestImage_obj.add_contest_image(data=data)
+        except AddImageContestImageFieldMissignError:
+            data = {'error' : True, 'message': 'AddImageContestImageFieldMissignError exception'}
+        else:
+            # build valid json response
+            id_image_contest_image = savedImageContestImage_obj.id_image_contest_image
+            image_url = savedImageContestImage_obj.image.url
+            data = {
+                    'success' : True,
+                    'like_limit' : ICA_LIKE_LIMIT,
+                    'id_image_contest_image' : id_image_contest_image,
+                    'image_url' : image_url,
+            }
 
-        # build json response
-        data = {
-                'success' : True,
-                'like_limit' : ICA_LIKE_LIMIT,
-        }
+        json_data_string = json.dumps(data)
+        self.set_json_response(json_response=json_data_string)
+
+        return True
+
+    # TODO
+    def remove_image_from_photoboard(self):
+        """Function to remove a photo from photoboard"""
+        from image_contest_app.models import *
+        from image_contest_app.settings import *
+
+        logger.debug("ajax_function: @@remove_image_from_photoboard@@")
+        logger.debug("parametri della chiamata: " + str(self.request.POST))
+
+        ImageContestImage_obj = ImageContestImage()
+
+        # retrieve logged user_obj
+        user_id = self.request.user.id
+        # retrieve image_contest_image_id to remove
+        id_image_contest_image = self.request.POST.get("id_image_contest_image")
+
+        try:
+            # remove image about this user from photoboard
+            ImageContestImage_obj.remove_contest_image(id_image_contest_image=id_image_contest_image, user_id=user_id)
+        except RemoveImageContestImageError:
+            data = {'error' : True,}
+        else:
+            data = {'success' : True,}
 
         json_data_string = json.dumps(data)
         self.set_json_response(json_response=json_data_string)
