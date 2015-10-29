@@ -28,6 +28,8 @@ from custom_form_app.forms.report_user_form import *
 from custom_form_app.forms.upload_book_form import *
 from custom_form_app.forms.unsubscribe_form import *
 from notify_system_app.models import Notify
+from image_contest_app.settings import ICA_LIKE_LIMIT
+from image_contest_app.models import ImageContest, ImageContestImage
 import logging, time
 
 # Get an instance of a logger
@@ -584,21 +586,52 @@ def profile_gain_points(request):
 
 @login_required
 @user_passes_test(check_if_is_a_catwalker_user)
-def profile_photoboard(request):
+def profile_photoboard(request, add_success):
     """View to show photo board page"""
+
+    user_obj = request.user
+    user_id = user_obj.id
+
     # retrieve info about current logged in user
     account_obj = Account()
-    account_info = account_obj.get_autenticated_user_data(request=request)
+    autenticated_user_data = account_obj.get_autenticated_user_data(request=request)
 
     # set current contest_type
     contest_obj = Contest()
-    contest_obj.set_contest_type(request=request, contest_type=account_info["contest_type"])
+    contest_obj.set_contest_type(request=request, contest_type=autenticated_user_data["contest_type"])
 
-    context = {
-        "user_id": account_info.get("user_id"),
-    }
+    ImageContest_obj = ImageContest()
+    # check if already exists an image for this user in photoboard
 
-    return render(request, 'website/profile/profile_photoboard.html', context)
+    """
+    logger.info("user_id: " + str(user_id))
+    """
+
+    ImageContestImage_obj = ImageContestImage()
+    if ImageContestImage_obj.image_exists(user_id=user_id):
+        # l'utente ha già selezionato una foto per la bacheca, prelevo l'url dell'immagine
+        ImageContestImage_obj = ImageContestImage()
+        user_contest_image_obj = ImageContestImage_obj.get_user_contest_image_obj(user_id=user_id)
+
+        context = {
+            "user_id": user_id,
+            "user_image_contest_id": user_contest_image_obj.image_contest_image_id,
+            "user_image_contest_url": user_contest_image_obj.image.image.url,
+            "user_image_contest_like": user_contest_image_obj.like,
+            "user_image_contest_visits": user_contest_image_obj.visits,
+            "user_image_contest_like_remaining": int(ICA_LIKE_LIMIT) - int(user_contest_image_obj.like),
+            "add_success": add_success,
+            "like_limit" : ICA_LIKE_LIMIT,
+        }
+        render_page = 'website/profile/profile_photoboard_details.html'
+    else:
+        # l'utente non ha ancora selezionato una foto per la bacheca
+        context = {
+            "user_id": user_id,
+        }
+        render_page = 'website/profile/profile_photoboard_list.html'
+
+    return render(request, render_page, context)
 # }}}
 
 # test email {{{

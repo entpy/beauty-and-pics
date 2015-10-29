@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from django.db import models
+from django.db import IntegrityError
 from django.contrib.auth.models import User
 from django.utils import timezone
 from contest_app.models import Contest
@@ -13,7 +14,7 @@ import logging
 logger = logging.getLogger(__name__)
 
 class ImageContest(models.Model):
-    id_image_contest = models.AutoField(primary_key=True)
+    image_contest_id = models.AutoField(primary_key=True)
     contest = models.ForeignKey(Contest) # woman contest or man contest
     status = models.IntegerField(default=0) # (0 attivo per la votazione, 1 chiuso, 2 terminato => non considerarlo più)
     creation_date = models.DateTimeField(auto_now_add=True) # contest creation date
@@ -24,7 +25,7 @@ class ImageContest(models.Model):
         app_label = 'image_contest_app'
 
     def __unicode__(self):
-        return str(self.id_image_contest) + " " + str(self.type) + " " + str(self.creation_date)
+        return str(self.image_contest_id) + " " + str(self.type) + " " + str(self.creation_date)
 
     def image_contest_manager(self):
         """Function to manage image contests"""
@@ -88,7 +89,7 @@ class ImageContest(models.Model):
         return return_var
 
 class ImageContestImage(models.Model):
-    id_image_contest_image = models.AutoField(primary_key=True)
+    image_contest_image_id = models.AutoField(primary_key=True)
     user = models.ForeignKey(User) # related user
     image_contest = models.ForeignKey(ImageContest) # related image contest
     image = models.ForeignKey(cropUploadedImages) # user image path
@@ -100,9 +101,8 @@ class ImageContestImage(models.Model):
         unique_together = (("user", "image_contest", "image"),)
 
     def __unicode__(self):
-        return str(self.id_image_contest_image) + " " + str(self.image.image.url)
+        return str(self.image_contest_image_id) + " " + str(self.image.image.url)
 
-    # TODO se inserisco valori duplicati wtf succede?
     def add_contest_image(self, data):
         """Function to add image_contest_image element"""
         return_var = False
@@ -118,40 +118,66 @@ class ImageContestImage(models.Model):
             image_contest = data.get('image_user_contest_obj'), # related image contest obj
             image = data.get('image_obj'), # image obj
         )
-        # saving object
-        return_var = ImageContestImage_obj.save()
+
+        try:
+            # try saving object
+            ImageContestImage_obj.save()
+        except IntegrityError:
+            raise AddImageContestIntegrityError
+        else:
+            return_var = ImageContestImage_obj
 
         return return_var
 
-    # TODO
-    def remove_contest_image(self, id_image_contest_image, user_id):
-        """Function to remove id_image_contest_image about user_id"""
+    def remove_contest_image(self, image_contest_image_id, user_id):
+        """Function to remove image_contest_image_id about user_id"""
         return_var = False
         try:
-            ImageContestImage_obj = ImageContestImage.objects.get(id_image_contest_image=id_image_contest_image, user__id=user_id)
+            ImageContestImage_obj = ImageContestImage.objects.get(image_contest_image_id=image_contest_image_id, user__id=user_id)
         except ImageContestImage.DoesNotExist:
             raise RemoveImageContestImageError
         else:
-            logger.debug("DELETE ImageContestImage -> id: " + str(ImageContestImage_obj.id) + " | email: " + str(ImageContestImage_obj.user.email))
+            logger.debug("DELETE ImageContestImage -> id: " + str(ImageContestImage_obj.image_contest_image_id) + " | email: " + str(ImageContestImage_obj.user.email))
             ImageContestImage_obj.delete()
             return_var = True
 
         return return_var
 
+    def image_exists(self,  user_id):
+        """Function to check if an image about user_id already exists"""
+        return_var = False
+
+        if ImageContestImage.objects.filter(user__id=user_id).exists():
+            return_var = True
+
+        return return_var
+
     # TODO
-    def add_image_like(self, id_image_contest_image, like=1):
+    def add_image_like(self, image_contest_image_id, like=1):
         # add a like (+1) to image
         return True
 
     # TODO
-    def trigger_like_limit_reach(self, id_image_contest_image):
+    def trigger_like_limit_reach(self, image_contest_image_id):
         # action performed when like limit is reached
         return True
 
     # TODO
-    def check_like_limit(self, id_image_contest_image):
+    def check_like_limit(self, image_contest_image_id):
         # check if like limit is reached, then perfoming "trigger_like_limit_reach" function
         return True
+
+    def get_user_contest_image_obj(self, user_id):
+        """Function to retrieve contest_image_obj about user_id"""
+        return_var = None
+        try:
+            ImageContestImage_obj = ImageContestImage.objects.get(user__id=user_id, image_contest__status=ICA_CONTEST_TYPE_ACTIVE)
+        except ImageContestImage.DoesNotExist:
+            pass
+        else:
+            return_var = ImageContestImage_obj
+
+        return return_var
 
     # TODO
     def show_contest_all_images(self, current_contest):
@@ -170,7 +196,7 @@ class ImageContestImage(models.Model):
         return True
 
 class ImageContestHallOfFame(models.Model):
-    id_image_contest_hall_of_fame = models.AutoField(primary_key=True)
+    image_contest_hall_of_fame_id = models.AutoField(primary_key=True)
     user = models.ForeignKey(User, null=True, on_delete=models.SET_NULL) # related user
     image_contest = models.ForeignKey(ImageContest) # related image contest
     first_name = models.CharField(max_length=50, null=True) # winner user name
@@ -182,7 +208,7 @@ class ImageContestHallOfFame(models.Model):
         app_label = 'image_contest_app'
 
     def __unicode__(self):
-        return str(self.id_image_contest_hall_of_fame)
+        return str(self.image_contest_hall_of_fame_id)
 
     # TODO
     def add_contest_hall_of_fame(self, data):

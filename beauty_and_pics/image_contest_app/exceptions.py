@@ -5,7 +5,12 @@ class AddImageContestImageFieldMissignError(Exception):
     get_error_code = "001"
     pass
 
+class AddImageContestIntegrityError(Exception):
+    """Error in add new image contest image, eg. duplicate elements"""
+    get_error_code = "002"
+    pass
+
 class RemoveImageContestImageError(Exception):
     """Error in remove image contest image, row not found"""
-    get_error_code = "002"
+    get_error_code = "003"
     pass

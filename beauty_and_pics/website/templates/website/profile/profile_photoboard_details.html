@@ -1,0 +1,137 @@
+{% extends "website/inc/base_profile.html" %}
+{% load staticfiles %}
+
+{% block title %}{{ site_name }} | il mio album fotografico{% endblock %}
+
+{% block description %}Il mio album fotografico: in questa pagina è possibile modificare la tua immagine del profilo e gestire il book fotografico, aggiungendo e rimuovendo foto.{% endblock %}
+
+{% block container4_title %}{% endblock %}
+
+{# navigation tabs active element #}
+{% block container4_navigation_profile_index %}active{% endblock %}
+
+{% block container4_content %}
+<div class="row">
+	<div class="col-sm-12">
+		<h3>Foto Bacheca</h3>
+	</div>
+	<div class="col-sm-12">
+		<div class="alert alert-info">
+			<p>Fatti notare, mostra il tuo scatto più artistico. Tra tutte le foto presenti, quella che per prima otterrà 500 mi piace otterrà uno spazio tutto suo nella passerella per 2 settimane. Seleziona la foto che vorresti mettere in evidenza.<br /><b>Seleziona quale immagine vorresti mettere in evidenza.</b></p>
+		</div>
+	</div>
+</div>
+<div class="background_container1 generic_container8">
+	<div class="left">
+		<div class="top">
+			<img alt="Imagine profilo" class="catwalk_user_main_image" src="{{ user_image_contest_url }}">
+		</div>
+		<div class="bottom">
+			<div>
+
+			</div>
+			<div>
+				<span>
+					<a class="user_action_link addToFavoritesClickAction" href="#">
+						<img alt="Aggiungi ai preferiti" src="{% static "website/img/catwalk/aggiungi-a-preferiti.png" %}">
+					</a>
+				</span>
+				<span>
+					<a class="user_action_link" href="/passerella/segnalazione-utente/{{user_info.user_id}}/">
+						<img alt="Segnala utente" src="{% static "website/img/catwalk/segnala-utente.png" %}">
+					</a>
+				</span>
+				<span>
+					<a class="user_action_link shareOnFacebookClickAction" href="#">
+						<img alt="Condividi su Facebook" src="{% static "website/img/catwalk/facebook-share.png" %}">
+					</a>
+				</span>
+			</div>
+		</div>
+	</div>
+	<div class="right">
+		<div class="top user_stats_container">
+			<div class="user_stats_block">
+				<span><span class="position">{{ user_image_contest_like }}</span> su {{ like_limit }} mi piace ottenuti</span>
+			</div>
+			<!-- stats block -->
+			<div class="stats_bar_container">
+				<div class="stats_bar_label">Livello di apprezzamento: {{ user_image_contest_like|default:"0" }} punti</div>
+				<div class="stats_bar">
+					<div class="progress">
+						<div class="progress-bar progress-bar-warning" role="progressbar" aria-valuenow="{{ user_image_contest_like }}" aria-valuemin="0" aria-valuemax="{{ like_limit }}" style="width: {{ user_contest_info.global.metric_rate_percentage }}%"></div>
+					</div>
+				</div>
+			</div>
+			<div class="user_stats_container">
+				<div class="user_stats_block">
+					<span class="points">{{ user_image_contest_visits }}</span>
+					<span>Visite ricevute</span>
+				</div>
+				<div class="user_stats_space"></div>
+				<div class="user_stats_block">
+					<span class="points">{{ user_image_contest_like_remaining }}</span>
+					<span>Mi piace mancanti</span>
+				</div>
+			</div>
+			<div>
+				<a href="#" class="btn btn-success">Visualizza nella bacheca</a>
+			</div>
+		</div>
+	</div>
+</div>
+<a href="#" class="removeImageFromPhotoboardAction" data-image-contest-image-id="{{ user_image_contest_id }}">Rimuovi dalla bacheca</a>
+{# image grid block }}} #}
+{% endblock container4_content %}
+{% block custom_js %}
+{{ block.super }}
+<script>
+	$(document).ready(function(){
+		{% if add_success %}
+			// show success popup
+			show_success_add_popup();
+		{% endif %}
+
+		// remove current image from photoboard click action
+		$(document).on("click",".removeImageFromPhotoboardAction", function(){
+			if (confirm("Stai per rimuovere l'immagine dalla bacheca, perderai tutti i \"mi piace\" ricevuti, confermi?")) {
+				var imageId = $(this).data("imageContestImageId");
+				removeImageFromPhotoboard(imageId);
+			}
+
+			return false;
+		});
+	});
+
+	/** function to show a success popup */
+	function show_success_add_popup() {
+		// like limit
+		var like_limit = "{{ like_limit }}";
+		// open success bootstrap modal
+		bootstrapModalsObect.showSuccessModal('Immagine inserita correttamente nella bacheca. Condividi la foto il più possibile per ottenere i <b>' + like_limit + '</b> mi piace ed ottenere il posto nella passerella!');
+	}
+
+	// remove selected image from photoboard
+	function removeImageFromPhotoboard(imageId) {
+		if (imageId) {
+			var addImageToPhotoboardCustomAjaxAction = customAjaxAction;
+			// set async to false
+			addImageToPhotoboardCustomAjaxAction.setAsyncFlag(false);
+			// serialize form
+			addImageToPhotoboardCustomAjaxAction.setAjaxCallParams("image_contest_image_id=" + imageId + "&");
+			// setting action name
+			addImageToPhotoboardCustomAjaxAction.setActionName("remove_image_from_photoboard");
+			// success callback function
+			var successCallback = function(jsonResponse) {
+				// redirect to book images list
+				location.href = "/profilo/foto-bacheca/";
+			};
+			addImageToPhotoboardCustomAjaxAction.setAjaxSuccessCallbackFunction(successCallback);
+			// perform ajax call to add favorite
+			addImageToPhotoboardCustomAjaxAction.performAjaxAction();
+		}
+
+		return true;
+	}
+</script>
+{% endblock custom_js %}

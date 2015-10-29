@@ -535,9 +535,8 @@ class ajaxManager():
 
     def add_image_to_photoboard(self):
         """Function to add a photo to photoboard"""
-        from image_contest_app.models import *
-        from image_contest_app.settings import *
-        from image_contest_app.exceptions import *
+        from image_contest_app.models import ImageContest, ImageContestImage
+        from image_contest_app.exceptions import AddImageContestImageFieldMissignError, AddImageContestIntegrityError
 
         logger.debug("ajax_function: @@add_image_to_photoboard@@")
         logger.debug("parametri della chiamata: " + str(self.request.POST))
@@ -567,14 +566,15 @@ class ajaxManager():
             savedImageContestImage_obj = ImageContestImage_obj.add_contest_image(data=data)
         except AddImageContestImageFieldMissignError:
             data = {'error' : True, 'message': 'AddImageContestImageFieldMissignError exception'}
+        except AddImageContestIntegrityError:
+            data = {'error' : True, 'message': 'AddImageContestIntegrityError exception'}
         else:
             # build valid json response
-            id_image_contest_image = savedImageContestImage_obj.id_image_contest_image
-            image_url = savedImageContestImage_obj.image.url
+            image_contest_image_id = savedImageContestImage_obj.image_contest_image_id
+            image_url = savedImageContestImage_obj.image.image.url
             data = {
                     'success' : True,
-                    'like_limit' : ICA_LIKE_LIMIT,
-                    'id_image_contest_image' : id_image_contest_image,
+                    'image_contest_image_id' : image_contest_image_id,
                     'image_url' : image_url,
             }
 
@@ -583,11 +583,9 @@ class ajaxManager():
 
         return True
 
-    # TODO
     def remove_image_from_photoboard(self):
         """Function to remove a photo from photoboard"""
-        from image_contest_app.models import *
-        from image_contest_app.settings import *
+        from image_contest_app.models import ImageContest, ImageContestImage
 
         logger.debug("ajax_function: @@remove_image_from_photoboard@@")
         logger.debug("parametri della chiamata: " + str(self.request.POST))
@@ -597,11 +595,11 @@ class ajaxManager():
         # retrieve logged user_obj
         user_id = self.request.user.id
         # retrieve image_contest_image_id to remove
-        id_image_contest_image = self.request.POST.get("id_image_contest_image")
+        image_contest_image_id = self.request.POST.get("image_contest_image_id")
 
         try:
             # remove image about this user from photoboard
-            ImageContestImage_obj.remove_contest_image(id_image_contest_image=id_image_contest_image, user_id=user_id)
+            ImageContestImage_obj.remove_contest_image(image_contest_image_id=image_contest_image_id, user_id=user_id)
         except RemoveImageContestImageError:
             data = {'error' : True,}
         else:
