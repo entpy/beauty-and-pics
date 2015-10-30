@@ -611,17 +611,13 @@ def profile_photoboard(request, add_success):
     if ImageContestImage_obj.image_exists(user_id=user_id):
         # l'utente ha già selezionato una foto per la bacheca, prelevo l'url dell'immagine
         ImageContestImage_obj = ImageContestImage()
-        user_contest_image_obj = ImageContestImage_obj.get_user_contest_image_obj(user_id=user_id)
+        # user_contest_image_obj = ImageContestImage_obj.get_user_contest_image_obj(user_id=user_id)
+        user_contest_image_info = ImageContestImage_obj.get_user_contest_image_info(user_id=user_id)
 
         context = {
             "user_id": user_id,
-            "user_image_contest_id": user_contest_image_obj.image_contest_image_id,
-            "user_image_contest_url": user_contest_image_obj.image.image.url,
-            "user_image_contest_like": user_contest_image_obj.like,
-            "user_image_contest_visits": user_contest_image_obj.visits,
-            "user_image_contest_like_remaining": int(ICA_LIKE_LIMIT) - int(user_contest_image_obj.like),
+            "user_image_contest_info": user_contest_image_info,
             "add_success": add_success,
-            "like_limit" : ICA_LIKE_LIMIT,
         }
         render_page = 'website/profile/profile_photoboard_details.html'
     else:

@@ -17,43 +17,43 @@
 	</div>
 	<div class="col-sm-12">
 		<div class="alert alert-info">
-			<p>Fatti notare, mostra il tuo scatto più artistico. Tra tutte le foto presenti, quella che per prima otterrà 500 mi piace otterrà uno spazio tutto suo nella passerella per 2 settimane.<br /><b>Seleziona la foto che vorresti mettere in evidenza.</b></p>
+			<p>Fatti notare, mostra il tuo scatto più artistico. Tra tutte le foto presenti, quella che per prima otterrà {{ user_image_contest_info.like_limit }} "mi piace" otterrà uno spazio tutto suo nella passerella per 2 settimane.<br /><b>Seleziona la foto che vorresti mettere in evidenza.</b></p>
 		</div>
 	</div>
 </div>
 <div class="background_container1 generic_container8">
 	<div class="left">
 		<div class="top">
-			<img alt="Imagine profilo" class="catwalk_user_main_image" src="{{ user_image_contest_url }}">
+			<img alt="Imagine profilo" class="catwalk_user_main_image" src="{{ user_image_contest_info.user_image_contest_url }}">
 		</div>
 		<div class="bottom user_action_link_container">
 			<div class="left">
-			    <a href="#" class="removeImageFromPhotoboardAction" data-image-contest-image-id="{{ user_image_contest_id }}">Rimuovi dalla bacheca</a>
+			    <a href="#" class="removeImageFromPhotoboardAction" data-image-contest-image-id="{{ user_image_contest_info.user_image_contest_id }}">Rimuovi dalla bacheca</a>
 			</div>
 		</div>
 	</div>
 	<div class="right">
 		<div class="top user_stats_container">
 			<div class="container_row1 user_stats_block">
-				<span><span class="position">{{ user_image_contest_like }}</span> su {{ like_limit }} mi piace ottenuti</span>
+				<span><span class="position">{{ user_image_contest_info.user_image_contest_like }}</span> su {{ user_image_contest_info.like_limit }} mi piace ottenuti</span>
 			</div>
 			<!-- stats block -->
 			<div class="container_row1 text-left">
-				<div class="stats_bar_label">Livello di apprezzamento: {{ user_image_contest_like|default:"0" }} punti</div>
+				<div class="stats_bar_label">Livello di apprezzamento</div>
 				<div class="stats_bar">
 					<div class="progress">
-						<div class="progress-bar progress-bar-warning" role="progressbar" aria-valuenow="{{ user_image_contest_like }}" aria-valuemin="0" aria-valuemax="{{ like_limit }}" style="width: {{ user_contest_info.global.metric_rate_percentage }}%"></div>
+						<div class="progress-bar progress-bar-warning" role="progressbar" aria-valuenow="{{ user_image_contest_info.user_image_contest_like_perc }}" aria-valuemin="0" aria-valuemax="{{ user_image_contest_info.like_limit }}" style="width: {{ user_image_contest_info.user_image_contest_like_perc }}%"></div>
 					</div>
 				</div>
 			</div>
 			<div class="container_row1">
 				<div class="user_stats_block">
-					<span class="points">{{ user_image_contest_visits }}</span>
+					<span class="points">{{ user_image_contest_info.user_image_contest_visits }}</span>
 					<span>Visite ricevute</span>
 				</div>
 				<div class="user_stats_space"></div>
 				<div class="user_stats_block">
-					<span class="points">{{ user_image_contest_like_remaining }}</span>
+					<span class="points">{{ user_image_contest_info.user_image_contest_like_remaining }}</span>
 					<span>Mi piace mancanti</span>
 				</div>
 			</div>
@@ -65,11 +65,11 @@
 </div>
 <div class="row">
 	<div class="col-md-12">
-		<h3>Condividi il tuo profilo sui social network</h3>
+		<h3>Condividi la tua foto sui social network</h3>
 	</div>
 	<div class="col-md-12">
 		<div class="alert alert-info">
-			<p>Ottenere molti punti è fondamentale, scala la classifica pubblicando spesso la tua pagina profilo sui social network. Per pubblicarla ora clicca sui pulsanti sotto.</p>
+			<p>Avere molta visibilità è fondamentale per raggiungere i {{ user_image_contest_info.like_limit }} mi piace, ottienili prima di tutti condividendo la tua foto sui social network.<br /><b>Per condividerla ora, clicca sui pulsanti sotto.</b></p>
 		</div>
 	</div>
 </div>
@@ -94,11 +94,11 @@
 </div>
 <div class="row">
 	<div class="col-md-12">
-		<h3>Condividi il tuo profilo sul web</h3>
+		<h3>Condividi la tua foto sul web</h3>
 	</div>
 	<div class="col-md-12">
 		<div class="alert alert-info">
-			<p>Oltre che sui social network, puoi condividere manualmente la tua pagina profilo sui siti che preferisci. Per farlo copia il link che vedi sotto e incollalo dove molta gente possa notarlo<br /><strong>(seleziona l'URL sotto e premi CTRL+C per copiarlo)</strong>.</p>
+			<p>Ottieni ulteriori "mi piace" condividendo manualmente la tua foto sui siti che preferisci. Per farlo copia il link che vedi sotto e incollalo dove molta gente possa vederlo<br /><strong>(seleziona l'URL sotto e premi CTRL+C per copiarlo)</strong>.</p>
 		</div>
 	</div>
 	<div class="col-md-12">

@@ -179,6 +179,23 @@ class ImageContestImage(models.Model):
 
         return return_var
 
+    def get_user_contest_image_info(self, user_id):
+        """Function to retrieve contest image info about user_id"""
+        return_var = None
+        ImageContestImage_obj = self.get_user_contest_image_obj(user_id)
+
+        return_var = {
+            "user_image_contest_id": user_contest_image_obj.image_contest_image_id,
+            "user_image_contest_url": user_contest_image_obj.image.image.url,
+            "user_image_contest_like": user_contest_image_obj.like,
+            "user_image_contest_like_perc": 100/(int(ICA_LIKE_LIMIT) / user_contest_image_obj.like),
+            "user_image_contest_visits": user_contest_image_obj.visits,
+            "like_limit" : ICA_LIKE_LIMIT,
+            "user_image_contest_like_remaining": int(ICA_LIKE_LIMIT) - int(user_contest_image_obj.like),
+        }
+
+        return return_var
+
     # TODO
     def show_contest_all_images(self, current_contest):
         """
