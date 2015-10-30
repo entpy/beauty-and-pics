@@ -17,7 +17,7 @@
 	</div>
 	<div class="col-sm-12">
 		<div class="alert alert-info">
-			<p>Fatti notare, mostra il tuo scatto più artistico. Tra tutte le foto presenti, quella che per prima otterrà 500 mi piace otterrà uno spazio tutto suo nella passerella per 2 settimane. Seleziona la foto che vorresti mettere in evidenza.<br /><b>Seleziona quale immagine vorresti mettere in evidenza.</b></p>
+			<p>Fatti notare, mostra il tuo scatto più artistico. Tra tutte le foto presenti, quella che per prima otterrà 500 mi piace otterrà uno spazio tutto suo nella passerella per 2 settimane.<br /><b>Seleziona la foto che vorresti mettere in evidenza.</b></p>
 		</div>
 	</div>
 </div>
@@ -26,36 +26,19 @@
 		<div class="top">
 			<img alt="Imagine profilo" class="catwalk_user_main_image" src="{{ user_image_contest_url }}">
 		</div>
-		<div class="bottom">
-			<div>
-
-			</div>
-			<div>
-				<span>
-					<a class="user_action_link addToFavoritesClickAction" href="#">
-						<img alt="Aggiungi ai preferiti" src="{% static "website/img/catwalk/aggiungi-a-preferiti.png" %}">
-					</a>
-				</span>
-				<span>
-					<a class="user_action_link" href="/passerella/segnalazione-utente/{{user_info.user_id}}/">
-						<img alt="Segnala utente" src="{% static "website/img/catwalk/segnala-utente.png" %}">
-					</a>
-				</span>
-				<span>
-					<a class="user_action_link shareOnFacebookClickAction" href="#">
-						<img alt="Condividi su Facebook" src="{% static "website/img/catwalk/facebook-share.png" %}">
-					</a>
-				</span>
+		<div class="bottom user_action_link_container">
+			<div class="left">
+			    <a href="#" class="removeImageFromPhotoboardAction" data-image-contest-image-id="{{ user_image_contest_id }}">Rimuovi dalla bacheca</a>
 			</div>
 		</div>
 	</div>
 	<div class="right">
 		<div class="top user_stats_container">
-			<div class="user_stats_block">
+			<div class="container_row1 user_stats_block">
 				<span><span class="position">{{ user_image_contest_like }}</span> su {{ like_limit }} mi piace ottenuti</span>
 			</div>
 			<!-- stats block -->
-			<div class="stats_bar_container">
+			<div class="container_row1 text-left">
 				<div class="stats_bar_label">Livello di apprezzamento: {{ user_image_contest_like|default:"0" }} punti</div>
 				<div class="stats_bar">
 					<div class="progress">
@@ -63,7 +46,7 @@
 					</div>
 				</div>
 			</div>
-			<div class="user_stats_container">
+			<div class="container_row1">
 				<div class="user_stats_block">
 					<span class="points">{{ user_image_contest_visits }}</span>
 					<span>Visite ricevute</span>
@@ -74,13 +57,57 @@
 					<span>Mi piace mancanti</span>
 				</div>
 			</div>
-			<div>
+			<div class="container_row1">
 				<a href="#" class="btn btn-success">Visualizza nella bacheca</a>
 			</div>
 		</div>
 	</div>
 </div>
-<a href="#" class="removeImageFromPhotoboardAction" data-image-contest-image-id="{{ user_image_contest_id }}">Rimuovi dalla bacheca</a>
+<div class="row">
+	<div class="col-md-12">
+		<h3>Condividi il tuo profilo sui social network</h3>
+	</div>
+	<div class="col-md-12">
+		<div class="alert alert-info">
+			<p>Ottenere molti punti è fondamentale, scala la classifica pubblicando spesso la tua pagina profilo sui social network. Per pubblicarla ora clicca sui pulsanti sotto.</p>
+		</div>
+	</div>
+</div>
+{# preferences block {{{ #}
+<div class="row">
+	<div class="col-xs-12 col-sm-6 col-md-4 col-lg-3">
+		<a href="#" class="thumbnail grid_button_1 shareViaFacebookClickAction" data-toggle="tooltip" data-placement="top" data-original-title="Condividi la tua pagina profilo su Facebook per ottenere più punti">
+			<span class="grid_button_image">
+				<img src="{% static "website/img/profile_fb_share.png" %}" alt="Share via Facebook">
+			</span>
+			<span class="grid_button_label">Condividi su Facebook</span>
+		</a>
+	</div>
+	<div class="col-xs-12 col-sm-6 col-md-4 col-lg-3">
+		<a href="https://twitter.com/intent/tweet?url={{ profile_page_url|urlencode }}&text={{ share_text|urlencode }}" class="thumbnail grid_button_1" data-toggle="tooltip" data-placement="top" data-original-title="Condividi la tua pagina profilo su Twitter per ottenere più punti">
+			<span class="grid_button_image">
+				<img src="{% static "website/img/profile_tw_share.png" %}" alt="Share via Twitter">
+			</span>
+			<span class="grid_button_label">Condividi su Twitter</span>
+		</a>
+	</div>
+</div>
+<div class="row">
+	<div class="col-md-12">
+		<h3>Condividi il tuo profilo sul web</h3>
+	</div>
+	<div class="col-md-12">
+		<div class="alert alert-info">
+			<p>Oltre che sui social network, puoi condividere manualmente la tua pagina profilo sui siti che preferisci. Per farlo copia il link che vedi sotto e incollalo dove molta gente possa notarlo<br /><strong>(seleziona l'URL sotto e premi CTRL+C per copiarlo)</strong>.</p>
+		</div>
+	</div>
+	<div class="col-md-12">
+		<div class="profile_share_url_container">
+			<strong class="profilePageUrlAction">{{ profile_page_url }}</strong>
+		</div>
+	</div>
+</div>
+{# preferences block }}} #}
 {# image grid block }}} #}
 {% endblock container4_content %}
 {% block custom_js %}

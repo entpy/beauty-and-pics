@@ -70,6 +70,10 @@
 .generic_container8 > .right { width: 64%; }
 .generic_container8 > .right > .top { margin-left: auto; width: 90%; }
 .generic_container8 > .right > .bottom { margin-left: auto; width: 90%; }
+.generic_container8 > .left .user_action_link_container { display: table; width: 100%; }
+.generic_container8 > .left .user_action_link_container > div { display: table-cell; }
+.generic_container8 > .left .user_action_link_container > div.left { text-align: left; }
+.generic_container8 > .left .user_action_link_container > div.right { text-align: right; }
 
 .user_details_container > div { float: left }
 .user_details_container .user_details_left { width: 38%; margin-right: 2%; }

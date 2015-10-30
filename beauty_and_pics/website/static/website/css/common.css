@@ -100,6 +100,8 @@ textarea { resize: none; }
 .generic_container6 > .button_container { margin-top: 220px; }
 .generic_container9 { padding: 0 25px 25px; }
 .generic_container9 > .title { margin-top: 15px; }
+.generic_container8 > .left .container8_image_bottom_block { margin-top: 5px; }
+.container_row1 { margin-bottom: 20px; }
 
 .tip_container { background-color: #1a2530; }
 .tip_container .tip_readable_text { color: #459fdd; }
@@ -109,7 +111,7 @@ textarea { resize: none; }
 /* catwalk user details page */
 .background_container1 { background-color: #E0E0E0; padding: 20px; }
 .generic_container8 { border-radius: 4px; -moz-border-radius: 4px; display: inline-block; width: 100%; }
-.user_stats_container { margin-top: -20px; margin-bottom: 20px; text-align: center; }
+.user_stats_container { text-align: center; }
 .user_stats_container .user_stats_block { display: inline-block; }
 .user_stats_container .user_stats_block .position { font-size: 55px; }
 .user_stats_container .user_stats_block .points { font-size: 25px; }
