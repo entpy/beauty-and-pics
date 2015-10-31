@@ -95,6 +95,7 @@ class ImageContestImage(models.Model):
     image = models.ForeignKey(cropUploadedImages) # user image path
     like = models.IntegerField(default=0) # image's like
     visits = models.IntegerField(default=0) # image's visits
+    creation_date = models.DateTimeField(auto_now_add=True) # image creation date
 
     class Meta:
         app_label = 'image_contest_app'
@@ -182,16 +183,22 @@ class ImageContestImage(models.Model):
     def get_user_contest_image_info(self, user_id):
         """Function to retrieve contest image info about user_id"""
         return_var = None
+	user_image_contest_like_perc = 0
         ImageContestImage_obj = self.get_user_contest_image_obj(user_id)
 
+	# calculating image contest like percentage
+	if ImageContestImage_obj.like:
+	    user_image_contest_like_perc =  100 / (int(ICA_LIKE_LIMIT) / (ImageContestImage_obj.like * 1.0))
+
+	logger.info("floatval: " + str(user_image_contest_like_perc))
         return_var = {
-            "user_image_contest_id": user_contest_image_obj.image_contest_image_id,
-            "user_image_contest_url": user_contest_image_obj.image.image.url,
-            "user_image_contest_like": user_contest_image_obj.like,
-            "user_image_contest_like_perc": 100/(int(ICA_LIKE_LIMIT) / user_contest_image_obj.like),
-            "user_image_contest_visits": user_contest_image_obj.visits,
+            "user_image_contest_id": ImageContestImage_obj.image_contest_image_id,
+            "user_image_contest_url": ImageContestImage_obj.image.image.url,
+            "user_image_contest_like": ImageContestImage_obj.like,
+            "user_image_contest_like_perc": user_image_contest_like_perc,
+            "user_image_contest_visits": ImageContestImage_obj.visits,
             "like_limit" : ICA_LIKE_LIMIT,
-            "user_image_contest_like_remaining": int(ICA_LIKE_LIMIT) - int(user_contest_image_obj.like),
+            "user_image_contest_like_remaining": int(ICA_LIKE_LIMIT) - int(ImageContestImage_obj.like),
         }
 
         return return_var

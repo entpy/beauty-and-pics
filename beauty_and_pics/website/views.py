@@ -286,6 +286,42 @@ def catwalk_report_user(request, user_id):
     }
 
     return render(request, 'website/catwalk/catwalk_report_user.html', context)
+
+@ensure_csrf_cookie
+def catwalk_photoboard(request, user_id):
+    # common method class init
+    CommonUtils_obj = CommonUtils()
+
+    # TODO: anche se lo user_id non viene passato il try di sotto entra nell'else...come se fosse tutto ok
+
+    try:
+	# retrieve user info if exists
+	account_obj =  Account()
+        account_info = account_obj.custom_user_id_data(user_id=user_id)
+	logger.info("successo" + str(user_id))
+    except User.DoesNotExist:
+        # user id doesn't exists, show all photoboard image about this contest
+	logger.info("errore")
+	pass
+    else:
+	# set current contest_type
+	contest_obj = Contest()
+	contest_obj.set_contest_type(request=request, contest_type=account_info["contest_type"])
+
+    # TODO retrieve photoboard user image
+
+    # TODO: check if this photocan be voted
+    """
+    try:
+        vote_obj.check_if_user_can_vote(user_id=user_id, ip_address=CommonUtils_obj.get_ip_address(request=request), request=request)
+    except UserAlreadyVotedError:
+        user_already_voted = True
+    """
+
+    context = {
+    }
+
+    return render(request, 'website/catwalk/catwalk_photoboard.html', context)
 # }}}
 
 # private profile {{{

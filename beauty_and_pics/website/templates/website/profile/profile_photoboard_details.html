@@ -1,5 +1,6 @@
 {% extends "website/inc/base_profile.html" %}
 {% load staticfiles %}
+{% load l10n %}
 
 {% block title %}{{ site_name }} | il mio album fotografico{% endblock %}
 
@@ -11,13 +12,14 @@
 {% block container4_navigation_profile_index %}active{% endblock %}
 
 {% block container4_content %}
+{# photo stats block {{{ #}
 <div class="row">
 	<div class="col-sm-12">
 		<h3>Foto Bacheca</h3>
 	</div>
 	<div class="col-sm-12">
 		<div class="alert alert-info">
-			<p>Fatti notare, mostra il tuo scatto più artistico. Tra tutte le foto presenti, quella che per prima otterrà {{ user_image_contest_info.like_limit }} "mi piace" otterrà uno spazio tutto suo nella passerella per 2 settimane.<br /><b>Seleziona la foto che vorresti mettere in evidenza.</b></p>
+			<p>Mostra il tuo scatto più artistico! Tra tutte le foto presenti, quella che per prima otterrà {{ user_image_contest_info.like_limit }} "mi piace" otterrà uno spazio tutto suo nella passerella per 2 settimane.<br /><b>Seleziona la foto che vorresti mettere in evidenza.</b></p>
 		</div>
 	</div>
 </div>
@@ -42,7 +44,7 @@
 				<div class="stats_bar_label">Livello di apprezzamento</div>
 				<div class="stats_bar">
 					<div class="progress">
-						<div class="progress-bar progress-bar-warning" role="progressbar" aria-valuenow="{{ user_image_contest_info.user_image_contest_like_perc }}" aria-valuemin="0" aria-valuemax="{{ user_image_contest_info.like_limit }}" style="width: {{ user_image_contest_info.user_image_contest_like_perc }}%"></div>
+						<div class="progress-bar progress-bar-warning" role="progressbar" aria-valuenow="{{ user_image_contest_info.user_image_contest_like_perc | unlocalize }}" aria-valuemin="0" aria-valuemax="{{ user_image_contest_info.like_limit }}" style="width: {{ user_image_contest_info.user_image_contest_like_perc | unlocalize }}%"></div>
 					</div>
 				</div>
 			</div>
@@ -63,6 +65,8 @@
 		</div>
 	</div>
 </div>
+{# photo stats block }}} #}
+{# share photo block {{{ #}
 <div class="row">
 	<div class="col-md-12">
 		<h3>Condividi la tua foto sui social network</h3>
@@ -73,7 +77,6 @@
 		</div>
 	</div>
 </div>
-{# preferences block {{{ #}
 <div class="row">
 	<div class="col-xs-12 col-sm-6 col-md-4 col-lg-3">
 		<a href="#" class="thumbnail grid_button_1 shareViaFacebookClickAction" data-toggle="tooltip" data-placement="top" data-original-title="Condividi la tua pagina profilo su Facebook per ottenere più punti">
@@ -107,8 +110,7 @@
 		</div>
 	</div>
 </div>
-{# preferences block }}} #}
-{# image grid block }}} #}
+{# share photo block }}} #}
 {% endblock container4_content %}
 {% block custom_js %}
 {{ block.super }}
