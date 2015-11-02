@@ -174,10 +174,10 @@ def catwalk_index(request, contest_type=None):
 def catwalk_profile(request, user_id):
     # common method class init
     CommonUtils_obj = CommonUtils()
-
-    # retrieve user info
     account_obj =  Account()
+
     try:
+        # retrieve user info
         account_info = account_obj.custom_user_id_data(user_id=user_id)
     except User.DoesNotExist:
         # user id doesn't exists
@@ -291,26 +291,28 @@ def catwalk_report_user(request, user_id):
 def catwalk_photoboard(request, user_id):
     # common method class init
     CommonUtils_obj = CommonUtils()
+    account_obj =  Account()
+
+    # fare funzione per settare il tipo di contest
 
     # TODO: anche se lo user_id non viene passato il try di sotto entra nell'else...come se fosse tutto ok
-
     try:
 	# retrieve user info if exists
-	account_obj =  Account()
         account_info = account_obj.custom_user_id_data(user_id=user_id)
-	logger.info("successo" + str(user_id))
     except User.DoesNotExist:
         # user id doesn't exists, show all photoboard image about this contest
-	logger.info("errore")
 	pass
     else:
+        # il contest type va settato in base all'utente prelevato
 	# set current contest_type
 	contest_obj = Contest()
 	contest_obj.set_contest_type(request=request, contest_type=account_info["contest_type"])
 
+    # TODO: prelevo il tipo di contest con "get_contest_type_from_session"
+
     # TODO retrieve photoboard user image
 
-    # TODO: check if this photocan be voted
+    # TODO: check if this photo can be voted
     """
     try:
         vote_obj.check_if_user_can_vote(user_id=user_id, ip_address=CommonUtils_obj.get_ip_address(request=request), request=request)
@@ -636,18 +638,10 @@ def profile_photoboard(request, add_success):
     contest_obj = Contest()
     contest_obj.set_contest_type(request=request, contest_type=autenticated_user_data["contest_type"])
 
-    ImageContest_obj = ImageContest()
     # check if already exists an image for this user in photoboard
-
-    """
-    logger.info("user_id: " + str(user_id))
-    """
-
     ImageContestImage_obj = ImageContestImage()
     if ImageContestImage_obj.image_exists(user_id=user_id):
         # l'utente ha già selezionato una foto per la bacheca, prelevo l'url dell'immagine
-        ImageContestImage_obj = ImageContestImage()
-        # user_contest_image_obj = ImageContestImage_obj.get_user_contest_image_obj(user_id=user_id)
         user_contest_image_info = ImageContestImage_obj.get_user_contest_image_info(user_id=user_id)
 
         context = {

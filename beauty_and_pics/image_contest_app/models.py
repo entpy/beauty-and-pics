@@ -204,12 +204,14 @@ class ImageContestImage(models.Model):
         return return_var
 
     # TODO
-    def show_contest_all_images(self, current_contest):
+    def show_contest_all_images(self, image_contest_id):
         """
         ex. -> current_contest = woman_contest
-        select images where ImageContest.contest = current_contest and status=0
+        select images where image_contest.image_contest_id = image_contest_id and status=0
         """
-        return True
+        return_var = ImageContestImage.objects.filter(image_contest__image_contest_id=image_contest_id, image_contest__status=ICA_CONTEST_TYPE_ACTIVE)
+
+        return return_var
 
     # TODO
     def show_closed_contest_image(self, current_contest):

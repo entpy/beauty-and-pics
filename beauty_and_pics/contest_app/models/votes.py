@@ -77,12 +77,16 @@ class Vote(models.Model):
 	from account_app.models.accounts import Account
 	from contest_app.models.contests import Contest
 
-        # retrieving account contest code
-        account_obj = Account()
-        account_data = account_obj.custom_user_id_data(user_id=user_id)
-        contest_obj = Contest()
-        if contest_obj.get_contests_type_status(contest_type=account_data["contest_type"]) != project_constants.CONTEST_ACTIVE:
-            raise ContestNotActiveError
+        try:
+            # retrieving account contest code
+            account_obj = Account()
+            account_data = account_obj.custom_user_id_data(user_id=user_id)
+        except User.DoesNotExist:
+            raise VoteUserIdMissingError
+        else:
+            contest_obj = Contest()
+            if contest_obj.get_contests_type_status(contest_type=account_data["contest_type"]) != project_constants.CONTEST_ACTIVE:
+                raise ContestNotActiveError
 
         return True
 
@@ -128,6 +132,10 @@ class Vote(models.Model):
             except ContestNotActiveError:
                 # send exception to parent try-except block
                 logger.error("Errore nella votazione, contest non attivo | error code: " + str(ContestNotActiveError.get_error_code))
+                raise
+            except VoteUserIdMissingError:
+                # send exception to parent try-except block
+                logger.error("Errore nella votazione, user_id non presente | error code: " + str(VoteUserIdMissingError.get_error_code))
                 raise
             else:
                 # check if user can vote

@@ -53,7 +53,7 @@ class ReportUserForm(forms.Form, FormCommonUtils):
         try:
             # retrieve report user data
             account_info = account_obj.custom_user_id_data(user_id=self.form_validated_data["report_user_id"])
-        except Account.DoesNotExist:
+        except User.DoesNotExist:
             # wtf: user id doesn't exists
             pass
         else:

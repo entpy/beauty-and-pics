@@ -73,8 +73,6 @@ class passwordRecoverForm(forms.Form, FormCommonUtils):
             logger.error("Errore nel recupero password: utente non esistente" + str(self.form_validated_data))
             self._errors = {"__all__": ["Sembrerebbe che l'email inserita non esista"]}
 	else:
-	    # retrieving first name and last name
-	    # account_obj.custom_user_id_data(user_id=user_obj.id):
 	    # send new password via email
 	    email_context = { "first_name" : user_obj.first_name, "last_name" : user_obj.last_name, "email": self.form_validated_data["email"], "password": new_password }
 	    CustomEmailTemplate(

@@ -103,7 +103,7 @@ class Account(models.Model):
 		# logout user
 		# in questo caso sono loggato con un utente non appartenente al gruppo "catwalker_user"
 		# probabilmente si tratta dell'amministratore, ma visto che non ha un oggetto account
-		# associato facci il logout dalla piattaforma
+		# associato faccio il logout dalla piattaforma
 		# logout(request)
 		pass
 	    else:
@@ -368,6 +368,9 @@ class Account(models.Model):
 	        raise
             else:
                 return_var = self.get_user_data_as_dictionary(user_obj=user_obj)
+        else:
+            # function called without user_id
+            raise User.DoesNotExist
 
         return return_var
 

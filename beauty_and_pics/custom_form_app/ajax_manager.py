@@ -4,6 +4,7 @@ from django.shortcuts import render
 from django.http import HttpResponse
 from django.conf import settings
 from django.utils import formats
+from django.contrib.auth.models import User
 from custom_form_app.forms.base_form_class import *
 from custom_form_app.forms.register_form import *
 from custom_form_app.forms.password_recover import *
@@ -463,14 +464,14 @@ class ajaxManager():
 
         account_obj = Account()
         book_obj = Book()
-        data = {'error' : True, 'message': "Controllare i parametri della chiamata"}
         user_id = self.request.POST.get("user_id")
 
-        # retrieve user info
         try:
+            # retrieve user info
             account_info = account_obj.custom_user_id_data(user_id=user_id)
-        except Account.DoesNotExist:
+        except User.DoesNotExist:
             # user id doesn't exists
+            data = {'error' : True, 'message': "Controllare i parametri della chiamata"}
             pass
         else:
             # retrieve contest user info
@@ -505,10 +506,10 @@ class ajaxManager():
         # current logged user id
         user_id = self.request.user.id
 
-        # retrieve user info
         try:
+            # retrieve user info
             account_info = account_obj.custom_user_id_data(user_id=user_id)
-        except Account.DoesNotExist:
+        except User.DoesNotExist:
             # user id doesn't exists
             data = {'error' : True, 'message': "Id utente non esistente: " + str(user_id)}
             pass
