@@ -29,7 +29,8 @@ from custom_form_app.forms.upload_book_form import *
 from custom_form_app.forms.unsubscribe_form import *
 from notify_system_app.models import Notify
 from image_contest_app.settings import ICA_LIKE_LIMIT
-from image_contest_app.models import ImageContest, ImageContestImage
+from image_contest_app.exceptions import ImageAlreadyVotedError
+from image_contest_app.models import ImageContest, ImageContestImage, ImageContestVote
 import logging, time
 
 # Get an instance of a logger
@@ -291,31 +292,50 @@ def catwalk_report_user(request, user_id):
 def catwalk_photoboard(request, user_id):
     CommonUtils_obj = CommonUtils()
     Contest_obj = Contest()
+    ImageContestImage_obj = ImageContestImage()
+    ImageContestVote_obj = ImageContestVote()
     account_obj =  Account()
+    account_info = {}
+    user_already_voted = False
+
+    try:
+        # retrieve user contest_type to set contest type in session
+        account_info = account_obj.custom_user_id_data(user_id=user_id)
+    except User.DoesNotExist:
+        # user_id doesn't exists, do nothing
+        pass
 
     # common function to set contest type
-    Contest_obj.common_view_set_contest_type(request=request, user_id=user_id)
+    Contest_obj.common_view_set_contest_type(request=request, contest_type=account_info.get("contest_type"))
 
     # retrieve current contest_type
     contest_type = Contest_obj.get_contest_type_from_session(request=request)
 
-    if user_id:
-	# TODO: show only user photoboard image
-	# TODO: retrieve photoboard user image
-	# TODO: check if this photo can be voted
-	"""
-	try:
-	    vote_obj.check_if_user_can_vote(user_id=user_id, ip_address=CommonUtils_obj.get_ip_address(request=request), request=request)
-	except UserAlreadyVotedError:
-	    user_already_voted = True
-	"""
-	render_page = 'website/catwalk/catwalk_photoboard_details.html'
+    try:
+        # retrieve photoboard user image
+        user_contest_image_info = ImageContestImage_obj.get_user_contest_image_info(user_id=user_id)
+    except ImageContestImage.DoesNotExist:
+        # show photoboard list about this contest_type
+        context = {}
+        render_page = 'website/catwalk/catwalk_photoboard_list.html'
     else:
-	# TODO: show photoboard about this contest_type
-	render_page = 'website/catwalk/catwalk_photoboard_list.html'
+        # show only user photoboard image
 
-    context = {
-    }
+        try:
+            ImageContestVote_obj.image_can_be_voted(image_contest_image_id=user_contest_image_info.get("user_image_contest_id"), ip_address=CommonUtils_obj.get_ip_address(request=request), request=request)
+        except ImageAlreadyVotedError:
+            user_already_voted = True
+
+        context = {
+                "user_info" : account_info,
+                "user_already_voted" : user_already_voted, # check if this photo can be voted
+                "user_image_contest_id" : user_contest_image_info.get("user_image_contest_id"),
+                "user_image_contest_url" : user_contest_image_info.get("user_image_contest_url"),
+                "user_image_contest_visits": user_contest_image_info.get("user_image_contest_visits"),
+                "like_limit" : user_contest_image_info.get("like_limit"),
+                "user_image_contest_like_remaining": user_contest_image_info.get("user_image_contest_like_remaining"),
+        }
+        render_page = 'website/catwalk/catwalk_photoboard_details.html'
 
     return render(request, render_page, context)
 # }}}

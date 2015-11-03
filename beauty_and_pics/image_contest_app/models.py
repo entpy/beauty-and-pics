@@ -155,7 +155,11 @@ class ImageContestImage(models.Model):
 
     # TODO
     def add_image_like(self, image_contest_image_id, like=1):
-        # add a like (+1) to image
+        # add a like (+1) to an image
+        return True
+
+    def add_image_visit(self, image_contest_image_id):
+        # add a 1 visit to an image
         return True
 
     # TODO
@@ -174,7 +178,7 @@ class ImageContestImage(models.Model):
         try:
             ImageContestImage_obj = ImageContestImage.objects.get(user__id=user_id, image_contest__status=ICA_CONTEST_TYPE_ACTIVE)
         except ImageContestImage.DoesNotExist:
-            pass
+            raise
         else:
             return_var = ImageContestImage_obj
 
@@ -184,26 +188,27 @@ class ImageContestImage(models.Model):
         """Function to retrieve contest image info about user_id"""
         return_var = None
 	user_image_contest_like_perc = 0
-        ImageContestImage_obj = self.get_user_contest_image_obj(user_id)
+        try:
+            ImageContestImage_obj = self.get_user_contest_image_obj(user_id)
+        except ImageContestImage.DoesNotExist:
+            raise
+        else:
+            if ImageContestImage_obj.like:
+                # calculating image contest like percentage
+                user_image_contest_like_perc =  100 / (int(ICA_LIKE_LIMIT) / (ImageContestImage_obj.like * 1.0))
 
-	# calculating image contest like percentage
-	if ImageContestImage_obj.like:
-	    user_image_contest_like_perc =  100 / (int(ICA_LIKE_LIMIT) / (ImageContestImage_obj.like * 1.0))
-
-	logger.info("floatval: " + str(user_image_contest_like_perc))
-        return_var = {
-            "user_image_contest_id": ImageContestImage_obj.image_contest_image_id,
-            "user_image_contest_url": ImageContestImage_obj.image.image.url,
-            "user_image_contest_like": ImageContestImage_obj.like,
-            "user_image_contest_like_perc": user_image_contest_like_perc,
-            "user_image_contest_visits": ImageContestImage_obj.visits,
-            "like_limit" : ICA_LIKE_LIMIT,
-            "user_image_contest_like_remaining": int(ICA_LIKE_LIMIT) - int(ImageContestImage_obj.like),
-        }
+            return_var = {
+                "user_image_contest_id" : ImageContestImage_obj.image_contest_image_id,
+                "user_image_contest_url" : ImageContestImage_obj.image.image.url,
+                "user_image_contest_like" : ImageContestImage_obj.like,
+                "user_image_contest_like_perc" : user_image_contest_like_perc,
+                "user_image_contest_visits" : ImageContestImage_obj.visits,
+                "like_limit" : ICA_LIKE_LIMIT,
+                "user_image_contest_like_remaining" : int(ICA_LIKE_LIMIT) - int(ImageContestImage_obj.like),
+            }
 
         return return_var
 
-    # TODO
     def show_contest_all_images(self, contest_type, filters_list=None):
         """
         ex. -> current_contest = woman_contest
@@ -227,6 +232,40 @@ class ImageContestImage(models.Model):
         ex. -> current_contest = woman_contest
         select images where ImageContest.contest = current_contest and status=1
         """
+        return True
+
+class ImageContestVote(models.Model):
+    image_contest_vote_id = models.AutoField(primary_key=True)
+    user = models.ForeignKey(User) # related user
+    image_contest_image = models.ForeignKey(ImageContestImage) # related image contest image
+    ip_address = models.CharField(max_length=50)
+    date = models.DateTimeField(auto_now=True) # vote date
+
+    class Meta:
+        app_label = 'image_contest_app'
+        unique_together = (("user", "image_contest_image"),)
+
+    def __unicode__(self):
+        return str(self.image_contest_vote_id)
+
+    def perform_vote(self):
+        return True
+
+    def image_can_be_voted(self, image_contest_image_id, ip_address, request):
+        """Function to check if an image can be voted"""
+        # check if exists cookie
+        if request.COOKIES.get(ICA_VATE_COOKIE_NAME + str(image_contest_image_id)):
+            raise ImageAlreadyVotedError
+        else:
+            try:
+                ImageContestVote.objects.get(image_contest_image__image_contest_image_id=image_contest_image_id, ip_address=ip_address)
+            except ImageContestVote.DoesNotExist:
+                # user can vote this catwalker
+                pass
+            else:
+                # image already voted
+                raise ImageAlreadyVotedError
+
         return True
 
 class ImageContestHallOfFame(models.Model):

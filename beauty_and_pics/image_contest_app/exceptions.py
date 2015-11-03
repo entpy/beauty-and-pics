@@ -14,3 +14,8 @@ class RemoveImageContestImageError(Exception):
     """Error in remove image contest image, row not found"""
     get_error_code = "003"
     pass
+
+class ImageAlreadyVotedError(Exception):
+    """Error in image voting, image already voted"""
+    get_error_code = "004"
+    pass

@@ -18,7 +18,7 @@ from beauty_and_pics.common_utils import CommonUtils
 from contest_app.models.votes import Vote
 from account_app.models import *
 from contest_app.models import Contest
-from image_contest_app.models import ImageContest, ImageContestImage
+from image_contest_app.models import ImageContest, ImageContestImage, ImageContestVote
 from upload_image_box.models import cropUploadedImages
 from notify_system_app.models import Notify
 from website.exceptions import *
@@ -47,6 +47,7 @@ class ajaxManager():
         self.__valid_action_list += ('count_unread_notify',)
         self.__valid_action_list += ('add_image_to_photoboard',)
         self.__valid_action_list += ('remove_image_from_photoboard',)
+        self.__valid_action_list += ('add_photoboard_like',)
 
         # retrieve action to perform
         self.ajax_action = request.POST.get("ajax_action")
@@ -282,9 +283,7 @@ class ajaxManager():
                 logger.debug("element list: " + str(single_element))
 		json_account_element.append({
 			"user_id": single_element["user__id"],
-			# TODO: per debug i valori sotto sono uguali
 			"thumbnail_image_url": settings.MEDIA_URL + single_element["image__image"],
-			"image_url": settings.MEDIA_URL + single_element["image__image"],
 		}),
 
         # user notify section
@@ -626,6 +625,51 @@ class ajaxManager():
         else:
             data = {'success' : True,}
 
+        json_data_string = json.dumps(data)
+        self.set_json_response(json_response=json_data_string)
+
+        return True
+
+    # TODO
+    def add_photoboard_like(self):
+        """Function to add a photoboard like"""
+        logger.debug("ajax_function: @@add_photoboard_like@@")
+        logger.debug("parametri della chiamata: " + str(self.request.POST))
+
+        # common method class init
+        CommonUtils_obj = CommonUtils()
+
+        # build votation dictionary
+        votation_data = {}
+        votation_data["user_image_contest_id"] = self.request.POST.get("user_image_contest_id")
+        error_msg = ""
+
+        try:
+            vote_obj = Vote()
+            vote_obj.perform_votation(votation_data, self.request.POST.get("user_id"), CommonUtils_obj.get_ip_address(request=self.request), request=self.request)
+        except VoteUserIdMissingError:
+            error_msg = "Non è stato possibile eseguire la votazione, sii gentile, contatta l'amministratore."
+        except VoteMetricMissingError:
+            error_msg = "Seleziona un valore per ogni metrica."
+        except VoteMetricWrongValueError:
+            error_msg = "I valori per ogni metrica devono essere compresi tra 1 e 5."
+        except ContestNotActiveError:
+            error_msg = "Non è possibile votare fino all'apertura del concorso."
+        except UserAlreadyVotedError:
+            error_msg = "Non puoi votare più volte lo stesso utente nell'arco di 7 giorni."
+        else:
+            # votation performing seems ok, attach cookie to response
+            self.cookie_key = project_constants.USER_ALREADY_VOTED_COOKIE_NAME + str(self.request.POST.get("user_id"))
+            self.cookie_value = True
+            self.cookie_expiring = project_constants.SECONDS_BETWEEN_VOTATION
+            pass
+
+        if error_msg:
+            data = {'error' : True, 'message': error_msg}
+        else:
+            data = {'success' : True, 'message': "Grazie per aver votato. Tieni d'occhio la classifica!"}
+
+        # build JSON response
         json_data_string = json.dumps(data)
         self.set_json_response(json_response=json_data_string)
 

@@ -1044,7 +1044,7 @@ var elementsListObject = {
 					elementsListObject.writeTableHtmlBlock(elementsListObject.manageTableElementsList(jsonResponse.elements_list));
 				} else if (jsonResponse.elements_list_type == "photoboard") {
 					// build and write block into html
-					elementsListObject.writeHtmlBlock(elementsListObject.managePhotobookList(jsonResponse.elements_list));
+					elementsListObject.writeHtmlBlock(elementsListObject.managePhotoboardList(jsonResponse.elements_list));
 				}
 				
 				// set blocks number limit
@@ -1136,6 +1136,19 @@ var elementsListObject = {
 			blockImageUrl = singleElement.image_url;
 			blockImageId = singleElement.image_id;
 			items += elementsListObject.getSingleHtmlBlock(blockUrl, blockThumbnailImageUrl, blockImageUrl, "zoom-image", blockImageId);
+		});
+
+		// return jQuery object
+		return $(items);
+	},
+
+	managePhotoboardList : function(elementsList) {
+	/* Function to retrieve an html blocks list, this must be appended to html page */
+		var items = "";
+		$.each(elementsList, function(index, singleElement) {
+			blockUrl = "/passerella/bacheca/" + singleElement.user_id;
+			blockThumbnailImageUrl = singleElement.thumbnail_image_url;
+			items += elementsListObject.getSingleHtmlBlock(blockUrl, blockThumbnailImageUrl);
 		});
 
 		// return jQuery object
