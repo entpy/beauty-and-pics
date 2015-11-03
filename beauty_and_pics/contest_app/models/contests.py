@@ -347,18 +347,19 @@ class Contest(models.Model):
             return_var = contest.start_date.year
         return return_var
 
-    # TODO
     def common_view_set_contest_type(self, request, user_id=None, contest_type=None):
-        """Function to set contest type, common to all view"""
+        """
+	    Function to set contest type, common to all view:
+	    - se è presente uno user_id, prelevo il contest_type dallo user e lo setto in sessione
+	    - altrimenti se presente il contest type lo setto in sessione
+	"""
+        from account_app.models.accounts import Account
         return_var = False
-        account_obj =  Account()
 
-        if contest_type:
-            self.set_contest_type(request=request, contest_type=contest_type)
-            return_var = True
-        elif user_id:
+        if user_id:
             try:
                 # retrieve user info
+		account_obj =  Account()
                 account_info = account_obj.custom_user_id_data(user_id=user_id)
             except User.DoesNotExist:
                 # user id doesn't exists
@@ -367,5 +368,8 @@ class Contest(models.Model):
                 # set current contest_type
                 self.set_contest_type(request=request, contest_type=account_info["contest_type"])
                 return_var = True
+        elif contest_type:
+            self.set_contest_type(request=request, contest_type=contest_type)
+            return_var = True
 
         return return_var

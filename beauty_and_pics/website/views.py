@@ -289,41 +289,35 @@ def catwalk_report_user(request, user_id):
 
 @ensure_csrf_cookie
 def catwalk_photoboard(request, user_id):
-    # common method class init
     CommonUtils_obj = CommonUtils()
+    Contest_obj = Contest()
     account_obj =  Account()
 
-    # fare funzione per settare il tipo di contest
+    # common function to set contest type
+    Contest_obj.common_view_set_contest_type(request=request, user_id=user_id)
 
-    # TODO: anche se lo user_id non viene passato il try di sotto entra nell'else...come se fosse tutto ok
-    try:
-	# retrieve user info if exists
-        account_info = account_obj.custom_user_id_data(user_id=user_id)
-    except User.DoesNotExist:
-        # user id doesn't exists, show all photoboard image about this contest
-	pass
+    # retrieve current contest_type
+    contest_type = Contest_obj.get_contest_type_from_session(request=request)
+
+    if user_id:
+	# TODO: show only user photoboard image
+	# TODO: retrieve photoboard user image
+	# TODO: check if this photo can be voted
+	"""
+	try:
+	    vote_obj.check_if_user_can_vote(user_id=user_id, ip_address=CommonUtils_obj.get_ip_address(request=request), request=request)
+	except UserAlreadyVotedError:
+	    user_already_voted = True
+	"""
+	render_page = 'website/catwalk/catwalk_photoboard_details.html'
     else:
-        # il contest type va settato in base all'utente prelevato
-	# set current contest_type
-	contest_obj = Contest()
-	contest_obj.set_contest_type(request=request, contest_type=account_info["contest_type"])
-
-    # TODO: prelevo il tipo di contest con "get_contest_type_from_session"
-
-    # TODO retrieve photoboard user image
-
-    # TODO: check if this photo can be voted
-    """
-    try:
-        vote_obj.check_if_user_can_vote(user_id=user_id, ip_address=CommonUtils_obj.get_ip_address(request=request), request=request)
-    except UserAlreadyVotedError:
-        user_already_voted = True
-    """
+	# TODO: show photoboard about this contest_type
+	render_page = 'website/catwalk/catwalk_photoboard_list.html'
 
     context = {
     }
 
-    return render(request, 'website/catwalk/catwalk_photoboard.html', context)
+    return render(request, render_page, context)
 # }}}
 
 # private profile {{{

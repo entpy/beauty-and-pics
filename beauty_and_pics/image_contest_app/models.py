@@ -204,12 +204,20 @@ class ImageContestImage(models.Model):
         return return_var
 
     # TODO
-    def show_contest_all_images(self, image_contest_id):
+    def show_contest_all_images(self, contest_type, filters_list=None):
         """
         ex. -> current_contest = woman_contest
         select images where image_contest.image_contest_id = image_contest_id and status=0
         """
-        return_var = ImageContestImage.objects.filter(image_contest__image_contest_id=image_contest_id, image_contest__status=ICA_CONTEST_TYPE_ACTIVE)
+        return_var = ImageContestImage.objects.values('user__id', 'image__image').filter(image_contest__contest__contest_type__code=contest_type, image_contest__status=ICA_CONTEST_TYPE_ACTIVE)
+	return_var = return_var.order_by('-creation_date')
+
+        # limits filter
+        if filters_list.get("start_limit") and filters_list.get("show_limit"):
+            return_var = return_var[filters_list["start_limit"]:filters_list["show_limit"]]
+
+	# performing query
+        return_var = list(return_var)
 
         return return_var
 

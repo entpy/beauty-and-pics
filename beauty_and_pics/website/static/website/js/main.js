@@ -874,11 +874,11 @@ var voteUserObject = {
 	},
 };
 
-/* Object to retrieve a filtered list of elements (user, photo book, favorites, notify) */
+/* Object to retrieve a filtered list of elements (user, photo book, favorites, notify, photoboard) */
 var elementsListObject = {
 	__elementsListFilters : {
 		"user_id" : null, // required in "favorites" and "book" elementsListType
-		"elements_list_type" : null, // catwalker, favorite, photobook, notify
+		"elements_list_type" : null, // catwalker, favorite, photobook, notify, photoboard
 		"start_limit" : 0, // element retrieving start limit
 		"show_limit" : 1, // element retrieving stop limit
 		"elements_per_call" : 1, // number of element retrieved per call
@@ -1042,8 +1042,11 @@ var elementsListObject = {
 				} else if (jsonResponse.elements_list_type == "notify") {
 					// build and write table blocks into html
 					elementsListObject.writeTableHtmlBlock(elementsListObject.manageTableElementsList(jsonResponse.elements_list));
+				} else if (jsonResponse.elements_list_type == "photoboard") {
+					// build and write block into html
+					elementsListObject.writeHtmlBlock(elementsListObject.managePhotobookList(jsonResponse.elements_list));
 				}
-
+				
 				// set blocks number limit
 				elementsListObject.setBlocksNumberLimit();
 			},

@@ -1,0 +1,65 @@
+{% extends "website/inc/base_catwalk.html" %}
+{% load staticfiles %}
+
+{% block title %}{{ site_name }} | bacheca foto{% endblock title %}
+
+{% block description %}Bacheca foto: guarda le foto migliori dei partecipanti e vota la tua preferita. La più votata andrà in evidenza nella passerella.{% endblock description %}
+
+{% block container4_title %}Bacheca foto{% endblock container4_title %}
+
+{% block return_to_catwalk_block %}{% endblock return_to_catwalk_block %}
+{% block catwalk_banner %}{% endblock catwalk_banner %}
+
+{% block catwalk_tip %}
+<div class="generic_container tip_container display_only_big">
+	<div class="title">
+		<h4>La passerella</h4>
+	</div>
+	<div class="tip_readable_text">
+	    Ciao e benvenuta/o nella passerella, qui puoi trovare tutti i partecipanti di {{ site_name }}. Vota i tuoi preferiti!
+	</div>
+</div>
+{% endblock catwalk_tip %}
+
+{% block container4_content %}
+{# image grid block {{{ #}
+<div class="row">
+	<div class="col-sm-12 margin_top_15 image_grid_container"></div>
+</div>
+{# image grid block }}} #}
+<div class="text-center">
+	<a class="btn btn-success loadMoreElementsAction" href="#">Mostra altre</a>
+</div>
+{% endblock container4_content %}
+
+{% block custom_js %}
+{{ block.super }}
+<script>
+	elementsListObject.setElementsPerCall(20);
+	$(document).ready(function(){
+		// $('[data-toggle="tooltip"]').tooltip();
+
+		// bootstrap modal on favorite click
+		/*$("body").on("click",".zoom-image", function(){
+			var userId = "";
+			if ($(this).attr("data-image-id")) {
+				userId = $(this).data("imageId");
+			}
+
+			// ajax call to retrieve user info and open bootstrap modal
+			retrieveUserInfo(userId);
+
+			return false;
+		});*/
+
+		$(".loadMoreElementsAction").click(function(){
+			elementsListObject.setElementsListType("photoboard");
+			elementsListObject.getElementsList();
+
+			return false;
+		});
+
+		$(".loadMoreElementsAction").click();
+	});
+</script>
+{% endblock custom_js %}

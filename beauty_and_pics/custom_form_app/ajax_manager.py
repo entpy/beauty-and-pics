@@ -18,6 +18,7 @@ from beauty_and_pics.common_utils import CommonUtils
 from contest_app.models.votes import Vote
 from account_app.models import *
 from contest_app.models import Contest
+from image_contest_app.models import ImageContest, ImageContestImage
 from upload_image_box.models import cropUploadedImages
 from notify_system_app.models import Notify
 from website.exceptions import *
@@ -265,6 +266,26 @@ class ajaxManager():
 			    "user_id": photobook_element["user__id"],
 			    "thumbnail_image_url": book_obj.get_base_image_url() + thumbnail_url,
 		    }),
+
+        # photoboard section
+        if elements_list_type == "photoboard":
+            ImageContestImage_obj = ImageContestImage()
+	    contest_obj = Contest()
+
+            # tiro fuori filtered_list + 1 e la controllo con filtered_list,
+            # se ce un elemento in più non nascondo il pulsante, altrimenti lo nascondo
+            filtered_list = ImageContestImage_obj.show_contest_all_images(contest_type=contest_obj.get_contest_type_from_session(request=self.request), filters_list=filters_list)
+            # return a valid filtered list, trick to hide "load more" button
+            valid_filtered_list = self.return_valid_filtered_list(filtered_list=filtered_list, show_limit=filters_list["elements_per_call"])
+
+            for single_element in valid_filtered_list:
+                logger.debug("element list: " + str(single_element))
+		json_account_element.append({
+			"user_id": single_element["user__id"],
+			# TODO: per debug i valori sotto sono uguali
+			"thumbnail_image_url": settings.MEDIA_URL + single_element["image__image"],
+			"image_url": settings.MEDIA_URL + single_element["image__image"],
+		}),
 
         # user notify section
         if elements_list_type == "notify":
@@ -536,7 +557,6 @@ class ajaxManager():
 
     def add_image_to_photoboard(self):
         """Function to add a photo to photoboard"""
-        from image_contest_app.models import ImageContest, ImageContestImage
         from image_contest_app.exceptions import AddImageContestImageFieldMissignError, AddImageContestIntegrityError
 
         logger.debug("ajax_function: @@add_image_to_photoboard@@")
@@ -586,7 +606,7 @@ class ajaxManager():
 
     def remove_image_from_photoboard(self):
         """Function to remove a photo from photoboard"""
-        from image_contest_app.models import ImageContest, ImageContestImage
+        # from image_contest_app.models import ImageContest, ImageContestImage
 
         logger.debug("ajax_function: @@remove_image_from_photoboard@@")
         logger.debug("parametri della chiamata: " + str(self.request.POST))
