@@ -332,8 +332,9 @@ def catwalk_photoboard(request, user_id):
                 "user_image_contest_id" : user_contest_image_info.get("user_image_contest_id"),
                 "user_image_contest_url" : user_contest_image_info.get("user_image_contest_url"),
                 "user_image_contest_visits": user_contest_image_info.get("user_image_contest_visits"),
-                "like_limit" : user_contest_image_info.get("like_limit"),
+                "user_image_contest_like" : user_contest_image_info.get("user_image_contest_like"),
                 "user_image_contest_like_remaining": user_contest_image_info.get("user_image_contest_like_remaining"),
+                "like_limit" : user_contest_image_info.get("like_limit"),
         }
         render_page = 'website/catwalk/catwalk_photoboard_details.html'
 

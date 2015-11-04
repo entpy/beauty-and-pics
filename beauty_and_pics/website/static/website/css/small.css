@@ -88,6 +88,7 @@
 .styled_container1 { display: block; margin: 0 auto; width: 95%; }
 .user_top_info_container { margin-left: 15px; width: auto; }
 .catwalk_user_main_image { max-width: 250px; width: 100%; }
+.container_row_s40 { margin-bottom: 40px; }
 
 /* bootstrap modal mobile fix {{{ */
 .modal-open {

@@ -37,18 +37,29 @@
 		<span class="user_info_value">{% if user_info.gender = "man" %}uomo{% elif user_info.gender = "woman" %}donna{% endif %}</span>
 	</div>
 </div>
-<div class="background_container1 generic_container8">
+<div class="row">
+	<div class="col-md-12">
+		<div class="alert alert-info display_only_small">
+			<p>Dai un "<b>mi piace</b>" a {{ user_info.first_name }}: se riuscirà a raggiungere i <b>{{ like_limit }}</b> mi piace prima di tutti avrà un posto in evidenza nella passerella.</p>
+		</div>
+	</div>
+</div>
+<div class="background_container1 generic_container8 photoboard_image_container">
 	<div class="left">
 		<div class="top">
 			<img alt="Imagine profilo" class="catwalk_user_main_image" src="{{ user_image_contest_url }}">
 		</div>
 		<div class="bottom user_action_link_container">
+		    <div class="left">
+			<a href="/passerella/dettaglio-utente/{{ user_info.user_id }}/">Visita il profilo completo</a>
+		    </div>
+		    <div class="right">
 			<span>
 				<a class="user_action_link addToFavoritesClickAction" href="#">
 					<img alt="Aggiungi ai preferiti" src="{% static "website/img/catwalk/aggiungi-a-preferiti.png" %}">
 				</a>
 			</span>
-			<span>
+			<span class="image_action_button_space">
 				<a class="user_action_link" href="/passerella/segnalazione-utente/{{user_info.user_id}}/">
 					<img alt="Segnala utente" src="{% static "website/img/catwalk/segnala-utente.png" %}">
 				</a>
@@ -58,46 +69,25 @@
 					<img alt="Condividi su Facebook" src="{% static "website/img/catwalk/facebook-share.png" %}">
 				</a>
 			</span>
+		    </div>
 		</div>
 	</div>
 	<div class="right">
 		<div class="top user_stats_container container_row1">
-			{% if user_contest_info.ranking %}
-			<div class="user_stats_block">
-				<span class="position">{{ user_contest_info.ranking }}°</span>
-				<span>Posizione</span>
+		    <div class="container_row display_only_big">
+			<div class="alert alert-info">
+			    <p>Dai un "<b>mi piace</b>" a {{ user_info.first_name }}: se riuscirà a raggiungere i <b>{{ like_limit }}</b> mi piace prima di tutti avrà un posto in evidenza nella passerella.</p>
 			</div>
-			<div class="user_stats_space"></div>
-			{% endif %}
-			<div class="user_stats_block">
-				<span class="points">{{ user_contest_info.total_points }}</span>
-				<span>Punti</span>
-			</div>
-		</div>
-		<div class="bottom">
-			<div class="stats_bar_container">
-				<!-- stats block -->
-				<div class="stats_bar_label">Globale: {{ user_contest_info.global.total_points|default:"0" }} punti</div>
-				<div class="stats_bar">
-					<div class="progress">
-						<div class="progress-bar progress-bar-warning" role="progressbar" aria-valuenow="{{ user_contest_info.global.metric_rate_percentage }}" aria-valuemin="0" aria-valuemax="100" style="width: {{ user_contest_info.global.metric_rate_percentage }}%"></div>
-					</div>
-				</div>
-				<!-- stats block -->
-				<div class="stats_bar_label">Sorriso: {{ user_contest_info.smile.total_points|default:"0" }} punti</div>
-				<div class="stats_bar">
-					<div class="progress">
-						<div class="progress-bar progress-bar-warning" role="progressbar" aria-valuenow="{{ user_contest_info.smile.metric_rate_percentage }}" aria-valuemin="0" aria-valuemax="100" style="width: {{ user_contest_info.smile.metric_rate_percentage }}%"></div>
-					</div>
-				</div>
-				<!-- stats block -->
-				<div class="stats_bar_label">Sguardo: {{ user_contest_info.look.total_points|default:"0" }} punti</div>
-				<div class="stats_bar">
-					<div class="progress">
-						<div class="progress-bar progress-bar-warning" role="progressbar" aria-valuenow="{{ user_contest_info.look.metric_rate_percentage }}" aria-valuemin="0" aria-valuemax="100" style="width: {{ user_contest_info.look.metric_rate_percentage }}%"></div>
-					</div>
-				</div>
-			</div>
+		    </div>
+		    <div class="container_row container_row_b80 container_row_s40 user_stats_block">
+			    <span>Piace a <span class="position">{{ user_image_contest_like }}</span> persone</span>
+		    </div>
+		    <div class="container_row container_row_common10 user_stats_block">
+			    <span><b>{{ user_image_contest_like_remaining }}</b> "mi piace" mancanti</span>
+		    </div>
+		    <div class="container_row user_stats_block text-center">
+			<a class="btn btn-success addPhotoLikeClickAction" href="#">Mi piace</a>
+		    </div>
 		</div>
 	</div>
 </div>
