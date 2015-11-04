@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
-from django.db import models
-from django.db import IntegrityError
+from django.db import models, IntegrityError
+from django.db.models import F
 from django.contrib.auth.models import User
 from django.utils import timezone
 from contest_app.models import Contest
@@ -144,6 +144,19 @@ class ImageContestImage(models.Model):
 
         return return_var
 
+    def get_image_contest_image_obj(self, image_contest_image_id):
+        """Function to retrieve image_contest_image from id"""
+        return_var = False
+        try:
+            logger.debug("image contest image retrieve obj about id: " + str(image_contest_image_id))
+            ImageContestImage_obj = ImageContestImage.objects.get(image_contest_image_id=image_contest_image_id, image_contest__status=ICA_CONTEST_TYPE_ACTIVE)
+        except ImageContestImage.DoesNotExist:
+            raise
+        else:
+            return_var = ImageContestImage_obj
+
+        return return_var
+
     def image_exists(self,  user_id):
         """Function to check if an image about user_id already exists"""
         return_var = False
@@ -153,9 +166,10 @@ class ImageContestImage(models.Model):
 
         return return_var
 
-    # TODO
     def add_image_like(self, image_contest_image_id, like=1):
-        # add a like (+1) to an image
+        """Function to add a like (+1) to an image"""
+        ImageContestImage.objects.filter(image_contest_image_id=image_contest_image_id).update(like=F('like') + like)
+
         return True
 
     def add_image_visit(self, image_contest_image_id):
@@ -236,19 +250,60 @@ class ImageContestImage(models.Model):
 
 class ImageContestVote(models.Model):
     image_contest_vote_id = models.AutoField(primary_key=True)
-    user = models.ForeignKey(User) # related user
     image_contest_image = models.ForeignKey(ImageContestImage) # related image contest image
     ip_address = models.CharField(max_length=50)
     date = models.DateTimeField(auto_now=True) # vote date
 
     class Meta:
         app_label = 'image_contest_app'
-        unique_together = (("user", "image_contest_image"),)
 
     def __unicode__(self):
         return str(self.image_contest_vote_id)
 
-    def perform_vote(self):
+    def __create_votation(self, image_contest_image, ip_address):
+        """Function to create a new votation"""
+        return_var = False
+
+        # create new votation
+        ImageContestVote_obj = ImageContestVote(
+            image_contest_image = image_contest_image,
+            ip_address = ip_address,
+        )
+
+        # save votation
+        ImageContestVote_obj.save()
+        return_var = ImageContestVote_obj
+        logger.debug("new votation created")
+
+        return return_var
+
+    def perform_votation(self, image_contest_image_id, ip_address, request):
+        """Function to perform a votation (add image like after validity check)"""
+
+        ImageContestImage_obj = ImageContestImage()
+        ImageContestVote_obj = ImageContestVote()
+
+        # check if image exists
+        try:
+            valid_image_contest_image_obj = ImageContestImage_obj.get_image_contest_image_obj(image_contest_image_id=image_contest_image_id)
+        except ImageContestImage.DoesNotExist:
+            # image does not exist
+            raise
+
+        # check if user can add like to image
+        try:
+            ImageContestVote_obj.image_can_be_voted(image_contest_image_id=image_contest_image_id, ip_address=ip_address, request=request)
+        except ImageAlreadyVotedError:
+            # user cannot add like to image
+            raise
+
+        # create votation
+        logger.debug("creating new votation...")
+        ImageContestVote_obj.__create_votation(image_contest_image=valid_image_contest_image_obj, ip_address=ip_address)
+
+        # add like (+1) to image
+        ImageContestImage_obj.add_image_like(image_contest_image_id=image_contest_image_id)
+
         return True
 
     def image_can_be_voted(self, image_contest_image_id, ip_address, request):

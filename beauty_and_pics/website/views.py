@@ -296,7 +296,7 @@ def catwalk_photoboard(request, user_id):
     ImageContestVote_obj = ImageContestVote()
     account_obj =  Account()
     account_info = {}
-    user_already_voted = False
+    user_can_vote = False
 
     try:
         # retrieve user contest_type to set contest type in session
@@ -324,11 +324,15 @@ def catwalk_photoboard(request, user_id):
         try:
             ImageContestVote_obj.image_can_be_voted(image_contest_image_id=user_contest_image_info.get("user_image_contest_id"), ip_address=CommonUtils_obj.get_ip_address(request=request), request=request)
         except ImageAlreadyVotedError:
-            user_already_voted = True
+            # user cannot add like again
+            pass
+        else:
+            # user can add like
+            user_can_vote = True
 
         context = {
                 "user_info" : account_info,
-                "user_already_voted" : user_already_voted, # check if this photo can be voted
+                "user_can_vote" : user_can_vote, # check if this photo can be voted
                 "user_image_contest_id" : user_contest_image_info.get("user_image_contest_id"),
                 "user_image_contest_url" : user_contest_image_info.get("user_image_contest_url"),
                 "user_image_contest_visits": user_contest_image_info.get("user_image_contest_visits"),

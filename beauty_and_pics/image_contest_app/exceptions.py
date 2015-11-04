@@ -19,3 +19,8 @@ class ImageAlreadyVotedError(Exception):
     """Error in image voting, image already voted"""
     get_error_code = "004"
     pass
+
+class AddImageContestVoteIntegrityError(Exception):
+    """Error in add new image contest vote, eg. duplicate elements"""
+    get_error_code = "005"
+    pass

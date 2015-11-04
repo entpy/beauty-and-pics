@@ -10,6 +10,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 
 ICA_LIKE_LIMIT = 500 # like limit to close photo contest
 ICA_VATE_COOKIE_NAME = "_icav_" # cookie name after vote
+ICA_VATE_COOKIE_EXPIRING = 31536000 # votation cookie expiring (60*60*24*365 = 1 year)
 ICA_CONTEST_ENABLED = True # check if init photo contest (True) or not (False)
 ICA_CONTEST_TYPE_ACTIVE = 0 # 0 active for votation
 ICA_CONTEST_TYPE_CLOSED = 1 # closed, image will be shown in catwalk
