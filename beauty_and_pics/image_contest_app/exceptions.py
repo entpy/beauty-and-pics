@@ -24,3 +24,11 @@ class AddImageContestVoteIntegrityError(Exception):
     """Error in add new image contest vote, eg. duplicate elements"""
     get_error_code = "005"
     pass
+
+class ImageContestClosedError(Exception):
+    """
+    Error in get image contest, eg. status not matches (ex. try to retrieve
+    an element in open contest but the constest was already closed)
+    """
+    get_error_code = "006"
+    pass

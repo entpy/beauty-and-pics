@@ -20,7 +20,7 @@ from account_app.models import *
 from contest_app.models import Contest
 from image_contest_app.models import ImageContest, ImageContestImage, ImageContestVote
 from image_contest_app.settings import ICA_VATE_COOKIE_NAME, ICA_VATE_COOKIE_EXPIRING
-from image_contest_app.exceptions import ImageAlreadyVotedError
+from image_contest_app.exceptions import ImageAlreadyVotedError, ImageContestStatusNotMatchError
 from upload_image_box.models import cropUploadedImages
 from notify_system_app.models import Notify
 from website.exceptions import *
@@ -643,7 +643,8 @@ class ajaxManager():
         ImageContestImage_obj = ImageContestImage()
         ImageContestVote_obj = ImageContestVote()
 
-        error_msg = ""
+        msg = ""
+        error_flag = False
         user_id = self.request.POST.get("user_id")
         image_contest_image_id = self.request.POST.get("image_contest_image_id")
         ip_address = CommonUtils_obj.get_ip_address(request=self.request)
@@ -653,24 +654,26 @@ class ajaxManager():
             ImageContestVote_obj.perform_votation(image_contest_image_id=image_contest_image_id, ip_address=ip_address, request=self.request)
         except ImageContestImage.DoesNotExist:
             # image_contest_image doesn't exist error
-            error_msg = "Non è stato possibile aggiungere il like, immagine non esistente o fuori dalla votazione."
+            msg = "Non è stato possibile aggiungere il like (immagine non esistente)."
+            error_flag = True
+        except ImageContestClosedError:
+            # image found but not in current contest
+            msg = "Immagine trovata ma non nel contest aperto (immagine fuori dalla votazione)."
         except ImageAlreadyVotedError:
             # image_contest_image already voted error
-            error_msg = "La foto è già stata votata."
+            msg = "La foto è già stata votata."
+            error_flag = True
         else:
             # votation performing seems ok, attach cookie to response
             self.cookie_key = ICA_VATE_COOKIE_NAME + str(image_contest_image_id)
             self.cookie_value = True
             self.cookie_expiring = ICA_VATE_COOKIE_EXPIRING
-
-            # retrieve photoboard user image info
-            user_contest_image_info = ImageContestImage_obj.get_user_contest_image_info(user_id=user_id)
             pass
 
-        if error_msg:
-            data = {'error' : True, 'message': error_msg}
+        if error_flag:
+            data = {'error' : True, 'message': msg}
         else:
-            data = {'success' : True, 'user_image_contest_like' : user_contest_image_info.get("user_image_contest_like"), 'user_image_contest_like_remaining' : user_contest_image_info.get("user_image_contest_like_remaining")}
+            data = {'success' : True, 'message': msg}
 
         # build JSON response
         json_data_string = json.dumps(data)

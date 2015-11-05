@@ -50,46 +50,55 @@
 			<img alt="Imagine profilo" class="catwalk_user_main_image" src="{{ user_image_contest_url }}">
 		</div>
 		<div class="bottom user_action_link_container">
-		    <div class="left">
-			<a href="/passerella/dettaglio-utente/{{ user_info.user_id }}/">Visita il profilo completo</a>
-		    </div>
-		    <div class="right">
-			<span>
-				<a class="user_action_link addToFavoritesClickAction" href="#">
-					<img alt="Aggiungi ai preferiti" src="{% static "website/img/catwalk/aggiungi-a-preferiti.png" %}">
-				</a>
-			</span>
-			<span class="image_action_button_space">
-				<a class="user_action_link" href="/passerella/segnalazione-utente/{{user_info.user_id}}/">
-					<img alt="Segnala utente" src="{% static "website/img/catwalk/segnala-utente.png" %}">
-				</a>
-			</span>
-			<span>
-				<a class="user_action_link shareOnFacebookClickAction" href="#">
-					<img alt="Condividi su Facebook" src="{% static "website/img/catwalk/facebook-share.png" %}">
-				</a>
-			</span>
-		    </div>
+			<div class="left">
+				<a href="/passerella/dettaglio-utente/{{ user_info.user_id }}/">Visita il profilo completo</a>
+			</div>
+			<div class="right">
+				<span>
+					<a class="user_action_link addToFavoritesClickAction" href="#">
+						<img alt="Aggiungi ai preferiti" src="{% static "website/img/catwalk/aggiungi-a-preferiti.png" %}">
+					</a>
+				</span>
+				<span class="image_action_button_space">
+					<a class="user_action_link" href="/passerella/segnalazione-utente/{{user_info.user_id}}/">
+						<img alt="Segnala utente" src="{% static "website/img/catwalk/segnala-utente.png" %}">
+					</a>
+				</span>
+				<span>
+					<a class="user_action_link shareOnFacebookClickAction" href="#">
+						<img alt="Condividi su Facebook" src="{% static "website/img/catwalk/facebook-share.png" %}">
+					</a>
+				</span>
+			</div>
 		</div>
 	</div>
 	<div class="right">
 		<div class="top user_stats_container container_row1">
-		    <div class="container_row display_only_big">
-			<div class="alert alert-info">
-			    <p>Dai un "<b>mi piace</b>" per {{ user_info.first_name }}: se riuscirà a raggiungere i <b>{{ like_limit }}</b> mi piace prima di tutti avrà un posto in evidenza nella passerella.</p>
+			<div class="container_row display_only_big">
+				<div class="alert alert-info">
+					<p>Dai un "<b>mi piace</b>" per {{ user_info.first_name }}: se riuscirà a raggiungere i <b>{{ like_limit }}</b> mi piace prima di tutti avrà un posto in evidenza nella passerella.</p>
+				</div>
 			</div>
-		    </div>
-		    <div class="container_row container_row_b80 container_row_s40 user_stats_block">
-			    <span>Piace a <span class="position">{{ user_image_contest_like }}</span> persone</span>
-		    </div>
-		    <div class="container_row container_row_common10 user_stats_block">
-			    <span><b>{{ user_image_contest_like_remaining }}</b> "mi piace" mancanti</span>
-		    </div>
-		    {% if user_can_vote %}
-		    <div class="container_row user_stats_block text-center addLikeButtonContainerAction">
-			<a class="btn btn-success addPhotoLikeClickAction" href="#">Mi piace</a>
-		    </div>
-		    {% endif %}
+			<div class="container_row container_row_b80 container_row_s40 user_stats_block">
+				<span>Piace a <span class="position imageContestLikeAction">{{ user_image_contest_like }}</span> persone</span>
+			</div>
+			<div class="container_row container_row_common10 user_stats_block">
+				<span><b class="imageContestLikeRemainingAction">{{ user_image_contest_like_remaining }}</b> "mi piace" mancanti</span>
+			</div>
+			<div class="userVotedMsgBlockAction {% if user_can_vote %}hide{% endif %}">
+				<div class="row">
+					<div class="col-md-12">
+						<div class="alert alert-warning">
+							<span class="msgTextAction">Grazie per aver dato il tuo "mi piace" a questo partecipante.</span>
+						</div>
+					</div>
+				</div>
+			</div>
+			{% if user_can_vote %}
+			<div class="container_row user_stats_block text-center addLikeButtonContainerAction">
+				<a class="btn btn-success addPhotoLikeClickAction" href="#">Mi piace</a>
+			</div>
+			{% endif %}
 		</div>
 	</div>
 </div>
@@ -131,6 +140,10 @@
 				// hide "like" button
 				$(".addLikeButtonContainerAction").hide();
 				if (jsonResponse.success == true) {
+					// decrease/increase like/remaining like
+					manageLikeNumberAfterCall();
+					// show user voted msg block
+					$(".userVotedMsgBlockAction").show();
 					// open success bootstrap modal
 					bootstrapModalsObect.showSuccessModal('Ottima scelta!');
 				}
@@ -138,6 +151,20 @@
 			photoboardLikeCustomAjaxAction.setAjaxSuccessCallbackFunction(successCallback);
 			// perform ajax call to add like
 			photoboardLikeCustomAjaxAction.performAjaxAction();
+		}
+
+		return true;
+	}
+
+	/** decrease/increase like/remaining like */
+	function manageLikeNumberAfterCall() {
+		// decrease/increase like/remaining like
+		var image_contest_like = parseInt($(".imageContestLikeAction").val());
+		var image_contest_like_remaining = parseInt($(".imageContestLikeRemainingAction").val());
+		$(".imageContestLikeAction").val(image_contest_like + 1);
+		// decremento i "like" rimanenti solo se sono maggiori di 0
+		if (image_contest_like_remaining > 0) {
+			$(".imageContestLikeRemainingAction").val(image_contest_like_remaining - 1);
 		}
 
 		return true;

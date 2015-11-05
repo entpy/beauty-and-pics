@@ -320,9 +320,11 @@ def catwalk_photoboard(request, user_id):
         render_page = 'website/catwalk/catwalk_photoboard_list.html'
     else:
         # show only user photoboard image
-
         try:
-            ImageContestVote_obj.image_can_be_voted(image_contest_image_id=user_contest_image_info.get("user_image_contest_id"), ip_address=CommonUtils_obj.get_ip_address(request=request), request=request)
+            ImageContestVote_obj.image_can_be_voted(image_contest_status=user_image_contest_status, image_contest_image_id=user_contest_image_info.get("user_image_contest_id"), ip_address=CommonUtils_obj.get_ip_address(request=request), request=request)
+            # TODO: check if contest is open, magari passare anche il contest
+            # nella func sopra, far funzionare image_contest_status ^^
+            # aggiungere except e redirect via di qua
         except ImageAlreadyVotedError:
             # user cannot add like again
             pass
