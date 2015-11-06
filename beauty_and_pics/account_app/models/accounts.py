@@ -73,6 +73,15 @@ class Account(models.Model):
 
 	return return_var
 
+    def check_if_user_id_exists(self, user_id):
+        """Function to check if an user id exists"""
+        return_var = False
+
+        if User.objects.filter(pk=user_id, groups__name=project_constants.CATWALK_GROUP_NAME).exists():
+            return_var = True
+
+	return return_var
+
     def get_user_about_email(self, email=None):
         """Function to retrieve user about an email"""
         return_var = None

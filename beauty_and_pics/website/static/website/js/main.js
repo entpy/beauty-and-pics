@@ -1421,6 +1421,20 @@ var lawCookieCompliance = {
 	},
 };
 
+/**
+ * 	TODO
+ * 	Author: Entpy Software <developer at entpy dot com>
+ * 	Version: 0.1.0
+ * 	- show message in fancy popup
+ *  	- require jquery
+ */
+var popupMessageFramework = {
+
+	showPopupMessageFramework : function(message, message_tags){
+		bootstrapModalsObect.showAlertModal(message + " | " + message_tags);
+	}
+};
+
 // Facebook JavaScript SDK
 window.fbAsyncInit = function() {
 	FB.init({

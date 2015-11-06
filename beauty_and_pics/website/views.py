@@ -169,6 +169,10 @@ def catwalk_index(request, contest_type=None):
     contest_obj = Contest()
     contest_obj.set_contest_type(request=request, contest_type=contest_type)
 
+    # TODO debug only
+    messages.add_message(request, settings.POPUP_ALERT, 'popup di prova success')
+    messages.add_message(request, settings.POPUP_SUCCESS, 'popup di prova success')
+
     return render(request, 'website/catwalk/catwalk_index.html', False)
 
 @ensure_csrf_cookie
@@ -289,7 +293,8 @@ def catwalk_report_user(request, user_id):
     return render(request, 'website/catwalk/catwalk_report_user.html', context)
 
 @ensure_csrf_cookie
-def catwalk_photoboard(request, user_id):
+def catwalk_photoboard_list(request):
+    # view to show user photoboard images list
     CommonUtils_obj = CommonUtils()
     Contest_obj = Contest()
     ImageContestImage_obj = ImageContestImage()
@@ -311,40 +316,72 @@ def catwalk_photoboard(request, user_id):
     # retrieve current contest_type
     contest_type = Contest_obj.get_contest_type_from_session(request=request)
 
+    # show photoboard list about this contest_type
+    # TODO: se il contest relativo all'utente è chiuso ma l'utente esiste: vvvvvv
+    # redirect in pagina profilo utente aprendo popup di errore (foto non più presente per )
+
+    return render(request, 'website/catwalk/catwalk_photoboard_list.html', {})
+
+@ensure_csrf_cookie
+def catwalk_photoboard_details(request, user_id):
+    # view to show only user photoboard image
+    CommonUtils_obj = CommonUtils()
+    Contest_obj = Contest()
+    ImageContestImage_obj = ImageContestImage()
+    ImageContestVote_obj = ImageContestVote()
+    account_obj =  Account()
+    account_info = {}
+    user_can_vote = True
+
+    try:
+        # retrieve user contest_type to set contest type in session
+        account_info = account_obj.custom_user_id_data(user_id=user_id)
+    except User.DoesNotExist:
+        # user_id doesn't exists, do nothing
+        pass
+
+    # common function to set contest type
+    Contest_obj.common_view_set_contest_type(request=request, contest_type=account_info.get("contest_type"))
+
+    # retrieve current contest_type
+    contest_type = Contest_obj.get_contest_type_from_session(request=request)
+
+    # user_id doesn't exist, redirect to catwalk page
+    if not account_obj.check_if_user_id_exists(user_id=user_id):
+        return HttpResponseRedirect('/passerella/')
+
     try:
         # retrieve photoboard user image
         user_contest_image_info = ImageContestImage_obj.get_user_contest_image_info(user_id=user_id)
     except ImageContestImage.DoesNotExist:
-        # show photoboard list about this contest_type
-	# TODO: se il contest relativo all'utente è chiuso ma l'utente esiste: vvvvvv
-	# redirect in pagina profilo utente aprendo popup di errore (foto non più presente per )
-        context = {}
-        render_page = 'website/catwalk/catwalk_photoboard_list.html'
-    else:
-        # show only user photoboard image
-        try:
-            ImageContestVote_obj.image_can_be_voted(image_contest_image_obj=user_contest_image_info.get("user_image_contest_obj"), ip_address=CommonUtils_obj.get_ip_address(request=request), request=request)
-        except ImageContestClosedError:
-            # TODO ops...contest closed redirect to user profile with alert popoup
-            pass
-        except ImageAlreadyVotedError:
-            # user cannot add like again
-            user_can_vote = False
-            pass
+        # TODO: non esiste la foto bacheca dell'utente passato
+        # - redirect in pagina profilo utente aprendo popup di errore "Ci spiace, la foto non più presente per la votazione":
+        return HttpResponseRedirect('/passerella/dettaglio-utente/' + str(user_id))
 
-        context = {
-                "user_info" : account_info,
-                "user_can_vote" : user_can_vote, # check if this photo can be voted
-                "user_image_contest_id" : user_contest_image_info.get("user_image_contest_id"),
-                "user_image_contest_url" : user_contest_image_info.get("user_image_contest_url"),
-                "user_image_contest_visits": user_contest_image_info.get("user_image_contest_visits"),
-                "user_image_contest_like" : user_contest_image_info.get("user_image_contest_like"),
-                "user_image_contest_like_remaining": user_contest_image_info.get("user_image_contest_like_remaining"),
-                "like_limit" : user_contest_image_info.get("like_limit"),
-        }
-        render_page = 'website/catwalk/catwalk_photoboard_details.html'
+    try:
+        ImageContestVote_obj.image_can_be_voted(image_contest_image_obj=user_contest_image_info.get("user_image_contest_obj"), ip_address=CommonUtils_obj.get_ip_address(request=request), request=request)
+    except ImageContestClosedError:
+        # TODO: se contest foto bacheca è chiuso
+        # - redirect in pagina profilo utente aprendo popup di errore "Ci spiace, la foto non più presente per la votazione":
+        return HttpResponseRedirect('/passerella/dettaglio-utente/' + str(user_id))
+        pass
+    except ImageAlreadyVotedError:
+        # user cannot add like again
+        user_can_vote = False
+        pass
 
-    return render(request, render_page, context)
+    context = {
+            "user_info" : account_info,
+            "user_can_vote" : user_can_vote, # check if this photo can be voted
+            "user_image_contest_id" : user_contest_image_info.get("user_image_contest_id"),
+            "user_image_contest_url" : user_contest_image_info.get("user_image_contest_url"),
+            "user_image_contest_visits": user_contest_image_info.get("user_image_contest_visits"),
+            "user_image_contest_like" : user_contest_image_info.get("user_image_contest_like"),
+            "user_image_contest_like_remaining": user_contest_image_info.get("user_image_contest_like_remaining"),
+            "like_limit" : user_contest_image_info.get("like_limit"),
+    }
+
+    return render(request, 'website/catwalk/catwalk_photoboard_details.html', context)
 # }}}
 
 # private profile {{{

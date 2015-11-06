@@ -90,6 +90,14 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     "beauty_and_pics.contest_processors.common_contest_processors" # <= il nuovo context
 )
 
+# message framework custom tags
+POPUP_SUCCESS = 100
+POPUP_ALERT = 110
+MESSAGE_TAGS = {
+    POPUP_SUCCESS: 'popup_success',
+    POPUP_ALERT: 'popup_alert',
+}
+
 # Database
 # https://docs.djangoproject.com/en/1.7/ref/settings/#databases
 

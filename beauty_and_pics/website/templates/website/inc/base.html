@@ -353,6 +353,16 @@
 		{% block custom_js %}
 		{% endblock custom_js %}
 
+		{# If exist a custom message, show it in a popup #}
+		{% if messages %}
+			{% for message in messages %}
+				{% if message.tags == "popup_success" or message.tags == "popup_alert" %}
+					<script>popupMessageFramework.showPopupMessageFramework("{{ message }}", "{{ message.tags }}");</script>
+				{% endif %}
+			{% endfor %}
+		{% endif %}
+		
+
 		<!-- Google Analytics -->
 		<script>
 		    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
