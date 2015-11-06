@@ -89,7 +89,7 @@
 				<div class="row">
 					<div class="col-md-12">
 						<div class="alert alert-warning">
-							<span class="msgTextAction">Grazie per aver dato il tuo "mi piace" a questo partecipante.</span>
+							<span class="msgTextAction">Grazie per aver dato il tuo "mi piace" a questo partecipante. Visita il suo <a href="/passerella/dettaglio-utente/{{ user_info.user_id }}/">profilo</a> completo.</span>
 						</div>
 					</div>
 				</div>
@@ -143,7 +143,7 @@
 					// decrease/increase like/remaining like
 					manageLikeNumberAfterCall();
 					// show user voted msg block
-					$(".userVotedMsgBlockAction").show();
+					$(".userVotedMsgBlockAction").removeClass("hide");
 					// open success bootstrap modal
 					bootstrapModalsObect.showSuccessModal('Ottima scelta!');
 				}
@@ -159,12 +159,12 @@
 	/** decrease/increase like/remaining like */
 	function manageLikeNumberAfterCall() {
 		// decrease/increase like/remaining like
-		var image_contest_like = parseInt($(".imageContestLikeAction").val());
-		var image_contest_like_remaining = parseInt($(".imageContestLikeRemainingAction").val());
-		$(".imageContestLikeAction").val(image_contest_like + 1);
+		var image_contest_like = parseInt($(".imageContestLikeAction").html());
+		var image_contest_like_remaining = parseInt($(".imageContestLikeRemainingAction").html());
+		$(".imageContestLikeAction").html(image_contest_like + 1);
 		// decremento i "like" rimanenti solo se sono maggiori di 0
 		if (image_contest_like_remaining > 0) {
-			$(".imageContestLikeRemainingAction").val(image_contest_like_remaining - 1);
+			$(".imageContestLikeRemainingAction").html(image_contest_like_remaining - 1);
 		}
 
 		return true;

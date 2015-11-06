@@ -20,7 +20,7 @@ from account_app.models import *
 from contest_app.models import Contest
 from image_contest_app.models import ImageContest, ImageContestImage, ImageContestVote
 from image_contest_app.settings import ICA_VATE_COOKIE_NAME, ICA_VATE_COOKIE_EXPIRING
-from image_contest_app.exceptions import ImageAlreadyVotedError, ImageContestStatusNotMatchError
+from image_contest_app.exceptions import ImageAlreadyVotedError, ImageContestClosedError
 from upload_image_box.models import cropUploadedImages
 from notify_system_app.models import Notify
 from website.exceptions import *

@@ -29,7 +29,7 @@ from custom_form_app.forms.upload_book_form import *
 from custom_form_app.forms.unsubscribe_form import *
 from notify_system_app.models import Notify
 from image_contest_app.settings import ICA_LIKE_LIMIT
-from image_contest_app.exceptions import ImageAlreadyVotedError
+from image_contest_app.exceptions import ImageAlreadyVotedError, ImageContestClosedError
 from image_contest_app.models import ImageContest, ImageContestImage, ImageContestVote
 import logging, time
 
@@ -296,7 +296,7 @@ def catwalk_photoboard(request, user_id):
     ImageContestVote_obj = ImageContestVote()
     account_obj =  Account()
     account_info = {}
-    user_can_vote = False
+    user_can_vote = True
 
     try:
         # retrieve user contest_type to set contest type in session
@@ -316,21 +316,21 @@ def catwalk_photoboard(request, user_id):
         user_contest_image_info = ImageContestImage_obj.get_user_contest_image_info(user_id=user_id)
     except ImageContestImage.DoesNotExist:
         # show photoboard list about this contest_type
+	# TODO: se il contest relativo all'utente è chiuso ma l'utente esiste: vvvvvv
+	# redirect in pagina profilo utente aprendo popup di errore (foto non più presente per )
         context = {}
         render_page = 'website/catwalk/catwalk_photoboard_list.html'
     else:
         # show only user photoboard image
         try:
-            ImageContestVote_obj.image_can_be_voted(image_contest_status=user_image_contest_status, image_contest_image_id=user_contest_image_info.get("user_image_contest_id"), ip_address=CommonUtils_obj.get_ip_address(request=request), request=request)
-            # TODO: check if contest is open, magari passare anche il contest
-            # nella func sopra, far funzionare image_contest_status ^^
-            # aggiungere except e redirect via di qua
+            ImageContestVote_obj.image_can_be_voted(image_contest_image_obj=user_contest_image_info.get("user_image_contest_obj"), ip_address=CommonUtils_obj.get_ip_address(request=request), request=request)
+        except ImageContestClosedError:
+            # TODO ops...contest closed redirect to user profile with alert popoup
+            pass
         except ImageAlreadyVotedError:
             # user cannot add like again
+            user_can_vote = False
             pass
-        else:
-            # user can add like
-            user_can_vote = True
 
         context = {
                 "user_info" : account_info,

@@ -144,20 +144,15 @@ class ImageContestImage(models.Model):
 
         return return_var
 
-    def get_image_contest_image_obj(self, image_contest_image_id, image_contest_status):
+    def get_image_contest_image_obj(self, image_contest_image_id):
         """Function to retrieve image_contest_image from id"""
         return_var = False
         try:
-            logger.debug("image contest image retrieve obj about id: " + str(image_contest_image_id) + " and status: " + str(image_contest_status))
+            logger.debug("image contest image retrieve obj about id: " + str(image_contest_image_id))
             ImageContestImage_obj = ImageContestImage.objects.get(image_contest_image_id=image_contest_image_id)
         except ImageContestImage.DoesNotExist:
             raise
         else:
-            # check if match image contest type
-            if ImageContestImage_obj.image_contest.status != image_contest_status:
-                # false, status not matches, raise an error
-                raise ImageContestClosedError 
-            # success, status matches
             return_var = ImageContestImage_obj
 
         return return_var
@@ -223,7 +218,7 @@ class ImageContestImage(models.Model):
                 user_image_contest_like_perc =  100 / (int(ICA_LIKE_LIMIT) / (ImageContestImage_obj.like * 1.0))
 
             return_var = {
-                "user_image_contest_status" : ImageContestImage_obj.image_contest.status,
+                "user_image_contest_obj" : ImageContestImage_obj,
                 "user_image_contest_id" : ImageContestImage_obj.image_contest_image_id,
                 "user_image_contest_url" : ImageContestImage_obj.image.image.url,
                 "user_image_contest_like" : ImageContestImage_obj.like,
@@ -295,22 +290,20 @@ class ImageContestVote(models.Model):
         ImageContestImage_obj = ImageContestImage()
         ImageContestVote_obj = ImageContestVote()
 
-        # check if image exists (only in current active contest)
+        # check if image exists
         try:
-            valid_image_contest_image_obj = ImageContestImage_obj.get_image_contest_image_obj(image_contest_image_id=image_contest_image_id, image_contest_status=ICA_CONTEST_TYPE_ACTIVE)
+            valid_image_contest_image_obj = ImageContestImage_obj.get_image_contest_image_obj(image_contest_image_id=image_contest_image_id)
         except ImageContestImage.DoesNotExist:
             # image does not exist
             raise
-        except ImageContestClosedError:
-            # image found but not in current contest
-            # IMPORTANTE: se un utente vota la foto dopo che è stato raggiunto
-            # il limite massimo entra qui, a livello di db non viene fatto
-            # nulla ma lui vede comunque aumentare il numero di like
-            raise
 
-        # check if user can add like to image (TODO except ImageContestClosedError)
         try:
-            ImageContestVote_obj.image_can_be_voted(image_contest_image_id=image_contest_image_id, ip_address=ip_address, request=request)
+            ImageContestVote_obj.image_can_be_voted(image_contest_image_obj=valid_image_contest_image_obj, ip_address=ip_address, request=request)
+        except ImageContestClosedError:
+            # contest closed, qui si entra se sto per dare il mi piace all'utente
+	    # ma qualcuno lo ha fatto prima di me, quindi sto tentando di dare un 
+	    # voto in più oltre al limite massimo
+            raise
         except ImageAlreadyVotedError:
             # user cannot add like to image
             raise
@@ -323,25 +316,30 @@ class ImageContestVote(models.Model):
         ImageContestImage_obj.add_image_like(image_contest_image_id=image_contest_image_id)
 
         # check if like limit is reached, then perform action "trigger_like_limit_reach"
-        if ImageContestImage_obj.check_like_limit(image_contest_image_like=image_contest_image_like.like + 1):
+        if ImageContestImage_obj.check_like_limit(image_contest_image_like=valid_image_contest_image_obj.like + 1):
             ImageContestImage_obj.trigger_like_limit_reach(image_contest_image_id=image_contest_image_id)
 
         return True
 
-    def image_can_be_voted(self, image_contest_image_id, ip_address, request):
+    def image_can_be_voted(self, image_contest_image_obj, ip_address, request):
         """Function to check if an image can be voted"""
+	# check if contest is open
+	if image_contest_image_obj.image_contest.status != ICA_CONTEST_TYPE_ACTIVE:
+	    raise ImageContestClosedError
+
         # check if exists cookie
-        if request.COOKIES.get(ICA_VATE_COOKIE_NAME + str(image_contest_image_id)):
+        if request.COOKIES.get(ICA_VATE_COOKIE_NAME + str(image_contest_image_obj.image_contest_image_id)):
             raise ImageAlreadyVotedError
-        else:
-            try:
-                ImageContestVote.objects.get(image_contest_image__image_contest_image_id=image_contest_image_id, ip_address=ip_address)
-            except ImageContestVote.DoesNotExist:
-                # user can vote this catwalker
-                pass
-            else:
-                # image already voted
-                raise ImageAlreadyVotedError
+
+	# check if exists vote inside database
+	try:
+	    ImageContestVote.objects.get(image_contest_image__image_contest_image_id=image_contest_image_obj.image_contest_image_id, ip_address=ip_address)
+	except ImageContestVote.DoesNotExist:
+	    # user can vote this catwalker
+	    pass
+	else:
+	    # image already voted
+	    raise ImageAlreadyVotedError
 
         return True
 
