@@ -1422,16 +1422,18 @@ var lawCookieCompliance = {
 };
 
 /**
- * 	TODO
  * 	Author: Entpy Software <developer at entpy dot com>
  * 	Version: 0.1.0
  * 	- show message in fancy popup
  *  	- require jquery
  */
 var popupMessageFramework = {
-
 	showPopupMessageFramework : function(message, message_tags){
-		bootstrapModalsObect.showAlertModal(message + " | " + message_tags);
+		if (message_tags == "popup_success") {
+		    bootstrapModalsObect.showSuccessModal(message);
+		} else if (message_tags == "popup_alert") {
+		    bootstrapModalsObect.showAlertModal(message);
+		}
 	}
 };
 

@@ -170,8 +170,8 @@ def catwalk_index(request, contest_type=None):
     contest_obj.set_contest_type(request=request, contest_type=contest_type)
 
     # TODO debug only
-    messages.add_message(request, settings.POPUP_ALERT, 'popup di prova success')
-    messages.add_message(request, settings.POPUP_SUCCESS, 'popup di prova success')
+    # messages.add_message(request, settings.POPUP_ALERT, 'popup di prova success')
+    # messages.add_message(request, settings.POPUP_SUCCESS, 'popup di prova success')
 
     return render(request, 'website/catwalk/catwalk_index.html', False)
 
@@ -294,31 +294,15 @@ def catwalk_report_user(request, user_id):
 
 @ensure_csrf_cookie
 def catwalk_photoboard_list(request):
-    # view to show user photoboard images list
+    # view to show photoboard list about this contest_type
     CommonUtils_obj = CommonUtils()
     Contest_obj = Contest()
-    ImageContestImage_obj = ImageContestImage()
-    ImageContestVote_obj = ImageContestVote()
-    account_obj =  Account()
-    account_info = {}
-    user_can_vote = True
-
-    try:
-        # retrieve user contest_type to set contest type in session
-        account_info = account_obj.custom_user_id_data(user_id=user_id)
-    except User.DoesNotExist:
-        # user_id doesn't exists, do nothing
-        pass
 
     # common function to set contest type
-    Contest_obj.common_view_set_contest_type(request=request, contest_type=account_info.get("contest_type"))
+    Contest_obj.common_view_set_contest_type(request=request)
 
     # retrieve current contest_type
     contest_type = Contest_obj.get_contest_type_from_session(request=request)
-
-    # show photoboard list about this contest_type
-    # TODO: se il contest relativo all'utente è chiuso ma l'utente esiste: vvvvvv
-    # redirect in pagina profilo utente aprendo popup di errore (foto non più presente per )
 
     return render(request, 'website/catwalk/catwalk_photoboard_list.html', {})
 
@@ -354,21 +338,25 @@ def catwalk_photoboard_details(request, user_id):
         # retrieve photoboard user image
         user_contest_image_info = ImageContestImage_obj.get_user_contest_image_info(user_id=user_id)
     except ImageContestImage.DoesNotExist:
-        # TODO: non esiste la foto bacheca dell'utente passato
+        # non esiste la foto bacheca dell'utente passato
         # - redirect in pagina profilo utente aprendo popup di errore "Ci spiace, la foto non più presente per la votazione":
+	messages.add_message(request, settings.POPUP_ALERT, 'Ci spiace, la foto non è più presente per la votazione.')
         return HttpResponseRedirect('/passerella/dettaglio-utente/' + str(user_id))
 
     try:
         ImageContestVote_obj.image_can_be_voted(image_contest_image_obj=user_contest_image_info.get("user_image_contest_obj"), ip_address=CommonUtils_obj.get_ip_address(request=request), request=request)
     except ImageContestClosedError:
-        # TODO: se contest foto bacheca è chiuso
+        # se contest foto bacheca è chiuso
         # - redirect in pagina profilo utente aprendo popup di errore "Ci spiace, la foto non più presente per la votazione":
+	messages.add_message(request, settings.POPUP_ALERT, 'Ci spiace, la foto non è più presente per la votazione.')
         return HttpResponseRedirect('/passerella/dettaglio-utente/' + str(user_id))
-        pass
     except ImageAlreadyVotedError:
         # user cannot add like again
         user_can_vote = False
         pass
+
+    # add a visit to this image
+    ImageContestImage_obj.add_image_visit(image_contest_image_id=user_contest_image_info.get("user_image_contest_id"))
 
     context = {
             "user_info" : account_info,

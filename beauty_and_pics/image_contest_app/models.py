@@ -8,6 +8,7 @@ from contest_app.models import Contest
 from upload_image_box.models import cropUploadedImages 
 from image_contest_app.exceptions import *
 from .settings import *
+from datetime import datetime, timedelta
 import logging
 
 # Get an instance of a logger
@@ -173,15 +174,19 @@ class ImageContestImage(models.Model):
         return True
 
     def add_image_visit(self, image_contest_image_id):
-        # add a 1 visit to an image
+        """Function to add a visit to an image"""
+        ImageContestImage.objects.filter(image_contest_image_id=image_contest_image_id).update(visits=F('visits') + 1)
+
         return True
 
     # TODO
     def trigger_like_limit_reach(self, image_contest_image_id):
-        # action performed when like limit is reached
         """
-        1) chiudere il relativo contest dell'immagine e settare una data di scadenza
+	action performed when like limit is reached:
+	Function to close related image_contest and set an expiring date (now + 2 weeks)
         """
+        ImageContestImage.objects.filter(image_contest_image_id=image_contest_image_id).update(image_contest__status=ICA_CONTEST_TYPE_CLOSED, image_contest__expiring=(datetime.now() + timedelta(days=14)))
+
         return True
 
     def check_like_limit(self, image_contest_image_like):
