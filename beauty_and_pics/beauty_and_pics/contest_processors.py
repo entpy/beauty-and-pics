@@ -5,6 +5,7 @@ from account_app.models.accounts import *
 from account_app.models.images import *
 from contest_app.models.contests import *
 from contest_app.models.hall_of_fame import *
+from image_contest_app.models import ImageContestImage
 from beauty_and_pics.consts import project_constants
 import logging
 
@@ -17,6 +18,7 @@ def common_contest_processors(request):
     book_obj = Book()
     contest_obj = Contest()
     hall_of_fame_obj = HallOfFame()
+    ImageContestImage_obj = ImageContestImage()
     contest_type = contest_obj.get_contest_type_from_session(request=request)
     logged_user_id = None
     logger.info("@@@current contest_type: " + str(contest_type))
@@ -30,6 +32,9 @@ def common_contest_processors(request):
     contest_info = contest_obj.get_contest_info_about_type(contest_type=contest_type)
     # last contest winner
     contest_winner = hall_of_fame_obj.get_last_active_contest_winner(contest_type=contest_type)
+    # TODO: last photoboard contest winner
+    photoboard_contest_winner = ImageContestImage_obj.get_closed_contest_info(contest_type=contest_type)
+
     # shown user notify popup
     check_user_notify = False
     ### template context vars }}} ###
@@ -58,9 +63,11 @@ def common_contest_processors(request):
             'profile_thumbnail_image_url': profile_thumbnail_image_url,
             'contest_info': contest_info,
             'contest_winner': contest_winner,
+            'photoboard_contest_winner': photoboard_contest_winner,
             'user_is_authenticated': user_is_authenticated,
             'authenticated_user_contest_type': autenticated_user_data.get("contest_type"),
             'site_name': project_constants.SITE_NAME,
             'logged_user_id': logged_user_id,
             'check_user_notify': check_user_notify,
+            'message_tags': MESSAGE_TAGS,
     }

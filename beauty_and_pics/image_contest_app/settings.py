@@ -15,3 +15,4 @@ ICA_CONTEST_ENABLED = True # check if init photo contest (True) or not (False)
 ICA_CONTEST_TYPE_ACTIVE = 0 # 0 active for votation
 ICA_CONTEST_TYPE_CLOSED = 1 # closed, image will be shown in catwalk
 ICA_CONTEST_TYPE_FINISHED = 2 # finished, data was saved into ImageContestHallOfFame
+ICA_VATE_CONTEST_EXPIRING = 1209600 # votation cookie expiring (60*60*24*14 = 2 weeks)

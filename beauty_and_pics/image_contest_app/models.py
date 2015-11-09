@@ -48,6 +48,8 @@ class ImageContest(models.Model):
         image_contest_list = ImageContest.objects.filter(status=ICA_CONTEST_TYPE_CLOSED, expiring__lte=timezone.now())
         for image_contest in image_contest_list:
             # TODO: save into ImageContestHallOfFame
+            ImageContestHallOfFame_obj = ImageContestHallOfFame()
+            ImageContestHallOfFame_obj.add_contest_hall_of_fame(contest_type=image_contest__contest__contest_type__code)
             pass
 
         ImageContest.objects.filter(status=ICA_CONTEST_TYPE_CLOSED, expiring__lte=timezone.now()).update(status=ICA_CONTEST_TYPE_FINISHED)
@@ -179,13 +181,25 @@ class ImageContestImage(models.Model):
 
         return True
 
-    # TODO
     def trigger_like_limit_reach(self, image_contest_image_id):
         """
 	action performed when like limit is reached:
 	Function to close related image_contest and set an expiring date (now + 2 weeks)
         """
-        ImageContestImage.objects.filter(image_contest_image_id=image_contest_image_id).update(image_contest__status=ICA_CONTEST_TYPE_CLOSED, image_contest__expiring=(datetime.now() + timedelta(days=14)))
+        # ImageContestImage.objects.filter(image_contest_image_id=image_contest_image_id).update(image_contest__status=ICA_CONTEST_TYPE_CLOSED, image_contest__expiring=(datetime.now() + timedelta(days=14)))
+
+        try:
+            ImageContestImage_obj = super(ImageContestImage, self).get_image_contest_image_obj(image_contest_image_id=image_contest_image_id)
+        except ImageContestImage.DoesNotExist:
+            # TODO: testare questo errore
+            logger.error("errore in trigger_like_limit_reach, nessuna immagine settata per la fine del contest bacheca")
+            pass
+        else:
+            # close related contest
+            ImageContestImage_obj.image_contest.status = ICA_CONTEST_TYPE_CLOSED
+            # set expiring now + 2 weeks
+            ImageContestImage_obj.image_contest.expiring = datetime.now() + timedelta(seconds=ICA_VATE_CONTEST_EXPIRING)
+            ImageContestImage_obj.save()
 
         return True
 
@@ -238,7 +252,7 @@ class ImageContestImage(models.Model):
     def show_contest_all_images(self, contest_type, filters_list=None):
         """
         ex. -> current_contest = woman_contest
-        select images where image_contest.image_contest_id = image_contest_id and status=0
+        select images where image_contest.contest.type = contest_type and status=0
         """
         return_var = ImageContestImage.objects.values('user__id', 'image__image').filter(image_contest__contest__contest_type__code=contest_type, image_contest__status=ICA_CONTEST_TYPE_ACTIVE)
 	return_var = return_var.order_by('-creation_date')
@@ -253,12 +267,22 @@ class ImageContestImage(models.Model):
         return return_var
 
     # TODO
-    def show_closed_contest_image(self, current_contest):
+    def get_closed_contest_info(self, contest_type):
         """
         ex. -> current_contest = woman_contest
-        select images where ImageContest.contest = current_contest and status=1
+        select * where image_contest.contest.type = contest_type and status=1
         """
-        return True
+        return_var = None
+
+        try:
+            ImageContestImage_obj = ImageContestImage.objects.filter(image_contest__contest__contest_type__code=contest_type, image_contest__status=ICA_CONTEST_TYPE_CLOSED)
+        except ImageContestImage.DoesNotExist:
+            # non ci sono dei contest chiusi
+            pass
+        else:
+            return_var = ImageContestImage_obj
+
+        return return_var
 
 class ImageContestVote(models.Model):
     image_contest_vote_id = models.AutoField(primary_key=True)
@@ -364,8 +388,22 @@ class ImageContestHallOfFame(models.Model):
         return str(self.image_contest_hall_of_fame_id)
 
     # TODO
-    def add_contest_hall_of_fame(self, data):
-        # add image_contest_hall_of_fame element
+    def add_contest_hall_of_fame(self, contest_type):
+        """Function to add an image_contest_hall_of_fame element"""
+        ImageContestImage_obj = super(ImageContestImage, self).get_closed_contest_info(contest_type=contest_type)
+
+        if ImageContestImage_obj:
+            # insert winner about contest_type into ImageContestHallOfFame :o
+            ImageContestHallOfFame_obj = ImageContestHallOfFame(
+                user = ImageContestImage_obj.user,
+                image_contest = ImageContestImage_obj.image_contest,
+                first_name = ImageContestImage_obj.user.first_name,
+                last_name = ImageContestImage_obj.user.last_name,
+                image_url = ImageContestImage_obj.image.image.url,
+                thumbnail_image_url = ImageContestImage_obj.image.thumbnail_image.url,
+            )
+
+            ImageContestHallOfFame_obj.save()
         return True
 
 # Create your models here.

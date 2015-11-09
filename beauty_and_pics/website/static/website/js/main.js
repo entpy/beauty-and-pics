@@ -350,6 +350,11 @@ function writeCountdownEndString(contestStatus) {
 /* Object to manage bootstrap modals */
 var bootstrapModalsObect = {
 
+	// popup message tags
+	success_message_tags : "popup_success",
+	alert_message_tags : "popup_alert",
+	error_message_tags : "popup_error",
+
 	/* Function to write bootstrap modal inside body tag, only if not already exists */
 	writeModalInsideBodyTag: function() {
 		if (!$(".bootstrap_modal").length) {
@@ -402,6 +407,20 @@ var bootstrapModalsObect = {
 	hideBootstrapModal: function() {
 		$(".bootstrap_modal").modal('hide');
 	},
+
+	/* Function to show popup message with bootstrap modal */
+	showPopupMessage : function(message, message_tags){
+		if (message_tags == success_message_tags) {
+			// show a success modal popup
+			this.showSuccessModal(message);
+		} else if (message_tags == alert_message_tags) {
+			// show an alert modal popup
+			this.showAlertModal(message);
+		} else if (message_tags == error_message_tags) {
+			// show an error modal popup
+			this.showErrorModal(message);
+		}
+	}
 
 	/* custom bootstrap modal functions {{{ */
 	/* Function to build and show image zoom bootstrap modal */
@@ -488,7 +507,28 @@ var bootstrapModalsObect = {
 			messageBlockTemplate += '</div>';
 			messageBlockTemplate += '</div>';
 			messageBlockTemplate += '</div>';
-			$(".bootstrap_modal").find('.modal-title').html("Gulp...");
+			$(".bootstrap_modal").find('.modal-title').html("Gulp!");
+			$(".bootstrap_modal").find('.modal-footer').html('<button type="button" class="btn btn-default" data-dismiss="modal">Chiudi</button>');
+			$(".bootstrap_modal").find('.modal-body').html(messageBlockTemplate);
+			this.showBootstrapModal();
+		}
+
+		return false;
+	},
+
+	/* Function to build and show an error bootstrap modal */
+	showErrorModal: function(message) {
+		if (message) {
+			this.resetBootstrapModal();
+			var messageBlockTemplate = '';
+			messageBlockTemplate += '<div class="row">';
+			messageBlockTemplate += '<div class="col-md-12 margin_top_30">';
+			messageBlockTemplate += '<div class="alert alert-error">';
+			messageBlockTemplate += message;
+			messageBlockTemplate += '</div>';
+			messageBlockTemplate += '</div>';
+			messageBlockTemplate += '</div>';
+			$(".bootstrap_modal").find('.modal-title').html("Ops...");
 			$(".bootstrap_modal").find('.modal-footer').html('<button type="button" class="btn btn-default" data-dismiss="modal">Chiudi</button>');
 			$(".bootstrap_modal").find('.modal-body').html(messageBlockTemplate);
 			this.showBootstrapModal();
@@ -1419,22 +1459,6 @@ var lawCookieCompliance = {
 			this.createDiv(); 
 		}
 	},
-};
-
-/**
- * 	Author: Entpy Software <developer at entpy dot com>
- * 	Version: 0.1.0
- * 	- show message in fancy popup
- *  	- require jquery
- */
-var popupMessageFramework = {
-	showPopupMessageFramework : function(message, message_tags){
-		if (message_tags == "popup_success") {
-		    bootstrapModalsObect.showSuccessModal(message);
-		} else if (message_tags == "popup_alert") {
-		    bootstrapModalsObect.showAlertModal(message);
-		}
-	}
 };
 
 // Facebook JavaScript SDK

@@ -353,15 +353,14 @@
 		{% block custom_js %}
 		{% endblock custom_js %}
 
-		{# If exist a custom message, show it in a popup #}
+		{# If exist a custom message, show it in a bootstrap modal popup #}
 		{% if messages %}
 			{% for message in messages %}
-				{% if message.tags == "popup_success" or message.tags == "popup_alert" %}
-					<script>popupMessageFramework.showPopupMessageFramework("{{ message }}", "{{ message.tags }}");</script>
+			{% if message.tags == {{ message_tags.POPUP_SUCCESS }} or message.tags == {{ message_tags.POPUP_ALERT }} or message.tags == {{ message_tags.POPUP_ERROR }} %}
+					<script>bootstrapModalsObect.showPopupMessage("{{ message }}", "{{ message.tags }}");</script>
 				{% endif %}
 			{% endfor %}
 		{% endif %}
-		
 
 		<!-- Google Analytics -->
 		<script>

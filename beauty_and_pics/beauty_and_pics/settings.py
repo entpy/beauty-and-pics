@@ -93,9 +93,11 @@ TEMPLATE_CONTEXT_PROCESSORS = (
 # message framework custom tags
 POPUP_SUCCESS = 100
 POPUP_ALERT = 110
+POPUP_ERROR = 120
 MESSAGE_TAGS = {
     POPUP_SUCCESS: 'popup_success',
     POPUP_ALERT: 'popup_alert',
+    POPUP_ALERT: 'popup_error',
 }
 
 # Database
