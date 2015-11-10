@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from django.db import models, IntegrityError
-from django.db.models import F
+from django.db.models import F, Q
 from django.contrib.auth.models import User
 from django.utils import timezone
 from django.conf import settings
@@ -49,8 +49,8 @@ class ImageContest(models.Model):
         image_contest_list = ImageContest.objects.filter(status=ICA_CONTEST_TYPE_CLOSED, expiring__lte=timezone.now())
         for image_contest in image_contest_list:
             # TODO: save into ImageContestHallOfFame
-            ImageContestHallOfFame_obj = ImageContestHallOfFame()
-            ImageContestHallOfFame_obj.add_contest_hall_of_fame(contest_type=image_contest__contest__contest_type__code)
+            # ImageContestHallOfFame_obj = ImageContestHallOfFame()
+            # ImageContestHallOfFame_obj.add_contest_hall_of_fame(contest_type=image_contest__contest__contest_type__code)
             pass
 
         ImageContest.objects.filter(status=ICA_CONTEST_TYPE_CLOSED, expiring__lte=timezone.now()).update(status=ICA_CONTEST_TYPE_FINISHED)
@@ -69,8 +69,8 @@ class ImageContest(models.Model):
         Contest_obj = Contest()
         active_contests_list = Contest_obj.get_all_active_contests()
         for active_contests in active_contests_list:
-            if not ImageContest.objects.filter(contest=active_contests, status=ICA_CONTEST_TYPE_ACTIVE).exists():
-                # no active image contests, must be create a new one
+            if not ImageContest.objects.filter(Q(status=ICA_CONTEST_TYPE_ACTIVE) | Q(status=ICA_CONTEST_TYPE_CLOSED), contest=active_contests).exists():
+                # no active or closed image contests, must be create a new one
                 ImageContest_obj = ImageContest(
                     contest = active_contests,
                     like_limit = ICA_LIKE_LIMIT,
