@@ -262,24 +262,31 @@
 							</div>
 							{% endif %}
 							{# right classification block }}} #}
-							{# TODO: non mettere in pagina profilo #}
 							{% block signup_banner %}
-							<div class="generic_container generic_container6 show_photoboard_banner_bg">
-								<div class="title">
-									<h4>Beauty and Pics<span class="show_photoboard_catwalk_subtitle">della settimana</span></h4>
-								</div>
-								{% if photoboard_contest_winner %}
-									<img src="{{ photoboard_contest_winner.image__thumbnail_image__image }}" alt="Image">
+							{% if photoboard_contest_winner and catwalk_index_view %}
+								{# se sono nella passerella e ho un vincitore del photoboard #}
+								{# mostro il box con l'immagine del vincitore #}
+								<div class="generic_container generic_container6 show_photoboard_banner_bg">
+									<div class="title">
+										<h4>Beauty and Pics<span class="show_photoboard_catwalk_subtitle">della settimana</span></h4>
+									</div>
+									<img src="{{ photoboard_contest_winner.image__thumbnail_image__image }}" alt="Foto della settimana">
 									<div class="button_container">
 										<a class="btn btn-danger" href="/passerella/dettaglio-utente/{{ photoboard_contest_winner.user__id }}/">Vai al profilo</a>
 									</div>
-								{% else %}
-									<img src="{% static "website/img/catwalk/show_photoboard.png" %}" alt="Image">
+								</div>
+							{% elif exists_active_photoboard %}
+								{# se esiste un contest aperto (non ho più vincitori da far vedere) #}
+								<div class="generic_container generic_container6 show_photoboard_banner_bg">
+									<div class="title">
+										<h4>Beauty and Pics<span class="show_photoboard_catwalk_subtitle">della settimana</span></h4>
+									</div>
+									<img src="{% static "website/img/catwalk/show_photoboard.png" %}" alt="Vai alla bacheca fotografica">
 									<div class="button_container">
 										<a class="btn btn-danger" href="/passerella/bacheca/">Guarda & scegli</a>
 									</div>
-								{% endif %}
-							</div>
+								</div>
+							{% endif %}
 							{% endblock signup_banner %}
 							{% block catwalk_banner %}
 							<div class="generic_container generic_container6 catwalk_banner_bg">

@@ -22,6 +22,15 @@
 {% endblock catwalk_tip %}
 
 {% block container4_content %}
+{% if exists_active_photoboard %}
+<div class="row">
+	<div class="col-sm-12">
+		<div class="alert alert-info">
+			<p>Non ci sono ancora foto nella bacheca, stay tuned!</p>
+		</div>
+	</div>
+</div>
+{% endif %}
 {# image grid block {{{ #}
 <div class="row">
 	<div class="col-sm-12 margin_top_15 image_grid_container"></div>

@@ -6,7 +6,7 @@ from account_app.models.accounts import *
 from account_app.models.images import *
 from contest_app.models.contests import *
 from contest_app.models.hall_of_fame import *
-from image_contest_app.models import ImageContestImage
+from image_contest_app.models import ImageContestImage, ImageContest
 from beauty_and_pics.consts import project_constants
 import logging
 
@@ -19,6 +19,7 @@ def common_contest_processors(request):
     book_obj = Book()
     contest_obj = Contest()
     hall_of_fame_obj = HallOfFame()
+    ImageContest_obj = ImageContest()
     ImageContestImage_obj = ImageContestImage()
     contest_type = contest_obj.get_contest_type_from_session(request=request)
     logged_user_id = None
@@ -33,7 +34,9 @@ def common_contest_processors(request):
     contest_info = contest_obj.get_contest_info_about_type(contest_type=contest_type)
     # last contest winner
     contest_winner = hall_of_fame_obj.get_last_active_contest_winner(contest_type=contest_type)
-    # TODO: last photoboard contest winner
+    # TODO: check if exists an active photoboard
+    exists_active_photoboard = ImageContest_obj.exists_active_contest(contest_type=contest_type)
+    # last photoboard contest winner
     photoboard_contest_winner = ImageContestImage_obj.get_closed_contest_info(contest_type=contest_type)
 
     # shown user notify popup
@@ -71,4 +74,5 @@ def common_contest_processors(request):
             'logged_user_id': logged_user_id,
             'check_user_notify': check_user_notify,
             'message_tags': settings.POPUP_TAGS,
+            'exists_active_photoboard': exists_active_photoboard,
     }

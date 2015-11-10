@@ -92,6 +92,15 @@ class ImageContest(models.Model):
 
         return return_var
 
+    def exists_active_contest(self, contest_type):
+        """Function to check if exists an active image_contest"""
+        return_var = False
+
+        if ImageContest.objects.filter(contest__contest_type__code=contest_type, status=ICA_CONTEST_TYPE_ACTIVE).exists():
+            return_var = True
+
+        return return_var
+
 class ImageContestImage(models.Model):
     image_contest_image_id = models.AutoField(primary_key=True)
     user = models.ForeignKey(User) # related user
@@ -131,6 +140,7 @@ class ImageContestImage(models.Model):
             raise AddImageContestIntegrityError
         else:
             return_var = ImageContestImage_obj
+            logger.debug("add_contest_image, successfully added new photoboard image, user_obj: " + str(data.get('user_obj')) + " image_obj" + str(data.get('image_obj')))
 
         return return_var
 
@@ -162,10 +172,11 @@ class ImageContestImage(models.Model):
         return return_var
 
     def image_exists(self,  user_id):
-        """Function to check if an image about user_id already exists"""
+        """Function to check if an image about user_id already exists for active contest"""
         return_var = False
 
-        if ImageContestImage.objects.filter(user__id=user_id).exists():
+        if ImageContestImage.objects.filter(user__id=user_id, image_contest__status=ICA_CONTEST_TYPE_ACTIVE).exists():
+            logger.debug("image_exists, photoboard image exists in active contest for user: " + str(user_id))
             return_var = True
 
         return return_var
@@ -173,12 +184,14 @@ class ImageContestImage(models.Model):
     def add_image_like(self, image_contest_image_id, like=1):
         """Function to add a like (+1) to an image"""
         ImageContestImage.objects.filter(image_contest_image_id=image_contest_image_id).update(like=F('like') + like)
+        logger.debug("add_image_like, image_contest_image_id: " + str(image_contest_image_id))
 
         return True
 
     def add_image_visit(self, image_contest_image_id):
         """Function to add a visit to an image"""
         ImageContestImage.objects.filter(image_contest_image_id=image_contest_image_id).update(visits=F('visits') + 1)
+        logger.debug("add_image_visit, image_contest_image_id: " + str(image_contest_image_id))
 
         return True
 
@@ -209,7 +222,9 @@ class ImageContestImage(models.Model):
     def check_like_limit(self, image_contest_image_like):
         """Function to check if like limit is reached"""
         return_var = False
+        logger.debug("check_like_limit, image_contest_image_like: " + str(image_contest_image_like) + " like_limit: " + str(ICA_LIKE_LIMIT))
         if int(image_contest_image_like) >= int(ICA_LIKE_LIMIT):
+	    logger.debug("check_like_limit, limit reached!")
             return_var = True
 
         return return_var
@@ -269,7 +284,6 @@ class ImageContestImage(models.Model):
 
         return return_var
 
-    # TODO
     def get_closed_contest_info(self, contest_type):
         """
         ex. -> current_contest = woman_contest
@@ -278,7 +292,7 @@ class ImageContestImage(models.Model):
         return_var = {}
 
         try:
-            ImageContestImage_obj = ImageContestImage.objects.values('image_contest_image_id', 'user__id', 'image__image', 'image__thumbnail_image__image').get(image_contest__contest__contest_type__code=contest_type, image_contest__status=ICA_CONTEST_TYPE_CLOSED)
+            ImageContestImage_obj = ImageContestImage.objects.values('image_contest_image_id', 'user__id', 'image__image', 'image__thumbnail_image__image', 'image_contest__expiring').get(image_contest__contest__contest_type__code=contest_type, image_contest__status=ICA_CONTEST_TYPE_CLOSED)
         except ImageContestImage.DoesNotExist:
 	    logger.info("nessun photoboard contest chiuso per il tipo: " + str(contest_type))
             # non ci sono dei contest chiusi
@@ -289,16 +303,6 @@ class ImageContestImage(models.Model):
             return_var["image__thumbnail_image__image"] = settings.MEDIA_URL + return_var.get("image__thumbnail_image__image")
             return_var["image__image"] = settings.MEDIA_URL + return_var.get("image__image")
 	    # logger.info("image_contest_image mod: " + str(return_var.get("image__thumbnail_image__image")))
-
-	    """
-		image_contest_image_id = models.AutoField(primary_key=True)
-		user = models.ForeignKey(User) # related user
-		image_contest = models.ForeignKey(ImageContest) # related image contest
-		image = models.ForeignKey(cropUploadedImages) # user image path
-		like = models.IntegerField(default=0) # image's like
-		visits = models.IntegerField(default=0) # image's visits
-		creation_date = models.DateTimeField(auto_now_add=True) # image creation date
-	    """
 
         return return_var
 
@@ -327,7 +331,7 @@ class ImageContestVote(models.Model):
         # save votation
         ImageContestVote_obj.save()
         return_var = ImageContestVote_obj
-        logger.debug("new votation created")
+        logger.debug("new votation created (" + str(return_var) + "), user: " + str(return_var.image_contest_image.user.id) + " ip address: " + str(ip_address))
 
         return return_var
 
@@ -337,10 +341,13 @@ class ImageContestVote(models.Model):
         ImageContestImage_obj = ImageContestImage()
         ImageContestVote_obj = ImageContestVote()
 
+        logger.debug("perform_votation...")
+
         # check if image exists
         try:
             valid_image_contest_image_obj = ImageContestImage_obj.get_image_contest_image_obj(image_contest_image_id=image_contest_image_id)
         except ImageContestImage.DoesNotExist:
+            logger.debug("perform_votation error: contest image does not exist")
             # image does not exist
             raise
 
@@ -350,13 +357,14 @@ class ImageContestVote(models.Model):
             # contest closed, qui si entra se sto per dare il mi piace all'utente
 	    # ma qualcuno lo ha fatto prima di me, quindi sto tentando di dare un 
 	    # voto in più oltre al limite massimo
+            logger.debug("perform_votation error: contest closed")
             raise
         except ImageAlreadyVotedError:
             # user cannot add like to image
+            logger.debug("perform_votation error: image already voted")
             raise
 
         # create votation
-        logger.debug("creating new votation...")
         ImageContestVote_obj.__create_votation(image_contest_image=valid_image_contest_image_obj, ip_address=ip_address)
 
         # add like (+1) to image
@@ -387,6 +395,8 @@ class ImageContestVote(models.Model):
 	else:
 	    # image already voted
 	    raise ImageAlreadyVotedError
+
+        logger.debug("image_can_be_voted, yessa!")
 
         return True
 
@@ -422,48 +432,5 @@ class ImageContestHallOfFame(models.Model):
             )
 
             ImageContestHallOfFame_obj.save()
+
         return True
-
-# Create your models here.
-"""
-image_contest
-image_contest_images
-image_contest_hall_of_fame
-
-in image_contest ho i possibili contest di immagini, possono essercene più
-contemporaneamente e di tipologie differenti, a loro volta devono essere
-legati al concorso principale uomo o donna. Quando l' image_contest viene
-chiuso hanno una data di vita settata, oltre la quale, tutte le immagini e i
-dati del contest vengono raggruppati in image_contest_hall_of_fame e le foto
-eliminate
-
-image_contest_images contiene le immagini per un dato contest, oltre alle
-immagini deve contenere l'utente, i mi piace per l'immagine
-
-image_contest_hall_of_fame contiene la foto vincente alla scadenza dell'image_contest
-con altre informazioni
-
-
-image_contest
-(id)
-contest = models.ForeignKey('Contest')
-type es. monthly_beauty_and_pics (non possono esserci due image_contest con lo stesso type attivi simultaneamente nello stesso contest)
-status (0 attivo per la votazione, 1 chiuso, 2 terminato, non considerarlo più)
-title
-creation_date
-expiring
-
-image_contest_images
-(id)
-image = models.OneToOneField(cropUploadedImages, primary_key=True)
-user = models.ForeignKey(User)
-image_contest = models.ForeignKey(image_contest)
-likes
-
-image_contest_hall_of_fame
-(id)
-image = models.OneToOneField(cropUploadedImages, primary_key=True)
-user = models.ForeignKey(User)
-image_contest = models.ForeignKey(image_contest)
-date
-"""

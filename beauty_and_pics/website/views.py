@@ -169,11 +169,15 @@ def catwalk_index(request, contest_type=None):
     contest_obj = Contest()
     contest_obj.set_contest_type(request=request, contest_type=contest_type)
 
-    # TODO debug only
+    context = {
+        "catwalk_index_view" : True,
+    }
+
+    # debug only
     # messages.add_message(request, settings.POPUP_ALERT, 'popup di prova success')
     # messages.add_message(request, settings.POPUP_SUCCESS, 'popup di prova success')
 
-    return render(request, 'website/catwalk/catwalk_index.html', False)
+    return render(request, 'website/catwalk/catwalk_index.html', context)
 
 @ensure_csrf_cookie
 def catwalk_profile(request, user_id):
@@ -697,9 +701,29 @@ def profile_photoboard(request, add_success):
         }
         render_page = 'website/profile/profile_photoboard_details.html'
     else:
-        # l'utente non ha ancora selezionato una foto per la bacheca
+        # l'utente non ha ancora selezionato una foto per la bacheca, mostro l'elenco delle foto selezionabili
+        photoboard_contest_winner = ImageContestImage_obj.get_closed_contest_info(contest_type=autenticated_user_data["contest_type"])
+
+        # check if current user win the photoboard contest
+        user_is_winner = False
+        if photoboard_contest_winner.get("user__id") == user_id:
+            user_is_winner = True
+
+        # è già presente un vincitore per il contest, non è possibile aggiungere adesso una foto in bacheca
+        enable_image_selection = True
+        if photoboard_contest_winner:
+            enable_image_selection = False
+
+        # tra quanti gg è possibile nuovamente aggiungere immagini nella bacheca
+        next_selection_days = 0
+        if photoboard_contest_winner.get("image_contest__expiring"):
+            next_selection_date = photoboard_contest_winner.get("image_contest__expiring")
+
         context = {
             "user_id": user_id,
+            "user_is_winner": user_is_winner,
+            "enable_image_selection": enable_image_selection,
+            "next_selection_date": next_selection_date,
         }
         render_page = 'website/profile/profile_photoboard_list.html'
 
