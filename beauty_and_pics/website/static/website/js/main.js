@@ -410,17 +410,17 @@ var bootstrapModalsObect = {
 
 	/* Function to show popup message with bootstrap modal */
 	showPopupMessage : function(message, message_tags){
-		if (message_tags == success_message_tags) {
+		if (message_tags == this.success_message_tags) {
 			// show a success modal popup
 			this.showSuccessModal(message);
-		} else if (message_tags == alert_message_tags) {
+		} else if (message_tags == this.alert_message_tags) {
 			// show an alert modal popup
 			this.showAlertModal(message);
-		} else if (message_tags == error_message_tags) {
+		} else if (message_tags == this.error_message_tags) {
 			// show an error modal popup
 			this.showErrorModal(message);
 		}
-	}
+	},
 
 	/* custom bootstrap modal functions {{{ */
 	/* Function to build and show image zoom bootstrap modal */
@@ -523,7 +523,7 @@ var bootstrapModalsObect = {
 			var messageBlockTemplate = '';
 			messageBlockTemplate += '<div class="row">';
 			messageBlockTemplate += '<div class="col-md-12 margin_top_30">';
-			messageBlockTemplate += '<div class="alert alert-error">';
+			messageBlockTemplate += '<div class="alert alert-danger">';
 			messageBlockTemplate += message;
 			messageBlockTemplate += '</div>';
 			messageBlockTemplate += '</div>';

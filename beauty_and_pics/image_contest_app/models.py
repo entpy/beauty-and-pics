@@ -4,6 +4,7 @@ from django.db import models, IntegrityError
 from django.db.models import F
 from django.contrib.auth.models import User
 from django.utils import timezone
+from django.conf import settings
 from contest_app.models import Contest
 from upload_image_box.models import cropUploadedImages 
 from image_contest_app.exceptions import *
@@ -189,17 +190,19 @@ class ImageContestImage(models.Model):
         # ImageContestImage.objects.filter(image_contest_image_id=image_contest_image_id).update(image_contest__status=ICA_CONTEST_TYPE_CLOSED, image_contest__expiring=(datetime.now() + timedelta(days=14)))
 
         try:
-            ImageContestImage_obj = super(ImageContestImage, self).get_image_contest_image_obj(image_contest_image_id=image_contest_image_id)
+	    ImageContestImage_obj = ImageContestImage()
+            RetrievedImageContestImage_obj = ImageContestImage_obj.get_image_contest_image_obj(image_contest_image_id=image_contest_image_id)
         except ImageContestImage.DoesNotExist:
             # TODO: testare questo errore
             logger.error("errore in trigger_like_limit_reach, nessuna immagine settata per la fine del contest bacheca")
             pass
         else:
             # close related contest
-            ImageContestImage_obj.image_contest.status = ICA_CONTEST_TYPE_CLOSED
+            RetrievedImageContestImage_obj.image_contest.status = ICA_CONTEST_TYPE_CLOSED
             # set expiring now + 2 weeks
-            ImageContestImage_obj.image_contest.expiring = datetime.now() + timedelta(seconds=ICA_VATE_CONTEST_EXPIRING)
-            ImageContestImage_obj.save()
+            RetrievedImageContestImage_obj.image_contest.expiring = datetime.now() + timedelta(seconds=ICA_VATE_CONTEST_EXPIRING)
+            RetrievedImageContestImage_obj.image_contest.save()
+	    logger.debug("like limit reached, close contest (" + str(RetrievedImageContestImage_obj.image_contest.image_contest_id) + ") and set expiring date to: " + str(datetime.now() + timedelta(seconds=ICA_VATE_CONTEST_EXPIRING)))
 
         return True
 
@@ -272,15 +275,30 @@ class ImageContestImage(models.Model):
         ex. -> current_contest = woman_contest
         select * where image_contest.contest.type = contest_type and status=1
         """
-        return_var = None
+        return_var = {}
 
         try:
-            ImageContestImage_obj = ImageContestImage.objects.filter(image_contest__contest__contest_type__code=contest_type, image_contest__status=ICA_CONTEST_TYPE_CLOSED)
+            ImageContestImage_obj = ImageContestImage.objects.values('image_contest_image_id', 'user__id', 'image__image', 'image__thumbnail_image__image').get(image_contest__contest__contest_type__code=contest_type, image_contest__status=ICA_CONTEST_TYPE_CLOSED)
         except ImageContestImage.DoesNotExist:
+	    logger.info("nessun photoboard contest chiuso per il tipo: " + str(contest_type))
             # non ci sono dei contest chiusi
             pass
         else:
+	    logger.info("image_contest_image del contest chiuso: " + str(ImageContestImage_obj.get("image_contest_image_id")))
             return_var = ImageContestImage_obj
+            return_var["image__thumbnail_image__image"] = settings.MEDIA_URL + return_var.get("image__thumbnail_image__image")
+            return_var["image__image"] = settings.MEDIA_URL + return_var.get("image__image")
+	    # logger.info("image_contest_image mod: " + str(return_var.get("image__thumbnail_image__image")))
+
+	    """
+		image_contest_image_id = models.AutoField(primary_key=True)
+		user = models.ForeignKey(User) # related user
+		image_contest = models.ForeignKey(ImageContest) # related image contest
+		image = models.ForeignKey(cropUploadedImages) # user image path
+		like = models.IntegerField(default=0) # image's like
+		visits = models.IntegerField(default=0) # image's visits
+		creation_date = models.DateTimeField(auto_now_add=True) # image creation date
+	    """
 
         return return_var
 

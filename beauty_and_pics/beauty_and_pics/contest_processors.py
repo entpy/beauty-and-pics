@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 # contest processor to manage common vars
+from django.conf import settings
 from account_app.models.accounts import *
 from account_app.models.images import *
 from contest_app.models.contests import *
@@ -69,5 +70,5 @@ def common_contest_processors(request):
             'site_name': project_constants.SITE_NAME,
             'logged_user_id': logged_user_id,
             'check_user_notify': check_user_notify,
-            'message_tags': MESSAGE_TAGS,
+            'message_tags': settings.POPUP_TAGS,
     }

@@ -262,23 +262,31 @@
 							</div>
 							{% endif %}
 							{# right classification block }}} #}
+							{# TODO: non mettere in pagina profilo #}
 							{% block signup_banner %}
-								{% if not user_is_authenticated %}
-								<div class="generic_container generic_container6 signup_banner_bg">
-									<div class="title">
-										<h4>Partecipa anche tu!</h4>
-									</div>
-									<div class="button_container">
-										<a class="btn btn-danger" href="/registrati/">Partecipa</a>
-									</div>
+							<div class="generic_container generic_container6 show_photoboard_banner_bg">
+								<div class="title">
+									<h4>Beauty and Pics<span class="show_photoboard_catwalk_subtitle">della settimana</span></h4>
 								</div>
+								{% if photoboard_contest_winner %}
+									<img src="{{ photoboard_contest_winner.image__thumbnail_image__image }}" alt="Image">
+									<div class="button_container">
+										<a class="btn btn-danger" href="/passerella/dettaglio-utente/{{ photoboard_contest_winner.user__id }}/">Vai al profilo</a>
+									</div>
+								{% else %}
+									<img src="{% static "website/img/catwalk/show_photoboard.png" %}" alt="Image">
+									<div class="button_container">
+										<a class="btn btn-danger" href="/passerella/bacheca/">Guarda & scegli</a>
+									</div>
 								{% endif %}
+							</div>
 							{% endblock signup_banner %}
 							{% block catwalk_banner %}
 							<div class="generic_container generic_container6 catwalk_banner_bg">
 								<div class="title">
 									<h4>Vai alla passerella!</h4>
 								</div>
+								<img src="{% static "website/img/passerella.png" %}" alt="Image">
 								<div class="button_container">
 									<a class="btn btn-danger" href="/passerella/">La passerella</a>
 								</div>
@@ -356,7 +364,7 @@
 		{# If exist a custom message, show it in a bootstrap modal popup #}
 		{% if messages %}
 			{% for message in messages %}
-			{% if message.tags == {{ message_tags.POPUP_SUCCESS }} or message.tags == {{ message_tags.POPUP_ALERT }} or message.tags == {{ message_tags.POPUP_ERROR }} %}
+			{% if message.tags == message_tags.POPUP_SUCCESS_TAG or message.tags == message_tags.POPUP_ALERT_TAG or message.tags == message_tags.POPUP_ERROR_TAG %}
 					<script>bootstrapModalsObect.showPopupMessage("{{ message }}", "{{ message.tags }}");</script>
 				{% endif %}
 			{% endfor %}
