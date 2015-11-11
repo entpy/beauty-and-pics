@@ -99,7 +99,7 @@ textarea { resize: none; }
 .tip_container { margin-bottom: 20px; padding: 0 20px 20px 20px; }
 .generic_container6 > .title, .tip_container > .title { text-align: center; color: white; margin-top: 15px; }
 .generic_container6 > .button_container { margin-bottom: 20px; }
-.generic_container6 > img { margin-bottom: 10px; }
+.generic_container6 > img { margin-bottom: 10px; max-width: 80%; }
 .generic_container9 { padding: 0 25px 25px; }
 .generic_container9 > .title { margin-top: 15px; }
 .generic_container8 > .left .container8_image_bottom_block { margin-top: 5px; }
@@ -112,7 +112,7 @@ textarea { resize: none; }
 /*.signup_banner_bg { background: url(../img/partecipa.png) no-repeat center center #3498db; }*/
 /*.show_photoboard_banner_bg { background: url(../img/catwalk/show_photoboard.png) no-repeat center center #3498db; }*/
 /*.catwalk_banner_bg { background: url(../img/passerella.png) no-repeat center center #1a2530; }*/
-.show_photoboard_banner_bg { background-color: #3498db; }
+.banner_bg_light_blue { background-color: #3498db; }
 .catwalk_banner_bg { background-color: #1a2530; }
 
 /* catwalk user details page */

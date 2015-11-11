@@ -1,4 +1,5 @@
-{% load staticfiles %}
+{% load staticfiles static website_extras %}
+{% get_static_prefix as STATIC_PREFIX %}
 <!DOCTYPE html>
 <!--[if lt IE 7]><html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
 <!--[if IE 7]><html class="no-js lt-ie9 lt-ie8"> <![endif]-->
@@ -264,6 +265,8 @@
 							{# right classification block }}} #}
 							{% block signup_banner %}
 							{% if photoboard_contest_winner and catwalk_index_view %}
+								{% include "website/inc/include_blocks/banner.html" with main_title="Beauty and Pics" subtitle="della settimana" img_src=photoboard_contest_winner.image__image img_alt="Foto della settimana" button_class="btn-danger" button_url="/passerella/dettaglio-utente/"|str_cat:photoboard_contest_winner.user__id|str_cat:"/" button_label="Vai al profilo" background_class="banner_bg_light_blue" only %}
+								{% comment %}
 								{# se sono nella passerella e ho un vincitore del photoboard #}
 								{# mostro il box con l'immagine del vincitore #}
 								<div class="generic_container generic_container6 show_photoboard_banner_bg">
@@ -275,8 +278,11 @@
 										<a class="btn btn-danger" href="/passerella/dettaglio-utente/{{ photoboard_contest_winner.user__id }}/">Vai al profilo</a>
 									</div>
 								</div>
+								{% endcomment %}
 							{% elif exists_active_photoboard %}
-								{# se esiste un contest aperto (non ho più vincitori da far vedere) mostro il box per entrare nel contest #}
+							{% include "website/inc/include_blocks/banner.html" with main_title="Beauty and Pics" subtitle="della settimana" img_src=STATIC_PREFIX|str_cat:"website/img/catwalk/show_photoboard.png" img_alt="Vai alla bacheca fotografica" button_class="btn-danger" button_url="/passerella/bacheca/" button_label="Guarda & Scegli" background_class="banner_bg_light_blue" only %}
+								{# se esiste un contest aperto (quindi non ho più vincitori da far vedere) mostro il box per entrare nel contest #}
+								{% comment %}
 								<div class="generic_container generic_container6 show_photoboard_banner_bg">
 									<div class="title">
 										<h4>Beauty and Pics<span class="show_photoboard_catwalk_subtitle">della settimana</span></h4>
@@ -286,6 +292,7 @@
 										<a class="btn btn-danger" href="/passerella/bacheca/">Guarda & scegli</a>
 									</div>
 								</div>
+								{% endcomment %}
 							{% endif %}
 							{% endblock signup_banner %}
 							{% block catwalk_banner %}
