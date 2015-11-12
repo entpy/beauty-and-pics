@@ -1,5 +1,4 @@
 {% load staticfiles static website_extras %}
-{% get_static_prefix as STATIC_PREFIX %}
 <!DOCTYPE html>
 <!--[if lt IE 7]><html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
 <!--[if IE 7]><html class="no-js lt-ie9 lt-ie8"> <![endif]-->
@@ -244,56 +243,30 @@
 							{% endblock container4_content %}
 						</div>
 						<div class="generic_container generic_container5">
-							{# banner block #}
+								{# banner page info #}
 							{% block catwalk_tip %}
 							{% endblock catwalk_tip %}
-							{# winner user block {{{ #}
+								{# banner winner user #}
 							{% if contest_winner %}
-							<div class="text-center inline_block generic_container9 margin_bottom_20">
-								<div class="title">
-									<h4>Vincitore anno {{ contest_winner.contest__start_date|date:"Y" }}</h4>
-								</div>
-								<div class="winner_block_wrapper">
-									<div class="winner_block_name">{{ contest_winner.first_name }} {{ contest_winner.last_name }}</div>
-									<div class="winner_block_img"><img alt="Vincitore concorso" src="{{ contest_winner.profile_thumbnail_image }}"></div>
-									<div class="winner_block_points">{{ contest_winner.points }} punti</div>
-									{% if contest_winner.user__id %}
-										<div class="winner_block_button"><a class="btn btn-danger" href="/passerella/dettaglio-utente/{{ contest_winner.user__id }}/">Guarda profilo</a></div>
-									{% endif %}
-								</div>
-							</div>
+								{% include "website/inc/include_blocks/contest_winner_banner.html" with contest_date=contest_winner.contest__start_date contest_winner_first_name=contest_winner.first_name contest_winner_last_name=contest_winner.last_name profile_thumbnail_image=contest_winner.profile_thumbnail_image contest_winner_points=contest_winner.points contest_winner_user_id=contest_winner.user__id only %}
 							{% endif %}
-							{# right classification block }}} #}
+								{# banner con il vincitore del photoboard #}
 							{% block photoboard_winner_banner %}
 							{% endblock photoboard_winner_banner %}
+								{# banner andare alla passerella #}
 							{% block catwalk_banner %}
-							{% include "website/inc/include_blocks/banner.html" with main_title="Vai alla passerella!" subtitle="" img_src=STATIC_PREFIX|str_cat:"website/img/passerella.png" img_alt="La passerella" button_class="btn-danger" button_url="/passerella/" button_label="La passerella" background_class="catwalk_banner_bg" only %}
+							{% include "website/inc/include_blocks/banner.html" with main_title="Vai alla passerella!" subtitle="" img_src=static_url|str_cat:"website/img/passerella.png" img_alt="La passerella" button_url="/passerella/" button_label="La passerella" button_class="btn-success" background_class="banner_bg_dark_blue" only %}
 							{% endblock catwalk_banner %}
+								{# banner andare al photoboard: se esiste un contest aperto (quindi non ho più vincitori da far vedere) mostro il box per entrare nel contest #}
 							{% if exists_active_photoboard %}
 								{% block photoboard_list_banner %}
-								{# se esiste un contest aperto (quindi non ho più vincitori da far vedere) mostro il box per entrare nel contest #}
-								{% include "website/inc/include_blocks/banner.html" with main_title="Beauty and Pics" subtitle="della settimana" img_src=STATIC_PREFIX|str_cat:"website/img/catwalk/show_photoboard.png" img_alt="Vai alla bacheca fotografica" button_class="btn-danger" button_url="/passerella/bacheca/" button_label="Guarda &amp; Scegli" background_class="banner_bg_light_blue" only %}
+								{% include "website/inc/include_blocks/banner.html" with main_title="Beauty and Pics" subtitle="della settimana" img_src=static_url|str_cat:"website/img/catwalk/show_photoboard.png" img_alt="Vai alla bacheca fotografica" button_url="/passerella/bacheca/" button_label="Guarda &amp; Scegli" button_class="btn-danger" background_class="banner_bg_light_blue" only %}
 								{% endblock photoboard_list_banner %}
 							{% endif %}
 							{# right classification block {{{ #}
+								{# banner top 5 users #}
 							{% if top_five_account %}
-							<div class="text-center inline_block generic_container9">
-								<div class="title">
-									<h4>Top 5</h4>
-								</div>
-								{% for single_user in top_five_account %}
-									<a class="classification_block" href="/passerella/dettaglio-utente/{{ single_user.user_id }}/">
-										<div class="classification_block_wrapper">
-											<div class="left"><img class="top_five_thumbnail" alt="Immagine partecipante" src="{{ single_user.user_profile_thumbnail_image_url }}"></div>
-											<div class="right">
-												<div class="classification_position">{{ forloop.counter }}°</div>
-												<div class="classification_name">{{ single_user.user_first_name }} {{ single_user.user_last_name }}</div>
-												<div class="classification_points">{{ single_user.user_total_points|default_if_none:0 }} punti</div>
-											</div>
-										</div>
-									</a>
-								{% endfor %}
-							</div>
+								{% include "website/inc/include_blocks/top_5_banner.html" with top_five_account=top_five_account only %}
 							{% endif %}
 							{# right classification block }}} #}
 						</div>

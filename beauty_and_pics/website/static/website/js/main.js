@@ -475,7 +475,7 @@ var bootstrapModalsObect = {
 	},
 
 	/* Function to build and show a success bootstrap modal */
-	showSuccessModal: function(message) {
+	showSuccessModal: function(message, popup_title) {
 		if (message) {
 			this.resetBootstrapModal();
 			var messageBlockTemplate = '';
@@ -487,6 +487,9 @@ var bootstrapModalsObect = {
 			messageBlockTemplate += '</div>';
 			messageBlockTemplate += '</div>';
 			$(".bootstrap_modal").find('.modal-title').html("Ottimo");
+			if (popup_title) {
+				$(".bootstrap_modal").find('.modal-title').html(popup_title);
+			}
 			$(".bootstrap_modal").find('.modal-footer').html('<button type="button" class="btn btn-default" data-dismiss="modal">Chiudi</button>');
 			$(".bootstrap_modal").find('.modal-body').html(messageBlockTemplate);
 			this.showBootstrapModal();

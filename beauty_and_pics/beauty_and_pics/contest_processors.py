@@ -75,4 +75,5 @@ def common_contest_processors(request):
             'check_user_notify': check_user_notify,
             'message_tags': settings.POPUP_TAGS,
             'exists_active_photoboard': exists_active_photoboard,
+            'static_url': settings.STATIC_URL,
     }

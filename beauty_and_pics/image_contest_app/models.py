@@ -5,6 +5,7 @@ from django.db.models import F, Q
 from django.contrib.auth.models import User
 from django.utils import timezone
 from django.conf import settings
+from notify_system_app.models import Notify
 from contest_app.models import Contest
 from upload_image_box.models import cropUploadedImages 
 from image_contest_app.exceptions import *
@@ -48,9 +49,13 @@ class ImageContest(models.Model):
         """
         image_contest_list = ImageContest.objects.filter(status=ICA_CONTEST_TYPE_CLOSED, expiring__lte=timezone.now())
         for image_contest in image_contest_list:
-            # TODO: save into ImageContestHallOfFame
-            # ImageContestHallOfFame_obj = ImageContestHallOfFame()
-            # ImageContestHallOfFame_obj.add_contest_hall_of_fame(contest_type=image_contest__contest__contest_type__code)
+            # save into ImageContestHallOfFame
+            # TODO: plz test
+            ImageContestHallOfFame_obj = ImageContestHallOfFame()
+            ImageContestHallOfFame_obj.add_contest_hall_of_fame(contest_type=image_contest.contest.contest_type.code)
+
+            # TODO (ma più avanti): notifico gli utenti del relativo contest che possono
+            # inserire immagini nella bacheca
             pass
 
         ImageContest.objects.filter(status=ICA_CONTEST_TYPE_CLOSED, expiring__lte=timezone.now()).update(status=ICA_CONTEST_TYPE_FINISHED)
@@ -211,21 +216,38 @@ class ImageContestImage(models.Model):
 	Function to close related image_contest and set an expiring date (now + 2 weeks)
         """
         # ImageContestImage.objects.filter(image_contest_image_id=image_contest_image_id).update(image_contest__status=ICA_CONTEST_TYPE_CLOSED, image_contest__expiring=(datetime.now() + timedelta(days=14)))
+        # ImageContestImage_obj = ImageContestImage()
 
         try:
-	    ImageContestImage_obj = ImageContestImage()
-            RetrievedImageContestImage_obj = ImageContestImage_obj.get_image_contest_image_obj(image_contest_image_id=image_contest_image_id)
+            ImageContestImage_obj = self.get_image_contest_image_obj(image_contest_image_id=image_contest_image_id)
         except ImageContestImage.DoesNotExist:
             # TODO: testare questo errore
-            logger.error("errore in trigger_like_limit_reach, nessuna immagine settata per la fine del contest bacheca")
+            logger.error("errore in trigger_like_limit_reach, nessuna immagine settata per la fine del contest bacheca, image_contest_image_id: " + str(image_contest_image_id))
             pass
         else:
             # close related contest
-            RetrievedImageContestImage_obj.image_contest.status = ICA_CONTEST_TYPE_CLOSED
+            ImageContestImage_obj.image_contest.status = ICA_CONTEST_TYPE_CLOSED
             # set expiring now + 2 weeks
-            RetrievedImageContestImage_obj.image_contest.expiring = datetime.now() + timedelta(seconds=ICA_VATE_CONTEST_EXPIRING)
-            RetrievedImageContestImage_obj.image_contest.save()
-	    logger.debug("like limit reached, close contest (" + str(RetrievedImageContestImage_obj.image_contest.image_contest_id) + ") and set expiring date to: " + str(datetime.now() + timedelta(seconds=ICA_VATE_CONTEST_EXPIRING)))
+            ImageContestImage_obj.image_contest.expiring = datetime.now() + timedelta(seconds=ICA_VATE_CONTEST_EXPIRING)
+            ImageContestImage_obj.image_contest.save()
+	    logger.debug("like limit reached, close contest (" + str(ImageContestImage_obj.image_contest.image_contest_id) + ") and set expiring date to: " + str(datetime.now() + timedelta(seconds=ICA_VATE_CONTEST_EXPIRING)))
+            # write notification to winner user
+            self.write_contest_winner_notify(user_obj=ImageContestImage_obj.user)
+
+        return True
+
+    def write_contest_winner_notify(self, user_obj):
+        """Function to write a notify to winner user"""
+        Notify_obj = Notify()
+
+        # create notify details
+        notify_data = {
+            "title" : "La tua foto ha vinto!",
+            "message" : "Complimenti, la tua foto ha ottenuto <b>" + str(ICA_LIKE_LIMIT) + " mi piace</b> prima delle altre. Ora avrai un posto in evidenza nella bacheca per 2 settimane!",
+        }
+
+        # save notify about this user
+        Notify_obj.create_notify(data=notify_data, user_obj=user_obj)
 
         return True
 
@@ -243,7 +265,7 @@ class ImageContestImage(models.Model):
         """Function to retrieve contest_image_obj about user_id"""
         return_var = None
         try:
-            ImageContestImage_obj = ImageContestImage.objects.get(user__id=user_id)
+            ImageContestImage_obj = ImageContestImage.objects.get(user__id=user_id, image_contest__status=ICA_CONTEST_TYPE_ACTIVE)
         except ImageContestImage.DoesNotExist:
             raise
         else:
@@ -302,7 +324,7 @@ class ImageContestImage(models.Model):
         return_var = {}
 
         try:
-            ImageContestImage_obj = ImageContestImage.objects.values('image_contest_image_id', 'user__id', 'image__image', 'image__thumbnail_image__image', 'image_contest__expiring').get(image_contest__contest__contest_type__code=contest_type, image_contest__status=ICA_CONTEST_TYPE_CLOSED)
+            ImageContestImage_obj = ImageContestImage.objects.values('image_contest_image_id', 'image_contest', 'user__id', 'user__first_name', 'user__last_name', 'image__image', 'image__thumbnail_image__image', 'image_contest__expiring').get(image_contest__contest__contest_type__code=contest_type, image_contest__status=ICA_CONTEST_TYPE_CLOSED)
         except ImageContestImage.DoesNotExist:
 	    logger.info("nessun photoboard contest chiuso per il tipo: " + str(contest_type))
             # non ci sono dei contest chiusi
@@ -406,7 +428,7 @@ class ImageContestVote(models.Model):
 	    # image already voted
 	    raise ImageAlreadyVotedError
 
-        logger.debug("image_can_be_voted, yessa!")
+        logger.debug("image_can_be_voted, yessa! image_contest_image_obj: " + str(image_contest_image_obj) + " from ip: " + str(ip_address))
 
         return True
 
@@ -425,20 +447,24 @@ class ImageContestHallOfFame(models.Model):
     def __unicode__(self):
         return str(self.image_contest_hall_of_fame_id)
 
-    # TODO
+    # TODO: plz test
     def add_contest_hall_of_fame(self, contest_type):
         """Function to add an image_contest_hall_of_fame element"""
-        ImageContestImage_obj = super(ImageContestImage, self).get_closed_contest_info(contest_type=contest_type)
+        return True
+        ImageContestImage_obj = ImageContestImage()
 
-        if ImageContestImage_obj:
+        # retireve closed contest info
+        ClosedImageContest_obj = ImageContestImage_obj.get_closed_contest_info(contest_type=contest_type)
+
+        if ClosedImageContest_obj:
             # insert winner about contest_type into ImageContestHallOfFame :o
             ImageContestHallOfFame_obj = ImageContestHallOfFame(
-                user = ImageContestImage_obj.user,
-                image_contest = ImageContestImage_obj.image_contest,
-                first_name = ImageContestImage_obj.user.first_name,
-                last_name = ImageContestImage_obj.user.last_name,
-                image_url = ImageContestImage_obj.image.image.url,
-                thumbnail_image_url = ImageContestImage_obj.image.thumbnail_image.url,
+                user = ClosedImageContest_obj.get("user"),
+                image_contest = ClosedImageContest_obj.get("image_contest"),
+                first_name = ClosedImageContest_obj.get("user__first_name"),
+                last_name = ClosedImageContest_obj.get("user__last_name"),
+                image_url = ClosedImageContest_obj.get("image__image"),
+                thumbnail_image_url = ClosedImageContest_obj.get("image__thumbnail_image__image"),
             )
 
             ImageContestHallOfFame_obj.save()

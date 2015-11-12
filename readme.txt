@@ -15,3 +15,13 @@ esempio di left join
 	    ORDER BY "notify_system_app_notify"."notify_id" DESC LIMIT 10;
         """
         # return_var = Notify.objects.filter(Q(creation_date__gte=account_creation_date) & (Q(user_notify__user=user_id) | Q(user_notify__user_notify_id__isnull=True))).values('notify_id', 'title', 'creation_date', 'user_notify__user_notify_id').order_by('-notify_id')
+
+
+I banner
+========
+Questi strani elementi che compaiono e scompaiono, sono visibili in
+diversi punti.
+Banner "vai alla passerella", presente in -> (tutte le pagine) | non presente in -> (index passerella)
+Banner "vai alla bacheca", presente in -> (index passerella se non ho vincitori, dettaglio photoboard) | non presente in -> (tutte le altre pagine)
+Banner "vincitore bacheca", presente in -> (index passerella se ho vincitori) | non presente in -> (tutte le altre pagine)
+Banner "vincitore concorso", presente in -> (index passerella) | non presente in -> (tutte le altre pagine)

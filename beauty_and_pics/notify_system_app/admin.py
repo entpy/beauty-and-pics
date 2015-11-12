@@ -6,8 +6,7 @@ from django.contrib import messages
 from django.http import HttpResponseRedirect
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from beauty_and_pics.consts import project_constants
-from notify_system_app.models import Notify
-from notify_system_app.models import User_Notify
+from notify_system_app.models import Notify, User_Notify
 from notify_system_app.forms import NotifyForm
 from account_app.models.accounts import Account
 import sys, logging

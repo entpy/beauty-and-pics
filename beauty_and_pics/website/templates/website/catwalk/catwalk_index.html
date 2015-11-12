@@ -1,6 +1,5 @@
 {% extends "website/inc/base_catwalk.html" %}
 {% load staticfiles static website_extras %}
-{% get_static_prefix as STATIC_PREFIX %}
 
 {% block title %}{{ site_name }} | la passerella{% endblock title %}
 
@@ -15,7 +14,7 @@
 {% block photoboard_winner_banner %}
 {% if photoboard_contest_winner %}
 {# se ho un vincitore del photoboard mostro il box con l'immagine del vincitore (solo qui nella passerella) #}
-{% include "website/inc/include_blocks/banner.html" with main_title="Beauty and Pics" subtitle="della settimana" img_src=photoboard_contest_winner.image__image img_alt="Foto della settimana" button_class="btn-danger" button_url="/passerella/dettaglio-utente/"|str_cat:photoboard_contest_winner.user__id|str_cat:"/" button_label="Vai al profilo" background_class="banner_bg_light_blue" only %}
+{% include "website/inc/include_blocks/banner.html" with main_title="Beauty and Pics" subtitle="della settimana" img_src=photoboard_contest_winner.image__image img_alt="Foto della settimana" button_url="/passerella/dettaglio-utente/"|str_cat:photoboard_contest_winner.user__id|str_cat:"/" button_label="Vai al profilo" button_class="btn-success" background_class="banner_bg_light_gray" only %}
 {% endif %}
 {% endblock photoboard_winner_banner %}
 
@@ -25,7 +24,7 @@
 		<h4>La passerella</h4>
 	</div>
 	<div class="tip_readable_text">
-	    Ciao questa è la passerella, qui puoi trovare tutti i partecipanti di {{ site_name }}. Vota i tuoi preferiti!
+	    Ciao, questa è la passerella, qui puoi trovare tutti i partecipanti di {{ site_name }}. Vota i tuoi preferiti!
 	</div>
 </div>
 {% endblock catwalk_tip %}

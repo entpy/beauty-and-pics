@@ -1,0 +1,17 @@
+<div class="text-center inline_block generic_container9">
+	<div class="title">
+		<h4>Top 5</h4>
+	</div>
+	{% for single_user in top_five_account %}
+		<a class="classification_block" href="/passerella/dettaglio-utente/{{ single_user.user_id }}/">
+			<div class="classification_block_wrapper">
+				<div class="left"><img class="top_five_thumbnail" alt="Immagine partecipante" src="{{ single_user.user_profile_thumbnail_image_url }}"></div>
+				<div class="right">
+					<div class="classification_position">{{ forloop.counter }}°</div>
+					<div class="classification_name">{{ single_user.user_first_name }} {{ single_user.user_last_name }}</div>
+					<div class="classification_points">{{ single_user.user_total_points|default_if_none:0 }} punti</div>
+				</div>
+			</div>
+		</a>
+	{% endfor %}
+</div>

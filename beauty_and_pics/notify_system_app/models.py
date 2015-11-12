@@ -35,18 +35,21 @@ class Notify(models.Model):
     def __unicode__(self):
         return str(self.notify_id) + ' ' + str(self.title)
 
-    def create_notify(self, data):
+    def create_notify(self, data, user_obj=None):
         """Function to create a notify"""
-        return_var = False
+        return_var = None
 
         if data.get("title") and data.get("message"):
             notify_obj = Notify()
+            if user_obj:
+                # if the notify is related only with a single user
+                notify_obj.user = user_obj
             notify_obj.title = data.get("title")
             notify_obj.message = data.get("message")
             notify_obj.action_title = data.get("action_title")
             notify_obj.action_url = data.get("action_url")
             notify_obj.save()
-            return_var.notify_id
+            return_var = notify_obj
 
         return return_var
 
@@ -238,7 +241,7 @@ class Notify(models.Model):
         total_notify_number = self.count_valid_notify(user_id=user_id)
         # read notify about this user
         # total_read_notify = User_Notify.objects.filter(user__id=user_id, notify__creation_date__gte=F('user__account__creation_date')).count()
-	# TODO: ho inserito Q per filtrare l'id account, ma non dovrebbe servire 
+        # ho inserito Q per filtrare l'id account, ma non dovrebbe servire :O
         total_read_notify = User_Notify.objects.filter((Q(notify__user__id=user_id) | Q(notify__user__id__isnull=True)), user__id=user_id, notify__creation_date__gte=F('user__account__creation_date')).count()
 
         if total_notify_number:
@@ -349,33 +352,6 @@ class Notify(models.Model):
         return_var = list(return_var)
 
         return return_var
-
-    #TODO: obsoleta
-    """
-    def check_if_show_notify(self, user_id, notify_date):
-        ""Check if a notify could be shown -> (notify_date >= user_creation_date)""
-        return_var = False
-        account_obj = Account()
-
-        # retrieve account info
-        user_info = account_obj.get_user_about_id(user_id=user_id)
-        # retrieve user join date
-        account_creation_date = user_info.account.creation_date
-
-        # log some fucking stuff
-        logger.info("data creazione account (id=" + str(user_id) + "): " + str(account_creation_date))
-        logger.info("data creazione notifica: " + str(notify_date))
-
-        # diff_between_dates = relativedelta(account_creation_date, notify_date)
-        if notify_date >= account_creation_date:
-            # la notifica è più recente o uguale all'account
-            return_var = True
-        else:
-            # l'account creato è più recente della notifica
-            pass
-
-        return return_var
-    """
 
 # se è presente una riga qua, la notifica è stata letta dall'utente
 # valido solo per le notifiche sul sito
