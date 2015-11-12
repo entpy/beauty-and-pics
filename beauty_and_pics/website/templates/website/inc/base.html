@@ -231,6 +231,7 @@
 								<div class="col-sm-12">
 									<ul class="nav nav-pills">
 										<li class="{% block container4_navigation_profile_index %}{% endblock %}"><a href="/profilo/">Album fotografico</a></li>
+										<li class="{% block container4_navigation_profile_bacheca %}{% endblock %}"><a href="/profilo/foto-bacheca">Bacheca</a></li>
 										<li class="{% block container4_navigation_profile_favorites %}{% endblock %}"><a href="/profilo/preferiti/">Preferiti</a></li>
 										<li class="{% block container4_navigation_profile_stats %}{% endblock %}"><a href="/profilo/statistiche/">Statistiche</a></li>
 										<li class="{% block container4_navigation_profile_preferences %}{% endblock %}"><a href="/profilo/pannello-di-controllo/">Pannello di controllo</a></li>
@@ -263,49 +264,17 @@
 							</div>
 							{% endif %}
 							{# right classification block }}} #}
-							{% block signup_banner %}
-							{% if photoboard_contest_winner and catwalk_index_view %}
-								{% include "website/inc/include_blocks/banner.html" with main_title="Beauty and Pics" subtitle="della settimana" img_src=photoboard_contest_winner.image__image img_alt="Foto della settimana" button_class="btn-danger" button_url="/passerella/dettaglio-utente/"|str_cat:photoboard_contest_winner.user__id|str_cat:"/" button_label="Vai al profilo" background_class="banner_bg_light_blue" only %}
-								{% comment %}
-								{# se sono nella passerella e ho un vincitore del photoboard #}
-								{# mostro il box con l'immagine del vincitore #}
-								<div class="generic_container generic_container6 show_photoboard_banner_bg">
-									<div class="title">
-										<h4>Beauty and Pics<span class="show_photoboard_catwalk_subtitle">della settimana</span></h4>
-									</div>
-									<img src="{{ photoboard_contest_winner.image__thumbnail_image__image }}" alt="Foto della settimana">
-									<div class="button_container">
-										<a class="btn btn-danger" href="/passerella/dettaglio-utente/{{ photoboard_contest_winner.user__id }}/">Vai al profilo</a>
-									</div>
-								</div>
-								{% endcomment %}
-							{% elif exists_active_photoboard %}
-							{% include "website/inc/include_blocks/banner.html" with main_title="Beauty and Pics" subtitle="della settimana" img_src=STATIC_PREFIX|str_cat:"website/img/catwalk/show_photoboard.png" img_alt="Vai alla bacheca fotografica" button_class="btn-danger" button_url="/passerella/bacheca/" button_label="Guarda & Scegli" background_class="banner_bg_light_blue" only %}
-								{# se esiste un contest aperto (quindi non ho più vincitori da far vedere) mostro il box per entrare nel contest #}
-								{% comment %}
-								<div class="generic_container generic_container6 show_photoboard_banner_bg">
-									<div class="title">
-										<h4>Beauty and Pics<span class="show_photoboard_catwalk_subtitle">della settimana</span></h4>
-									</div>
-									<img src="{% static "website/img/catwalk/show_photoboard.png" %}" alt="Vai alla bacheca fotografica">
-									<div class="button_container">
-										<a class="btn btn-danger" href="/passerella/bacheca/">Guarda & scegli</a>
-									</div>
-								</div>
-								{% endcomment %}
-							{% endif %}
-							{% endblock signup_banner %}
+							{% block photoboard_winner_banner %}
+							{% endblock photoboard_winner_banner %}
 							{% block catwalk_banner %}
-							<div class="generic_container generic_container6 catwalk_banner_bg">
-								<div class="title">
-									<h4>Vai alla passerella!</h4>
-								</div>
-								<img src="{% static "website/img/passerella.png" %}" alt="Image">
-								<div class="button_container">
-									<a class="btn btn-danger" href="/passerella/">La passerella</a>
-								</div>
-							</div>
+							{% include "website/inc/include_blocks/banner.html" with main_title="Vai alla passerella!" subtitle="" img_src=STATIC_PREFIX|str_cat:"website/img/passerella.png" img_alt="La passerella" button_class="btn-danger" button_url="/passerella/" button_label="La passerella" background_class="catwalk_banner_bg" only %}
 							{% endblock catwalk_banner %}
+							{% if exists_active_photoboard %}
+								{% block photoboard_list_banner %}
+								{# se esiste un contest aperto (quindi non ho più vincitori da far vedere) mostro il box per entrare nel contest #}
+								{% include "website/inc/include_blocks/banner.html" with main_title="Beauty and Pics" subtitle="della settimana" img_src=STATIC_PREFIX|str_cat:"website/img/catwalk/show_photoboard.png" img_alt="Vai alla bacheca fotografica" button_class="btn-danger" button_url="/passerella/bacheca/" button_label="Guarda &amp; Scegli" background_class="banner_bg_light_blue" only %}
+								{% endblock photoboard_list_banner %}
+							{% endif %}
 							{# right classification block {{{ #}
 							{% if top_five_account %}
 							<div class="text-center inline_block generic_container9">

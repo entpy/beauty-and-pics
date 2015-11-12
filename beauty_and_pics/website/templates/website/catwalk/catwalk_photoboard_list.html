@@ -7,8 +7,8 @@
 
 {% block container4_title %}Bacheca foto{% endblock container4_title %}
 
-{% block return_to_catwalk_block %}{% endblock return_to_catwalk_block %}
-{% block catwalk_banner %}{% endblock catwalk_banner %}
+{% block return_to_catwalk_block %}{% endblock %}
+{% block photoboard_list_banner %}{% endblock %}
 
 {% block catwalk_tip %}
 <div class="generic_container tip_container display_only_big">
@@ -22,7 +22,8 @@
 {% endblock catwalk_tip %}
 
 {% block container4_content %}
-{% if not exists_active_photoboard %}
+{# no active photoboard contest or no images #}
+{% if not exists_active_photoboard or not images_exist %}
 <div class="row">
 	<div class="col-sm-12">
 		<div class="alert alert-info">

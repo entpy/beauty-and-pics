@@ -181,6 +181,16 @@ class ImageContestImage(models.Model):
 
         return return_var
 
+    def contest_images_exist(self, contest_type):
+        """Function to check if exist images in current active contest type"""
+        return_var = False
+
+	if ImageContestImage.objects.filter(image_contest__contest__contest_type__code=contest_type, image_contest__status=ICA_CONTEST_TYPE_ACTIVE).exists():
+            logger.debug("contest_images_exist, photoboard images exists in current active contest: " + str(contest_type))
+	    return_var = True
+
+        return return_var
+
     def add_image_like(self, image_contest_image_id, like=1):
         """Function to add a like (+1) to an image"""
         ImageContestImage.objects.filter(image_contest_image_id=image_contest_image_id).update(like=F('like') + like)

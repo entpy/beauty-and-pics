@@ -1,14 +1,14 @@
 {% extends "website/inc/base_profile.html" %}
 {% load staticfiles %}
 
-{% block title %}{{ site_name }} | il mio album fotografico{% endblock %}
+{% block title %}{{ site_name }} | bacheca{% endblock %}
 
-{% block description %}Il mio album fotografico: in questa pagina è possibile modificare la tua immagine del profilo e gestire il book fotografico, aggiungendo e rimuovendo foto.{% endblock %}
+{% block description %}Fatti notare, mostra il tuo scatto più artistico. Tra tutte le foto presenti, quella che per prima otterrà 500 mi piace otterrà uno spazio tutto suo nella passerella per 2 settimane.{% endblock %}
 
 {% block container4_title %}{% endblock %}
 
 {# navigation tabs active element #}
-{% block container4_navigation_profile_index %}active{% endblock %}
+{% block container4_navigation_profile_bacheca %}active{% endblock %}
 
 {% block container4_content %}
 <div class="row">
@@ -24,7 +24,7 @@
 	{% elif enable_image_selection %}
 		<div class="col-sm-12">
 			<div class="alert alert-info">
-				<p>Fatti notare, mostra il tuo scatto più artistico. Tra tutte le foto presenti, quella che per prima otterrà 500 mi piace otterrà uno spazio tutto suo nella passerella per 2 settimane. Seleziona la foto che vorresti mettere in evidenza.<br /><b>Seleziona quale immagine vorresti mettere in evidenza.</b></p>
+				<p>Fatti notare, mostra il tuo scatto più artistico. Tra tutte le foto presenti, quella che per prima otterrà 500 mi piace otterrà uno spazio tutto suo nella passerella per 2 settimane.<br /><b>Seleziona quale immagine vorresti mettere in evidenza.</b></p>
 			</div>
 		</div>
 	{% else %}

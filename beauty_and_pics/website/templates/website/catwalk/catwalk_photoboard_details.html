@@ -79,20 +79,20 @@
 					<p>Dai un "<b>mi piace</b>" per {{ user_info.first_name }}: se riuscirà a raggiungere i <b>{{ like_limit }}</b> mi piace prima di tutti avrà un posto in evidenza nella passerella.</p>
 				</div>
 			</div>
+			<div class="userVotedMsgBlockAction {% if user_can_vote %}hide{% endif %}">
+				<div class="row">
+					<div class="col-md-12">
+						<div class="alert alert-warning">
+							<span class="msgTextAction">Grazie per aver dato il tuo "mi piace" a questo partecipante. Visita anche il suo <a href="/passerella/dettaglio-utente/{{ user_info.user_id }}/">profilo</a> completo.</span>
+						</div>
+					</div>
+				</div>
+			</div>
 			<div class="container_row container_row_b80 container_row_s40 user_stats_block">
 				<span>Piace a <span class="position imageContestLikeAction">{{ user_image_contest_like }}</span> persone</span>
 			</div>
 			<div class="container_row container_row_common10 user_stats_block">
 				<span><b class="imageContestLikeRemainingAction">{{ user_image_contest_like_remaining }}</b> "mi piace" mancanti</span>
-			</div>
-			<div class="userVotedMsgBlockAction {% if user_can_vote %}hide{% endif %}">
-				<div class="row">
-					<div class="col-md-12">
-						<div class="alert alert-warning">
-							<span class="msgTextAction">Grazie per aver dato il tuo "mi piace" a questo partecipante. Visita il suo <a href="/passerella/dettaglio-utente/{{ user_info.user_id }}/">profilo</a> completo.</span>
-						</div>
-					</div>
-				</div>
 			</div>
 			{% if user_can_vote %}
 			<div class="container_row user_stats_block text-center addLikeButtonContainerAction">

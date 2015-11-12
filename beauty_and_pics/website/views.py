@@ -169,15 +169,11 @@ def catwalk_index(request, contest_type=None):
     contest_obj = Contest()
     contest_obj.set_contest_type(request=request, contest_type=contest_type)
 
-    context = {
-        "catwalk_index_view" : True,
-    }
-
     # debug only
     # messages.add_message(request, settings.POPUP_ALERT, 'popup di prova success')
     # messages.add_message(request, settings.POPUP_SUCCESS, 'popup di prova success')
 
-    return render(request, 'website/catwalk/catwalk_index.html', context)
+    return render(request, 'website/catwalk/catwalk_index.html', False)
 
 @ensure_csrf_cookie
 def catwalk_profile(request, user_id):
@@ -301,6 +297,7 @@ def catwalk_photoboard_list(request):
     # view to show photoboard list about this contest_type
     CommonUtils_obj = CommonUtils()
     Contest_obj = Contest()
+    ImageContestImage_obj = ImageContestImage()
 
     # common function to set contest type
     Contest_obj.common_view_set_contest_type(request=request)
@@ -308,7 +305,14 @@ def catwalk_photoboard_list(request):
     # retrieve current contest_type
     contest_type = Contest_obj.get_contest_type_from_session(request=request)
 
-    return render(request, 'website/catwalk/catwalk_photoboard_list.html', {})
+    # check if exist images in current active contest
+    images_exist = ImageContestImage_obj.contest_images_exist(contest_type=contest_type)
+
+    context = {
+        "images_exist": images_exist,
+    }
+
+    return render(request, 'website/catwalk/catwalk_photoboard_list.html', context)
 
 @ensure_csrf_cookie
 def catwalk_photoboard_details(request, user_id):
@@ -693,11 +697,14 @@ def profile_photoboard(request, add_success):
     if ImageContestImage_obj.image_exists(user_id=user_id):
         # l'utente ha già selezionato una foto per la bacheca, prelevo l'url dell'immagine
         user_contest_image_info = ImageContestImage_obj.get_user_contest_image_info(user_id=user_id)
+	# photoboard image url
+	photoboard_image_url = settings.SITE_URL + "/passerella/bacheca/" + str(request.user.id) + "/"
 
         context = {
             "user_id": user_id,
             "user_image_contest_info": user_contest_image_info,
             "add_success": add_success,
+            "photoboard_image_url": photoboard_image_url,
         }
         render_page = 'website/profile/profile_photoboard_details.html'
     else:
@@ -715,7 +722,7 @@ def profile_photoboard(request, add_success):
             enable_image_selection = False
 
         # tra quanti gg è possibile nuovamente aggiungere immagini nella bacheca
-        next_selection_days = 0
+        next_selection_date = 0
         if photoboard_contest_winner.get("image_contest__expiring"):
             next_selection_date = photoboard_contest_winner.get("image_contest__expiring")
 
