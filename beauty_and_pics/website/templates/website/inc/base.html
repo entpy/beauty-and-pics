@@ -1,4 +1,4 @@
-{% load staticfiles static website_extras %}
+{% load staticfiles static django_bootstrap_breadcrumbs website_extras %}
 <!DOCTYPE html>
 <!--[if lt IE 7]><html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
 <!--[if IE 7]><html class="no-js lt-ie9 lt-ie8"> <![endif]-->
@@ -216,6 +216,15 @@
 					<div class="generic_container generic_container3">
 						{# left block (with catwalk) #}
 						<div class="generic_container generic_container4">
+							{% block breadcrumbs %}
+								{% clear_breadcrumbs %}
+								{% breadcrumb "Passerella" "/passerella/" %}
+								{% breadcrumb "Bacheca" "catwalk_photoboard_list" %}
+							{% endblock %}
+
+							{% block content %}
+								{% render_breadcrumbs "website/inc/breadcrumbs/breadcrumbs_template.html" %}
+							{% endblock %}
 							{% block return_to_catwalk_block %}{% endblock %} {# return to catwalk block #}
 							{% block container4_title_block %}
 							<div class="row">
