@@ -7,6 +7,7 @@ from account_app.models.images import *
 from contest_app.models.contests import *
 from contest_app.models.hall_of_fame import *
 from image_contest_app.models import ImageContestImage, ImageContest
+from notify_system_app.models import Notify
 from beauty_and_pics.consts import project_constants
 import logging
 
@@ -21,6 +22,7 @@ def common_contest_processors(request):
     hall_of_fame_obj = HallOfFame()
     ImageContest_obj = ImageContest()
     ImageContestImage_obj = ImageContestImage()
+    Notify_obj = Notify()
     contest_type = contest_obj.get_contest_type_from_session(request=request)
     logged_user_id = None
     logger.info("@@@current contest_type: " + str(contest_type))
@@ -34,7 +36,7 @@ def common_contest_processors(request):
     contest_info = contest_obj.get_contest_info_about_type(contest_type=contest_type)
     # last contest winner
     contest_winner = hall_of_fame_obj.get_last_active_contest_winner(contest_type=contest_type)
-    # TODO: check if exists an active photoboard
+    # check if exists an active photoboard
     exists_active_photoboard = ImageContest_obj.exists_active_contest(contest_type=contest_type)
     # last photoboard contest winner
     photoboard_contest_winner = ImageContestImage_obj.get_closed_contest_info(contest_type=contest_type)
@@ -53,7 +55,8 @@ def common_contest_processors(request):
         profile_thumbnail_image_url = book_obj.get_profile_thumbnail_image_url(user_id=autenticated_user_data["user_id"])
         # retrieve logged user id
         logged_user_id = autenticated_user_data.get("user_id")
-        # retrieve logged user favorites exist
+	# count unread notify number TODO: aggiungere icona notifiche nel menu
+	# unread_notify_number = Notify_obj.count_notify_to_read(user_id=logged_user_id)
 
 	# check if user notify popup must be shown: if not exists cookie -> show user notify popup
         if not request.COOKIES.get(project_constants.USER_NOTIFY_POPUP_SHOWN_COOKIE_NAME):

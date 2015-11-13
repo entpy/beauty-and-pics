@@ -73,8 +73,13 @@
 			if ($(this).attr("data-fullimage-url")) {
 				imageUrl = $(this).data("fullimageUrl");
 			}
-			// open bootstrap modal
-			bootstrapModalsObect.showAddImageToPhotoboard(imageUrl, imageId);
+			{% if enable_image_selection %}
+			    // open bootstrap modal
+			    bootstrapModalsObect.showAddImageToPhotoboard(imageUrl, imageId);
+			{% else %}
+			    // open bootstrap alert popup
+			    bootstrapModalsObect.showAlertModal("Ci spiace, potrai inserire nuovamente l'immagine nella bacheca tra: <b>{{ next_selection_date|timeuntil }}</b>.");
+			{% endif %}
 
 			return false;
 		});
