@@ -541,7 +541,7 @@ class ajaxManager():
 
             # set cookie to not show user notify popup for next x seconds
             self.cookie_key = project_constants.USER_NOTIFY_POPUP_SHOWN_COOKIE_NAME
-            self.cookie_value = unread_notify_number
+            self.cookie_value = True
             self.cookie_expiring = project_constants.USER_NOTIFY_POPUP_SHOWN_COOKIE_EXPIRING_SECONDS
 
             # build json response
