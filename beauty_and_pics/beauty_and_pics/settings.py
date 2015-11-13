@@ -48,6 +48,7 @@ INSTALLED_APPS = (
     'adminplus',
     'ckeditor',
     'image_contest_app',
+    'django_bootstrap_breadcrumbs',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -87,6 +88,7 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     "django.core.context_processors.static",
     "django.core.context_processors.tz",
     "django.contrib.messages.context_processors.messages",
+    "django.core.context_processors.request",
     "beauty_and_pics.contest_processors.common_contest_processors" # <= il nuovo context
 )
 
