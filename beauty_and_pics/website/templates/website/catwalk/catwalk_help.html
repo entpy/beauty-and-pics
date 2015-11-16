@@ -1,11 +1,15 @@
 {% extends "website/inc/base_catwalk.html" %}
-{% load staticfiles %}
+{% load staticfiles django_bootstrap_breadcrumbs %}
 
 {% block title %}{{ site_name }} | richiesta di aiuto{% endblock %}
 
 {% block description %}Richiesta di aiuto: se hai dubbi, domande o suggerimenti questa è la sezione giusta.{% endblock %}
 
-{% block container4_title %}Serve aiuto?{% endblock %}
+{# {% block container4_title %}Serve aiuto?{% endblock %} #}
+
+{% block breadcrumbs %}
+    {% breadcrumb "Serve aiuto?" catwalk_help %}
+{% endblock %}
 
 {% block container4_content %}
 <div class="row">

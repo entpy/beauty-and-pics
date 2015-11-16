@@ -1,5 +1,5 @@
 {% extends "website/inc/base_catwalk.html" %}
-{% load staticfiles %}
+{% load staticfiles django_bootstrap_breadcrumbs website_extras %}
 
 {% block title %}{{ site_name }} | profilo di {{ user_info.first_name }} {{ user_info.last_name }}{% endblock title %}
 
@@ -12,13 +12,22 @@
 <meta property="og:type" content="profile" />
 <meta property="og:title" content="{{ user_info.first_name }} {{ user_info.last_name }}" />
 <meta property="og:site_name" content="Beauty and Pics"/>
-<meta property="og:description" content="Beauty and Pics, il concorso di bellezza fatto a misura di web." />
+<meta property="og:description" content="Beauty and Pics, il concorso di bellezza." />
 <meta property="og:image" content="{{ profile_image_url }}" />
 <meta property="og:image:width" content="500" />
 <meta property="og:image:height" content="500" />
 {% endblock og_metatags %}
 
-{% block container4_title %}{{ user_info.first_name }} {{ user_info.last_name }}{% endblock container4_title %}
+{# {% block container4_title %}{{ user_info.first_name }} {{ user_info.last_name }}{% endblock container4_title %} #}
+
+{% block breadcrumbs %}
+    {{ block.super }}
+    {% breadcrumb "bacheca foto" "/passerella/bacheca/" %}
+    {% breadcrumb user_info.first_name|str_cat:" "|str_cat:user_info.last_name catwalk_photoboard_details %}
+{% endblock %}
+
+{# hide photoboard list banner #}
+{% block photoboard_list_banner %}{% endblock %}
 
 {% block container4_content %}
 {# Facebook SDK {{{ #}
@@ -54,11 +63,6 @@
 				<a href="/passerella/dettaglio-utente/{{ user_info.user_id }}/">Visita il profilo completo</a>
 			</div>
 			<div class="right">
-				<span>
-					<a class="user_action_link addToFavoritesClickAction" href="#">
-						<img alt="Aggiungi ai preferiti" src="{% static "website/img/catwalk/aggiungi-a-preferiti.png" %}">
-					</a>
-				</span>
 				<span class="image_action_button_space">
 					<a class="user_action_link" href="/passerella/segnalazione-utente/{{user_info.user_id}}/">
 						<img alt="Segnala utente" src="{% static "website/img/catwalk/segnala-utente.png" %}">
@@ -88,7 +92,7 @@
 					</div>
 				</div>
 			</div>
-			<div class="container_row container_row_b80 container_row_s40 user_stats_block">
+			<div class="container_row container_row_bottom16-xl container_row_s40 user_stats_block">
 				<span>Piace a <span class="position imageContestLikeAction">{{ user_image_contest_like }}</span> persone</span>
 			</div>
 			<div class="container_row container_row_common10 user_stats_block">

@@ -1,11 +1,15 @@
 {% extends "website/inc/base_catwalk.html" %}
-{% load staticfiles %}
+{% load staticfiles django_bootstrap_breadcrumbs %}
 
 {% block title %}{{ site_name }} | segnalazione utente{% endblock %}
 
 {% block description %}Segnalazione utente: in questa sezione è posibile segnalare gli utenti che non si sono comportati bene.{% endblock %}
 
-{% block container4_title %}Segnala un utente{% endblock %}
+{# {% block container4_title %}Segnala un utente{% endblock %} #}
+
+{% block breadcrumbs %}
+    {% breadcrumb "Segnala un utente" catwalk_report_user %}
+{% endblock %}
 
 {% block container4_content %}
 <div class="row">

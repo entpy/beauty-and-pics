@@ -1,5 +1,5 @@
 {% extends "website/inc/base.html" %}
-{% load staticfiles %}
+{% load staticfiles django_bootstrap_breadcrumbs %}
 
 {# page title #}
 {% block title %}{% endblock %}
@@ -13,6 +13,11 @@
 {# set navigation type #}
 {#% block login-navigation %}{{ block.super }}{% endblock %#}
 {#% block no-login-navigation %}{% endblock %#}
+
+{% block breadcrumbs %}
+    {{ block.super }}
+    {% breadcrumb "La passerella" "/passerella/" %}
+{% endblock %}
 
 {% block container4_navigation %}{% endblock %}
 
@@ -33,7 +38,7 @@
 {% block block0_1_title_h4 %}<span class="contest_status_container"></span>{% endblock block0_1_title_h4 %}
 
 {# container title #}
-{% block container4_title %}{% endblock %}
+{% block container4_title_block %}{% endblock %}
 
 {# container content #}
 {% block container4_content %}{% endblock %}
@@ -50,6 +55,7 @@
 {% endblock custom_js %}
 
 {# return to catwalk block #}
+{% comment %}
 {% block return_to_catwalk_block %}
 <div class="row">
 	<div class="col-sm-12">
@@ -57,6 +63,7 @@
 	</div>
 </div>
 {% endblock return_to_catwalk_block %}
+{% endcomment %}
 
 {# contest info block #}
 {% block contest_info_block %}

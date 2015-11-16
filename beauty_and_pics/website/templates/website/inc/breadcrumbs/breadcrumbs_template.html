@@ -1,11 +1,16 @@
-<ul class="breadcrumb">
-	{% for url, label in breadcrumbs %}
-		<li {% ifequal forloop.counter breadcrumbs_total %}class="active"{% endifequal %}>{% ifequal forloop.counter breadcrumbs_total %}<span class="">/</span>{% endifequal %}
-			{% ifnotequal forloop.counter breadcrumbs_total %}
-				<a href="{{ url }}">{{ label|safe }}</a>
-			{% else %}
-				{{ label|safe }}
-			{% endifnotequal %}
-		</li>
-	{% endfor %}
-</ul>
+<div class="row">
+	<div class="col-sm-12">
+		<ul class="breadcrumb">
+			{% for url, label in breadcrumbs %}
+				<li {% ifequal forloop.counter breadcrumbs_total %}class="active"{% endifequal %}>
+					{% ifnotequal forloop.counter breadcrumbs_total %}
+						<a href="{{ url }}">{{ label|safe }}</a>
+						<span class="separator">/</span>
+					{% else %}
+						<span class="active_label">{{ label|safe }}</span>
+					{% endifnotequal %}
+				</li>
+			{% endfor %}
+		</ul>
+	</div>
+</div>

@@ -1,11 +1,16 @@
 {% extends "website/inc/base_catwalk.html" %}
-{% load staticfiles %}
+{% load staticfiles django_bootstrap_breadcrumbs %}
 
 {% block title %}{{ site_name }} | bacheca foto{% endblock title %}
 
 {% block description %}Bacheca foto: guarda le foto migliori dei partecipanti e vota la tua preferita. La più votata andrà in evidenza nella passerella.{% endblock description %}
 
-{% block container4_title %}Bacheca foto{% endblock container4_title %}
+{# {% block container4_title %}Bacheca foto{% endblock container4_title %} #}
+
+{% block breadcrumbs %}
+    {{ block.super }}
+    {% breadcrumb "bacheca foto" "/passerella/bacheca/" %}
+{% endblock %}
 
 {% block return_to_catwalk_block %}{% endblock %}
 {% block photoboard_list_banner %}{% endblock %}

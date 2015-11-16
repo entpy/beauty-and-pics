@@ -76,7 +76,7 @@
 .generic_container8 > .left .user_action_link_container > div.right { text-align: right; float: right; }
 .photoboard_image_container > .left { width: 60%; }
 .photoboard_image_container > .right { width: 40%; }
-.container_row_b80 { margin-bottom: 80px; }
+.container_row_bottom16-xl { margin-bottom: 16px; }
 
 .user_details_container > div { float: left }
 .user_details_container .user_details_left { width: 38%; margin-right: 2%; }
