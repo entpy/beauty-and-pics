@@ -14,11 +14,6 @@
 {#% block login-navigation %}{{ block.super }}{% endblock %#}
 {#% block no-login-navigation %}{% endblock %#}
 
-{% block breadcrumbs %}
-    {{ block.super }}
-    {% breadcrumb "La passerella" "/passerella/" %}
-{% endblock %}
-
 {% block container4_navigation %}{% endblock %}
 
 {% block block0_0 %}{% endblock %}
@@ -39,6 +34,11 @@
 
 {# container title #}
 {% block container4_title_block %}{% endblock %}
+
+{% block breadcrumbs %}
+    {{ block.super }}
+    {% breadcrumb "La passerella" "/passerella/" %}
+{% endblock %}
 
 {# container content #}
 {% block container4_content %}{% endblock %}

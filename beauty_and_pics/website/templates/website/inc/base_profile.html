@@ -2,13 +2,6 @@
 {% load staticfiles %}
 
 {% block extra_js %}
-{% if welcome %}
-<!-- Facebook Conversion Code for Registrazioni sul sito -->
-<!--
-<script>(function() { var _fbq = window._fbq || (window._fbq = []); if (!_fbq.loaded) { var fbds = document.createElement('script'); fbds.async = true; fbds.src = '//connect.facebook.net/en_US/fbds.js'; var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(fbds, s); _fbq.loaded = true; } })(); window._fbq = window._fbq || []; window._fbq.push(['track', '6029232026278', {'value':'0.01','currency':'USD'}]); </script>
-<noscript><img height="1" width="1" alt="" style="display:none" src="https://www.facebook.com/tr?ev=6029232026278&amp;cd[value]=0.01&amp;cd[currency]=USD&amp;noscript=1" /></noscript>
--->
-{% endif %}
 {% endblock extra_js %}
 
 {# page title #}
@@ -16,10 +9,6 @@
 
 {# page description #}
 {% block description %}{% endblock %}
-
-{# set navigation type #}
-{#% block login-navigation %}{{ block.super }}{% endblock %#}
-{#% block no-login-navigation %}{% endblock %#}
 
 {% block block0_0 %}{% endblock %}
 
@@ -35,8 +24,12 @@
 {% block block0_1_title_h1 %}<span class="contest_timedelta_string_container"></span>{% endblock block0_1_title_h1 %}
 {% block block0_1_title_h4 %}<span class="contest_status_container"></span>{% endblock block0_1_title_h4 %}
 
-{# container title block #}
+{# container title block, the page inside profile doesn't use a title #}
 {% block container4_title_block %}{% endblock %}
+
+{% block breadcrumbs %}
+    {{ block.super }}
+{% endblock %}
 
 {# navigation block #}
 {% block container4_navigation %}{{ block.super }}{% endblock %}

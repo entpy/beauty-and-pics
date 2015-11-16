@@ -1,9 +1,9 @@
 {% extends "website/inc/base_catwalk.html" %}
 {% load staticfiles django_bootstrap_breadcrumbs website_extras %}
 
-{% block title %}{{ site_name }} | profilo di {{ user_info.first_name }} {{ user_info.last_name }}{% endblock title %}
+{% block title %}{{ site_name }} | foto di {{ user_info.first_name }} {{ user_info.last_name }}{% endblock title %}
 
-{% block description %}Profilo utente: da qui puoi vedere il punteggio, la posizione e le foto del book di {{ user_info.first_name }} {{ user_info.last_name }}.{% endblock description %}
+{% block description %}Foto bacheca, dai anche tu il tuo "mi piace" per la foto di {{ user_info.first_name }} {{ user_info.last_name }}.{% endblock description %}
 
 {# Open Graph metatags #}
 {% block og_metatags %}
@@ -18,12 +18,10 @@
 <meta property="og:image:height" content="500" />
 {% endblock og_metatags %}
 
-{# {% block container4_title %}{{ user_info.first_name }} {{ user_info.last_name }}{% endblock container4_title %} #}
-
 {% block breadcrumbs %}
-    {{ block.super }}
-    {% breadcrumb "bacheca foto" "/passerella/bacheca/" %}
-    {% breadcrumb user_info.first_name|str_cat:" "|str_cat:user_info.last_name catwalk_photoboard_details %}
+	{{ block.super }}
+	{% breadcrumb "bacheca foto" "/passerella/bacheca/" %}
+	{% breadcrumb user_info.first_name|str_cat:" "|str_cat:user_info.last_name catwalk_photoboard_details %}
 {% endblock %}
 
 {# hide photoboard list banner #}
@@ -49,7 +47,7 @@
 <div class="row">
 	<div class="col-md-12">
 		<div class="alert alert-info display_only_small">
-			<p>Dai un "<b>mi piace</b>" per {{ user_info.first_name }}: se riuscirà a raggiungere i <b>{{ like_limit }}</b> mi piace prima di tutti avrà un posto in evidenza nella passerella.</p>
+			<p>Dai il tuo "<b>mi piace</b>" a {{ user_info.first_name }}: se riuscirà a raggiungerne <b>{{ like_limit }}</b> prima di tutti gli altri avrà un posto in evidenza nella passerella.</p>
 		</div>
 	</div>
 </div>
@@ -95,7 +93,7 @@
 			<div class="container_row container_row_bottom16-xl container_row_s40 user_stats_block">
 				<span>Piace a <span class="position imageContestLikeAction">{{ user_image_contest_like }}</span> persone</span>
 			</div>
-			<div class="container_row container_row_common10 user_stats_block">
+			<div class="container_row container_row_common10">
 				<span><b class="imageContestLikeRemainingAction">{{ user_image_contest_like_remaining }}</b> "mi piace" mancanti</span>
 			</div>
 			{% if user_can_vote %}
@@ -149,7 +147,7 @@
 					// show user voted msg block
 					$(".userVotedMsgBlockAction").removeClass("hide");
 					// open success bootstrap modal
-					bootstrapModalsObect.showSuccessModal('Grazie per aver dato un "mi piace" a questo concorrente. Visita anche il suo <a href="/passerella/dettaglio-utente/{{ user_info.user_id }}/">profilo</a> completo.', 'Ottima scelta!');
+					bootstrapModalsObect.showMessageModal('Hai dato il tuo "<b>mi piace</b>" a {{ user_info.first_name }}.<br />Ora visita anche il suo <a href="/passerella/dettaglio-utente/{{ user_info.user_id }}/">profilo completo</a> per vedere tutte le sue foto.', 'Ottima scelta!');
 				}
 			};
 			photoboardLikeCustomAjaxAction.setAjaxSuccessCallbackFunction(successCallback);

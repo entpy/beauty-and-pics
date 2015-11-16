@@ -375,6 +375,7 @@ def catwalk_photoboard_details(request, user_id):
             "user_image_contest_like" : user_contest_image_info.get("user_image_contest_like"),
             "user_image_contest_like_remaining": user_contest_image_info.get("user_image_contest_like_remaining"),
             "like_limit" : user_contest_image_info.get("like_limit"),
+            "absolute_uri" : request.build_absolute_uri(),
     }
 
     return render(request, 'website/catwalk/catwalk_photoboard_details.html', context)
@@ -731,6 +732,7 @@ def profile_photoboard(request, add_success):
             "user_is_winner": user_is_winner,
             "enable_image_selection": enable_image_selection,
             "next_selection_date": next_selection_date,
+            "contest_like_limit": ImageContestImage_obj.get_contest_like_limit(),
         }
         render_page = 'website/profile/profile_photoboard_list.html'
 

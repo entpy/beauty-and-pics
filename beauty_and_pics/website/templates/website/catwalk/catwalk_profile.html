@@ -18,11 +18,9 @@
 <meta property="og:image:height" content="500" />
 {% endblock og_metatags %}
 
-{# {% block container4_title %}{{ user_info.first_name }} {{ user_info.last_name }}{% endblock container4_title %} #}
-
 {% block breadcrumbs %}
-    {{ block.super }}
-    {% breadcrumb user_info.first_name|str_cat:" "|str_cat:user_info.last_name catwalk_profile %}
+	{{ block.super }}
+	{% breadcrumb user_info.first_name|str_cat:" "|str_cat:user_info.last_name catwalk_profile %}
 {% endblock %}
 
 {# hide photoboard list banner #}

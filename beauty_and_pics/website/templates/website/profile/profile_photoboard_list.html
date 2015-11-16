@@ -1,9 +1,9 @@
 {% extends "website/inc/base_profile.html" %}
 {% load staticfiles %}
 
-{% block title %}{{ site_name }} | bacheca{% endblock %}
+{% block title %}{{ site_name }} | foto bacheca{% endblock %}
 
-{% block description %}Fatti notare, mostra il tuo scatto più artistico. Tra tutte le foto presenti, quella che per prima otterrà 500 mi piace otterrà uno spazio tutto suo nella passerella per 2 settimane.{% endblock %}
+{% block description %}Fatti notare, mostra il tuo scatto più artistico. Tra tutte le foto presenti, quella che per prima otterrà {{ contest_like_limit }} mi piace avrà uno spazio tutto suo nella passerella per 2 settimane.{% endblock %}
 
 {% block container4_title %}{% endblock %}
 
@@ -13,24 +13,24 @@
 {% block container4_content %}
 <div class="row">
 	<div class="col-sm-12">
-		<h3>Foto Bacheca</h3>
+		<h3>Foto bacheca</h3>
 	</div>
 	{% if user_is_winner %}
 		<div class="col-sm-12">
 			<div class="alert alert-info">
-				<p>Complimenti, la tua foto ha raggiunto i 500 mi piace prima di tutte le altre.<br />Potrai rimettere una foto nella bacheca tra <b>{{ next_selection_date|timeuntil }}</b>!</p>
+				<p>Complimenti, la tua foto ha raggiunto i {{ contest_like_limit }} mi piace prima di tutte le altre.<br />Potrai rimettere una foto nella bacheca tra: <b>{{ next_selection_date|timeuntil }}</b>!</p>
 			</div>
 		</div>
 	{% elif enable_image_selection %}
 		<div class="col-sm-12">
 			<div class="alert alert-info">
-				<p>Fatti notare, mostra il tuo scatto più artistico. Tra tutte le foto presenti, quella che per prima otterrà 500 mi piace otterrà uno spazio tutto suo nella passerella per 2 settimane.<br /><b>Seleziona quale immagine vorresti mettere in evidenza.</b></p>
+				<p>Fatti notare, mostra il tuo scatto più artistico. Tra tutte le foto presenti, quella che per prima otterrà {{ contest_like_limit }} mi piace otterrà uno spazio tutto suo nella passerella per 2 settimane.<br /><b>Seleziona quale immagine vorresti mettere in evidenza.</b></p>
 			</div>
 		</div>
 	{% else %}
 		<div class="col-sm-12">
 			<div class="alert alert-info">
-				<p>Ci spiace, la tua foto ha raggiunto in tempo i 500 mi piace.<br />Potrai riprovare a mettere una foto nella bacheca tra <b>{{ next_selection_date|timeuntil }}</b>!</p>
+				<p>Ci spiace, la tua foto ha raggiunto in tempo i {{ contest_like_limit }} mi piace.<br />Potrai riprovare a mettere una foto nella bacheca tra: <b>{{ next_selection_date|timeuntil }}</b>!</p>
 			</div>
 		</div>
 	{% endif %}

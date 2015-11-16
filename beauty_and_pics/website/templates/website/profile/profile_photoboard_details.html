@@ -1,21 +1,22 @@
 {% extends "website/inc/base_profile.html" %}
-{% load staticfiles %}
-{% load l10n %}
+{% load staticfiles l10n %}
 
-{% block title %}{{ site_name }} | il mio album fotografico{% endblock %}
+{% block title %}{{ site_name }} | foto bacheca{% endblock %}
 
-{% block description %}Il mio album fotografico: in questa pagina è possibile modificare la tua immagine del profilo e gestire il book fotografico, aggiungendo e rimuovendo foto.{% endblock %}
-
-{% block container4_title %}{% endblock %}
+{% block description %}Fatti notare, mostra il tuo scatto più artistico. Tra tutte le foto presenti, quella che per prima otterrà {{ contest_like_limit }} mi piace avrà uno spazio tutto suo nella passerella per 2 settimane.{% endblock %}
 
 {# navigation tabs active element #}
 {% block container4_navigation_profile_bacheca %}active{% endblock %}
 
 {% block container4_content %}
+{# Facebook & Twitter SDK {{{ #}
+<script>(function(d, s, id){ var js, fjs = d.getElementsByTagName(s)[0]; if (d.getElementById(id)) {return;} js = d.createElement(s); js.id = id; js.src = "//connect.facebook.net/en_US/sdk.js"; fjs.parentNode.insertBefore(js, fjs); }(document, 'script', 'facebook-jssdk'));</script>
+<script type="text/javascript" src="//platform.twitter.com/widgets.js"></script>
+{# Facebook & Twitter SDK }}} #}
 {# photo stats block {{{ #}
 <div class="row">
 	<div class="col-sm-12">
-		<h3>Foto Bacheca</h3>
+		<h3>Foto bacheca</h3>
 	</div>
 	<div class="col-sm-12">
 		<div class="alert alert-info">
@@ -77,17 +78,17 @@
 </div>
 <div class="row">
 	<div class="col-xs-12 col-sm-6 col-md-4 col-lg-3">
-		<a href="#" class="thumbnail grid_button_1 shareViaFacebookClickAction" data-toggle="tooltip" data-placement="top" data-original-title="Condividi la tua pagina profilo su Facebook per ottenere più punti">
+		<a href="#" class="thumbnail grid_button_1 shareViaFacebookClickAction" data-toggle="tooltip" data-placement="top" data-original-title="Condividi la foto su Facebook">
 			<span class="grid_button_image">
-				<img src="{% static "website/img/profile_fb_share.png" %}" alt="Share via Facebook">
+				<img src="{% static "website/img/profile_fb_share.png" %}" alt="Condividi via Facebook">
 			</span>
 			<span class="grid_button_label">Condividi su Facebook</span>
 		</a>
 	</div>
 	<div class="col-xs-12 col-sm-6 col-md-4 col-lg-3">
-		<a href="https://twitter.com/intent/tweet?url={{ photoboard_image_url|urlencode }}&text={{ "Vi piace la mia foto?"|urlencode }}" class="thumbnail grid_button_1" data-toggle="tooltip" data-placement="top" data-original-title="Condividi la tua pagina profilo su Twitter per ottenere più punti">
+		<a href="https://twitter.com/intent/tweet?url={{ photoboard_image_url|urlencode }}&text={{ "Votatemi:"|urlencode }}" class="thumbnail grid_button_1" data-toggle="tooltip" data-placement="top" data-original-title="Condividi la foto su Twitter">
 			<span class="grid_button_image">
-				<img src="{% static "website/img/profile_tw_share.png" %}" alt="Share via Twitter">
+				<img src="{% static "website/img/profile_tw_share.png" %}" alt="Condividi via Twitter">
 			</span>
 			<span class="grid_button_label">Condividi su Twitter</span>
 		</a>
@@ -125,6 +126,27 @@
 				var imageId = $(this).data("imageContestImageId");
 				removeImageFromPhotoboard(imageId);
 			}
+
+			return false;
+		});
+
+		// share on Facebook action
+		$("body").on("click",".shareViaFacebookClickAction", function(){
+
+			// create Facebook share dialog
+			// reference -> https://developers.facebook.com/docs/javascript/reference/FB.ui
+			FB.ui({
+				method: 'share',
+				href: '{{ photoboard_image_url }}' },
+				// callback
+				function(response) {
+					if (response && !response.error_message) {
+						// posting completed
+					} else {
+						// error while posting
+					}
+				}
+			);
 
 			return false;
 		});

@@ -5,11 +5,9 @@
 
 {% block description %}Bacheca foto: guarda le foto migliori dei partecipanti e vota la tua preferita. La più votata andrà in evidenza nella passerella.{% endblock description %}
 
-{# {% block container4_title %}Bacheca foto{% endblock container4_title %} #}
-
 {% block breadcrumbs %}
-    {{ block.super }}
-    {% breadcrumb "bacheca foto" "/passerella/bacheca/" %}
+	{{ block.super }}
+	{% breadcrumb "bacheca foto" "/passerella/bacheca/" %}
 {% endblock %}
 
 {% block return_to_catwalk_block %}{% endblock %}
@@ -32,7 +30,7 @@
 <div class="row">
 	<div class="col-sm-12">
 		<div class="alert alert-info">
-			<p>Non ci sono ancora foto nella bacheca...stay tuned.</p>
+			<p>Non sono ancora presenti foto nella bacheca...stay tuned.</p>
 		</div>
 	</div>
 </div>

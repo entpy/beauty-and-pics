@@ -5,21 +5,14 @@
 
 {% block description %}Ottieni più punti: scopri come ottenere più punti per scalare la classifica di {{ site_name }}.{% endblock %}
 
-{% block container4_title %}Ottieni più punti{% endblock %}
-
 {# navigation tabs active element #}
 {% block container4_navigation_profile_preferences %}active{% endblock %}
 
 {% block container4_content %}
-{# Facebook SDK {{{ #}
-<script>
-(function(d, s, id){ var js, fjs = d.getElementsByTagName(s)[0]; if (d.getElementById(id)) {return;} js = d.createElement(s); js.id = id; js.src = "//connect.facebook.net/en_US/sdk.js"; fjs.parentNode.insertBefore(js, fjs); }(document, 'script', 'facebook-jssdk'));
-</script>
-{# Facebook SDK }}} #}
-{# Twitter javascript {{{ #}
-{# layout break #}
+{# Facebook & Twitter SDK {{{ #}
+<script>(function(d, s, id){ var js, fjs = d.getElementsByTagName(s)[0]; if (d.getElementById(id)) {return;} js = d.createElement(s); js.id = id; js.src = "//connect.facebook.net/en_US/sdk.js"; fjs.parentNode.insertBefore(js, fjs); }(document, 'script', 'facebook-jssdk'));</script>
 <script type="text/javascript" src="//platform.twitter.com/widgets.js"></script>
-{# Twitter javascript }}} #}
+{# Facebook & Twitter SDK }}} #}
 <div class="row">
 	<div class="col-md-12">
 		<h3>Condividi il tuo profilo sui social network</h3>
@@ -35,7 +28,7 @@
 	<div class="col-xs-12 col-sm-6 col-md-4 col-lg-3">
 		<a href="#" class="thumbnail grid_button_1 shareViaFacebookClickAction" data-toggle="tooltip" data-placement="top" data-original-title="Condividi la tua pagina profilo su Facebook per ottenere più punti">
 			<span class="grid_button_image">
-				<img src="{% static "website/img/profile_fb_share.png" %}" alt="Share via Facebook">
+				<img src="{% static "website/img/profile_fb_share.png" %}" alt="Condividi via Facebook">
 			</span>
 			<span class="grid_button_label">Condividi su Facebook</span>
 		</a>
@@ -43,7 +36,7 @@
 	<div class="col-xs-12 col-sm-6 col-md-4 col-lg-3">
 		<a href="https://twitter.com/intent/tweet?url={{ profile_page_url|urlencode }}&text={{ share_text|urlencode }}" class="thumbnail grid_button_1" data-toggle="tooltip" data-placement="top" data-original-title="Condividi la tua pagina profilo su Twitter per ottenere più punti">
 			<span class="grid_button_image">
-				<img src="{% static "website/img/profile_tw_share.png" %}" alt="Share via Twitter">
+				<img src="{% static "website/img/profile_tw_share.png" %}" alt="Condividi via Twitter">
 			</span>
 			<span class="grid_button_label">Condividi su Twitter</span>
 		</a>

@@ -498,6 +498,30 @@ var bootstrapModalsObect = {
 		return false;
 	},
 
+	/* Function to build and show a message bootstrap modal */
+	showMessageModal: function(message, popup_title) {
+		if (message) {
+			this.resetBootstrapModal();
+			var messageBlockTemplate = '';
+			messageBlockTemplate += '<div class="row">';
+			messageBlockTemplate += '<div class="col-md-12 margin_top_30">';
+			messageBlockTemplate += '<div class="alert">';
+			messageBlockTemplate += message;
+			messageBlockTemplate += '</div>';
+			messageBlockTemplate += '</div>';
+			messageBlockTemplate += '</div>';
+			$(".bootstrap_modal").find('.modal-title').html("Ottimo");
+			if (popup_title) {
+				$(".bootstrap_modal").find('.modal-title').html(popup_title);
+			}
+			$(".bootstrap_modal").find('.modal-footer').html('<button type="button" class="btn btn-default" data-dismiss="modal">Chiudi</button>');
+			$(".bootstrap_modal").find('.modal-body').html(messageBlockTemplate);
+			this.showBootstrapModal();
+		}
+
+		return false;
+	},
+
 	/* Function to build and show an alert bootstrap modal */
 	showAlertModal: function(message) {
 		if (message) {

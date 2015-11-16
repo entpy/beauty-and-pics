@@ -120,7 +120,7 @@ textarea { resize: none; }
 .background_container1 { background-color: #E0E0E0; padding: 20px; }
 .generic_container8 { border-radius: 4px; -moz-border-radius: 4px; display: inline-block; width: 100%; }
 .user_stats_container { text-align: center; }
-.user_stats_container .user_stats_block { display: inline-block; width: 100%; }
+.user_stats_container .user_stats_block { display: inline-block; }
 .user_stats_container .user_stats_block .position { font-size: 55px; }
 .user_stats_container .user_stats_block .points { font-size: 25px; }
 .user_stats_container .user_stats_space { display: inline-block; width: 10%; }
