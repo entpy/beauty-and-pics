@@ -732,7 +732,7 @@ def profile_photoboard(request, add_success):
             "user_is_winner": user_is_winner,
             "enable_image_selection": enable_image_selection,
             "next_selection_date": next_selection_date,
-            "contest_like_limit": ImageContestImage_obj.get_contest_like_limit(),
+            "contest_like_limit": ICA_LIKE_LIMIT,
         }
         render_page = 'website/profile/profile_photoboard_list.html'
 

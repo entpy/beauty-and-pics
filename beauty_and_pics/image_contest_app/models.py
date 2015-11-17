@@ -299,10 +299,6 @@ class ImageContestImage(models.Model):
 
         return return_var
 
-    def get_contest_like_limit(self):
-        """Function to retrieve contest like limit"""
-        return ICA_LIKE_LIMIT
-
     def show_contest_all_images(self, contest_type, filters_list=None):
         """
         ex. -> current_contest = woman_contest
