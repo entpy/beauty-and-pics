@@ -2,16 +2,18 @@
 
 from django.db import models, IntegrityError
 from django.db.models import F, Q
+from django.db.models.signals import post_delete
 from django.contrib.auth.models import User
 from django.utils import timezone
 from django.conf import settings
+from django.dispatch import receiver
 from notify_system_app.models import Notify
 from contest_app.models import Contest
 from upload_image_box.models import cropUploadedImages 
 from image_contest_app.exceptions import *
 from .settings import *
 from datetime import datetime, timedelta
-import logging
+import logging, uuid
 
 # Get an instance of a logger
 logger = logging.getLogger(__name__)
@@ -122,6 +124,10 @@ class ImageContestImage(models.Model):
     def __unicode__(self):
         return str(self.image_contest_image_id) + " " + str(self.image.image.url)
 
+    @receiver(post_delete, dispatch_uid=str(uuid.uuid1()))
+    def post_delete_callback(sender, instance, using, **kwargs):
+        logger.info("Elemento rimosso con successo: " + str(instance))
+
     def add_contest_image(self, data):
         """Function to add image_contest_image element"""
         return_var = False
@@ -215,9 +221,6 @@ class ImageContestImage(models.Model):
 	action performed when like limit is reached:
 	Function to close related image_contest and set an expiring date (now + 2 weeks)
         """
-        # ImageContestImage.objects.filter(image_contest_image_id=image_contest_image_id).update(image_contest__status=ICA_CONTEST_TYPE_CLOSED, image_contest__expiring=(datetime.now() + timedelta(days=14)))
-        # ImageContestImage_obj = ImageContestImage()
-
         try:
             ImageContestImage_obj = self.get_image_contest_image_obj(image_contest_image_id=image_contest_image_id)
         except ImageContestImage.DoesNotExist:
@@ -238,6 +241,8 @@ class ImageContestImage(models.Model):
 
     def write_contest_winner_notify(self, user_obj):
         """Function to write a notify to winner user"""
+        return True # per il momento non faccio scrivere nessuna notifica
+
         Notify_obj = Notify()
 
         # create notify details
