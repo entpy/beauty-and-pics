@@ -124,9 +124,12 @@ class ImageContestImage(models.Model):
     def __unicode__(self):
         return str(self.image_contest_image_id) + " " + str(self.image.image.url)
 
+    """
     @receiver(post_delete, dispatch_uid=str(uuid.uuid1()))
     def post_delete_callback(sender, instance, using, **kwargs):
-        logger.info("Elemento rimosso con successo: " + str(instance))
+	# se il concorso relativo all'immagine è chiuso lo metto in stato scaduto
+        logger.info("--Elemento rimosso con successo: " + str(instance))
+    """
 
     def add_contest_image(self, data):
         """Function to add image_contest_image element"""
