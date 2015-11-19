@@ -2,7 +2,6 @@
 
 from django.db import models, IntegrityError
 from django.db.models import F, Q
-from django.db.models.signals import post_delete
 from django.contrib.auth.models import User
 from django.utils import timezone
 from django.conf import settings
@@ -13,7 +12,7 @@ from upload_image_box.models import cropUploadedImages
 from image_contest_app.exceptions import *
 from .settings import *
 from datetime import datetime, timedelta
-import logging, uuid
+import logging
 
 # Get an instance of a logger
 logger = logging.getLogger(__name__)
@@ -123,13 +122,6 @@ class ImageContestImage(models.Model):
 
     def __unicode__(self):
         return str(self.image_contest_image_id) + " " + str(self.image.image.url)
-
-    """
-    @receiver(post_delete, dispatch_uid=str(uuid.uuid1()))
-    def post_delete_callback(sender, instance, using, **kwargs):
-	# se il concorso relativo all'immagine è chiuso lo metto in stato scaduto
-        logger.info("--Elemento rimosso con successo: " + str(instance))
-    """
 
     def add_contest_image(self, data):
         """Function to add image_contest_image element"""
@@ -346,6 +338,26 @@ class ImageContestImage(models.Model):
 
         return return_var
 
+    # TODO:
+    def get_closed_contest_objects(self, contest_type):
+        """
+        ex. -> current_contest = woman_contest
+        select * where image_contest.contest.type = contest_type and status=1
+        """
+        return_var = None
+
+        try:
+            ImageContestImage_obj = ImageContestImage.objects.get(image_contest__contest__contest_type__code=contest_type, image_contest__status=ICA_CONTEST_TYPE_CLOSED)
+        except ImageContestImage.DoesNotExist:
+	    logger.info("nessun photoboard contest chiuso per il tipo: " + str(contest_type))
+            # non ci sono dei contest chiusi
+            pass
+        else:
+	    logger.info("image_contest_image del contest chiuso: " + str(ImageContestImage_obj.get("image_contest_image_id")))
+            return_var = ImageContestImage_obj
+
+        return return_var
+
 class ImageContestVote(models.Model):
     image_contest_vote_id = models.AutoField(primary_key=True)
     image_contest_image = models.ForeignKey(ImageContestImage) # related image contest image
@@ -462,17 +474,18 @@ class ImageContestHallOfFame(models.Model):
         ImageContestImage_obj = ImageContestImage()
 
         # retireve closed contest info
-        ClosedImageContest_obj = ImageContestImage_obj.get_closed_contest_info(contest_type=contest_type)
+        ClosedImageContest_obj = ImageContestImage_obj.get_closed_contest_objects(contest_type=image_contest.contest.contest_type.code)
+        # ClosedImageContest_obj = ImageContestImage_obj.get_closed_contest_info(contest_type=contest_type)
 
         if ClosedImageContest_obj:
             # insert winner about contest_type into ImageContestHallOfFame :o
             ImageContestHallOfFame_obj = ImageContestHallOfFame(
-                user = ClosedImageContest_obj.get("user"),
-                image_contest = ClosedImageContest_obj.get("image_contest"),
-                first_name = ClosedImageContest_obj.get("user__first_name"),
-                last_name = ClosedImageContest_obj.get("user__last_name"),
-                image_url = ClosedImageContest_obj.get("image__image"),
-                thumbnail_image_url = ClosedImageContest_obj.get("image__thumbnail_image__image"),
+                user = ClosedImageContest_obj.user,
+                image_contest = ClosedImageContest_obj.image_contest,
+                first_name = ClosedImageContest_obj.user.first_name,
+                last_name = ClosedImageContest_obj.user.last_name,
+                image_url = ClosedImageContest_obj.image.image,
+                thumbnail_image_url = ClosedImageContest_obj.image.thumbnail_image.image,
             )
 
             ImageContestHallOfFame_obj.save()
