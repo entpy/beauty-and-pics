@@ -29,7 +29,7 @@ class ImageContest(models.Model):
         app_label = 'image_contest_app'
 
     def __unicode__(self):
-        return str(self.image_contest_id) + " " + str(self.type) + " " + str(self.creation_date)
+        return str(self.image_contest_id) + " " + str(self.contest.contest_type.code) + " " + str(self.creation_date)
 
     def image_contest_manager(self):
         """Function to manage image contests"""
@@ -51,7 +51,6 @@ class ImageContest(models.Model):
         image_contest_list = ImageContest.objects.filter(status=ICA_CONTEST_TYPE_CLOSED, expiring__lte=timezone.now())
         for image_contest in image_contest_list:
             # save into ImageContestHallOfFame
-            # TODO: plz test
             ImageContestHallOfFame_obj = ImageContestHallOfFame()
             ImageContestHallOfFame_obj.add_contest_hall_of_fame(contest_type=image_contest.contest.contest_type.code)
 
@@ -230,14 +229,13 @@ class ImageContestImage(models.Model):
             ImageContestImage_obj.image_contest.save()
 	    logger.debug("like limit reached, close contest (" + str(ImageContestImage_obj.image_contest.image_contest_id) + ") and set expiring date to: " + str(datetime.now() + timedelta(seconds=ICA_VATE_CONTEST_EXPIRING)))
             # write notification to winner user
+	    # per il momento non faccio scrivere nessuna notifica
             self.write_contest_winner_notify(user_obj=ImageContestImage_obj.user)
 
         return True
 
     def write_contest_winner_notify(self, user_obj):
         """Function to write a notify to winner user"""
-        return True # per il momento non faccio scrivere nessuna notifica
-
         Notify_obj = Notify()
 
         # create notify details
@@ -338,7 +336,6 @@ class ImageContestImage(models.Model):
 
         return return_var
 
-    # TODO:
     def get_closed_contest_objects(self, contest_type):
         """
         ex. -> current_contest = woman_contest
@@ -353,7 +350,7 @@ class ImageContestImage(models.Model):
             # non ci sono dei contest chiusi
             pass
         else:
-	    logger.info("image_contest_image del contest chiuso: " + str(ImageContestImage_obj.get("image_contest_image_id")))
+	    logger.info("image_contest_image del contest chiuso: " + str(ImageContestImage_obj.image_contest_image_id))
             return_var = ImageContestImage_obj
 
         return return_var
@@ -467,14 +464,12 @@ class ImageContestHallOfFame(models.Model):
     def __unicode__(self):
         return str(self.image_contest_hall_of_fame_id)
 
-    # TODO: plz test
     def add_contest_hall_of_fame(self, contest_type):
         """Function to add an image_contest_hall_of_fame element"""
-        return True
         ImageContestImage_obj = ImageContestImage()
 
         # retireve closed contest info
-        ClosedImageContest_obj = ImageContestImage_obj.get_closed_contest_objects(contest_type=image_contest.contest.contest_type.code)
+        ClosedImageContest_obj = ImageContestImage_obj.get_closed_contest_objects(contest_type=contest_type)
         # ClosedImageContest_obj = ImageContestImage_obj.get_closed_contest_info(contest_type=contest_type)
 
         if ClosedImageContest_obj:
