@@ -1,5 +1,5 @@
 {% extends "website/inc/base.html" %}
-{% load staticfiles %}
+{% load staticfiles website_extras %}
 
 {% block extra_js %}
 {% endblock extra_js %}
@@ -41,20 +41,15 @@
 {% block container4_navigation_profile_preferences %}{% endblock %}
 {% block container4_navigation_profile_notify %}{% endblock %}
 
+{# page tip block (blocco a destra con titolo e descrizione) #}
+{% block page_tip %}
+{% autoescape off %}
+{% include "website/inc/include_blocks/page_tip.html" with title="Il tuo profilo" text="<b>"|str_cat:user.first_name|escape|str_cat:"</b>,<br />questa è la tua area privata. Da qui puoi modificare i dettagli del tuo profilo, aggiungere/rimuovere foto, visualizzare l'elenco dei preferiti che hai salvato e tante altre cose." only %}
+{% endautoescape %}
+{% endblock %}
+
 {# container content #}
 {% block container4_content %}{% endblock %}
-
-{# tip container #}
-{% block catwalk_tip %}
-<div class="generic_container tip_container display_only_big">
-	<div class="title">
-		<h4>Il tuo profilo</h4>
-	</div>
-	<div class="tip_readable_text">
-	    <b>{{ user.first_name }}</b>,<br />questa è la tua area privata. Da qui puoi modificare i dettagli del tuo profilo, aggiungere/rimuovere foto, visualizzare l'elenco dei preferiti che hai salvato e tante altre cose.
-	</div>
-</div>
-{% endblock catwalk_tip %}
 
 {# custom page js #}
 {% block custom_js %}

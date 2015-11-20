@@ -13,16 +13,10 @@
 {% block return_to_catwalk_block %}{% endblock %}
 {% block photoboard_list_banner %}{% endblock %}
 
-{% block catwalk_tip %}
-<div class="generic_container tip_container display_only_big">
-	<div class="title">
-		<h4>Bacheca foto</h4>
-	</div>
-	<div class="tip_readable_text">
-		Guarda le foto migliori dei partecipanti e vota la tua foto preferita! La più votata andrà in evidenza nella passerella.
-	</div>
-</div>
-{% endblock catwalk_tip %}
+{# page tip block (blocco a destra con titolo e descrizione) #}
+{% block page_tip %}
+{% include "website/inc/include_blocks/page_tip.html" with title="Bacheca foto" text="Guarda le foto migliori dei partecipanti e vota la tua foto preferita! La più votata andrà in evidenza nella passerella." only %}
+{% endblock %}
 
 {% block container4_content %}
 {# no active photoboard contest or no images #}

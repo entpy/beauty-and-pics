@@ -20,16 +20,10 @@
 {% endif %}
 {% endblock photoboard_winner_banner %}
 
-{% block catwalk_tip %}
-<div class="generic_container tip_container display_only_big">
-	<div class="title">
-		<h4>La passerella</h4>
-	</div>
-	<div class="tip_readable_text">
-	    Ciao, questa è la passerella, qui puoi trovare tutti i partecipanti di {{ site_name }}. Vota i tuoi preferiti!
-	</div>
-</div>
-{% endblock catwalk_tip %}
+{# page tip block (blocco a destra con titolo e descrizione) #}
+{% block page_tip %}
+{% include "website/inc/include_blocks/page_tip.html" with title="La passerella" text="Ciao, questa è la passerella, qui puoi trovare tutti i partecipanti di "|str_cat:site_name|str_cat:". Vota i tuoi preferiti!" only %}
+{% endblock %}
 
 {% block container4_content %}
 <div class="row">

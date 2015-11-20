@@ -238,6 +238,15 @@ class Contest(models.Model):
 
         return return_var
 
+    def check_if_contest_type_is_active(self, contest_type):
+        """Function to get if contest about contest_type is active or not"""
+        return_var = True
+        if self.get_contests_type_status(contest_type=contest_type) != project_constants.CONTEST_ACTIVE:
+            return_var = False
+
+        return return_var
+
+
     def get_active_contests_by_type(self, contest_type):
         """Function to retrieve active contest by contest_type"""
         return_var = None

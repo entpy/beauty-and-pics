@@ -10,27 +10,40 @@
 {# navigation tabs active element #}
 {% block container4_navigation_profile_bacheca %}active{% endblock %}
 
+{# page tip block (blocco a destra con titolo e descrizione) #}
+{% block page_tip %}
+{% include "website/inc/include_blocks/page_tip.html" with title="Bacheca fotografica" text="Vorresti avere uno spazio dedicato per la tua foto migliore? Allora questo è il posto giusto." only %}
+{% endblock %}
+
 {% block container4_content %}
 <div class="row">
 	<div class="col-sm-12">
 		<h3>Foto bacheca</h3>
 	</div>
-	{% if user_is_winner %}
-		<div class="col-sm-12">
-			<div class="alert alert-info">
-				<p>Complimenti, la tua foto ha raggiunto i {{ contest_like_limit }} mi piace prima di tutte le altre.<br />Potrai rimettere una foto nella bacheca tra: <b>{{ next_selection_date|timeuntil }}</b>!</p>
+	{% if base_contest_active %}
+		{% if user_is_winner %}
+			<div class="col-sm-12">
+				<div class="alert alert-info">
+					<p>Complimenti, la tua foto ha raggiunto i {{ contest_like_limit }} mi piace prima di tutte le altre.<br />Potrai rimettere una foto nella bacheca tra: <b>{{ next_selection_date|timeuntil }}</b>!</p>
+				</div>
 			</div>
-		</div>
-	{% elif enable_image_selection %}
-		<div class="col-sm-12">
-			<div class="alert alert-info">
-				<p>Fatti notare, mostra il tuo scatto più artistico. Tra tutte le foto presenti, quella che per prima otterrà {{ contest_like_limit }} mi piace otterrà uno spazio tutto suo nella passerella per 2 settimane.<br /><b>Seleziona quale immagine vorresti mettere in evidenza.</b></p>
+		{% elif enable_image_selection %}
+			<div class="col-sm-12">
+				<div class="alert alert-info">
+					<p>Fatti notare, mostra il tuo scatto più artistico. Tra tutte le foto presenti, quella che per prima otterrà {{ contest_like_limit }} mi piace otterrà uno spazio tutto suo nella passerella per 2 settimane.<br /><b>Seleziona quale immagine vorresti mettere in evidenza.</b></p>
+				</div>
 			</div>
-		</div>
+		{% else %}
+			<div class="col-sm-12">
+				<div class="alert alert-info">
+					<p>Ci spiace, la tua foto ha raggiunto in tempo i {{ contest_like_limit }} mi piace.<br />Potrai riprovare a mettere una foto nella bacheca tra: <b>{{ next_selection_date|timeuntil }}</b>!</p>
+				</div>
+			</div>
+		{% endif %}
 	{% else %}
 		<div class="col-sm-12">
 			<div class="alert alert-info">
-				<p>Ci spiace, la tua foto ha raggiunto in tempo i {{ contest_like_limit }} mi piace.<br />Potrai riprovare a mettere una foto nella bacheca tra: <b>{{ next_selection_date|timeuntil }}</b>!</p>
+				<p>Ci spiace, potrai inserire nuovamente foto nella bacheca quando il concorso principale sarà riaperto.</p>
 			</div>
 		</div>
 	{% endif %}
@@ -46,7 +59,6 @@
 {% endblock container4_content %}
 {% block custom_js %}
 {{ block.super }}
-<script src="{% static "notify_system_app/js/notify.js" %}"></script>
 <script>
 	// set elements retrieved per call
 	elementsListObject.setElementsPerCall(20);
@@ -73,12 +85,15 @@
 			if ($(this).attr("data-fullimage-url")) {
 				imageUrl = $(this).data("fullimageUrl");
 			}
-			{% if enable_image_selection %}
-			    // open bootstrap modal
-			    bootstrapModalsObect.showAddImageToPhotoboard(imageUrl, imageId);
+			{% if not base_contest_active %}
+				// open bootstrap alert popup
+				bootstrapModalsObect.showAlertModal("Ci spiace, potrai inserire nuovamente foto nella bacheca quando il concorso principale sarà riaperto.");
+			{% elif enable_image_selection %}
+				// open bootstrap modal
+				bootstrapModalsObect.showAddImageToPhotoboard(imageUrl, imageId);
 			{% else %}
-			    // open bootstrap alert popup
-			    bootstrapModalsObect.showAlertModal("Ci spiace, potrai inserire nuovamente l'immagine nella bacheca tra: <b>{{ next_selection_date|timeuntil }}</b>.");
+				// open bootstrap alert popup
+				bootstrapModalsObect.showAlertModal("Ci spiace, potrai inserire nuovamente l'immagine nella bacheca tra: <b>{{ next_selection_date|timeuntil }}</b>.");
 			{% endif %}
 
 			return false;

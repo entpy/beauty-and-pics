@@ -722,6 +722,11 @@ def profile_photoboard(request, add_success):
         if photoboard_contest_winner:
             enable_image_selection = False
 
+        # esiste il relativo contest di base (quello del concorso a punti)?
+        base_contest_active = False
+        if contest_obj.check_if_contest_type_is_active(contest_type=autenticated_user_data["contest_type"]):
+            base_contest_active = True
+
         # tra quanti gg è possibile nuovamente aggiungere immagini nella bacheca
         next_selection_date = 0
         if photoboard_contest_winner.get("image_contest__expiring"):
@@ -732,6 +737,7 @@ def profile_photoboard(request, add_success):
             "user_is_winner": user_is_winner,
             "enable_image_selection": enable_image_selection,
             "next_selection_date": next_selection_date,
+            "base_contest_active": base_contest_active,
             "contest_like_limit": ICA_LIKE_LIMIT,
         }
         render_page = 'website/profile/profile_photoboard_list.html'

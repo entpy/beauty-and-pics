@@ -76,6 +76,11 @@ class ImageContest(models.Model):
         for active_contests in active_contests_list:
             if not ImageContest.objects.filter(Q(status=ICA_CONTEST_TYPE_ACTIVE) | Q(status=ICA_CONTEST_TYPE_CLOSED), contest=active_contests).exists():
                 # no active or closed image contests, must be create a new one
+                # TODO: se è presente un photoboard attivo, poi il concorso
+                # principale termina, poi si riapre viene creato un altro
+                # photoboard attivo, gestire questo caso
+                # una possibile soluzione è chiudere il photoboard
+                # all'apertura del nuovo contest
                 ImageContest_obj = ImageContest(
                     contest = active_contests,
                     like_limit = ICA_LIKE_LIMIT,
