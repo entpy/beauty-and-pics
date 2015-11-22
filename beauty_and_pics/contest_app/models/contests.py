@@ -47,7 +47,7 @@ class Contest(models.Model):
         """
         for contest_type in Contest_Type.objects.all():
             if not Contest.objects.filter(Q(contest_type=contest_type.id_contest_type), Q(status=project_constants.CONTEST_OPENING) | Q(status=project_constants.CONTEST_ACTIVE)).count():
-                # no active or opening contests, must be create a new one
+                # no active or opening contests, must be created a new one
                 Contest_obj = Contest(
                     contest_type = contest_type,
                     start_date = timezone.now() + timedelta(days=project_constants.CONTEST_OPENING_DAYS),
@@ -95,6 +95,7 @@ class Contest(models.Model):
 
     def __activate_contests(self):
         from account_app.models.accounts import Account
+	from image_contest_app.models import ImageContest
         """Function to activate contests
         Funzione per attivare i concorsi()
 
@@ -104,12 +105,16 @@ class Contest(models.Model):
                 ponendo come end_date "+ 10 mesi" a partire dalla data attuale
                 - notifico tutti gli utenti (TUTTI!) che il concorso è stato aperto
         """
+	ImageContest_obj = ImageContest()
         send_email = False
         contest_list = Contest.objects.filter(status=project_constants.CONTEST_OPENING)
         for contest in contest_list:
             if timezone.now() >= contest.start_date:
                 logger.info("contest attivato:" + str(contest))
                 send_email = True
+		# force expiring active photoboard (se c'è ancora un photoboard attivo per questo contest lo termino)
+		# TODO: svuotare anche la tabella con i voti
+		ImageContest_obj.force_expiring_active_photoboard(contest_type=contest.contest_type.code)
                 pass
         Contest.objects.filter(status=project_constants.CONTEST_OPENING, start_date__lte=timezone.now()).update(status=project_constants.CONTEST_ACTIVE, end_date=(timezone.now()+timedelta(days=project_constants.CONTEST_EXPIRING_DAYS)))
 

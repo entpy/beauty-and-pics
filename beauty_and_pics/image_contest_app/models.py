@@ -111,6 +111,14 @@ class ImageContest(models.Model):
 
         return return_var
 
+    def force_expiring_active_photoboard(self, contest_type):
+	"""Function to force expiring of an active contest by type"""
+
+	if self.exists_active_contest(contest_type=contest_type):
+	    ImageContest.objects.filter(contest__contest_type__code=contest_type, status=ICA_CONTEST_TYPE_ACTIVE).update(status=ICA_CONTEST_TYPE_FINISHED)
+
+	return True
+
 class ImageContestImage(models.Model):
     image_contest_image_id = models.AutoField(primary_key=True)
     user = models.ForeignKey(User) # related user
