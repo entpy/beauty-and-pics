@@ -50,12 +50,9 @@ class ImageContest(models.Model):
         """
         image_contest_list = ImageContest.objects.filter(status=ICA_CONTEST_TYPE_CLOSED, expiring__lte=timezone.now())
         for image_contest in image_contest_list:
-            # save into ImageContestHallOfFame
+            # save contest_type winner into ImageContestHallOfFame
             ImageContestHallOfFame_obj = ImageContestHallOfFame()
             ImageContestHallOfFame_obj.add_contest_hall_of_fame(contest_type=image_contest.contest.contest_type.code)
-
-            # TODO (ma più avanti): notifico gli utenti del relativo contest che possono
-            # inserire immagini nella bacheca
             pass
 
         ImageContest.objects.filter(status=ICA_CONTEST_TYPE_CLOSED, expiring__lte=timezone.now()).update(status=ICA_CONTEST_TYPE_FINISHED)
@@ -76,7 +73,7 @@ class ImageContest(models.Model):
         for active_contests in active_contests_list:
             if not ImageContest.objects.filter(Q(status=ICA_CONTEST_TYPE_ACTIVE) | Q(status=ICA_CONTEST_TYPE_CLOSED), contest=active_contests).exists():
                 # no active or closed image contests, must be create a new one
-                # TODO: se è presente un photoboard attivo, poi il concorso
+                # se è presente un photoboard attivo, poi il concorso
                 # principale termina, poi si riapre viene creato un altro
                 # photoboard attivo, gestire questo caso
                 # una possibile soluzione è chiudere il photoboard
@@ -86,7 +83,19 @@ class ImageContest(models.Model):
                     like_limit = ICA_LIKE_LIMIT,
                 )
                 ImageContest_obj.save()
-                logger.info("image contest creato")
+
+                # TODO: plz test
+                # delete all images and votes about this contest_type
+                self.__delete_contest_images_images_and_votes(contest_type=active_contests.contest_type.code)
+
+                logger.info("image contest creato per: " + str(active_contests.contest_type.code))
+
+        return True
+
+    def __delete_contest_images_images_and_votes(self, contest_type):
+        """Function to delete all images about a contest"""
+        logger.debug("creation of new photoboard contest, delete all images and votes about contest: " + str(contest_type))
+        ImageContestImage.objects.filter(image_contest__contest__contest_type__code=contest_type).delete()
 
         return True
 
@@ -465,7 +474,7 @@ class ImageContestVote(models.Model):
 class ImageContestHallOfFame(models.Model):
     image_contest_hall_of_fame_id = models.AutoField(primary_key=True)
     user = models.ForeignKey(User, null=True, on_delete=models.SET_NULL) # related user
-    image_contest = models.ForeignKey(ImageContest) # related image contest
+    image_contest = models.ForeignKey(ImageContest, null=True, on_delete=models.SET_NULL) # related image contest
     first_name = models.CharField(max_length=50, null=True) # winner user name
     last_name = models.CharField(max_length=50, null=True) # winner user last name
     image_url = models.ImageField(max_length=500, null=True) # winner user image path
