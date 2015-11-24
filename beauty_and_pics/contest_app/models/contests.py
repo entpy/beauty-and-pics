@@ -113,6 +113,8 @@ class Contest(models.Model):
                 logger.info("contest attivato:" + str(contest))
                 send_email = True
 		# force expiring active photoboard (se c'è ancora un photoboard attivo per questo contest lo termino)
+                # TODO XXX: se è presente un photoboard ancora attivo, lo
+                # aggancio a questo contest
 		# TODO: svuotare anche la tabella con i voti
 		ImageContest_obj.force_expiring_active_photoboard(contest_type=contest.contest_type.code)
                 pass
