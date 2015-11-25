@@ -7,7 +7,7 @@ from django.utils import timezone
 from django.conf import settings
 from django.dispatch import receiver
 from notify_system_app.models import Notify
-from contest_app.models import Contest
+from contest_app.models.contest_types import Contest_Type
 from upload_image_box.models import cropUploadedImages 
 from image_contest_app.exceptions import *
 from .settings import *
@@ -19,7 +19,7 @@ logger = logging.getLogger(__name__)
 
 class ImageContest(models.Model):
     image_contest_id = models.AutoField(primary_key=True)
-    contest = models.ForeignKey(Contest) # woman contest or man contest
+    contest_type = models.ForeignKey(Contest_Type, null=True) # "woman_contest" or "man_contest"
     status = models.IntegerField(default=0) # (0 attivo per la votazione, 1 chiuso, 2 terminato => non considerarlo più)
     creation_date = models.DateTimeField(auto_now_add=True) # contest creation date
     expiring = models.DateTimeField(null=True) # contest expiring
@@ -33,77 +33,64 @@ class ImageContest(models.Model):
 
     def image_contest_manager(self):
         """Function to manage image contests"""
-        # logger.info("image contest manager")
-        # close expired image contests
-        self.__terminate_expired_contests()
-        # create new image contests
+        # delete expired image_contests
+        self.__delete_expired_contests()
+        # create new image_contests if required
         self.__create_contests()
 
         return True
 
-    def __terminate_expired_contests(self):
+    def __delete_expired_contests(self):
         """
-        itero su tutti i concorsi chiusi (status=1)
-            se la data corrente è >= della scadenza
-                - termino il concorso (settando lo status=2  |1 -> 2|)
-                - salvo tutto in ImageContestHallOfFame
+        itero su tutti i concorsi chiusi (status=ICA_CONTEST_TYPE_CLOSED)
+            se la data di scadenza è <= della data corrente (ovvero l'image_contest è scaduto):
+                - save winner into ImageContestHallOfFame
+                - delete all image_contest_images image_contest and votes about this contest_type
         """
         image_contest_list = ImageContest.objects.filter(status=ICA_CONTEST_TYPE_CLOSED, expiring__lte=timezone.now())
         for image_contest in image_contest_list:
-            # save contest_type winner into ImageContestHallOfFame
+            # save image_contest winner into image_contest_hall_of_fame
             ImageContestHallOfFame_obj = ImageContestHallOfFame()
-            ImageContestHallOfFame_obj.add_contest_hall_of_fame(contest_type=image_contest.contest.contest_type.code)
+            ImageContestHallOfFame_obj.add_contest_hall_of_fame(contest_type=image_contest.contest_type.code)
             pass
 
-        ImageContest.objects.filter(status=ICA_CONTEST_TYPE_CLOSED, expiring__lte=timezone.now()).update(status=ICA_CONTEST_TYPE_FINISHED)
+            # delete this image_contest and related image_contest_images and image_contest_vote
+            self.__delete_image_contest(contest_type=image_contest.contest_type.code)
 
         return True
 
     def __create_contests(self):
-        # creo i nuovi image contest, uno per il man contest e l'altro per il woman contest
+        # creo i nuovi image contest, uno per ogni contest_type("woman_contest" e "man_contest")
         """
-        Itero sui concorsi attivi (per ora "uomo" e "donna")
-            Se per ogni tipo non esiste il concorso attivo o in fase di
-            apertura (con concorso.status!=0 o concorso.status=1)
-                - creo il concorso, ponendo come start_date "+ 1 mese" a partire dalla data attuale
-                  e mettendo lo status a 0 (default)
+            Itero sui tipi di concosi (per ora "uomo" e "donna")
+            Se per ogni tipo non esiste il concorso attivo o chiuso
+                - allora creo l'image_contest per relativo contest_type
         """
-        Contest_obj = Contest()
-        active_contests_list = Contest_obj.get_all_active_contests()
-        for active_contests in active_contests_list:
-            if not ImageContest.objects.filter(Q(status=ICA_CONTEST_TYPE_ACTIVE) | Q(status=ICA_CONTEST_TYPE_CLOSED), contest=active_contests).exists():
-                # no active or closed image contests, must be create a new one
-                # se è presente un photoboard attivo, poi il concorso
-                # principale termina, poi si riapre viene creato un altro
-                # photoboard attivo, gestire questo caso
-                # una possibile soluzione è chiudere il photoboard
-                # all'apertura del nuovo contest
+        for contest_type in Contest_Type.objects.all():
+            if not ImageContest.objects.filter(Q(status=ICA_CONTEST_TYPE_ACTIVE) | Q(status=ICA_CONTEST_TYPE_CLOSED), contest_type=contest_type).exists():
+                # no active or closed image_contests about this contest_type, must be create a new one
                 ImageContest_obj = ImageContest(
-                    contest = active_contests,
+                    contest_type = contest_type,
                     like_limit = ICA_LIKE_LIMIT,
                 )
                 ImageContest_obj.save()
 
-                # TODO: plz test
-                # delete all images and votes about this contest_type
-                self.__delete_contest_images_images_and_votes(contest_type=active_contests.contest_type.code)
-
-                logger.info("image contest creato per: " + str(active_contests.contest_type.code))
+                logger.info("image contest creato per il contest_type: " + str(contest_type.code))
 
         return True
 
-    def __delete_contest_images_images_and_votes(self, contest_type):
-        """Function to delete all images about a contest"""
-        logger.debug("creation of new photoboard contest, delete all images and votes about contest: " + str(contest_type))
-        ImageContestImage.objects.filter(image_contest__contest__contest_type__code=contest_type).delete()
+    def __delete_image_contest(self, contest_type):
+        """Function to delete image_contest, and then related image_contest_images and image_contest_vote"""
+        logger.debug("__delete_image_contest, delete image_contest about type: " + str(contest_type))
+        ImageContest.objects.filter(contest_type__code=contest_type).delete()
 
         return True
 
     def get_image_contest_about_user(self, user_obj=None):
-        """Function to retrieve image_contest about user_obj"""
+        """Function to retrieve active image_contest about user_obj"""
         return_var = None
         try:
-            ImageContest_obj = ImageContest.objects.get(contest__contest_type_id=user_obj.account.contest_type, status=ICA_CONTEST_TYPE_ACTIVE)
+            ImageContest_obj = ImageContest.objects.get(contest_type=user_obj.account.contest_type, status=ICA_CONTEST_TYPE_ACTIVE)
         except ImageContest.DoesNotExist:
             pass
         else:
@@ -112,22 +99,14 @@ class ImageContest(models.Model):
         return return_var
 
     def exists_active_contest(self, contest_type):
-        """Function to check if exists an active image_contest"""
+        """Function to check if exists an active image_contest about contest_type"""
         return_var = False
 
-        if ImageContest.objects.filter(contest__contest_type__code=contest_type, status=ICA_CONTEST_TYPE_ACTIVE).exists():
+        if ImageContest.objects.filter(contest_type__code=contest_type, status=ICA_CONTEST_TYPE_ACTIVE).exists():
             return_var = True
 
         return return_var
-
-    def force_expiring_active_photoboard(self, contest_type):
-	"""Function to force expiring of an active contest by type"""
-
-	if self.exists_active_contest(contest_type=contest_type):
-	    ImageContest.objects.filter(contest__contest_type__code=contest_type, status=ICA_CONTEST_TYPE_ACTIVE).update(status=ICA_CONTEST_TYPE_FINISHED)
-
-	return True
-
+    
 class ImageContestImage(models.Model):
     image_contest_image_id = models.AutoField(primary_key=True)
     user = models.ForeignKey(User) # related user
@@ -171,13 +150,13 @@ class ImageContestImage(models.Model):
 
         return return_var
 
-    def remove_contest_image(self, image_contest_image_id, user_id):
-        """Function to remove image_contest_image_id about user_id"""
+    def remove_contest_image_about_user(self, user_id):
+        """Function to remove image_contest_image about user_id"""
         return_var = False
         try:
-            ImageContestImage_obj = ImageContestImage.objects.get(image_contest_image_id=image_contest_image_id, user__id=user_id)
+            ImageContestImage_obj = ImageContestImage.objects.get(user__id=user_id)
         except ImageContestImage.DoesNotExist:
-            raise RemoveImageContestImageError
+            raise
         else:
             logger.debug("DELETE ImageContestImage -> id: " + str(ImageContestImage_obj.image_contest_image_id) + " | email: " + str(ImageContestImage_obj.user.email))
             ImageContestImage_obj.delete()
@@ -198,22 +177,22 @@ class ImageContestImage(models.Model):
 
         return return_var
 
-    def image_exists(self,  user_id):
+    def image_exists_in_active_contest(self, user_id):
         """Function to check if an image about user_id already exists for active contest"""
         return_var = False
 
         if ImageContestImage.objects.filter(user__id=user_id, image_contest__status=ICA_CONTEST_TYPE_ACTIVE).exists():
-            logger.debug("image_exists, photoboard image exists in active contest for user: " + str(user_id))
+            logger.debug("image_exists_in_active_contest, photoboard image exists in active contest for user: " + str(user_id))
             return_var = True
 
         return return_var
 
-    def contest_images_exist(self, contest_type):
+    def images_exist_in_active_contest(self, contest_type):
         """Function to check if exist images in current active contest type"""
         return_var = False
 
-	if ImageContestImage.objects.filter(image_contest__contest__contest_type__code=contest_type, image_contest__status=ICA_CONTEST_TYPE_ACTIVE).exists():
-            logger.debug("contest_images_exist, photoboard images exists in current active contest: " + str(contest_type))
+	if ImageContestImage.objects.filter(image_contest__contest_type__code=contest_type, image_contest__status=ICA_CONTEST_TYPE_ACTIVE).exists():
+            logger.debug("images_exist_in_active_contest, photoboard images exists in contest_type: " + str(contest_type))
 	    return_var = True
 
         return return_var
@@ -244,15 +223,15 @@ class ImageContestImage(models.Model):
             logger.error("errore in trigger_like_limit_reach, nessuna immagine settata per la fine del contest bacheca, image_contest_image_id: " + str(image_contest_image_id))
             pass
         else:
-            # close related contest
+            # close related contest_image
             ImageContestImage_obj.image_contest.status = ICA_CONTEST_TYPE_CLOSED
             # set expiring now + 2 weeks
             ImageContestImage_obj.image_contest.expiring = datetime.now() + timedelta(seconds=ICA_VATE_CONTEST_EXPIRING)
             ImageContestImage_obj.image_contest.save()
-	    logger.debug("like limit reached, close contest (" + str(ImageContestImage_obj.image_contest.image_contest_id) + ") and set expiring date to: " + str(datetime.now() + timedelta(seconds=ICA_VATE_CONTEST_EXPIRING)))
+	    logger.debug("like limit reached, closing image_contest (" + str(ImageContestImage_obj.image_contest.image_contest_id) + ") and setting expiring date to: " + str(datetime.now() + timedelta(seconds=ICA_VATE_CONTEST_EXPIRING)))
             # write notification to winner user
 	    # per il momento non faccio scrivere nessuna notifica
-            self.write_contest_winner_notify(user_obj=ImageContestImage_obj.user)
+            # self.write_contest_winner_notify(user_obj=ImageContestImage_obj.user)
 
         return True
 
@@ -281,8 +260,8 @@ class ImageContestImage(models.Model):
 
         return return_var
 
-    def get_user_contest_image_obj(self, user_id):
-        """Function to retrieve contest_image_obj about user_id"""
+    def get_active_contest_user_image_obj(self, user_id):
+        """Function to retrieve contest_image_obj about user_id and active image_contest"""
         return_var = None
         try:
             ImageContestImage_obj = ImageContestImage.objects.get(user__id=user_id, image_contest__status=ICA_CONTEST_TYPE_ACTIVE)
@@ -298,7 +277,7 @@ class ImageContestImage(models.Model):
         return_var = None
 	user_image_contest_like_perc = 0
         try:
-            ImageContestImage_obj = self.get_user_contest_image_obj(user_id)
+            ImageContestImage_obj = self.get_active_contest_user_image_obj(user_id)
         except ImageContestImage.DoesNotExist:
             raise
         else:
@@ -324,7 +303,7 @@ class ImageContestImage(models.Model):
         ex. -> current_contest = woman_contest
         select images where image_contest.contest.type = contest_type and status=0
         """
-        return_var = ImageContestImage.objects.values('user__id', 'image__image').filter(image_contest__contest__contest_type__code=contest_type, image_contest__status=ICA_CONTEST_TYPE_ACTIVE)
+        return_var = ImageContestImage.objects.values('user__id', 'image__image').filter(image_contest__contest_type__code=contest_type, image_contest__status=ICA_CONTEST_TYPE_ACTIVE)
 	return_var = return_var.order_by('-creation_date')
 
         # limits filter
@@ -344,7 +323,7 @@ class ImageContestImage(models.Model):
         return_var = {}
 
         try:
-            ImageContestImage_obj = ImageContestImage.objects.values('image_contest_image_id', 'image_contest', 'user__id', 'user__first_name', 'user__last_name', 'image__image', 'image__thumbnail_image__image', 'image_contest__expiring').get(image_contest__contest__contest_type__code=contest_type, image_contest__status=ICA_CONTEST_TYPE_CLOSED)
+            ImageContestImage_obj = ImageContestImage.objects.values('image_contest_image_id', 'image_contest', 'user__id', 'user__first_name', 'user__last_name', 'image__image', 'image__thumbnail_image__image', 'image_contest__expiring').get(image_contest__contest_type__code=contest_type, image_contest__status=ICA_CONTEST_TYPE_CLOSED)
         except ImageContestImage.DoesNotExist:
 	    logger.info("nessun photoboard contest chiuso per il tipo: " + str(contest_type))
             # non ci sono dei contest chiusi
@@ -358,6 +337,7 @@ class ImageContestImage(models.Model):
 
         return return_var
 
+    # TODO: non capisco come faccia a funzionare visto che tira fuori più elementi
     def get_closed_contest_objects(self, contest_type):
         """
         ex. -> current_contest = woman_contest
@@ -467,18 +447,19 @@ class ImageContestVote(models.Model):
 	    # image already voted
 	    raise ImageAlreadyVotedError
 
-        logger.debug("image_can_be_voted, yessa! image_contest_image_obj: " + str(image_contest_image_obj) + " from ip: " + str(ip_address))
+        logger.debug("image_can_be_voted, l'immagine del photoboard è votabile, image_contest_image_obj: " + str(image_contest_image_obj) + " from ip: " + str(ip_address))
 
         return True
 
 class ImageContestHallOfFame(models.Model):
     image_contest_hall_of_fame_id = models.AutoField(primary_key=True)
     user = models.ForeignKey(User, null=True, on_delete=models.SET_NULL) # related user
-    image_contest = models.ForeignKey(ImageContest, null=True, on_delete=models.SET_NULL) # related image contest
+    contest_type = models.ForeignKey(Contest_Type, null=True) # related contest type
     first_name = models.CharField(max_length=50, null=True) # winner user name
     last_name = models.CharField(max_length=50, null=True) # winner user last name
     image_url = models.ImageField(max_length=500, null=True) # winner user image path
     thumbnail_image_url = models.ImageField(max_length=500, null=True) # winner user thumbnail image path
+    creation_date = models.DateTimeField(auto_now_add=True) # creation date
 
     class Meta:
         app_label = 'image_contest_app'
@@ -498,7 +479,7 @@ class ImageContestHallOfFame(models.Model):
             # insert winner about contest_type into ImageContestHallOfFame :o
             ImageContestHallOfFame_obj = ImageContestHallOfFame(
                 user = ClosedImageContest_obj.user,
-                image_contest = ClosedImageContest_obj.image_contest,
+                contest_type = ClosedImageContest_obj.image_contest.contest_type,
                 first_name = ClosedImageContest_obj.user.first_name,
                 last_name = ClosedImageContest_obj.user.last_name,
                 image_url = ClosedImageContest_obj.image.image,

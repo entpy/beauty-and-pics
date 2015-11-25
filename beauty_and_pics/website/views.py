@@ -306,7 +306,7 @@ def catwalk_photoboard_list(request):
     contest_type = Contest_obj.get_contest_type_from_session(request=request)
 
     # check if exist images in current active contest
-    images_exist = ImageContestImage_obj.contest_images_exist(contest_type=contest_type)
+    images_exist = ImageContestImage_obj.images_exist_in_active_contest(contest_type=contest_type)
 
     context = {
         "images_exist": images_exist,
@@ -680,7 +680,7 @@ def profile_gain_points(request):
 @login_required
 @user_passes_test(check_if_is_a_catwalker_user)
 def profile_photoboard(request, add_success):
-    """View to show photo board page"""
+    """View to show photoboard page"""
 
     user_obj = request.user
     user_id = user_obj.id
@@ -695,8 +695,9 @@ def profile_photoboard(request, add_success):
 
     # check if already exists an image for this user in photoboard
     ImageContestImage_obj = ImageContestImage()
-    if ImageContestImage_obj.image_exists(user_id=user_id):
-        # l'utente ha già selezionato una foto per la bacheca, prelevo l'url dell'immagine
+    if ImageContestImage_obj.image_exists_in_active_contest(user_id=user_id):
+        # l'utente ha già inserito una foto nella bacheca
+        # quindi prelevo l'url dell'immagine e altre info
         user_contest_image_info = ImageContestImage_obj.get_user_contest_image_info(user_id=user_id)
 	# photoboard image url
 	photoboard_image_url = settings.SITE_URL + "/passerella/bacheca/" + str(request.user.id) + "/"
@@ -709,23 +710,19 @@ def profile_photoboard(request, add_success):
         }
         render_page = 'website/profile/profile_photoboard_details.html'
     else:
-        # l'utente non ha ancora selezionato una foto per la bacheca, mostro l'elenco delle foto selezionabili
+        # l'utente non ha ancora inserito una foto nella bacheca, oppure è
+        # presente un vincitore e il photoboard è stato chiuso
         photoboard_contest_winner = ImageContestImage_obj.get_closed_contest_info(contest_type=autenticated_user_data["contest_type"])
-
-        # check if current user win the photoboard contest
-        user_is_winner = False
-        if photoboard_contest_winner.get("user__id") == user_id:
-            user_is_winner = True
 
         # è già presente un vincitore per il contest, non è possibile aggiungere adesso una foto in bacheca
         enable_image_selection = True
         if photoboard_contest_winner:
             enable_image_selection = False
 
-        # esiste il relativo contest di base (quello del concorso a punti)?
-        base_contest_active = False
-        if contest_obj.check_if_contest_type_is_active(contest_type=autenticated_user_data["contest_type"]):
-            base_contest_active = True
+        # check if current user win the photoboard contest
+        user_is_winner = False
+        if photoboard_contest_winner.get("user__id") == user_id:
+            user_is_winner = True
 
         # tra quanti gg è possibile nuovamente aggiungere immagini nella bacheca
         next_selection_date = 0
@@ -737,7 +734,6 @@ def profile_photoboard(request, add_success):
             "user_is_winner": user_is_winner,
             "enable_image_selection": enable_image_selection,
             "next_selection_date": next_selection_date,
-            "base_contest_active": base_contest_active,
             "contest_like_limit": ICA_LIKE_LIMIT,
         }
         render_page = 'website/profile/profile_photoboard_list.html'

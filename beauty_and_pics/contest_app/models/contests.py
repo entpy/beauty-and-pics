@@ -95,7 +95,6 @@ class Contest(models.Model):
 
     def __activate_contests(self):
         from account_app.models.accounts import Account
-	from image_contest_app.models import ImageContest
         """Function to activate contests
         Funzione per attivare i concorsi()
 
@@ -105,18 +104,12 @@ class Contest(models.Model):
                 ponendo come end_date "+ 10 mesi" a partire dalla data attuale
                 - notifico tutti gli utenti (TUTTI!) che il concorso è stato aperto
         """
-	ImageContest_obj = ImageContest()
         send_email = False
         contest_list = Contest.objects.filter(status=project_constants.CONTEST_OPENING)
         for contest in contest_list:
             if timezone.now() >= contest.start_date:
                 logger.info("contest attivato:" + str(contest))
                 send_email = True
-		# force expiring active photoboard (se c'è ancora un photoboard attivo per questo contest lo termino)
-                # TODO XXX: se è presente un photoboard ancora attivo, lo
-                # aggancio a questo contest
-		# TODO: svuotare anche la tabella con i voti
-		ImageContest_obj.force_expiring_active_photoboard(contest_type=contest.contest_type.code)
                 pass
         Contest.objects.filter(status=project_constants.CONTEST_OPENING, start_date__lte=timezone.now()).update(status=project_constants.CONTEST_ACTIVE, end_date=(timezone.now()+timedelta(days=project_constants.CONTEST_EXPIRING_DAYS)))
 
@@ -245,14 +238,16 @@ class Contest(models.Model):
 
         return return_var
 
+    # TODO: in realtà questa def non serve, si potrebbe eliminare
+    """
     def check_if_contest_type_is_active(self, contest_type):
-        """Function to get if contest about contest_type is active or not"""
-        return_var = True
-        if self.get_contests_type_status(contest_type=contest_type) != project_constants.CONTEST_ACTIVE:
-            return_var = False
+        ""Function to get if contest about contest_type is active or not""
+        return_var = False
+        if self.get_contests_type_status(contest_type=contest_type) == project_constants.CONTEST_ACTIVE:
+            return_var = True
 
         return return_var
-
+    """
 
     def get_active_contests_by_type(self, contest_type):
         """Function to retrieve active contest by contest_type"""

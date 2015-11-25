@@ -616,15 +616,13 @@ class ajaxManager():
 
         # retrieve logged user_obj
         user_id = self.request.user.id
-        # retrieve image_contest_image_id to remove
-        image_contest_image_id = self.request.POST.get("image_contest_image_id")
 
         try:
-            # remove image about this user from photoboard
-            ImageContestImage_obj.remove_contest_image(image_contest_image_id=image_contest_image_id, user_id=user_id)
+            # remove image from photoboard about this user
+            ImageContestImage_obj.remove_contest_image_about_user(user_id=user_id)
             # TODO: definire e testare l'eccezione
-        except RemoveImageContestImageError:
-            data = {'error' : True,}
+        except ImageContestImage.DoesNotExist:
+            data = {'error' : True, 'message' : 'L\'immagine da eliminare non è stata trovata.'}
         else:
             data = {'success' : True,}
 

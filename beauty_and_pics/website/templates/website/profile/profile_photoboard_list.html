@@ -20,30 +20,22 @@
 	<div class="col-sm-12">
 		<h3>Foto bacheca</h3>
 	</div>
-	{% if base_contest_active %}
-		{% if user_is_winner %}
-			<div class="col-sm-12">
-				<div class="alert alert-info">
-					<p>Complimenti, la tua foto ha raggiunto i {{ contest_like_limit }} mi piace prima di tutte le altre.<br />Potrai rimettere una foto nella bacheca tra: <b>{{ next_selection_date|timeuntil }}</b>!</p>
-				</div>
+	{% if user_is_winner %}
+		<div class="col-sm-12">
+			<div class="alert alert-info">
+				<p>Complimenti, la tua foto ha raggiunto i {{ contest_like_limit }} mi piace prima di tutte le altre.<br />Potrai rimettere una foto nella bacheca tra: <b>{{ next_selection_date|timeuntil }}</b>!</p>
 			</div>
-		{% elif enable_image_selection %}
-			<div class="col-sm-12">
-				<div class="alert alert-info">
-					<p>Fatti notare, mostra il tuo scatto più artistico. Tra tutte le foto presenti, quella che per prima otterrà {{ contest_like_limit }} mi piace otterrà uno spazio tutto suo nella passerella per 2 settimane.<br /><b>Seleziona quale immagine vorresti mettere in evidenza.</b></p>
-				</div>
+		</div>
+	{% elif enable_image_selection %}
+		<div class="col-sm-12">
+			<div class="alert alert-info">
+				<p>Fatti notare, mostra il tuo scatto più artistico. Tra tutte le foto presenti nella bacheca, quella che per prima otterrà {{ contest_like_limit }} mi piace otterrà uno spazio tutto suo nella passerella per 2 settimane.<br /><b>Seleziona quale immagine vorresti inserire nella bacheca.</b></p>
 			</div>
-		{% else %}
-			<div class="col-sm-12">
-				<div class="alert alert-info">
-					<p>Ci spiace, la tua foto ha raggiunto in tempo i {{ contest_like_limit }} mi piace.<br />Potrai riprovare a mettere una foto nella bacheca tra: <b>{{ next_selection_date|timeuntil }}</b>!</p>
-				</div>
-			</div>
-		{% endif %}
+		</div>
 	{% else %}
 		<div class="col-sm-12">
 			<div class="alert alert-info">
-				<p>Ci spiace, potrai inserire nuovamente foto nella bacheca quando il concorso principale sarà riaperto.</p>
+				<p>Ci spiace, la tua foto ha raggiunto in tempo i {{ contest_like_limit }} mi piace.<br />Potrai riprovare a mettere una foto nella bacheca tra: <b>{{ next_selection_date|timeuntil }}</b>!</p>
 			</div>
 		</div>
 	{% endif %}
@@ -85,10 +77,7 @@
 			if ($(this).attr("data-fullimage-url")) {
 				imageUrl = $(this).data("fullimageUrl");
 			}
-			{% if not base_contest_active %}
-				// open bootstrap alert popup
-				bootstrapModalsObect.showAlertModal("Ci spiace, potrai inserire nuovamente foto nella bacheca quando il concorso principale sarà riaperto.");
-			{% elif enable_image_selection %}
+			{% if enable_image_selection %}
 				// open bootstrap modal
 				bootstrapModalsObect.showAddImageToPhotoboard(imageUrl, imageId);
 			{% else %}

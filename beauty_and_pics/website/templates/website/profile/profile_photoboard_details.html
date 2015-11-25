@@ -30,7 +30,7 @@
 			<img alt="Imagine profilo" class="catwalk_user_main_image" src="{{ user_image_contest_info.user_image_contest_url }}">
 		</div>
 		<div class="bottom user_action_link_container">
-			<a href="#" class="removeImageFromPhotoboardAction" data-image-contest-image-id="{{ user_image_contest_info.user_image_contest_id }}">Rimuovi dalla bacheca</a>
+			<a href="#" class="removeImageFromPhotoboardAction">Rimuovi dalla bacheca</a>
 		</div>
 	</div>
 	<div class="right">
@@ -123,8 +123,7 @@
 		// remove current image from photoboard click action
 		$(document).on("click",".removeImageFromPhotoboardAction", function(){
 			if (confirm("Stai per rimuovere l'immagine dalla bacheca, perderai tutti i \"mi piace\" ricevuti, confermi?")) {
-				var imageId = $(this).data("imageContestImageId");
-				removeImageFromPhotoboard(imageId);
+				removeImageFromPhotoboard();
 			}
 
 			return false;
@@ -160,25 +159,21 @@
 		bootstrapModalsObect.showSuccessModal('Immagine inserita correttamente nella bacheca. Condividi la foto il più possibile per guadagnare <b>' + like_limit + ' mi piace</b> ed ottenere il posto nella passerella!');
 	}
 
-	// remove selected image from photoboard
-	function removeImageFromPhotoboard(imageId) {
-		if (imageId) {
-			var addImageToPhotoboardCustomAjaxAction = customAjaxAction;
-			// set async to false
-			addImageToPhotoboardCustomAjaxAction.setAsyncFlag(false);
-			// serialize form
-			addImageToPhotoboardCustomAjaxAction.setAjaxCallParams("image_contest_image_id=" + imageId + "&");
-			// setting action name
-			addImageToPhotoboardCustomAjaxAction.setActionName("remove_image_from_photoboard");
-			// success callback function
-			var successCallback = function(jsonResponse) {
-				// redirect to book images list
-				location.href = "/profilo/foto-bacheca/";
-			};
-			addImageToPhotoboardCustomAjaxAction.setAjaxSuccessCallbackFunction(successCallback);
-			// perform ajax call to add favorite
-			addImageToPhotoboardCustomAjaxAction.performAjaxAction();
-		}
+	// remove photoboard user image
+	function removeImageFromPhotoboard() {
+		var addImageToPhotoboardCustomAjaxAction = customAjaxAction;
+		// set async to false
+		addImageToPhotoboardCustomAjaxAction.setAsyncFlag(false);
+		// setting action name
+		addImageToPhotoboardCustomAjaxAction.setActionName("remove_image_from_photoboard");
+		// success callback function
+		var successCallback = function(jsonResponse) {
+			// redirect to book images list
+			location.href = "/profilo/foto-bacheca/";
+		};
+		addImageToPhotoboardCustomAjaxAction.setAjaxSuccessCallbackFunction(successCallback);
+		// perform ajax call to add favorite
+		addImageToPhotoboardCustomAjaxAction.performAjaxAction();
 
 		return true;
 	}
