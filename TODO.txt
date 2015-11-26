@@ -50,3 +50,6 @@ ALTER TABLE `upload_image_box_tmpuploadedimages` CONVERT TO CHARACTER SET utf8 C
 
 Sezione preferenze fatta a piastrelle (stile win 8 :O :O :O :O :O:O)
 	(ricezione email notifiche, zona proibita, informazioni utente)
+
+testare:
+aggiunta immagine al photoboard, deve essere mostrato messaggio di successo
