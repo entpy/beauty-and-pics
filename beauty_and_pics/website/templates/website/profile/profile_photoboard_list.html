@@ -35,7 +35,7 @@
 	{% else %}
 		<div class="col-sm-12">
 			<div class="alert alert-info">
-				<p>Ci spiace, la tua foto ha raggiunto in tempo i {{ contest_like_limit }} mi piace.<br />Potrai riprovare a mettere una foto nella bacheca tra: <b>{{ next_selection_date|timeuntil }}</b>!</p>
+				<p>Ci spiace, la tua foto non ha raggiunto in tempo i {{ contest_like_limit }} mi piace.<br />Potrai riprovare a mettere una foto nella bacheca tra: <b>{{ next_selection_date|timeuntil }}</b>!</p>
 			</div>
 		</div>
 	{% endif %}
