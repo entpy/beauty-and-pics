@@ -323,7 +323,7 @@
 		{# If exist a custom message, show it in a bootstrap modal popup #}
 		{% if messages %}
 			{% for message in messages %}
-			{% if message.tags == message_tags.POPUP_SUCCESS_TAG or message.tags == message_tags.POPUP_ALERT_TAG or message.tags == message_tags.POPUP_ERROR_TAG %}
+			{% if message.tags == message_tags.POPUP_SUCCESS_TAG or message.tags == message_tags.POPUP_ALERT_TAG or message.tags == message_tags.POPUP_ERROR_TAG or message.tags == message_tags.POPUP_SIMPLE_MESSAGE_TAG %}
 					<script>bootstrapModalsObect.showPopupMessage("{{ message }}", "{{ message.tags }}");</script>
 				{% endif %}
 			{% endfor %}

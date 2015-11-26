@@ -17,6 +17,8 @@ import logging
 # Get an instance of a logger
 logger = logging.getLogger(__name__)
 
+"""go to end of file to a small how to about this!"""
+
 class ImageContest(models.Model):
     image_contest_id = models.AutoField(primary_key=True)
     contest_type = models.ForeignKey(Contest_Type, null=True) # "woman_contest" or "man_contest"
@@ -44,17 +46,17 @@ class ImageContest(models.Model):
         """
         itero su tutti i concorsi chiusi (status=ICA_CONTEST_TYPE_CLOSED)
             se la data di scadenza è <= della data corrente (ovvero l'image_contest è scaduto):
-                - save winner into ImageContestHallOfFame
-                - delete all image_contest_images image_contest and votes about this contest_type
+                - save winner into 'image_contest_hall_of_fame'
+                - delete 'image_contest' and related 'image_contest_images' and 'image_contest_vote'
         """
         image_contest_list = ImageContest.objects.filter(status=ICA_CONTEST_TYPE_CLOSED, expiring__lte=timezone.now())
         for image_contest in image_contest_list:
-            # save image_contest winner into image_contest_hall_of_fame
+            # save 'image_contest' winner into 'image_contest_hall_of_fame'
             ImageContestHallOfFame_obj = ImageContestHallOfFame()
             ImageContestHallOfFame_obj.add_contest_hall_of_fame(contest_type=image_contest.contest_type.code)
             pass
 
-            # delete this image_contest and related image_contest_images and image_contest_vote
+            # delete this 'image_contest' and related 'image_contest_images' and 'image_contest_vote'
             self.__delete_image_contest(contest_type=image_contest.contest_type.code)
 
         return True
@@ -62,9 +64,9 @@ class ImageContest(models.Model):
     def __create_contests(self):
         # creo i nuovi image contest, uno per ogni contest_type("woman_contest" e "man_contest")
         """
-            Itero sui tipi di concosi (per ora "uomo" e "donna")
+            Itero sui tipi di concosi (per ora woman_contest" e "man_contest)
             Se per ogni tipo non esiste il concorso attivo o chiuso
-                - allora creo l'image_contest per relativo contest_type
+                - allora creo l'image_contest per il relativo contest_type
         """
         for contest_type in Contest_Type.objects.all():
             if not ImageContest.objects.filter(Q(status=ICA_CONTEST_TYPE_ACTIVE) | Q(status=ICA_CONTEST_TYPE_CLOSED), contest_type=contest_type).exists():
@@ -80,7 +82,7 @@ class ImageContest(models.Model):
         return True
 
     def __delete_image_contest(self, contest_type):
-        """Function to delete image_contest, and then related image_contest_images and image_contest_vote"""
+        """Function to delete 'image_contest' and then related 'image_contest_images' and 'image_contest_vote'"""
         logger.debug("__delete_image_contest, delete image_contest about type: " + str(contest_type))
         ImageContest.objects.filter(contest_type__code=contest_type).delete()
 
@@ -317,8 +319,12 @@ class ImageContestImage(models.Model):
 
     def get_closed_contest_info(self, contest_type):
         """
+        Function to retrieve winning 'image_contest_image' info about a 'contest_type' if exists
         ex. -> current_contest = woman_contest
-        select * where image_contest.contest.type = contest_type and status=1 and like=500
+        SELECT * WHERE
+        image_contest.contest.type = contest_type AND
+        status=1 AND
+        like=500;
         """
         return_var = {}
 
@@ -337,11 +343,14 @@ class ImageContestImage(models.Model):
 
         return return_var
 
-    # TODO: non capisco come faccia a funzionare visto che tira fuori più elementi
-    def get_closed_contest_objects(self, contest_type):
+    def get_closed_contest_object(self, contest_type):
         """
+        Function to retrieve winning 'image_contest_image' obj about a 'contest_type' if exists
         ex. -> current_contest = woman_contest
-        select * where image_contest.contest.type = contest_type and status=1 and like=500
+        SELECT * WHERE
+        image_contest.contest.type = contest_type AND
+        status=1 AND
+        like=500;
         """
         return_var = None
 
@@ -429,7 +438,7 @@ class ImageContestVote(models.Model):
 
     def image_can_be_voted(self, image_contest_image_obj, ip_address, request):
         """Function to check if an image can be voted"""
-	# check if contest is open
+	# check if contest is active
 	if image_contest_image_obj.image_contest.status != ICA_CONTEST_TYPE_ACTIVE:
 	    raise ImageContestClosedError
 
@@ -472,8 +481,7 @@ class ImageContestHallOfFame(models.Model):
         ImageContestImage_obj = ImageContestImage()
 
         # retireve closed contest info
-        ClosedImageContest_obj = ImageContestImage_obj.get_closed_contest_objects(contest_type=contest_type)
-        # ClosedImageContest_obj = ImageContestImage_obj.get_closed_contest_info(contest_type=contest_type)
+        ClosedImageContest_obj = ImageContestImage_obj.get_closed_contest_object(contest_type=contest_type)
 
         if ClosedImageContest_obj:
             # insert winner about contest_type into ImageContestHallOfFame :o
@@ -489,3 +497,34 @@ class ImageContestHallOfFame(models.Model):
             ImageContestHallOfFame_obj.save()
 
         return True
+
+"""
+Breve HOW TO sull'app "image_contest_app"
+=========================================
+
+image_contest
+-------------
+I tipi di contest fotografici, per ora uno per ogni "contest_type" ("woman_contest" o "man_contest")
+ogni "image_contest" è associato a un "contest_type", se lo status è 0 è
+possibile assegnare i 'mi piace' alle foto del relativo "image_contest". Se lo
+status è 1 è già stata decretata una foto vincitrice e non è più possibile
+dare i mi piace, a questo punto viene settata una data di scadenza, al termine
+della quale "image_contest", relative "image_contest_image" e relativi
+"image_contest_vote" verranno eliminati, il vincitore verrà però salvato
+all'interno della tabella di aggregazione "image_contest_hall_of_fame" per
+mantenere uno storico dei vincitori.
+
+image_contest_image
+-------------------
+Le immagini presenti in ogni image_contest, a parità di "contest_type" la stessa
+immagine potrebbe essere asociata a più "image_contest".
+
+image_contest_vote
+------------------
+In questa tabella sono inserite le votazioni per ogni "image_contest_image" e
+indirizzo ip.
+
+image_contest_hall_of_fame
+--------------------------
+tabella di aggregazione per il salvataggio delle foto dei vincitori.
+"""

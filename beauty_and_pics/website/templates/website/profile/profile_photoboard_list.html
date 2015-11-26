@@ -1,7 +1,7 @@
 {% extends "website/inc/base_profile.html" %}
 {% load staticfiles %}
 
-{% block title %}{{ site_name }} | foto bacheca{% endblock %}
+{% block title %}{{ site_name }} | bacheca fotografica{% endblock %}
 
 {% block description %}Fatti notare, mostra il tuo scatto più artistico. Tra tutte le foto presenti, quella che per prima otterrà {{ contest_like_limit }} mi piace avrà uno spazio tutto suo nella passerella per 2 settimane.{% endblock %}
 
@@ -12,18 +12,18 @@
 
 {# page tip block (blocco a destra con titolo e descrizione) #}
 {% block page_tip %}
-{% include "website/inc/include_blocks/page_tip.html" with title="Bacheca fotografica" text="Vorresti avere uno spazio dedicato per la tua foto migliore? Allora questo è il posto giusto." only %}
+{% include "website/inc/include_blocks/page_tip.html" with title="Bacheca fotografica" text="Vorresti avere uno spazio dedicato per la tua foto migliore? Questo è il posto giusto." only %}
 {% endblock %}
 
 {% block container4_content %}
 <div class="row">
 	<div class="col-sm-12">
-		<h3>Foto bacheca</h3>
+		<h3>Bacheca fotografica</h3>
 	</div>
 	{% if user_is_winner %}
 		<div class="col-sm-12">
 			<div class="alert alert-info">
-				<p>Complimenti, la tua foto ha raggiunto i {{ contest_like_limit }} mi piace prima di tutte le altre.<br />Potrai rimettere una foto nella bacheca tra: <b>{{ next_selection_date|timeuntil }}</b>!</p>
+				<p>Complimenti, la tua foto ha raggiunto i {{ contest_like_limit }} mi piace prima di tutte le altre.<br />Potrai rimettere una foto nella bacheca tra: <b>{{ next_selection_date | timeuntil }}</b>!</p>
 			</div>
 		</div>
 	{% elif enable_image_selection %}
@@ -35,7 +35,7 @@
 	{% else %}
 		<div class="col-sm-12">
 			<div class="alert alert-info">
-				<p>Ci spiace, la tua foto non ha raggiunto in tempo i {{ contest_like_limit }} mi piace.<br />Potrai riprovare a mettere una foto nella bacheca tra: <b>{{ next_selection_date|timeuntil }}</b>!</p>
+				<p>Ci spiace, la tua foto non ha raggiunto in tempo i {{ contest_like_limit }} mi piace.<br />Potrai riprovare a mettere una foto nella bacheca tra: <b>{{ next_selection_date | timeuntil }}</b>!</p>
 			</div>
 		</div>
 	{% endif %}
@@ -47,6 +47,11 @@
 <div class="text-center">
 	<a class="btn btn-success loadMoreElementsAction" href="#">Mostra altre immagini</a>
 </div>
+{# hidden form #}
+<form class="addPhotoboardImageFormSubmitAction" method="post" action="">
+	{% csrf_token %}
+	<input name="add_photoboard_image_form_sent" value="1" type="hidden">
+</form>
 {# image grid block }}} #}
 {% endblock container4_content %}
 {% block custom_js %}
@@ -82,7 +87,7 @@
 				bootstrapModalsObect.showAddImageToPhotoboard(imageUrl, imageId);
 			{% else %}
 				// open bootstrap alert popup
-				bootstrapModalsObect.showAlertModal("Ci spiace, potrai inserire nuovamente l'immagine nella bacheca tra: <b>{{ next_selection_date|timeuntil }}</b>.");
+				bootstrapModalsObect.showAlertModal("Ci spiace, potrai inserire nuovamente l'immagine nella bacheca tra: <b>{{ next_selection_date | timeuntil }}</b>.");
 			{% endif %}
 
 			return false;
@@ -116,8 +121,9 @@
 			addImageToPhotoboardCustomAjaxAction.setActionName("add_image_to_photoboard");
 			// success callback function
 			var successCallback = function(jsonResponse) {
-				// redirect with success message
-				location.href = "/profilo/foto-bacheca/1/";
+				// fare submit di un form nascosto che punta a questa pagina
+				// caricherò il messaggio di successo nella view...mucho mejo!
+				$(".addPhotoboardImageFormSubmitAction").submit();
 			};
 			addImageToPhotoboardCustomAjaxAction.setAjaxSuccessCallbackFunction(successCallback);
 			// perform ajax call to add favorite

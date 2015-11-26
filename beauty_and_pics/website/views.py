@@ -679,19 +679,25 @@ def profile_gain_points(request):
 
 @login_required
 @user_passes_test(check_if_is_a_catwalker_user)
-def profile_photoboard(request, add_success):
+def profile_photoboard(request):
     """View to show photoboard page"""
+
+    # TODO: errore
+    # se l'utente ha appena inserito l'immagine nella bacheca mostro un popup di successo
+    if request.POST.get("add_photoboard_image_form_sent"):
+        messages.add_message(request, settings.POPUP_SIMPLE_MESSAGE, 'Immagine inserita correttamente nella bacheca. Condividi la foto il più possibile per guadagnare <b>' + str(user_contest_image_info.get("like_limit")) + ' mi piace</b> ed ottenere il posto nella passerella!')
+        return HttpResponseRedirect('/profilo/foto-bacheca/')
 
     user_obj = request.user
     user_id = user_obj.id
+    Contest_obj = Contest()
+    account_obj = Account()
 
     # retrieve info about current logged in user
-    account_obj = Account()
     autenticated_user_data = account_obj.get_autenticated_user_data(request=request)
 
     # set current contest_type
-    contest_obj = Contest()
-    contest_obj.set_contest_type(request=request, contest_type=autenticated_user_data["contest_type"])
+    Contest_obj.common_view_set_contest_type(request=request, contest_type=autenticated_user_data["contest_type"])
 
     # check if already exists an image for this user in photoboard
     ImageContestImage_obj = ImageContestImage()
@@ -700,12 +706,11 @@ def profile_photoboard(request, add_success):
         # quindi prelevo l'url dell'immagine e altre info
         user_contest_image_info = ImageContestImage_obj.get_user_contest_image_info(user_id=user_id)
 	# photoboard image url
-	photoboard_image_url = settings.SITE_URL + "/passerella/bacheca/" + str(request.user.id) + "/"
+	photoboard_image_url = settings.SITE_URL + "/passerella/bacheca/" + str(user_id) + "/"
 
         context = {
             "user_id": user_id,
             "user_image_contest_info": user_contest_image_info,
-            "add_success": add_success,
             "photoboard_image_url": photoboard_image_url,
         }
         render_page = 'website/profile/profile_photoboard_details.html'

@@ -16,7 +16,7 @@
 {# photo stats block {{{ #}
 <div class="row">
 	<div class="col-sm-12">
-		<h3>Foto bacheca</h3>
+		<h3>Bacheca fotografica</h3>
 	</div>
 	<div class="col-sm-12">
 		<div class="alert alert-info">
@@ -80,7 +80,7 @@
 	<div class="col-xs-12 col-sm-6 col-md-4 col-lg-3">
 		<a href="#" class="thumbnail grid_button_1 shareViaFacebookClickAction" data-toggle="tooltip" data-placement="top" data-original-title="Condividi la foto su Facebook">
 			<span class="grid_button_image">
-				<img src="{% static "website/img/profile_fb_share.png" %}" alt="Condividi via Facebook">
+				<img src="{% static "website/img/profile_fb_share.png" %}" alt="Condividi su Facebook">
 			</span>
 			<span class="grid_button_label">Condividi su Facebook</span>
 		</a>
@@ -88,7 +88,7 @@
 	<div class="col-xs-12 col-sm-6 col-md-4 col-lg-3">
 		<a href="https://twitter.com/intent/tweet?url={{ photoboard_image_url|urlencode }}&text={{ "Votatemi:"|urlencode }}" class="thumbnail grid_button_1" data-toggle="tooltip" data-placement="top" data-original-title="Condividi la foto su Twitter">
 			<span class="grid_button_image">
-				<img src="{% static "website/img/profile_tw_share.png" %}" alt="Condividi via Twitter">
+				<img src="{% static "website/img/profile_tw_share.png" %}" alt="Condividi su Twitter">
 			</span>
 			<span class="grid_button_label">Condividi su Twitter</span>
 		</a>
@@ -115,11 +115,6 @@
 {{ block.super }}
 <script>
 	$(document).ready(function(){
-		{% if add_success %}
-			// show success popup
-			show_success_add_popup();
-		{% endif %}
-
 		// remove current image from photoboard click action
 		$(document).on("click",".removeImageFromPhotoboardAction", function(){
 			if (confirm("Stai per rimuovere l'immagine dalla bacheca, perderai tutti i \"mi piace\" ricevuti, confermi?")) {
@@ -150,14 +145,6 @@
 			return false;
 		});
 	});
-
-	/** function to show a success popup */
-	function show_success_add_popup() {
-		// like limit
-		var like_limit = "{{ user_image_contest_info.like_limit }}";
-		// open success bootstrap modal
-		bootstrapModalsObect.showSuccessModal('Immagine inserita correttamente nella bacheca. Condividi la foto il più possibile per guadagnare <b>' + like_limit + ' mi piace</b> ed ottenere il posto nella passerella!');
-	}
 
 	// remove photoboard user image
 	function removeImageFromPhotoboard() {

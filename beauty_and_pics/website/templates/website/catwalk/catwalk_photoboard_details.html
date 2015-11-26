@@ -85,7 +85,7 @@
 				<div class="row">
 					<div class="col-md-12">
 						<div class="alert alert-warning">
-							<span class="msgTextAction">Hai già dato il tuo "mi piace" a questo partecipante.</span>
+							<span class="msgTextAction">Hai già dato il tuo "mi piace" per {{ user_info.first_name }}.</span>
 						</div>
 					</div>
 				</div>
@@ -147,7 +147,7 @@
 					// show user voted msg block
 					$(".userVotedMsgBlockAction").removeClass("hide");
 					// open success bootstrap modal
-					bootstrapModalsObect.showMessageModal('Hai dato il tuo "<b>mi piace</b>" a {{ user_info.first_name }}.<br />Ora visita anche il suo <a href="/passerella/dettaglio-utente/{{ user_info.user_id }}/">profilo completo</a> per vedere tutte le sue foto.', 'Ottima scelta!');
+					bootstrapModalsObect.showMessageModal('Hai dato il tuo "<b>mi piace</b>" per {{ user_info.first_name }}.<br />Visita anche il suo <a href="/passerella/dettaglio-utente/{{ user_info.user_id }}/">profilo completo</a> e guarda tutte le sue foto.', 'Ottima scelta!');
 				}
 			};
 			photoboardLikeCustomAjaxAction.setAjaxSuccessCallbackFunction(successCallback);

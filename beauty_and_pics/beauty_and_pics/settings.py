@@ -18,7 +18,7 @@ GIT_PROJECT_NAME = "beauty-and-pics"
 # See https://docs.djangoproject.com/en/1.7/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = '!4gs-mrlkct9)_j(afw-i1)gjoj21kp_y^zhf3-9+9tatkge4k'
+SECRET_KEY = '!4gs-mrlkct9)_j(afw-i1)gjoj21kp_y^zhf3-9+9tatkge4k' # SECRET_KEY only for test
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -88,7 +88,7 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     "django.core.context_processors.static",
     "django.core.context_processors.tz",
     "django.contrib.messages.context_processors.messages",
-    "django.core.context_processors.request",
+    "django.core.context_processors.request", # questo avrei voluto evitarlo, ma serve per l'app 'django_bootstrap_breadcrumbs'
     "beauty_and_pics.contest_processors.common_contest_processors" # <= il nuovo context
 )
 
@@ -99,17 +99,21 @@ POPUP_ALERT = 110
 POPUP_ALERT_TAG = 'popup_alert'
 POPUP_ERROR = 120
 POPUP_ERROR_TAG = 'popup_error'
+POPUP_SIMPLE_MESSAGE = 130
+POPUP_SIMPLE_MESSAGE_TAG = 'popup_simple_message'
 
 POPUP_TAGS = {
     'POPUP_SUCCESS_TAG' : POPUP_SUCCESS_TAG,
     'POPUP_ALERT_TAG' : POPUP_ALERT_TAG,
     'POPUP_ERROR_TAG' : POPUP_ERROR_TAG,
+    'POPUP_SIMPLE_MESSAGE_TAG' : POPUP_SIMPLE_MESSAGE_TAG,
 }
 
 MESSAGE_TAGS = {
     POPUP_SUCCESS: POPUP_SUCCESS_TAG,
     POPUP_ALERT: POPUP_ALERT_TAG,
     POPUP_ERROR: POPUP_ERROR_TAG,
+    POPUP_SIMPLE_MESSAGE: POPUP_SIMPLE_MESSAGE_TAG,
 }
 # message framework custom tags }}}
 

@@ -351,6 +351,7 @@ function writeCountdownEndString(contestStatus) {
 var bootstrapModalsObect = {
 
 	// popup message tags
+	simple_message_tags : "popup_simple_message",
 	success_message_tags : "popup_success",
 	alert_message_tags : "popup_alert",
 	error_message_tags : "popup_error",
@@ -419,6 +420,9 @@ var bootstrapModalsObect = {
 		} else if (message_tags == this.error_message_tags) {
 			// show an error modal popup
 			this.showErrorModal(message);
+		} else if (message_tags == this.simple_message_tags) {
+			// show a simple message popup without style
+			this.showMessageModal(message);
 		}
 	},
 
