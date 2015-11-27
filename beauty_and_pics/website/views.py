@@ -679,14 +679,8 @@ def profile_gain_points(request):
 
 @login_required
 @user_passes_test(check_if_is_a_catwalker_user)
-def profile_photoboard(request):
+def profile_photoboard(request, image_add_success):
     """View to show photoboard page"""
-
-    # TODO: errore
-    # se l'utente ha appena inserito l'immagine nella bacheca mostro un popup di successo
-    if request.POST.get("add_photoboard_image_form_sent"):
-        messages.add_message(request, settings.POPUP_SIMPLE_MESSAGE, 'Immagine inserita correttamente nella bacheca. Condividi la foto il più possibile per guadagnare <b>' + str(user_contest_image_info.get("like_limit")) + ' mi piace</b> ed ottenere il posto nella passerella!')
-        return HttpResponseRedirect('/profilo/foto-bacheca/')
 
     user_obj = request.user
     user_id = user_obj.id
@@ -707,6 +701,10 @@ def profile_photoboard(request):
         user_contest_image_info = ImageContestImage_obj.get_user_contest_image_info(user_id=user_id)
 	# photoboard image url
 	photoboard_image_url = settings.SITE_URL + "/passerella/bacheca/" + str(user_id) + "/"
+
+	# se l'utente ha appena inserito l'immagine nella bacheca mostro un popup di successo
+	if image_add_success:
+	    messages.add_message(request, settings.POPUP_SIMPLE_MESSAGE, 'Immagine inserita correttamente nella bacheca. Condividi la foto il più possibile per guadagnare <b>' + str(ICA_LIKE_LIMIT) + ' mi piace</b> ed ottenere il posto nella passerella!')
 
         context = {
             "user_id": user_id,

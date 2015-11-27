@@ -47,11 +47,6 @@
 <div class="text-center">
 	<a class="btn btn-success loadMoreElementsAction" href="#">Mostra altre immagini</a>
 </div>
-{# hidden form #}
-<form class="addPhotoboardImageFormSubmitAction" method="post" action="">
-	{% csrf_token %}
-	<input name="add_photoboard_image_form_sent" value="1" type="hidden">
-</form>
 {# image grid block }}} #}
 {% endblock container4_content %}
 {% block custom_js %}
@@ -121,9 +116,8 @@
 			addImageToPhotoboardCustomAjaxAction.setActionName("add_image_to_photoboard");
 			// success callback function
 			var successCallback = function(jsonResponse) {
-				// fare submit di un form nascosto che punta a questa pagina
-				// caricherò il messaggio di successo nella view...mucho mejo!
-				$(".addPhotoboardImageFormSubmitAction").submit();
+			    // redirect with success message
+			    location.href = "/profilo/foto-bacheca/1/";
 			};
 			addImageToPhotoboardCustomAjaxAction.setAjaxSuccessCallbackFunction(successCallback);
 			// perform ajax call to add favorite

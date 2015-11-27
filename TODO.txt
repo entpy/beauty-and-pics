@@ -52,4 +52,6 @@ Sezione preferenze fatta a piastrelle (stile win 8 :O :O :O :O :O:O)
 	(ricezione email notifiche, zona proibita, informazioni utente)
 
 testare:
-aggiunta immagine al photoboard, deve essere mostrato messaggio di successo
+- aggiunta immagine al photoboard, deve essere mostrato messaggio di successo
+- testare il photoboard con la chiusura/apertura dei contest (ora è completamente scollegato quindi
+  dovrebbe funzionare)
