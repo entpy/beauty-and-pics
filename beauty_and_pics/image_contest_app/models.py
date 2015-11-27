@@ -31,7 +31,7 @@ class ImageContest(models.Model):
         app_label = 'image_contest_app'
 
     def __unicode__(self):
-        return str(self.image_contest_id) + " " + str(self.contest.contest_type.code) + " " + str(self.creation_date)
+        return str(self.image_contest_id) + " " + str(self.contest_type.code) + " " + str(self.creation_date)
 
     def image_contest_manager(self):
         """Function to manage image contests"""
