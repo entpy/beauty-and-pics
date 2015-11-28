@@ -575,7 +575,6 @@ var bootstrapModalsObect = {
 		messageBlockTemplate += '<div class="row">';
 		messageBlockTemplate += '<div class="col-md-8">';
 		messageBlockTemplate += '<div class="favorite_popup_info_container">';
-		messageBlockTemplate += '<div class="favorite_popup_name_container">' + userFirstName + ' ' + userLastName + '</div>';
 		if (userRanking) {
 		    messageBlockTemplate += '<div><span class="favorite_popup_ranking_value">' + userRanking + '</span>a posizione</div>';
 		}
@@ -586,7 +585,7 @@ var bootstrapModalsObect = {
 		messageBlockTemplate += '<img class="favorite_profile_image" alt="Immagine profilo" src="' + userProfileImageUrl + '"';
 		messageBlockTemplate += '</div>';
 		messageBlockTemplate += '</div>';
-		$(".bootstrap_modal").find('.modal-title').html("Dettaglio utente");
+		$(".bootstrap_modal").find('.modal-title').html(userFirstName + ' ' + userLastName);
 		$(".bootstrap_modal").find('.modal-footer').html('<button type="button" class="btn btn-default" data-dismiss="modal">Chiudi</button><a href="/passerella/dettaglio-utente/' + userId + '/" class="btn btn-success">Vai al profilo</a>');
 		$(".bootstrap_modal").find('.modal-body').html(messageBlockTemplate);
 		this.showBootstrapModal();

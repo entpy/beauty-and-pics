@@ -209,7 +209,6 @@ ul.grid_container li img:hover { opacity: 0.5; }
 .favorite_popup_info_container > div { margin-bottom: 10px; }
 .favorite_popup_info_container .favorite_popup_ranking_value, .favorite_popup_info_container .favorite_popup_points_value { font-weight: bold; font-size: 21px; }
 .favorite_popup_info_container .favorite_popup_points_container { margin-bottom: 30px; }
-.favorite_popup_info_container .favorite_popup_name_container { margin-bottom: 20px; }
 
 /* catwalk winner block */
 .winner_block_wrapper .winner_block_name { margin-bottom: 10px; }
