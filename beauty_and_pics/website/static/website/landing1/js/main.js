@@ -1,6 +1,6 @@
 $(document).ready(function() {
 	$(window).load(function(){
-		$('.page-loader').fadeOut('slow');
+		// $('.page-loader').fadeOut('slow');
 	});
 
 	wow = new WOW({
