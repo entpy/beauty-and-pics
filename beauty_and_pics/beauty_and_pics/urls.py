@@ -61,5 +61,6 @@ urlpatterns = patterns('',
     # landing pages
     url(r'^l/concorso-per-modelle/$', 'website.views.landing_landing1', name='landing_landing1'),
     url(r'^l/evento-tendenze-moda/$', 'website.views.landing_landing2', name='landing_landing2'),
+    url(r'^l/beauty-and-pics/$', 'website.views.beauty_and_pics', name='beauty_and_pics'),
 
 ) + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT) + static(settings.MEDIA_URL_TMP, document_root=settings.MEDIA_ROOT)

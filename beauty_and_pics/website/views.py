@@ -649,4 +649,7 @@ def landing_landing1(request):
 def landing_landing2(request):
     """Landing page 2 - tendenze moda"""
     return render(request, 'website/landing/landing2.html', False)
+def beauty_and_pics(request):
+    """Landing beauty_and_pics - presentazione del concorso"""
+    return render(request, 'website/landing/beauty_and_pics.html', False)
 # landing pages }}}
