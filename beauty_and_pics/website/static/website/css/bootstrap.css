@@ -6845,10 +6845,10 @@ a.list-group-item-danger.active:focus {
 .nav-pills > li + li { margin: 0px; }
 .table a.alert-link { color: transparent; text-decoration: none; }
 hr { border-color: #dcdcdc; }
-.breadcrumb { background-color: transparent; font-size: 21px; margin-bottom: 10px; margin-top: 20px; padding: 0; }
+.breadcrumb { background-color: transparent; font-size: 19px; margin-bottom: 10px; margin-top: 20px; padding: 0; }
 .breadcrumb > li + li::before { content: none; }
 .breadcrumb > li span.separator { color: #cccccc; }
-.breadcrumb > li span.active_label { color: #2c3e50; }
+.breadcrumb > li span.active_label { color: #2c3e50; font-size: 26px; }
 
 active_label
 /*.nav > li > a, h3, .h3, .alert { margin-left: 5px; margin-right: 5px; }*/

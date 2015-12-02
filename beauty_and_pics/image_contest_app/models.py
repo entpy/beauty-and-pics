@@ -305,8 +305,8 @@ class ImageContestImage(models.Model):
         ex. -> current_contest = woman_contest
         select images where image_contest.contest.type = contest_type and status=0
         """
-        return_var = ImageContestImage.objects.values('user__id', 'image__image').filter(image_contest__contest_type__code=contest_type, image_contest__status=ICA_CONTEST_TYPE_ACTIVE)
-	return_var = return_var.order_by('-creation_date')
+        return_var = ImageContestImage.objects.values('user__id', 'image__thumbnail_image__image').filter(image_contest__contest_type__code=contest_type, image_contest__status=ICA_CONTEST_TYPE_ACTIVE)
+	return_var = return_var.order_by('creation_date')
 
         # limits filter
         if filters_list.get("start_limit") and filters_list.get("show_limit"):

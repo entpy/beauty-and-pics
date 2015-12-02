@@ -15,7 +15,7 @@
 {% block photoboard_winner_banner %}
 {% if photoboard_contest_winner %}
 {# se ho un vincitore del photoboard mostro il box con l'immagine del vincitore (solo qui nella passerella) #}
-{% include "website/inc/include_blocks/banner.html" with main_title="Beauty and Pics" subtitle="della settimana" img_src=photoboard_contest_winner.image__image img_alt="Foto della settimana" button_url="/passerella/dettaglio-utente/"|str_cat:photoboard_contest_winner.user__id|str_cat:"/" button_label="Vai al profilo" button_class="btn-success" background_class="banner_bg_light_gray" only %}
+{% include "website/inc/include_blocks/banner.html" with main_title="Beauty and Pics" subtitle="della settimana" img_src=photoboard_contest_winner.image__image img_alt="Foto della settimana" button_url="/passerella/dettaglio-utente/"|str_cat:photoboard_contest_winner.user__id|str_cat:"/" button_label="Vedi profilo" button_class="btn-success" background_class="banner_bg_light_gray" only %}
 {% endif %}
 {% endblock photoboard_winner_banner %}
 

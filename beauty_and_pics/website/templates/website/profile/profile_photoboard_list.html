@@ -12,7 +12,7 @@
 
 {# page tip block (blocco a destra con titolo e descrizione) #}
 {% block page_tip %}
-{% include "website/inc/include_blocks/page_tip.html" with title="Bacheca fotografica" text="Vorresti avere uno spazio dedicato per la tua foto migliore? Questo è il posto giusto." only %}
+{% include "website/inc/include_blocks/page_tip.html" with title="Bacheca fotografica" text="Vorresti avere uno spazio dedicato per la tua foto migliore? Questo è il posto giusto. La foto più votata avrà uno spazio tutto suo nella passerella per 2 settimane." only %}
 {% endblock %}
 
 {% block container4_content %}
@@ -29,7 +29,7 @@
 	{% elif enable_image_selection %}
 		<div class="col-sm-12">
 			<div class="alert alert-info">
-				<p>Fatti notare, mostra il tuo scatto più artistico. Tra tutte le foto presenti nella bacheca, quella che per prima otterrà {{ contest_like_limit }} mi piace otterrà uno spazio tutto suo nella passerella per 2 settimane.<br /><b>Seleziona quale immagine vorresti inserire nella bacheca.</b></p>
+				<p>Fatti notare, mostra il tuo scatto più artistico. Tra tutte le foto presenti nella bacheca, quella che per prima otterrà {{ contest_like_limit }} mi piace, avrà uno spazio tutto suo nella passerella per 2 settimane.<br /><b>Seleziona quale immagine vorresti inserire nella bacheca.</b></p>
 			</div>
 		</div>
 	{% else %}

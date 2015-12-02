@@ -285,7 +285,7 @@ class ajaxManager():
                 logger.debug("element list: " + str(single_element))
 		json_account_element.append({
 			"user_id": single_element["user__id"],
-			"thumbnail_image_url": settings.MEDIA_URL + single_element["image__image"],
+			"thumbnail_image_url": settings.MEDIA_URL + single_element["image__thumbnail_image__image"],
 		}),
 
         # user notify section
