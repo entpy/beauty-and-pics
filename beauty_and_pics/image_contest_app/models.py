@@ -323,13 +323,13 @@ class ImageContestImage(models.Model):
         ex. -> current_contest = woman_contest
         SELECT * WHERE
         image_contest.contest.type = contest_type AND
-        status=1 AND
-        like=500;
+        status = 1 AND
+        like >= 500;
         """
         return_var = {}
 
         try:
-            ImageContestImage_obj = ImageContestImage.objects.values('image_contest_image_id', 'image_contest', 'user__id', 'user__first_name', 'user__last_name', 'image__image', 'image__thumbnail_image__image', 'image_contest__expiring').get(image_contest__contest_type__code=contest_type, image_contest__status=ICA_CONTEST_TYPE_CLOSED, like=ICA_LIKE_LIMIT)
+            ImageContestImage_obj = ImageContestImage.objects.values('image_contest_image_id', 'image_contest', 'user__id', 'user__first_name', 'user__last_name', 'image__image', 'image__thumbnail_image__image', 'image_contest__expiring').get(image_contest__contest_type__code=contest_type, image_contest__status=ICA_CONTEST_TYPE_CLOSED, like__gte=ICA_LIKE_LIMIT)
         except ImageContestImage.DoesNotExist:
 	    logger.info("nessun photoboard contest chiuso per il tipo: " + str(contest_type))
             # non ci sono dei contest chiusi
@@ -349,13 +349,13 @@ class ImageContestImage(models.Model):
         ex. -> current_contest = woman_contest
         SELECT * WHERE
         image_contest.contest.type = contest_type AND
-        status=1 AND
-        like=500;
+        status = 1 AND
+        like >= 500;
         """
         return_var = None
 
         try:
-            ImageContestImage_obj = ImageContestImage.objects.get(image_contest__contest_type__code=contest_type, image_contest__status=ICA_CONTEST_TYPE_CLOSED, like=ICA_LIKE_LIMIT)
+            ImageContestImage_obj = ImageContestImage.objects.get(image_contest__contest_type__code=contest_type, image_contest__status=ICA_CONTEST_TYPE_CLOSED, like__gte=ICA_LIKE_LIMIT)
         except ImageContestImage.DoesNotExist:
 	    logger.info("nessun photoboard contest chiuso per il tipo: " + str(contest_type))
             # non ci sono dei contest chiusi

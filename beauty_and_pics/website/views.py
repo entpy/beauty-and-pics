@@ -10,6 +10,7 @@ from django.contrib.auth import logout
 from django.views.decorators.csrf import ensure_csrf_cookie
 from django.conf import settings
 from account_app.models.accounts import *
+from account_app.models.images import Book
 from account_app.models.favorites import *
 from contest_app.models.contests import *
 from contest_app.models.contest_types import *
@@ -686,6 +687,7 @@ def profile_photoboard(request, image_add_success):
     user_id = user_obj.id
     Contest_obj = Contest()
     account_obj = Account()
+    Book_obj = Book()
 
     # retrieve info about current logged in user
     autenticated_user_data = account_obj.get_autenticated_user_data(request=request)
@@ -732,11 +734,15 @@ def profile_photoboard(request, image_add_success):
         if photoboard_contest_winner.get("image_contest__expiring"):
             next_selection_date = photoboard_contest_winner.get("image_contest__expiring")
 
+	# check if exists book images
+	exists_user_images = Book_obj.exists_user_images(user_id=user_id)
+
         context = {
             "user_id": user_id,
             "user_is_winner": user_is_winner,
             "enable_image_selection": enable_image_selection,
             "next_selection_date": next_selection_date,
+            "exists_user_images": exists_user_images,
             "contest_like_limit": ICA_LIKE_LIMIT,
         }
         render_page = 'website/profile/profile_photoboard_list.html'

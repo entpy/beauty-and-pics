@@ -182,6 +182,15 @@ class Book(models.Model):
 
         return return_var
 
+    def exists_user_images(self, user_id):
+        """Function to count images about a user"""
+        return_var = 0
+        page_load_datetime = False
+        if user_id:
+	    return_var = Book.objects.filter(user__id=user_id, image_type=project_constants.IMAGE_TYPE["book"]).exists()
+
+        return return_var
+
     def get_base_image_url(self):
 	"""Function to retrieve base image url: http:www.hostimage.com/image_folder/"""
 	return settings.MEDIA_URL
