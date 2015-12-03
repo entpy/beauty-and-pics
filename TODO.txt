@@ -51,7 +51,16 @@ ALTER TABLE `upload_image_box_tmpuploadedimages` CONVERT TO CHARACTER SET utf8 C
 Sezione preferenze fatta a piastrelle (stile win 8 :O :O :O :O :O:O)
 	(ricezione email notifiche, zona proibita, informazioni utente)
 
-testare:
-- aggiunta immagine al photoboard, deve essere mostrato messaggio di successo
-- testare il photoboard con la chiusura/apertura dei contest (ora è completamente scollegato quindi
-  dovrebbe funzionare)
+A test su photoboard:
+- 1 aggiungere immagine
+- 2 rimuovere immagine
+- 3 aggiungere punto
+- 4 arrivare al limite di punti
+- 5 vedere l'immagine vincitrice nella passerella
+- 6 far scadere il concorso (dovrebbe essere inserita una riga in halloffame, eliminati voti, immagini
+  e relativo contest)
+
+B ripetere fino a 5 e poi
+- 1 eliminare immagine vincitrice del photoboard
+
+aggiungere una seconda e terza immagine nel photoboard e testare nuovamente i casi sopra (A e B)
