@@ -59,6 +59,7 @@ A test su photoboard:
 - 5 vedere l'immagine vincitrice nella passerella
 - 6 far scadere il concorso (dovrebbe essere inserita una riga in halloffame, eliminati voti, immagini
   e relativo contest)
+- 7 ripetere tutto con due schede e dare un voto in più oltre al vincitore
 
 B ripetere fino a 5 e poi
 - 1 eliminare immagine vincitrice del photoboard
