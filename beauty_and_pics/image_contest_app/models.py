@@ -5,8 +5,8 @@ from django.db.models import F, Q
 from django.contrib.auth.models import User
 from django.utils import timezone
 from django.conf import settings
-from django.dispatch import receiver
-from notify_system_app.models import Notify
+# from django.dispatch import receiver
+# from notify_system_app.models import Notify
 from contest_app.models.contest_types import Contest_Type
 from upload_image_box.models import cropUploadedImages 
 from image_contest_app.exceptions import *
@@ -179,6 +179,7 @@ class ImageContestImage(models.Model):
 
         return return_var
 
+    # TODO: ma che nomi
     def image_exists_in_active_contest(self, user_id):
         """Function to check if an image about user_id already exists for active contest"""
         return_var = False
@@ -230,7 +231,7 @@ class ImageContestImage(models.Model):
             # set expiring now + 2 weeks
             ImageContestImage_obj.image_contest.expiring = datetime.now() + timedelta(seconds=ICA_VATE_CONTEST_EXPIRING)
             ImageContestImage_obj.image_contest.save()
-	    logger.debug("like limit reached, closing image_contest (" + str(ImageContestImage_obj.image_contest.image_contest_id) + ") and setting expiring date to: " + str(datetime.now() + timedelta(seconds=ICA_VATE_CONTEST_EXPIRING)))
+	    logger.debug("limite punti raggiunto, chiudo il photoboard (" + str(ImageContestImage_obj.image_contest.image_contest_id) + ") e setto data di scadenza a: " + str(datetime.now() + timedelta(seconds=ICA_VATE_CONTEST_EXPIRING)))
             # write notification to winner user
 	    # per il momento non faccio scrivere nessuna notifica
             # self.write_contest_winner_notify(user_obj=ImageContestImage_obj.user)
