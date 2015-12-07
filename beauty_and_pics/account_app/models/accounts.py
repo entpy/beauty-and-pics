@@ -445,26 +445,39 @@ class Account(models.Model):
 
         return contest_account_info
 
-    def get_top_five_contest_user(self, contest_type=None, hall_of_fame=False):
+    # TODO: testare
+    def get_top_100_contest_user(self, contest_type):
+        """Function to retrieve the '100 best of' contest users"""
+        filters_list = {"filter_name": "classification", "start_limit": "0", "show_limit": "100"}
+        filtered_elements = self.get_filtered_accounts_list(filters_list=filters_list, contest_type=contest_type)
+        best_users = []
+        for user_info in filtered_elements:
+            try:
+                user_obj = self.get_user_about_id(user_id=user_info["user__id"]),
+            except User.DoesNotExist:
+                # l'utente potrebbe essere stato eliminato nel bel mezzo del for
+                # quindi skippo e passo all'iterazione successiva
+                continue
+            else:
+                best_users.append({
+                    "user_id": user_info["user__id"],
+                    "user": user_obj, # Ottimizzare, ma non credo si riesca
+                    "user_total_points": user_info.get("total_points"),
+                }),
+
+        return best_users
+
+    # TODO: testare
+    def get_top_five_contest_user(self, contest_type):
         """Function to retrieve the top five contest user"""
-        user = None
         book_obj = Book()
         top_five_account = []
         filters_list = {"filter_name": "classification", "start_limit": "0", "show_limit": "5"}
         filtered_elements = self.get_filtered_accounts_list(filters_list=filters_list, contest_type=contest_type)
         for user_info in filtered_elements:
             # logger.debug("element list: " + str(user_info))
-            # retrieve extra params in hall of fame case
-            if hall_of_fame:
-                try:
-		    user = self.get_user_about_id(user_id=user_info["user__id"])
-		except User.DoesNotExist:
-                    user = {}
-		    pass
-
             top_five_account.append({
                 "user_id": user_info["user__id"],
-                "user": user,
                 "user_first_name": user_info["user__first_name"],
                 "user_last_name": user_info["user__last_name"],
                 "user_email": user_info.get("user__email"),
@@ -491,7 +504,7 @@ class Account(models.Model):
         if filters_list["filter_name"] == "classification":
             # "contest__status" to identify point about current contest
             # più leggera ma non mostra gli utenti che non hanno ancora punti
-            return_var = Point.objects.values('user__first_name', 'user__last_name', 'user__email', 'user__id', 'user__account__newsletters_bitmask').filter(user__groups__name=project_constants.CATWALK_GROUP_NAME, contest__status=project_constants.CONTEST_ACTIVE, contest__contest_type__code=contest_type).annotate(total_points=Sum('points'))
+            return_var = Point.objects.values('user', 'user__first_name', 'user__last_name', 'user__email', 'user__id', 'user__account__newsletters_bitmask').filter(user__groups__name=project_constants.CATWALK_GROUP_NAME, contest__status=project_constants.CONTEST_ACTIVE, contest__contest_type__code=contest_type).annotate(total_points=Sum('points'))
             # più pesante e mostra anche gli utenti che non hanno ancora punti
             # return_var = Account.objects.values('user__first_name', 'user__last_name', 'user__email', 'user__id').filter(user__groups__name=project_constants.CATWALK_GROUP_NAME, contest_type__contest__status=project_constants.CONTEST_ACTIVE).annotate(total_points=Sum('user__point__points'))
             return_var = return_var.order_by('-total_points', 'user__id')

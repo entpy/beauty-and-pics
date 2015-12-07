@@ -13,11 +13,6 @@ class HallOfFame(models.Model):
     id_hall_of_fame = models.AutoField(primary_key=True)
     contest = models.ForeignKey('Contest')
     user = models.ForeignKey(User, null=True, on_delete=models.SET_NULL)
-    first_name = models.CharField(max_length=50, null=True)
-    last_name = models.CharField(max_length=50, null=True)
-    email = models.CharField(max_length=75)
-    profile_image = models.ImageField(max_length=500, null=True)
-    profile_thumbnail_image = models.ImageField(max_length=500, null=True)
     ranking = models.IntegerField()
     points = models.IntegerField(max_length=50)
 
@@ -31,17 +26,39 @@ class HallOfFame(models.Model):
         * id_hall_of_fame (PK)
         * contest (FK)
         * user (FK)
-        * first_name
-        * last_name
-        * email
-        * profile_image
-        * profile_thumbnail_image
         * ranking
         * points
     """
 
+    # TODO: testare
     def save_active_contest_hall_of_fame(self, contest_type):
         """Function to create hall of fame about a contest (before contest close action)"""
+        from account_app.models.accounts import Account
+        contest_obj = Contest()
+        account_obj = Account()
+
+        # retrieve best 100 users about current contest_type
+        top_users = account_obj.get_top_100_contest_user(contest_type=contest_type)
+
+        # retrieve active contest
+        active_contest = contest_obj.get_active_contests_by_type(contest_type=contest_type)
+        if top_users:
+            ranking = 1
+            for single_user in top_users:
+                # save user inside hall of fame *.*
+                hall_of_fame_obj = HallOfFame()
+                hall_of_fame_obj.contest = active_contest
+                hall_of_fame_obj.user = single_user["user"]
+                hall_of_fame_obj.ranking = ranking
+                hall_of_fame_obj.points = single_user["user_total_points"]
+                hall_of_fame_obj.save()
+                ranking +=1
+
+        return True
+
+    """ provo a sostituire con quella sopra
+    def save_active_contest_hall_of_fame(self, contest_type):
+        ""Function to create hall of fame about a contest (before contest close action)""
         from account_app.models.accounts import Account
         contest_obj = Contest()
         account_obj = Account()
@@ -70,9 +87,31 @@ class HallOfFame(models.Model):
                 return_var = True
 
         return return_var
+    """
 
     def get_last_active_contest_hall_of_fame(self, contest_type, only_winner=False):
         """Function to retrieve hall of fame about a contest (last active contest)"""
+        contest_obj = Contest()
+        return_var = None
+
+        # retrieve last active contest
+        last_closed_contest = contest_obj.get_last_closed_contests_by_type(contest_type=contest_type)
+        if last_closed_contest:
+            # retrieve all hall of fame users about last active contest
+            hall_of_fame_users = HallOfFame.objects.filter(contest__id_contest=last_closed_contest.id_contest).order_by('ranking')
+            if hall_of_fame_users:
+                if only_winner:
+                    # retrieve only winner
+                    return_var = hall_of_fame_users[0]
+                else:
+                    # retrieve top 100
+                    return_var = hall_of_fame_users
+
+        return return_var
+
+    """ sostituita da quella sopra
+    def get_last_active_contest_hall_of_fame(self, contest_type, only_winner=False):
+        ""Function to retrieve hall of fame about a contest (last active contest)""
         contest_obj = Contest()
         return_var = None
 
@@ -102,6 +141,7 @@ class HallOfFame(models.Model):
                 logger.debug("test@@@@: " + str(return_var))
 
         return return_var
+    """
 
     def get_last_active_contest_winner(self, contest_type):
         """Function to retrieve winner user about last active contest"""
