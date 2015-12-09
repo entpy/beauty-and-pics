@@ -51,7 +51,7 @@ class Contest_Type(models.Model):
 	except Contest_Type.DoesNotExist:
             Contest_Type_obj = Contest_Type(
                                     code = project_constants.MAN_CONTEST,
-                                    description = "Contest maschile",
+                                    description = "Concorso maschile",
                                     status = 1,
                                 )
             Contest_Type_obj.save()
@@ -63,7 +63,7 @@ class Contest_Type(models.Model):
 	except Contest_Type.DoesNotExist:
             Contest_Type_obj = Contest_Type(
                                     code = project_constants.WOMAN_CONTEST,
-                                    description = "Contest femminile",
+                                    description = "Concorso femminile",
                                     status = 1,
                                 )
             Contest_Type_obj.save()

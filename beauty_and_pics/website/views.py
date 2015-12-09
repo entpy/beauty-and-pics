@@ -170,8 +170,9 @@ def www_ranking_contest(request, contest_type, contest_year):
     HallOfFame_obj = HallOfFame()
 
     # check if contest_type exists, otherwise redirect in home page
-    if not Contest_Type_obj.get_contest_type_by_code(code=contest_type):
-	return HttpResponseRedirect('/')
+    current_contest_type_obj = Contest_Type_obj.get_contest_type_by_code(code=contest_type)
+    if not current_contest_type_obj:
+        return HttpResponseRedirect('/')
 
     # retrieve top 100 users
     # potrebbe essere una lista vuota in due casi, o la data selezionata non contiene nessun contest,
@@ -185,13 +186,8 @@ def www_ranking_contest(request, contest_type, contest_year):
     if top_100_users:
 	view_contest_year = top_100_users[0]["contest__start_date"]
 
-    # TODO: fare funzione che restituisca il nome in contest_type
     # retrieve contest name
-    contest_name = None
-    if contest_type == project_constants.WOMAN_CONTEST:
-	contest_name = "Concorso femminile"
-    elif contest_type == project_constants.MAN_CONTEST:
-	contest_name = "Concorso maschile"
+    contest_name = current_contest_type_obj.get("description")
 
     context = {
         "top_100_users": top_100_users,

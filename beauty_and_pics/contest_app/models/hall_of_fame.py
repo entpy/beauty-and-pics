@@ -56,8 +56,9 @@ class HallOfFame(models.Model):
 
         return True
 
+    """
     def get_last_active_contest_hall_of_fame(self, contest_type, only_winner=False):
-        """Function to retrieve hall of fame about a contest (last active contest)"""
+        ""Function to retrieve hall of fame about a contest (last active contest)""
         contest_obj = Contest()
         return_var = None
 
@@ -82,19 +83,21 @@ class HallOfFame(models.Model):
 		    return_var = hall_of_fame_users
 
         return return_var
+    """
 
     def get_last_active_contest_winner(self, contest_type):
         """Function to retrieve winner user about last active contest"""
         Book_obj = Book()
-        return_var = self.get_last_active_contest_hall_of_fame(contest_type=contest_type, only_winner=True)
+        return_var = self.get_contest_top_100(contest_type=contest_type, contest_year=False, only_winner=True)
 	if return_var:
 	    return_var["profile_image"] = Book_obj.get_profile_thumbnail_image_url(user_id=return_var["user__id"])
 	    return_var["profile_thumbnail_image"] = Book_obj.get_profile_image_url(user_id=return_var["user__id"])
 
         return return_var
 
-    # TODO: unificare questa funzione con "get_last_active_contest_hall_of_fame" perchè fanno praticamente la stessa cosa
-    def get_contest_top_100(self, contest_type, contest_year=False):
+    # TODO: testare elenco utenti per contest e anno.
+    # testare anche utente vincitore
+    def get_contest_top_100(self, contest_type, contest_year=False, only_winner=False):
         """Function to retrieve top 100 users about a contest"""
         Contest_obj = Contest()
         return_var = None
@@ -119,5 +122,9 @@ class HallOfFame(models.Model):
 
 	# order by ranking
 	return_var = return_var.order_by('ranking')
+
+        # check if return only winner user
+        if return_var and only_winner:
+            return_var = return_var[0]
 
         return list(return_var)
