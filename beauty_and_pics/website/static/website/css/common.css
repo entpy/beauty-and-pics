@@ -13,6 +13,7 @@ textarea { resize: none; }
 .float_right { float: right; }
 .readable_text1 { letter-spacing: 0.02em; line-height: 1.8678; }
 .readable_text2 { letter-spacing: 0.02em; line-height: 1.8678; color: #C5C5C5; padding: 20px; display: inline-block; }
+.readable_text3 { letter-spacing: 0.02em; line-height: 1.8678; padding: 20px; display: inline-block; }
 .last_page_element_margin { margin-bottom: 100px; }
 .inline_block { display: inline-block; }
 .display_none { display: none; }
@@ -46,6 +47,7 @@ textarea { resize: none; }
 .title_block * { color: #fff; }
 .first_color { background-color: #2C3E50; }
 .second_color { background-color: #1A242F; }
+.third_color { background-color: #ECF0F1; }
 .navigation_container a { color: white; }
 .link_color { color: #18bc9c; }
 .notify_details_container p a { color:  #2c3e50; }

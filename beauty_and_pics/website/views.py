@@ -15,6 +15,7 @@ from account_app.models.favorites import *
 from contest_app.models.contests import *
 from contest_app.models.contest_types import *
 from contest_app.models.votes import Vote
+from contest_app.models.hall_of_fame import HallOfFame
 from beauty_and_pics.common_utils import CommonUtils
 from email_template.email.email_template import *
 # loading forms
@@ -161,6 +162,44 @@ def www_register(request):
     }
 
     return render(request, 'website/www/www_register.html', context)
+
+def www_ranking_contest(request, contest_type, contest_year):
+    # view to show a ranking table about contest and year, se l'anno non è specificato
+    # mi baso sull'ultimo contest chiuso
+    Contest_Type_obj = Contest_Type()
+    HallOfFame_obj = HallOfFame()
+
+    # check if contest_type exists, otherwise redirect in home page
+    if not Contest_Type_obj.get_contest_type_by_code(code=contest_type):
+	return HttpResponseRedirect('/')
+
+    # retrieve top 100 users
+    # potrebbe essere una lista vuota in due casi, o la data selezionata non contiene nessun contest,
+    # oppure il contest esiste ma non è presente nessun partecipante con almeno un voto (quasi impossibile)
+    top_100_users = HallOfFame_obj.get_contest_top_100(contest_type=contest_type, contest_year=contest_year)
+
+    # retrieve contest year (ho fatto così perchè se contest_year non venisse passato ci si riferirebbe
+    # all'ultimo concorso chiuso prima di questo attivo, in questa maniera riesco a prelevare la
+    # data corretta
+    view_contest_year = None
+    if top_100_users:
+	view_contest_year = top_100_users[0]["contest__start_date"]
+
+    # TODO: fare funzione che restituisca il nome in contest_type
+    # retrieve contest name
+    contest_name = None
+    if contest_type == project_constants.WOMAN_CONTEST:
+	contest_name = "Concorso femminile"
+    elif contest_type == project_constants.MAN_CONTEST:
+	contest_name = "Concorso maschile"
+
+    context = {
+        "top_100_users": top_100_users,
+        "contest_name": contest_name,
+        "contest_year": view_contest_year,
+    }
+
+    return render(request, 'website/www/www_ranking_contest.html', context)
 # }}}
 
 # catwalk {{{

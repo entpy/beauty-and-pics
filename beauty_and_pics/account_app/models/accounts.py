@@ -453,17 +453,16 @@ class Account(models.Model):
         best_users = []
         for user_info in filtered_elements:
             try:
-                user_obj = self.get_user_about_id(user_id=user_info["user__id"]),
+		user_obj = {}
+                user_obj = self.get_user_about_id(user_id=user_info["user__id"])
             except User.DoesNotExist:
                 # l'utente potrebbe essere stato eliminato nel bel mezzo del for
-                # quindi skippo e passo all'iterazione successiva
-                continue
-            else:
-                best_users.append({
-                    "user_id": user_info["user__id"],
-                    "user": user_obj, # Ottimizzare, ma non credo si riesca
-                    "user_total_points": user_info.get("total_points"),
-                }),
+		pass
+	    best_users.append({
+		"user_id": user_info["user__id"],
+		"user": user_obj, # Ottimizzare, ma non credo si riesca
+		"user_total_points": user_info["total_points"],
+	    }),
 
         return best_users
 

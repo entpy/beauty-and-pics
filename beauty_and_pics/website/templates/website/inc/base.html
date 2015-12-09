@@ -251,7 +251,7 @@
 							{% block page_tip %}{% endblock %}
 								{# banner winner user #}
 							{% if contest_winner %}
-								{% include "website/inc/include_blocks/contest_winner_banner.html" with contest_date=contest_winner.contest__start_date contest_winner_first_name=contest_winner.first_name contest_winner_last_name=contest_winner.last_name profile_thumbnail_image=contest_winner.profile_thumbnail_image contest_winner_points=contest_winner.points contest_winner_user_id=contest_winner.user__id only %}
+								{% include "website/inc/include_blocks/contest_winner_banner.html" with contest_date=contest_winner.contest__start_date contest_winner_first_name=contest_winner.user__first_name contest_winner_last_name=contest_winner.user__last_name profile_thumbnail_image=contest_winner.profile_thumbnail_image contest_winner_points=contest_winner.points contest_winner_user_id=contest_winner.user__id only %}
 							{% endif %}
 								{# banner con il vincitore del photoboard #}
 							{% block photoboard_winner_banner %}

@@ -25,6 +25,7 @@ urlpatterns = patterns('',
     url(r'^come-funziona/$', 'website.views.www_how_it_works_info', name='www_how_it_works_info'),
     url(r'^come-iscriversi/$', 'website.views.www_signup_info', name='www_signup_info'),
     url(r'^il-concorso/$', 'website.views.www_contest_info', name='www_contest_info'),
+    url(r'^classifica/(?P<contest_type>[a-z-]+)/(?:(?P<contest_year>\d+)/)?$', 'website.views.www_ranking_contest', name='www_ranking_contest'), # pagina con la classifica del concorso
 
     # catwalk
     url(r'^passerella/dettaglio-utente/(?P<user_id>\d+)/$', 'website.views.catwalk_profile', name='catwalk_profile'),

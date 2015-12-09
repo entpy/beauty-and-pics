@@ -65,3 +65,6 @@ B ripetere fino a 5 e poi
 - 1 eliminare immagine vincitrice del photoboard
 
 aggiungere una seconda e terza immagine nel photoboard e testare nuovamente i casi sopra (A e B)
+
+----
+Il vincitore del concorso deve essere visibile solo nella passerella
