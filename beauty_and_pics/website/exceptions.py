@@ -89,3 +89,8 @@ class UserDeleteDoesNotExistsError(Exception):
     """Error in user delete, user id doesn't exists."""
     get_error_code = "018"
     pass
+
+class ContestClosedNotExistsError(Exception):
+    """Error in get last closed contest, a closed contest not exists yet."""
+    get_error_code = "019"
+    pass

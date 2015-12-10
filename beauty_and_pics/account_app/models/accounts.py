@@ -472,7 +472,7 @@ class Account(models.Model):
         book_obj = Book()
         top_five_account = []
         filters_list = {"filter_name": "classification", "start_limit": "0", "show_limit": "5"}
-        filtered_elements = self.get_filtered_accounts_list(filters_list=filters_list, contest_type=contest_type)
+        filtered_elements = self.get_filtered_accounts_list(contest_type=contest_type, filters_list=filters_list)
         for user_info in filtered_elements:
             # logger.debug("element list: " + str(user_info))
             top_five_account.append({
@@ -503,7 +503,7 @@ class Account(models.Model):
         if filters_list["filter_name"] == "classification":
             # "contest__status" to identify point about current contest
             # più leggera ma non mostra gli utenti che non hanno ancora punti
-            return_var = Point.objects.values('user', 'user__first_name', 'user__last_name', 'user__email', 'user__id', 'user__account__newsletters_bitmask').filter(user__groups__name=project_constants.CATWALK_GROUP_NAME, contest__status=project_constants.CONTEST_ACTIVE, contest__contest_type__code=contest_type).annotate(total_points=Sum('points'))
+            return_var = Point.objects.values('user__first_name', 'user__last_name', 'user__email', 'user__id', 'user__account__newsletters_bitmask').filter(user__groups__name=project_constants.CATWALK_GROUP_NAME, contest__status=project_constants.CONTEST_ACTIVE, contest__contest_type__code=contest_type).annotate(total_points=Sum('points'))
             # più pesante e mostra anche gli utenti che non hanno ancora punti
             # return_var = Account.objects.values('user__first_name', 'user__last_name', 'user__email', 'user__id').filter(user__groups__name=project_constants.CATWALK_GROUP_NAME, contest_type__contest__status=project_constants.CONTEST_ACTIVE).annotate(total_points=Sum('user__point__points'))
             return_var = return_var.order_by('-total_points', 'user__id')

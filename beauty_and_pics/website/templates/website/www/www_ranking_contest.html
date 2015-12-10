@@ -8,7 +8,7 @@
 {% block description %}La classifica di {{ site_name }}. Scopri il vincitore del concorso e consulta la classifica dei top 100 in qualsisi momento.{% endblock %}
 
 {% block block0_0_title_h1 %}La classifica{% endblock %}
-{% block block0_0_title_h4 %}{{ contest_name }}{% if top_100_users %}, anno {{ contest_year | date:"Y" }}{% endif %}{% endblock %}
+{% block block0_0_title_h4 %}{{ contest_name }}{% if top_100_users %}, anno {{ contest_start_date | date:"Y" }}{% endif %}{% endblock %}
 
 {% block block0_0_content %}
 <div class="centered_page generic_container generic_container1 third_color last_page_element_margin">
@@ -16,7 +16,7 @@
 		{% if top_100_users %}
 			<span class="readable_text3">
 				<h4>Risultati:</h4>
-				<p>La classifica completa dei top 100 del <b>{{ contest_name }}, anno {{ contest_year | date:"Y" }}</b>. Consultala quando vuoi per leggere punteggio e posizione, clicca sul link "Vai al profilo" per visitare il profilo del partecipante, clicca sul nome di uno dei primi 5 partecipanti per andare alla pagina dedicata del concorso.</p><br />
+				<p>La classifica completa dei top 100 del <b>{{ contest_name }}, anno {{ contest_start_date | date:"Y" }}</b>. Consultala quando vuoi per leggere punteggio e posizione, clicca sul link "Vai al profilo" per visitare il profilo del partecipante, clicca sul nome di uno dei primi 5 partecipanti per andare alla pagina dedicata del concorso.</p><br />
 			</span>
 			<div class="col-xs-12">
 				<table class="table table-striped table-hover ">
@@ -33,7 +33,7 @@
 					{% for user in top_100_users %}
 						<tr>
 							<td>{{ user.ranking }}</td>
-							<td>{{ user.user__first_name }}</td>
+							<td><a href="/podio/{{ contest_type }}/{{ contest_start_date | date:"Y" }}/{{ user.user__id }}/">{{ user.user__first_name }}</a></td>
 							<td>{{ user.user__last_name }}</td>
 							<td>{{ user.points }}</td>
 							<td><a href="/passerella/dettaglio-utente/{{ user.user__id }}/">Vai al profilo</a></td>

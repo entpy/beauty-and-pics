@@ -1,0 +1,21 @@
+{% extends "website/inc/base_www.html" %}
+{% load staticfiles %}
+
+{# page title #}
+{% block title %}{{ site_name }} | il podio{% endblock %}
+
+{# page description #}
+{% block description %}Il podio di {{ site_name }}. [mettere desc]{% endblock %}
+
+{% block block0_0_title_h1 %}{{ podium_user.user__first_name }} {{ podium_user.user__last_name }}{% endblock %}
+{% block block0_0_title_h4 %}{{ contest_name }}, anno {{ contest_start_date | date:"Y" }}{% endblock %}
+
+{% block block0_0_content %}
+<div class="centered_page generic_container generic_container1 third_color last_page_element_margin">
+	<div class="generic_container_block generic_container_block2 left_100">
+		<span class="readable_text3">
+			<h4>Pagina podio</h4>
+		</span>
+	</div>
+</div>
+{% endblock block0_0_content %}

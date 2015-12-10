@@ -5,6 +5,7 @@ from contest_app.models.contests import Contest
 from django.contrib.auth.models import User
 from account_app.models.images import Book
 from beauty_and_pics.consts import project_constants
+from website.exceptions import ContestClosedNotExistsError
 import logging
 
 # Get an instance of a logger
@@ -85,19 +86,9 @@ class HallOfFame(models.Model):
         return return_var
     """
 
-    def get_last_active_contest_winner(self, contest_type):
-        """Function to retrieve winner user about last active contest"""
-        Book_obj = Book()
-        return_var = self.get_contest_top_100(contest_type=contest_type, contest_year=False, only_winner=True)
-	if return_var:
-	    return_var["profile_image"] = Book_obj.get_profile_thumbnail_image_url(user_id=return_var["user__id"])
-	    return_var["profile_thumbnail_image"] = Book_obj.get_profile_image_url(user_id=return_var["user__id"])
-
-        return return_var
-
     # TODO: testare elenco utenti per contest e anno.
     # testare anche utente vincitore
-    def get_contest_top_100(self, contest_type, contest_year=False, only_winner=False):
+    def get_contest_top_100(self, contest_type, contest_year=False, user_id=False, only_winner=False):
         """Function to retrieve top 100 users about a contest"""
         Contest_obj = Contest()
         return_var = None
@@ -118,7 +109,14 @@ class HallOfFame(models.Model):
 	else:
 	    # se non ho specificato l'anno, mi baso sull'ultimo contest chiuso
 	    last_closed_contest = Contest_obj.get_last_closed_contests_by_type(contest_type=contest_type)
+            if not last_closed_contest:
+                # TODO: not exists a closed contest yet
+                raise ContestClosedNotExistsError
 	    return_var = return_var.filter(contest__id_contest=last_closed_contest.id_contest)
+
+        # check if retrieve only a user
+        if user_id:
+            return_var = return_var.filter(user__id=user_id)
 
 	# order by ranking
 	return_var = return_var.order_by('ranking')
@@ -127,4 +125,35 @@ class HallOfFame(models.Model):
         if return_var and only_winner:
             return_var = return_var[0]
 
-        return list(return_var)
+        return return_var
+
+    def get_last_active_contest_winner(self, contest_type):
+        """Function to retrieve winner user about last active contest"""
+        Book_obj = Book()
+        return_var = self.get_contest_top_100(contest_type=contest_type, only_winner=True)
+	if return_var:
+	    return_var["profile_image"] = Book_obj.get_profile_thumbnail_image_url(user_id=return_var["user__id"])
+            return_var["profile_thumbnail_image"] = Book_obj.get_profile_image_url(user_id=return_var["user__id"])
+            # logger.info("vincitore concorso[" + str(contest_type) + "]: " + str(return_var))
+
+        return return_var
+
+    def get_hall_of_fame_user(self, contest_type, contest_year, user_id):
+        """Function to retrieve winner user about last active contest"""
+        Book_obj = Book()
+        return_var = self.get_contest_top_100(contest_type=contest_type, contest_year=contest_year, user_id=user_id)
+	if return_var:
+	    return_var["profile_image"] = Book_obj.get_profile_thumbnail_image_url(user_id=user_id)
+	    return_var["profile_thumbnail_image"] = Book_obj.get_profile_image_url(user_id=user_id)
+
+        return return_var
+
+    def is_a_podium_user(self, hall_of_fame_user_row):
+        """Function to check if a user is a podium user"""
+        return_var = False
+
+        if hall_of_fame_user_row:
+            if int(hall_of_fame_user_row.get("ranking")) >= 1 and int(hall_of_fame_user_row.get("ranking")) <= 5:
+                return_var = True
+
+        return return_var
