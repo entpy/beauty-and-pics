@@ -94,3 +94,8 @@ class ContestClosedNotExistsError(Exception):
     """Error in get last closed contest, a closed contest not exists yet."""
     get_error_code = "019"
     pass
+
+class ContestTypeRequiredError(Exception):
+    """A contest type is required, function called without this param."""
+    get_error_code = "020"
+    pass

@@ -35,7 +35,11 @@ def common_contest_processors(request):
     # current contest start_time
     contest_info = contest_obj.get_contest_info_about_type(contest_type=contest_type)
     # last contest winner
-    contest_winner = hall_of_fame_obj.get_last_active_contest_winner(contest_type=contest_type)
+    try:
+	contest_winner = hall_of_fame_obj.get_hall_of_fame_user(contest_type=contest_type)
+    except ContestClosedNotExistsError, ContestTypeRequiredError:
+	# non esistono ancora concorsi chiusi o nessun contest type passato
+	pass
     # check if exists an active photoboard
     exists_active_photoboard = ImageContest_obj.exists_active_contest(contest_type=contest_type)
     # last photoboard contest winner

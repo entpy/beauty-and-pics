@@ -57,41 +57,12 @@ class HallOfFame(models.Model):
 
         return True
 
-    """
-    def get_last_active_contest_hall_of_fame(self, contest_type, only_winner=False):
-        ""Function to retrieve hall of fame about a contest (last active contest)""
-        contest_obj = Contest()
-        return_var = None
-
-        # retrieve last active contest
-        last_closed_contest = contest_obj.get_last_closed_contests_by_type(contest_type=contest_type)
-        if last_closed_contest:
-            # retrieve all hall of fame users about last active contest
-            hall_of_fame_users = HallOfFame.objects.values(
-                    'contest__start_date',
-                    'user__id',
-                    'user__first_name',
-                    'user__last_name',
-                    'ranking',
-                    'points',
-                    ).filter(contest__id_contest=last_closed_contest.id_contest).order_by('ranking')
-	    if hall_of_fame_users:
-		if only_winner:
-		    # retrieve only winner
-		    return_var = hall_of_fame_users[0]
-		else:
-		    # retrieve all top 100
-		    return_var = hall_of_fame_users
-
-        return return_var
-    """
-
     # TODO: testare elenco utenti per contest e anno.
     # testare anche utente vincitore
-    def get_contest_top_100(self, contest_type, contest_year=False, user_id=False, only_winner=False):
+    def get_contest_top_100(self, contest_type, contest_year, user_id=False):
         """Function to retrieve top 100 users about a contest"""
-        Contest_obj = Contest()
         return_var = None
+        Contest_obj = Contest()
 
 	# filter contest_type
 	return_var = HallOfFame.objects.values(
@@ -103,48 +74,67 @@ class HallOfFame(models.Model):
 		'points',
 		).filter(contest__contest_type__code=contest_type)
 
-	# filter year if specified
-	if contest_year:
-	    return_var = return_var.filter(contest__start_date__year=contest_year)
-	else:
-	    # se non ho specificato l'anno, mi baso sull'ultimo contest chiuso
-	    last_closed_contest = Contest_obj.get_last_closed_contests_by_type(contest_type=contest_type)
-            if not last_closed_contest:
-                # TODO: not exists a closed contest yet
-                raise ContestClosedNotExistsError
-	    return_var = return_var.filter(contest__id_contest=last_closed_contest.id_contest)
+	# filter year
+	return_var = return_var.filter(contest__start_date__year=contest_year)
 
-        # check if retrieve only a user
+        # check if retrieve only a single user
         if user_id:
             return_var = return_var.filter(user__id=user_id)
 
 	# order by ranking
 	return_var = return_var.order_by('ranking')
 
-        # check if return only winner user
-        if return_var and only_winner:
-            return_var = return_var[0]
-
         return return_var
 
-    def get_last_active_contest_winner(self, contest_type):
-        """Function to retrieve winner user about last active contest"""
-        Book_obj = Book()
-        return_var = self.get_contest_top_100(contest_type=contest_type, only_winner=True)
+    def get_hall_of_fame_user(self, contest_type, contest_year=False, user_id=False):
+	"""Function to retrieve last active contest winner"""
+	return_var = None
+	Book_obj = Book()
+
+	logger.info("prelevo un utente specifico tra i top 100, contest: " + str(contest_type) + ", contest_year: " + str(contest_year) + ", user_id: " + str(user_id))
+
+	try:
+	    return_var = self.get_hall_of_fame_elements(contest_type=contest_type, contest_year=contest_year, user_id=user_id)
+	except ContestTypeRequiredError:
+	    raise
+	except ContestClosedNotExistsError:
+	    raise
+
 	if return_var:
+	    # sia che voglia avere solo il vincitore, oppure un determinato utente,
+	    # prelevo solo il primo elemento della lista
+	    return_var = return_var[0]
+
+	    # carico anche l'immagine profilo dell'utente prelevato
+	    logger.info("prelevo immagine profilo per user: " + str(return_var))
 	    return_var["profile_image"] = Book_obj.get_profile_thumbnail_image_url(user_id=return_var["user__id"])
-            return_var["profile_thumbnail_image"] = Book_obj.get_profile_image_url(user_id=return_var["user__id"])
-            # logger.info("vincitore concorso[" + str(contest_type) + "]: " + str(return_var))
+	    return_var["profile_thumbnail_image"] = Book_obj.get_profile_image_url(user_id=return_var["user__id"])
 
         return return_var
 
-    def get_hall_of_fame_user(self, contest_type, contest_year, user_id):
-        """Function to retrieve winner user about last active contest"""
+    def get_hall_of_fame_elements(self, contest_type, contest_year=False, user_id=False):
+	"""
+	    Function to retrieve an elements list of a single element about hall of fame object:
+	    - se non viene passato un anno, viene utilizzato l'anno dell'ultimo contest attivo
+	    - se non viene passato l'anno e non esistono contest precedentemente chiusi throwa un folle errore
+	"""
+	return_var = None
         Book_obj = Book()
+	Contest_obj = Contest()
+
+	if not contest_type:
+	    # non è stato specificato un contest_type
+	    raise ContestTypeRequiredError
+
+	if not contest_year:
+	    # tento di prelevare l'anno dell'ultimo concorso chiuso
+	    try:
+		contest_year = Contest_obj.get_last_closed_contests_year(contest_type=contest_type)
+	    except ContestClosedNotExistsError:
+		# non esiste ancora un contest chiuso per questo contest_type
+		raise
+
         return_var = self.get_contest_top_100(contest_type=contest_type, contest_year=contest_year, user_id=user_id)
-	if return_var:
-	    return_var["profile_image"] = Book_obj.get_profile_thumbnail_image_url(user_id=user_id)
-	    return_var["profile_thumbnail_image"] = Book_obj.get_profile_image_url(user_id=user_id)
 
         return return_var
 

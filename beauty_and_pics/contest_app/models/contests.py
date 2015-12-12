@@ -7,6 +7,7 @@ from django.utils import timezone
 from contest_app.models.contest_types import Contest_Type
 from contest_app.models.metrics import Metric
 from beauty_and_pics.consts import project_constants
+from website.exceptions import ContestClosedNotExistsError
 import logging, time
 
 # Get an instance of a logger
@@ -238,17 +239,6 @@ class Contest(models.Model):
 
         return return_var
 
-    # TODO: in realtà questa def non serve, si potrebbe eliminare
-    """
-    def check_if_contest_type_is_active(self, contest_type):
-        ""Function to get if contest about contest_type is active or not""
-        return_var = False
-        if self.get_contests_type_status(contest_type=contest_type) == project_constants.CONTEST_ACTIVE:
-            return_var = True
-
-        return return_var
-    """
-
     def get_active_contests_by_type(self, contest_type):
         """Function to retrieve active contest by contest_type"""
         return_var = None
@@ -330,6 +320,27 @@ class Contest(models.Model):
 
         return return_var
 
+    def get_contest_year(self, contest_obj=None):
+        """Function to retrieve start_date year about a contest"""
+        return_var = False
+        if contest_obj:
+            return_var = contest_obj.start_date.year
+
+        return return_var
+
+    def get_last_closed_contests_year(self, contest_type):
+	"""Function to retrieve last closed contest year, if not exists a closed contest raise an error"""
+	return_var = False
+	Contest_obj = self.get_last_closed_contests_by_type(contest_type=contest_type)
+	if not Contest_obj:
+	    # nessun contest ancora chiuso per questo contest_type
+	    raise ContestClosedNotExistsError
+	return_var = self.get_contest_year(contest_obj=Contest_obj)
+
+	logger.info("last closed contest: " + str(return_var))
+
+        return return_var
+
     def contest_type_exists_check(self, contest_type=None):
         """Function to check if a contest_type name is valid"""
         return_var = False
@@ -349,13 +360,6 @@ class Contest(models.Model):
                 request.session['contest_type'] = str(contest_type)
                 return_var = True
 
-        return return_var
-
-    def get_contest_year(self, contest=None):
-        """Function to retrieve start_date year about a contest"""
-        return_var = False
-        if contest:
-            return_var = contest.start_date.year
         return return_var
 
     def common_view_set_contest_type(self, request, user_id=None, contest_type=None):

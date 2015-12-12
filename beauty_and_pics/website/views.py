@@ -181,7 +181,7 @@ def www_ranking_contest(request, contest_type, contest_year):
     # oppure il contest esiste ma non è presente nessun partecipante con almeno un voto (quasi impossibile)
     top_100_users = None
     try:
-        top_100_users = HallOfFame_obj.get_contest_top_100(contest_type=contest_type, contest_year=contest_year)
+        top_100_users = HallOfFame_obj.get_hall_of_fame_elements(contest_type=contest_type, contest_year=contest_year)
     except ContestClosedNotExistsError:
         # non esistono ancora concorsi chiusi
         pass
@@ -214,7 +214,6 @@ def www_podium(request, contest_type, contest_year, user_id):
     # check if contest_type exists, otherwise redirect in home page
     current_contest_type_obj = Contest_Type_obj.get_contest_type_by_code(code=contest_type)
     if not current_contest_type_obj:
-        # return HttpResponseRedirect('/')
         raise Http404()
 
     if user_id:
@@ -222,15 +221,14 @@ def www_podium(request, contest_type, contest_year, user_id):
         # prelevo un utente specifico tra i top 100
         try:
             hall_of_fame_user = HallOfFame_obj.get_hall_of_fame_user(contest_type=contest_type, contest_year=contest_year, user_id=user_id)
-        except ContestClosedNotExistsError:
-            # non esistono ancora concorsi chiusi
+        except ContestClosedNotExistsError, ContestTypeRequiredError:
+	# non esistono ancora concorsi chiusi o nessun contest type passato
             raise Http404()
 
     # check if user is a podium user (posizione compresa tra 1 e 5)
     is_valid_podium_user = HallOfFame_obj.is_a_podium_user(hall_of_fame_user_row=hall_of_fame_user)
     if not hall_of_fame_user or not is_valid_podium_user:
-        # utente non esistente o non sul podio
-        # return HttpResponseRedirect('/')
+        # utente non esistente o non sul podio, l'utente non sarebbe dovuto arrivare in questa pagina
         raise Http404()
 
     # retrieve contest year (ho fatto così perchè se contest_year non venisse passato ci si riferirebbe
