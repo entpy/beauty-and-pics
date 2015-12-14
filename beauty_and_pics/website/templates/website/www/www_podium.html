@@ -1,5 +1,5 @@
 {% extends "website/inc/base_www.html" %}
-{% load staticfiles %}
+{% load staticfiles website_extras %}
 
 {# page title #}
 {% block title %}{{ site_name }} | il podio{% endblock %}
@@ -13,9 +13,22 @@
 {% block block0_0_content %}
 <div class="centered_page generic_container generic_container1 third_color last_page_element_margin">
 	<div class="generic_container_block generic_container_block2 left_100">
-		<span class="readable_text3">
-			<h4>Pagina podio</h4>
+		<span class="readable_text3 text-center">
+			<h4>{{ podium_string }}</h4>
 		</span>
+		<div class="col-xs-12">
+			<div class="col-sm-6 col-xs-12">
+				<div class="col-sm-12 text-center">
+					<img class="img-circle podium_user_image" src="{{ podium_user.profile_image }}" alt="{{ podium_user.user__first_name }} {{ podium_user.user__last_name }}">
+				</div>
+				<div class="col-sm-12 text-center margin_top_15">
+					<a href="/passerella/dettaglio-utente/{{ podium_user.user__id }}/">Vai al profilo</a>
+				</div>
+			</div>
+			<div class="col-sm-6 col-xs-12 text-center margin_top_30 margin_bottom_20">
+				<img src="{% static "website/img/podio/posizione_"|str_cat:podium_user.ranking|str_cat:".png" %}" alt="{{ podium_user.ranking }} posizione">
+			</div>
+		</div>
 	</div>
 </div>
 {% endblock block0_0_content %}

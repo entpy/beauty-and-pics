@@ -147,3 +147,38 @@ class HallOfFame(models.Model):
                 return_var = True
 
         return return_var
+
+    def get_podium_page_string(self, contest_type, ranking):
+        """
+            Function to build podium page string, related with ranking and contest_type
+            es. "Vincitrice assoluta" or "Terzo classificato"
+        """
+        return_var = ""
+
+        # check contest type
+        if contest_type == project_constants.WOMAN_CONTEST:
+            # check podium user ranking
+            if ranking == 1:
+                return_var = "Vincitrice assoluta"
+            elif ranking == 2:
+                return_var = "Seconda classificata"
+            elif ranking == 3:
+                return_var = "Terza classificata"
+            elif ranking == 4:
+                return_var = "Quarta classificata"
+            elif ranking == 5:
+                return_var = "Quinta classificata"
+        elif contest_type == project_constants.MAN_CONTEST:
+            # check podium user ranking
+            if ranking == 1:
+                return_var = "Vincitore assoluto"
+            elif ranking == 2:
+                return_var = "Secondo classificato"
+            elif ranking == 3:
+                return_var = "Terzo classificato"
+            elif ranking == 4:
+                return_var = "Quarto classificato"
+            elif ranking == 5:
+                return_var = "Quinto classificato"
+
+        return return_var

@@ -47,7 +47,7 @@ INSTALLED_APPS = (
     'notify_system_app',
     'adminplus',
     'ckeditor',
-    'image_contest_app',
+    # 'image_contest_app', # abilitare quando le votazioni saranno inespugnabili :(
     'django_bootstrap_breadcrumbs',
 )
 

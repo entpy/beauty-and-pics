@@ -234,7 +234,8 @@
 								<div class="col-sm-12">
 									<ul class="nav nav-pills">
 										<li class="{% block container4_navigation_profile_index %}{% endblock %}"><a href="/profilo/">Album fotografico</a></li>
-										<li class="{% block container4_navigation_profile_bacheca %}{% endblock %}"><a href="/profilo/foto-bacheca">Bacheca</a></li>
+										{# TODO: scommentare quanto segue per riabilitare il photoboard #}
+										{# <li class="{% block container4_navigation_profile_bacheca %}{% endblock %}"><a href="/profilo/foto-bacheca">Bacheca</a></li> #}
 										<li class="{% block container4_navigation_profile_favorites %}{% endblock %}"><a href="/profilo/preferiti/">Preferiti</a></li>
 										<li class="{% block container4_navigation_profile_stats %}{% endblock %}"><a href="/profilo/statistiche/">Statistiche</a></li>
 										<li class="{% block container4_navigation_profile_preferences %}{% endblock %}"><a href="/profilo/pannello-di-controllo/">Pannello di controllo</a></li>
@@ -260,12 +261,17 @@
 							{% block catwalk_banner %}
 							{% include "website/inc/include_blocks/banner.html" with main_title="Vai alla passerella!" subtitle="" img_src=static_url|str_cat:"website/img/passerella.png" img_alt="La passerella" button_url="/passerella/" button_label="La passerella" button_class="btn-success" background_class="banner_bg_dark_blue" only %}
 							{% endblock catwalk_banner %}
+
+							{# TODO: scommentare quanto segue per riabilitare il photoboard #}
 								{# banner andare al photoboard: se esiste un contest aperto (quindi non ho più vincitori da far vedere) mostro il box per entrare nel contest #}
+							{% comment %}
 							{% if exists_active_photoboard %}
 								{% block photoboard_list_banner %}
 								{% include "website/inc/include_blocks/banner.html" with main_title="Beauty and Pics" subtitle="della settimana" img_src=static_url|str_cat:"website/img/catwalk/show_photoboard.png" img_alt="Vai alla bacheca fotografica" button_url="/passerella/bacheca/" button_label="Guarda &amp; Scegli" button_class="btn-danger" background_class="banner_bg_light_blue" only %}
 								{% endblock photoboard_list_banner %}
 							{% endif %}
+							{% endcomment %}
+
 							{# right classification block {{{ #}
 								{# banner top 5 users #}
 							{% if top_five_account %}
