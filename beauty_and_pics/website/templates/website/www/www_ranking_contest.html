@@ -34,7 +34,13 @@
 						{% for user in top_100_users %}
 							<tr>
 								<td>{{ user.ranking }}</td>
-								<td><a href="/podio/{{ contest_type }}/{{ contest_start_date | date:"Y" }}/{{ user.user__id }}/">{{ user.user__first_name }}</a></td>
+								<td>
+									{% if user.ranking >= 1 and user.ranking <= 5 %}
+										<a href="/podio/{{ contest_type }}/{{ contest_start_date | date:"Y" }}/{{ user.user__id }}/">{{ user.user__first_name }}</a>
+									{% else %}
+										{{ user.user__first_name }}
+									{% endif %}
+								</td>
 								<td>{{ user.user__last_name }}</td>
 								<td>{{ user.points }}</td>
 								<td><a href="/passerella/dettaglio-utente/{{ user.user__id }}/">Vai al profilo</a></td>

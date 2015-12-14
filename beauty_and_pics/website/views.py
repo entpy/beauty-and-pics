@@ -246,6 +246,7 @@ def www_podium(request, contest_type, contest_year, user_id):
         "contest_name": contest_name,
         "contest_start_date": contest_start_date,
         "podium_string": HallOfFame_obj.get_podium_page_string(contest_type=contest_type, ranking=hall_of_fame_user.get("ranking")),
+	"contest_type": contest_type,
     }
 
     return render(request, 'website/www/www_podium.html', context)

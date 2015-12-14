@@ -8,7 +8,7 @@
 {% block description %}Il podio di {{ site_name }}. [mettere desc]{% endblock %}
 
 {% block block0_0_title_h1 %}{{ podium_user.user__first_name }} {{ podium_user.user__last_name }}{% endblock %}
-{% block block0_0_title_h4 %}{{ contest_name }}, anno {{ contest_start_date | date:"Y" }}{% endblock %}
+{% block block0_0_title_h4 %}<a href="/classifica/{{ contest_type }}/{{ contest_start_date | date:"Y" }}/">{{ contest_name }}</a>, anno {{ contest_start_date | date:"Y" }}{% endblock %}
 
 {% block block0_0_content %}
 <div class="centered_page generic_container generic_container1 third_color last_page_element_margin">

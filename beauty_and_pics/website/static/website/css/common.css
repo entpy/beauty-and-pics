@@ -45,7 +45,7 @@ textarea { resize: none; }
 /* cookie law }}} */
 
 /* colors */
-.title_block * { color: #fff; }
+.title_block h1, .title_block h2, .title_block h3, .title_block h4, .title_block h5, .title_block h6 { color: #fff; }
 .first_color { background-color: #2C3E50; }
 .second_color { background-color: #1A242F; }
 .third_color { background-color: #ECF0F1; }
