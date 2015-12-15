@@ -5,7 +5,7 @@ from contest_app.models.contests import Contest
 from django.contrib.auth.models import User
 from account_app.models.images import Book
 from beauty_and_pics.consts import project_constants
-from website.exceptions import ContestClosedNotExistsError
+from website.exceptions import ContestClosedNotExistsError, ContestTypeRequiredError
 import logging
 
 # Get an instance of a logger
@@ -17,6 +17,7 @@ class HallOfFame(models.Model):
     user = models.ForeignKey(User, null=True, on_delete=models.SET_NULL)
     ranking = models.IntegerField()
     points = models.IntegerField()
+    disqualified = models.IntegerField(default=0)
 
     class Meta:
         app_label = 'contest_app'
@@ -72,6 +73,7 @@ class HallOfFame(models.Model):
 		'user__last_name',
 		'ranking',
 		'points',
+		'disqualified',
 		).filter(contest__contest_type__code=contest_type)
 
 	# filter year
@@ -105,10 +107,15 @@ class HallOfFame(models.Model):
 	    # prelevo solo il primo elemento della lista
 	    return_var = return_var[0]
 
-	    # carico anche l'immagine profilo dell'utente prelevato
-	    logger.info("prelevo immagine profilo per user: " + str(return_var))
-	    return_var["profile_image"] = Book_obj.get_profile_thumbnail_image_url(user_id=return_var["user__id"])
-	    return_var["profile_thumbnail_image"] = Book_obj.get_profile_image_url(user_id=return_var["user__id"])
+            if return_var["disqualified"]:
+                # l'utente è stato squalificato per una serie di motivi, sarà
+                # visibile in classifica ma non ci sarà foto in home e passerella
+                return_var = None
+            else:
+                # carico anche l'immagine profilo dell'utente prelevato
+                logger.info("prelevo immagine profilo per user: " + str(return_var))
+                return_var["profile_image"] = Book_obj.get_profile_thumbnail_image_url(user_id=return_var["user__id"])
+                return_var["profile_thumbnail_image"] = Book_obj.get_profile_image_url(user_id=return_var["user__id"])
 
         return return_var
 

@@ -33,9 +33,9 @@
 						<tbody>
 						{% for user in top_100_users %}
 							<tr>
-								<td>{{ user.ranking }}</td>
+								<td>{% if user.disqualified %}<span data-toggle="tooltip" data-placement="top" data-original-title="Votazione errata">-</span>{% else %}{{ user.ranking }}{% endif %}</td>
 								<td>
-									{% if user.ranking >= 1 and user.ranking <= 5 %}
+									{% if user.ranking >= 1 and user.ranking <= 5 and not user.disqualified %}
 										<a href="/podio/{{ contest_type }}/{{ contest_start_date | date:"Y" }}/{{ user.user__id }}/">{{ user.user__first_name }}</a>
 									{% else %}
 										{{ user.user__first_name }}
@@ -59,3 +59,11 @@
 	</div>
 </div>
 {% endblock block0_0_content %}
+{% block custom_js %}
+{{ block.super }}
+<script>
+	$(document).ready(function(){
+		$('[data-toggle="tooltip"]').tooltip();
+	});
+</script>
+{% endblock custom_js %}

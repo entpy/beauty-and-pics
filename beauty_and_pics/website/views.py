@@ -61,7 +61,37 @@ def check_if_is_staff_user(user):
 
 # www {{{
 def www_index(request):
-    return render(request, 'website/www/www_index.html', False)
+    """View to show home page, and contest_type winners if exist"""
+    HallOfFame_obj = HallOfFame()
+
+    # retrieve contest_type codes
+    woman_contest_code = project_constants.WOMAN_CONTEST
+    man_contest_code = project_constants.MAN_CONTEST
+
+    try:
+        # se esiste un vincitore per l'ultimo contest chiuso, lo mostro in home page
+        woman_contest_winner = {}
+        woman_contest_winner = HallOfFame_obj.get_hall_of_fame_user(contest_type=project_constants.WOMAN_CONTEST)
+    except ContestClosedNotExistsError, ContestTypeRequiredError:
+        # il contest_type non ha contest chiusi, mostro immagine di default
+        pass
+
+    try:
+        # se esiste un vincitore per l'ultimo contest chiuso, lo mostro in home page
+        man_contest_winner = {}
+        man_contest_winner = HallOfFame_obj.get_hall_of_fame_user(contest_type=project_constants.MAN_CONTEST)
+    except ContestClosedNotExistsError, ContestTypeRequiredError:
+        # il contest_type non ha contest chiusi, mostro immagine di default
+        pass
+
+    context = {
+        "woman_contest_code" : woman_contest_code,
+        "man_contest_code" : man_contest_code,
+        "woman_contest_winner" : woman_contest_winner,
+        "man_contest_winner" : man_contest_winner,
+    }
+
+    return render(request, 'website/www/www_index.html', context)
 
 def www_how_it_works_info(request):
     return render(request, 'website/www/www_how_it_works_info.html', False)
