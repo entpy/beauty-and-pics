@@ -139,7 +139,8 @@ def www_login(request):
 
 def www_logout(request):
     logout(request)
-    return render(request, 'website/www/www_index.html', False)
+    return HttpResponseRedirect('/')
+    # return render(request, 'website/www/www_index.html', False)
 
 def www_forgot_password(request):
     # if this is a POST request we need to process the form data

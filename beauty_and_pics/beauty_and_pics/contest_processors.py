@@ -25,6 +25,7 @@ def common_contest_processors(request):
     Notify_obj = Notify()
     contest_type = contest_obj.get_contest_type_from_session(request=request)
     logged_user_id = None
+    contest_winner = None
     logger.info("@@@current contest_type: " + str(contest_type))
 
     ### template context vars {{{ ###
