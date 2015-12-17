@@ -13,11 +13,17 @@
 {% block catwalk_banner %}{% endblock catwalk_banner %}
 {# show photoboard winner banner #}
 {% block photoboard_winner_banner %}
-{% if photoboard_contest_winner %}
-{# se ho un vincitore del photoboard mostro il box con l'immagine del vincitore (solo qui nella passerella) #}
-{% include "website/inc/include_blocks/banner.html" with main_title="Beauty and Pics" subtitle="della settimana" img_src=photoboard_contest_winner.image__image img_alt="Foto della settimana" button_url="/passerella/dettaglio-utente/"|str_cat:photoboard_contest_winner.user__id|str_cat:"/" button_label="Vedi profilo" button_class="btn-success" background_class="banner_bg_light_gray" only %}
-{% endif %}
+	{% if photoboard_contest_winner %}
+		{# se ho un vincitore del photoboard mostro il box con l'immagine del vincitore (solo qui nella passerella) #}
+		{% include "website/inc/include_blocks/banner.html" with main_title="Beauty and Pics" subtitle="della settimana" img_src=photoboard_contest_winner.image__image img_alt="Foto della settimana" button_url="/passerella/dettaglio-utente/"|str_cat:photoboard_contest_winner.user__id|str_cat:"/" button_label="Vedi profilo" button_class="btn-success" background_class="banner_bg_light_gray" only %}
+	{% endif %}
 {% endblock photoboard_winner_banner %}
+{# se ho un vincitore del contest mostro il box con l'immagine del vincitore (solo qui nella passerella) #}
+{% block contest_winner_banner %}
+	{% if contest_winner %}
+		{% include "website/inc/include_blocks/contest_winner_banner.html" with contest_date=contest_winner.contest__start_date contest_winner_first_name=contest_winner.user__first_name contest_winner_last_name=contest_winner.user__last_name profile_thumbnail_image=contest_winner.profile_thumbnail_image contest_winner_points=contest_winner.points contest_winner_user_id=contest_winner.user__id only %}
+	{% endif %}
+{% endblock contest_winner_banner %}
 
 {# page tip block (blocco a destra con titolo e descrizione) #}
 {% block page_tip %}

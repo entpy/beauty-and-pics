@@ -109,7 +109,7 @@ class HallOfFame(models.Model):
 
             if return_var["disqualified"]:
                 # l'utente è stato squalificato per una serie di motivi, sarà
-                # visibile in classifica ma non ci sarà foto in home e passerella
+                # visibile in classifica senza punteggio e non ci sarà foto in home e passerella
                 return_var = None
             else:
                 # carico anche l'immagine profilo dell'utente prelevato

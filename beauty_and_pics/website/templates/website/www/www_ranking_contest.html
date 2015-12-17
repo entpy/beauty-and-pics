@@ -16,7 +16,7 @@
 		{% if top_100_users %}
 			<span class="readable_text3">
 				<h4>Risultati:</h4>
-				<p>La classifica completa dei top 100 del <b>{{ contest_name }}, anno {{ contest_start_date | date:"Y" }}</b>. Consultala quando vuoi per leggere punteggio e posizione, clicca sul link "Vai al profilo" per visitare il profilo del partecipante, clicca sul nome di uno dei primi 5 partecipanti per andare alla pagina dedicata del concorso.</p><br />
+				<p>La classifica completa con i top 100 del <b>{{ contest_name }}, anno {{ contest_start_date | date:"Y" }}</b>. Consultala quando vuoi per leggere punteggio e posizione, clicca sul link "Vai al profilo" per visitare il profilo del partecipante, clicca sul nome di uno dei primi 5 partecipanti per andare alla pagina podio del concorso.</p><br />
 			</span>
 			<div class="col-xs-12">
 				<div class="table-responsive">
@@ -33,7 +33,7 @@
 						<tbody>
 						{% for user in top_100_users %}
 							<tr>
-								<td>{% if user.disqualified %}<span data-toggle="tooltip" data-placement="top" data-original-title="Votazione errata">-</span>{% else %}{{ user.ranking }}{% endif %}</td>
+								<td>{% if user.disqualified %}<span data-toggle="tooltip" data-placement="top" data-original-title="Utente con votazioni falsate">-</span>{% else %}{{ user.ranking }}{% endif %}</td>
 								<td>
 									{% if user.ranking >= 1 and user.ranking <= 5 and not user.disqualified %}
 										<a href="/podio/{{ contest_type }}/{{ contest_start_date | date:"Y" }}/{{ user.user__id }}/">{{ user.user__first_name }}</a>
