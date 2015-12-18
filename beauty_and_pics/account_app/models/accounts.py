@@ -5,7 +5,7 @@ from django.db import connection
 from datetime import date
 from dateutil.relativedelta import *
 from django.contrib.auth import authenticate, login, logout
-from django.contrib.auth.models import User, Group
+from django.contrib.auth.models import User, Group, Permission
 from contest_app.models.contest_types import Contest_Type
 from contest_app.models.points import Point
 from account_app.models.images import Book
@@ -44,6 +44,11 @@ class Account(models.Model):
 
     class Meta:
         app_label = 'account_app'
+        # custom account permission
+        permissions = (
+            # ("can_receive_votes", "Indica se l'utente può essere votato"),
+            ("can_parade_on_the_catwalk", "Utente visualizzato nella passerella"),
+        )
 
     def __unicode__(self):
         return self.user.username
@@ -61,6 +66,23 @@ class Account(models.Model):
         """Function to remove bitmask 'remove_value' from 'bitmask'"""
         return int(bitmask) & (~int(remove_value));
     # bitwise functions }}}
+
+    # TODO
+    # permissions functions {{{
+    def add_user_permission(self, user, permission_codename):
+        """Function to add a new user permission"""
+        permission = Permission.objects.get(codename=permission_codename)
+        user.user_permissions.add(permission)
+
+        return True
+
+    def remove_user_permission(self, user, permission_codename):
+        """Function to remove a user permission"""
+        permission = Permission.objects.get(codename=permission_codename)
+        user.user_permissions.remove(permission)
+
+        return True
+    # permissions functions }}}
 
     def check_if_email_exists(self, email_to_check=None):
         """Function to check if an email already exists"""
@@ -183,7 +205,7 @@ class Account(models.Model):
             if not self.check_if_email_exists(email_to_check=email):
                 account_obj.user = User.objects.create_user(username=self.__email_to_username(email), email=email, password=password)
                 # add "catwalk_user" group in user groups
-                account_obj.user.groups.add(self.__create_defaul_user_group())
+                account_obj.user.groups.add(self.__create_default_user_group())
                 account_obj.save()
                 return_var = account_obj.user
 
@@ -193,7 +215,7 @@ class Account(models.Model):
 
         return return_var
 
-    def __create_defaul_user_group(self):
+    def __create_default_user_group(self):
         """Function to [create if not exists and] retrieve catwalk_user group"""
         return_var = None
         try:
@@ -492,18 +514,20 @@ class Account(models.Model):
         return_var = False
         # logger.debug("NOME FILTRO: " + str(filters_list["filter_name"]))
 
-        # filter only catwalker users
+        # filter only catwalker users that can parade on the catwalk:
+        # (gruppo catwalk e permesso can_parade_on_the_catwalk)
+        can_parade_on_the_catwalk_permission = Permission.objects.get(codename='can_parade_on_the_catwalk')  
 
         # order by "latest_registered" filter
         if filters_list["filter_name"] == "latest_registered":
-            return_var = Account.objects.values('user__first_name', 'user__last_name', 'user__email', 'user__id', 'user__account__newsletters_bitmask').filter(user__groups__name=project_constants.CATWALK_GROUP_NAME, contest_type__code=contest_type)
+            return_var = Account.objects.values('user__first_name', 'user__last_name', 'user__email', 'user__id', 'user__account__newsletters_bitmask').filter(contest_type__code=contest_type)
             return_var = return_var.order_by('-user__account__creation_date')
 
         # order by "classification" filter
         if filters_list["filter_name"] == "classification":
             # "contest__status" to identify point about current contest
             # più leggera ma non mostra gli utenti che non hanno ancora punti
-            return_var = Point.objects.values('user__first_name', 'user__last_name', 'user__email', 'user__id', 'user__account__newsletters_bitmask').filter(user__groups__name=project_constants.CATWALK_GROUP_NAME, contest__status=project_constants.CONTEST_ACTIVE, contest__contest_type__code=contest_type).annotate(total_points=Sum('points'))
+            return_var = Point.objects.values('user__first_name', 'user__last_name', 'user__email', 'user__id', 'user__account__newsletters_bitmask').annotate(total_points=Sum('points'))
             # più pesante e mostra anche gli utenti che non hanno ancora punti
             # return_var = Account.objects.values('user__first_name', 'user__last_name', 'user__email', 'user__id').filter(user__groups__name=project_constants.CATWALK_GROUP_NAME, contest_type__contest__status=project_constants.CONTEST_ACTIVE).annotate(total_points=Sum('user__point__points'))
             return_var = return_var.order_by('-total_points', 'user__id')
@@ -512,7 +536,7 @@ class Account(models.Model):
         if filters_list["filter_name"] == "most_beautiful_smile":
             # "contest__status" to identify point about current contest
             # più leggera ma non mostra gli utenti che non hanno ancora punti
-            return_var = Point.objects.values('user__first_name', 'user__last_name', 'user__email', 'user__id', 'user__account__newsletters_bitmask').filter(user__groups__name=project_constants.CATWALK_GROUP_NAME, contest__status=project_constants.CONTEST_ACTIVE, contest__contest_type__code=contest_type, metric__name=project_constants.VOTE_METRICS_LIST["smile_metric"]).annotate(total_points=Sum('points'))
+            return_var = Point.objects.values('user__first_name', 'user__last_name', 'user__email', 'user__id', 'user__account__newsletters_bitmask').filter(metric__name=project_constants.VOTE_METRICS_LIST["smile_metric"]).annotate(total_points=Sum('points'))
             # più pesante e mostra anche gli utenti che non hanno ancora punti
             # return_var = Account.objects.values('user__first_name', 'user__last_name', 'user__email', 'user__id').filter(Q(user__point__metric__name=project_constants.VOTE_METRICS_LIST["smile_metric"]) | Q(user__point__isnull=True), user__groups__name=project_constants.CATWALK_GROUP_NAME, contest_type__contest__status=project_constants.CONTEST_ACTIVE).annotate(total_points=Sum('user__point__points'))
             return_var = return_var.order_by('-total_points', 'user__id')
@@ -521,10 +545,14 @@ class Account(models.Model):
         if filters_list["filter_name"] == "look_more_beautiful":
             # "contest__status" to identify point about current contest
             # più leggera ma non mostra gli utenti che non hanno ancora punti
-            return_var = Point.objects.values('user__first_name', 'user__last_name', 'user__email', 'user__id', 'user__account__newsletters_bitmask').filter(user__groups__name=project_constants.CATWALK_GROUP_NAME, contest__status=project_constants.CONTEST_ACTIVE, contest__contest_type__code=contest_type, metric__name=project_constants.VOTE_METRICS_LIST["look_metric"]).annotate(total_points=Sum('points'))
+            return_var = Point.objects.values('user__first_name', 'user__last_name', 'user__email', 'user__id', 'user__account__newsletters_bitmask').filter(metric__name=project_constants.VOTE_METRICS_LIST["look_metric"]).annotate(total_points=Sum('points'))
             # più pesante e mostra anche gli utenti che non hanno ancora punti
             # return_var = Account.objects.values('user__first_name', 'user__last_name', 'user__email', 'user__id').filter(user__groups__name=project_constants.CATWALK_GROUP_NAME, contest_type__contest__status=project_constants.CONTEST_ACTIVE).filter(Q(user__point__metric__name=project_constants.VOTE_METRICS_LIST["look_metric"]) | Q(user__point__metric__isnull=True)).annotate(total_points=Sum('user__point__points'))
             return_var = return_var.order_by('-total_points', 'user__id')
+
+        # applico i filtri di base
+        if return_var:
+            return_var = self.apply_catwalker_filters(contest_type=contest_type, queryset=return_var)
 
         # limits filter
         #logger.debug("limite da: " + str(filters_list["start_limit"]))
@@ -535,6 +563,19 @@ class Account(models.Model):
         #logger.debug("@@@: " + str(return_var))
 	# performing query
         return_var = list(return_var)
+
+        return return_var
+
+    def apply_catwalker_filters(self, contest_type, queryset):
+        """Function to add base catwalker filters to elements list"""
+        return_var = None
+
+        # filter only catwalker users that can parade on the catwalk:
+        # (gruppo catwalk e permesso can_parade_on_the_catwalk)
+        can_parade_on_the_catwalk_permission = Permission.objects.get(codename='can_parade_on_the_catwalk')  
+
+        if queryset:
+            return_var = queryset.filter(user__groups__name=project_constants.CATWALK_GROUP_NAME, user__user_permissions=can_parade_on_the_catwalk_permission, contest__status=project_constants.CONTEST_ACTIVE, contest__contest_type__code=contest_type)
 
         return return_var
 

@@ -6,7 +6,7 @@ from account_app.models.accounts import *
 from account_app.models.images import *
 from contest_app.models.contests import *
 from contest_app.models.hall_of_fame import *
-from image_contest_app.models import ImageContestImage, ImageContest
+# from image_contest_app.models import ImageContestImage, ImageContest #imagecontestapptag
 from notify_system_app.models import Notify
 from beauty_and_pics.consts import project_constants
 import logging
@@ -20,8 +20,8 @@ def common_contest_processors(request):
     book_obj = Book()
     contest_obj = Contest()
     hall_of_fame_obj = HallOfFame()
-    ImageContest_obj = ImageContest()
-    ImageContestImage_obj = ImageContestImage()
+    # ImageContest_obj = ImageContest() #imagecontestapptag
+    # ImageContestImage_obj = ImageContestImage() #imagecontestapptag
     Notify_obj = Notify()
     contest_type = contest_obj.get_contest_type_from_session(request=request)
     logged_user_id = None
@@ -41,10 +41,12 @@ def common_contest_processors(request):
     except ContestClosedNotExistsError, ContestTypeRequiredError:
 	# non esistono ancora concorsi chiusi o nessun contest type passato
 	pass
+    exists_active_photoboard = False
+    photoboard_contest_winner = False
     # check if exists an active photoboard
-    exists_active_photoboard = ImageContest_obj.exists_active_contest(contest_type=contest_type)
+    # exists_active_photoboard = ImageContest_obj.exists_active_contest(contest_type=contest_type) #imagecontestapptag
     # last photoboard contest winner
-    photoboard_contest_winner = ImageContestImage_obj.get_closed_contest_info(contest_type=contest_type)
+    # photoboard_contest_winner = ImageContestImage_obj.get_closed_contest_info(contest_type=contest_type) #imagecontestapptag
 
     # shown user notify popup
     check_user_notify = False

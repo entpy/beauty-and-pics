@@ -23,7 +23,7 @@
 /* footer style }}} */
 
 /* www index page {{{ */
-.catwalk_container .catwalk_block { width: 39%; }
+.catwalk_container .catwalk_block { max-width: 330px; width: 39%; }
 /* www index page }}} */
 
 /* how it works page {{{ */

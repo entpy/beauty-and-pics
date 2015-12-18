@@ -66,5 +66,6 @@ B ripetere fino a 5 e poi
 
 aggiungere una seconda e terza immagine nel photoboard e testare nuovamente i casi sopra (A e B)
 
+per riabilitare il contest delle immagini cercare nel codice il tag: #imagecontestapptag
 ----
-Il vincitore del concorso deve essere visibile solo nella passerella e non anche nella pagina profilo di un utente
+

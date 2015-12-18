@@ -32,8 +32,9 @@ urlpatterns = patterns('',
     url(r'^passerella/dettaglio-utente/(?P<user_id>\d+)/$', 'website.views.catwalk_profile', name='catwalk_profile'),
     url(r'^passerella/richiesta-aiuto/$', 'website.views.catwalk_help', name='catwalk_help'),
     url(r'^passerella/segnalazione-utente/(?P<user_id>\d+)/$', 'website.views.catwalk_report_user', name='catwalk_report_user'),
-    url(r'^passerella/bacheca/(?:(?P<user_id>\d+)/)$', 'website.views.catwalk_photoboard_details', name='catwalk_photoboard_details'),
-    url(r'^passerella/bacheca/$', 'website.views.catwalk_photoboard_list', name='catwalk_photoboard_list'),
+    #imagecontestapptag
+    # url(r'^passerella/bacheca/(?:(?P<user_id>\d+)/)$', 'website.views.catwalk_photoboard_details', name='catwalk_photoboard_details'),
+    # url(r'^passerella/bacheca/$', 'website.views.catwalk_photoboard_list', name='catwalk_photoboard_list'),
     url(r'^passerella/(?:(?P<contest_type>[a-z-]+)/)?$', 'website.views.catwalk_index', name='catwalk_index'), # per il blocco catwalk questo va messo sempre al fondo
 
     # private profile
@@ -47,7 +48,8 @@ urlpatterns = patterns('',
     url(r'^profilo/notifiche/(?:(?P<notify_id>\d+)/)$', 'website.views.profile_notify_details', name='profile_notify_details'),
     url(r'^profilo/notifiche/$', 'website.views.profile_notify', name='profile_notify'),
     url(r'^profilo/ottieni-punti/$', 'website.views.profile_gain_points', name='profile_gain_points'),
-    url(r'^profilo/foto-bacheca/(?:(?P<image_add_success>\d+)/)?$', 'website.views.profile_photoboard', name='profile_photoboard'),
+    #imagecontestapptag
+    # url(r'^profilo/foto-bacheca/(?:(?P<image_add_success>\d+)/)?$', 'website.views.profile_photoboard', name='profile_photoboard'),
 
     # email test
     url(r'^email-test/(?P<email_name>\w+)/(?P<email_mode>\w+)/$', 'website.views.email_test', name='email_test'),

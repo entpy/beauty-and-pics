@@ -18,7 +18,10 @@ class ContestMiddleware(object):
         contest_obj = Contest()
         ImageContest_obj = ImageContest()
 
+        # TODO #imagecontestapptag
+        """
         # contest manager function
         contest_obj.contest_manager()
         # image contest manager function
         ImageContest_obj.image_contest_manager()
+        """

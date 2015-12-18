@@ -40,6 +40,7 @@ import logging, time
 logger = logging.getLogger(__name__)
 
 # view decorators {{{
+# TODO: togliere questo tipo di check e inserire i permessi
 def check_if_is_a_catwalker_user(user):
     """ Function to detect if user is a catwalker user """
     account_obj =  Account()

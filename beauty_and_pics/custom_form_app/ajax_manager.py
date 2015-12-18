@@ -393,6 +393,7 @@ class ajaxManager():
         logger.debug("parametri della chiamata: " + str(self.request.POST))
 
         book_obj = Book()
+        Account_obj = Account()
 
         # retrieve uploaded image data
         image_data = {}
@@ -412,6 +413,11 @@ class ajaxManager():
             logger.error("Image type inserito non valido: " + str(self.request) + " | error code: " + str(imageTypeWrongError.get_error_code))
             data = {'error' : True, 'message': "Errore inaspettato (codice=" + str(imageTypeWrongError.get_error_code) + "), sii gentile contatta l'amministratore!"}
         else:
+            # se è stata uploadata l'immagine del profilo abilito l'utente a
+            # sfilare sulla passerella
+            if image_data["image_type"] == project_constants.IMAGE_TYPE["profile"]:
+                # TODO: aggiungo permesso "can_parade_on_the_catwalk"
+                Account_obj.add_user_permission(user=self.request.user, permission_codename="can_parade_on_the_catwalk")
             data = {'success' : True, 'image_url': saved_image_url, 'image_id': saved_image_id, 'message': "immagine salvata correttamente!"}
 
         # build JSON response

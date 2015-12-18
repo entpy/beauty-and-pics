@@ -15,12 +15,14 @@
 			<h3>Passerella donna</h3>
 		</div>
 		<div class="image_container">
-			{% if woman_contest_winner %}
-				<img class="img-circle" alt="{{ woman_contest_winner.user__first_name }} {{ woman_contest_winner.user__last_name }}" src="{{ woman_contest_winner.profile_image }}" width="100" height="100">
-				<div class="title_container">{{ woman_contest_winner.user__first_name }} {{ woman_contest_winner.user__last_name }}, <em><a href="classifica/{{ woman_contest_code }}/">vincitrice anno {{ woman_contest_winner.contest__start_date | date:"Y" }}</a></em></div>
-			{% else %}
-				<img alt="Passerella donna" src="{% static "website/img/passerella_donna.png" %}" width="200" height="107">
-			{% endif %}
+			<div class="image_container_inner">
+				{% if woman_contest_winner %}
+					<img class="img-circle" alt="{{ woman_contest_winner.user__first_name }} {{ woman_contest_winner.user__last_name }}" src="{{ woman_contest_winner.profile_image }}" width="100" height="100">
+					<div class="winner_text_container">{{ woman_contest_winner.user__first_name }} {{ woman_contest_winner.user__last_name }}, <em><a href="classifica/{{ woman_contest_code }}/">vincitrice anno {{ woman_contest_winner.contest__start_date | date:"Y" }}</a></em></div>
+				{% else %}
+					<img alt="Passerella donna" src="{% static "website/img/passerella_donna.png" %}" width="200" height="107">
+				{% endif %}
+			</div>
 		</div>
 		<div class="button_container">
 			<a class="btn btn-danger" href="/passerella/{{ woman_contest_code }}/">Visita</a>
@@ -32,12 +34,14 @@
 			<h3>Passerella uomo</h3>
 		</div>
 		<div class="image_container">
-			{% if man_contest_winner %}
-				<img class="img-circle" alt="{{ man_contest_winner.user__first_name }} {{ man_contest_winner.user__last_name }}" src="{{ man_contest_winner.profile_image }}" width="100" height="100">
-				<div class="title_container">{{ man_contest_winner.user__first_name }} {{ man_contest_winner.user__last_name }}, <em><a href="classifica/{{ man_contest_code }}/">vincitore anno {{ man_contest_winner.contest__start_date | date:"Y" }}</a></em></div>
-			{% else %}
-				<img alt="Passerella uomo" src="{% static "website/img/passerella_uomo.png" %}" width="190" height="107">
-			{% endif %}
+			<div class="image_container_inner">
+				{% if man_contest_winner %}
+					<img class="img-circle" alt="{{ man_contest_winner.user__first_name }} {{ man_contest_winner.user__last_name }}" src="{{ man_contest_winner.profile_image }}" width="100" height="100">
+					<div class="winner_text_container">{{ man_contest_winner.user__first_name }} {{ man_contest_winner.user__last_name }}, <em><a href="classifica/{{ man_contest_code }}/">vincitore anno {{ man_contest_winner.contest__start_date | date:"Y" }}</a></em></div>
+				{% else %}
+					<img alt="Passerella uomo" src="{% static "website/img/passerella_uomo.png" %}" width="190" height="107">
+				{% endif %}
+			</div>
 		</div>
 		<div class="button_container">
 			<a class="btn btn-danger" href="/passerella/{{ man_contest_code }}/">Visita</a>
