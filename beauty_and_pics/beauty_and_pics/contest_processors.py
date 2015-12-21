@@ -25,7 +25,6 @@ def common_contest_processors(request):
     Notify_obj = Notify()
     contest_type = contest_obj.get_contest_type_from_session(request=request)
     logged_user_id = None
-    contest_winner = None
     logger.info("@@@current contest_type: " + str(contest_type))
 
     ### template context vars {{{ ###
@@ -35,12 +34,6 @@ def common_contest_processors(request):
     profile_thumbnail_image_url = None
     # current contest start_time
     contest_info = contest_obj.get_contest_info_about_type(contest_type=contest_type)
-    # last contest winner
-    try:
-	contest_winner = hall_of_fame_obj.get_hall_of_fame_user(contest_type=contest_type)
-    except ContestClosedNotExistsError, ContestTypeRequiredError:
-	# non esistono ancora concorsi chiusi o nessun contest type passato
-	pass
     exists_active_photoboard = False
     photoboard_contest_winner = False
     # check if exists an active photoboard
@@ -76,7 +69,6 @@ def common_contest_processors(request):
             'top_five_account': top_five_account,
             'profile_thumbnail_image_url': profile_thumbnail_image_url,
             'contest_info': contest_info,
-            'contest_winner': contest_winner,
             'photoboard_contest_winner': photoboard_contest_winner,
             'user_is_authenticated': user_is_authenticated,
             'authenticated_user_contest_type': autenticated_user_data.get("contest_type"),

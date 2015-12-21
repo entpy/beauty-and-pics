@@ -2,7 +2,7 @@
 
 # middleware to manage contest, expiring date and ranking block
 from contest_app.models.contests import *
-from image_contest_app.models import *
+# from image_contest_app.models import * # #imagecontestapptag
 # import logging
 
 # Get an instance of a logger
@@ -16,12 +16,12 @@ class ContestMiddleware(object):
     """
     def process_request(self, request):
         contest_obj = Contest()
-        ImageContest_obj = ImageContest()
+        # ImageContest_obj = ImageContest() #imagecontestapptag
 
-        # TODO #imagecontestapptag
-        """
         # contest manager function
         contest_obj.contest_manager()
+        #imagecontestapptag
+        """
         # image contest manager function
         ImageContest_obj.image_contest_manager()
         """

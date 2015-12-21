@@ -2,7 +2,7 @@
 
 from django.db import models
 from django.conf import settings
-from django.contrib.auth.models import User, Permission
+from django.contrib.auth.models import User
 from django.templatetags.static import static
 from upload_image_box.models import cropUploadedImages 
 from website.exceptions import *
@@ -112,13 +112,15 @@ class Book(models.Model):
 
         return return_var
 
-    def get_all_photobook_list(self, contest_type=None, filters_list=None):
+    def get_all_photobook_list(self, contest_type, filters_list=None):
         """Function to retrieve a list of photobook about all users ordered by date"""
-        can_parade_on_the_catwalk_permission = Permission.objects.get(codename='can_parade_on_the_catwalk')  
-	if contest_type:
-	    return_var = Book.objects.values('user__id', 'image_id__thumbnail_image').filter(user__groups__name=project_constants.CATWALK_GROUP_NAME, user__permissions=can_parade_on_the_catwalk_permission, user__account__contest_type__code=contest_type, image_type=project_constants.IMAGE_TYPE["book"])
-	else:
-	    return_var = Book.objects.values('user__id', 'image_id__thumbnail_image').filter(image_type=project_constants.IMAGE_TYPE["book"])
+	from account_app.models import Account
+	Account_obj = Account()
+
+	# retrieve all photos about a contest_type
+	return_var = Book.objects.values('user__id', 'image_id__thumbnail_image').filter(user__account__contest_type__code=contest_type, image_type=project_constants.IMAGE_TYPE["book"])
+	# apply default account filters
+	return_var = Account_obj.apply_catwalker_filters(contest_type=contest_type, queryset=return_var)
 	# list orders
 	return_var = return_var.order_by('-upload_date')
 	# list limits

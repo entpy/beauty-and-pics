@@ -21,7 +21,7 @@
 {# se ho un vincitore del contest mostro il box con l'immagine del vincitore (solo qui nella passerella) #}
 {% block contest_winner_banner %}
 	{% if contest_winner %}
-		{% include "website/inc/include_blocks/contest_winner_banner.html" with contest_date=contest_winner.contest__start_date contest_winner_first_name=contest_winner.user__first_name contest_winner_last_name=contest_winner.user__last_name profile_thumbnail_image=contest_winner.profile_thumbnail_image contest_winner_points=contest_winner.points contest_winner_user_id=contest_winner.user__id only %}
+		{% include "website/inc/include_blocks/contest_winner_banner.html" with contest_winner_title=contest_winner.contest_winner_title contest_date=contest_winner.contest__start_date contest_winner_first_name=contest_winner.user__first_name contest_winner_last_name=contest_winner.user__last_name profile_thumbnail_image=contest_winner.profile_thumbnail_image contest_winner_points=contest_winner.points contest_winner_user_id=contest_winner.user__id only %}
 	{% endif %}
 {% endblock contest_winner_banner %}
 

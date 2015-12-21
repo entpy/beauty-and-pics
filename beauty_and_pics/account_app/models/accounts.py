@@ -5,7 +5,7 @@ from django.db import connection
 from datetime import date
 from dateutil.relativedelta import *
 from django.contrib.auth import authenticate, login, logout
-from django.contrib.auth.models import User, Group, Permission
+from django.contrib.auth.models import User, Group
 from contest_app.models.contest_types import Contest_Type
 from contest_app.models.points import Point
 from account_app.models.images import Book
@@ -41,14 +41,17 @@ class Account(models.Model):
     newsletters_bitmask = models.CharField(max_length=20, default=(project_constants.WEEKLY_REPORT_EMAIL_BITMASK + project_constants.CONTEST_REPORT_EMAIL_BITMASK), null=True)
     creation_date = models.DateTimeField(auto_now_add=True)
     update_date = models.DateTimeField(auto_now=True)
+    can_be_shown = models.IntegerField(default=0) # indica se l'utente può essere mostrato nella passerella
 
     class Meta:
         app_label = 'account_app'
         # custom account permission
+	""" questa in futuro potrebbe servire
         permissions = (
             # ("can_receive_votes", "Indica se l'utente può essere votato"),
             ("can_parade_on_the_catwalk", "Utente visualizzato nella passerella"),
         )
+	"""
 
     def __unicode__(self):
         return self.user.username
@@ -67,22 +70,30 @@ class Account(models.Model):
         return int(bitmask) & (~int(remove_value));
     # bitwise functions }}}
 
-    # TODO
+    def set_user_can_be_shown(self, value, user):
+	"""Function to show/hide user from catwalk"""
+	user.account.can_be_shown = value
+	user.account.save()
+
+	return True
+
+    """
     # permissions functions {{{
     def add_user_permission(self, user, permission_codename):
-        """Function to add a new user permission"""
+        #""Function to add a new user permission""
         permission = Permission.objects.get(codename=permission_codename)
         user.user_permissions.add(permission)
 
         return True
 
     def remove_user_permission(self, user, permission_codename):
-        """Function to remove a user permission"""
+        #""Function to remove a user permission""
         permission = Permission.objects.get(codename=permission_codename)
         user.user_permissions.remove(permission)
 
         return True
     # permissions functions }}}
+    """
 
     def check_if_email_exists(self, email_to_check=None):
         """Function to check if an email already exists"""
@@ -426,6 +437,7 @@ class Account(models.Model):
 		return_var["birthday_day"] = str(user_obj.account.birthday_date.day) or ''
 		return_var["birthday_month"] = str(user_obj.account.birthday_date.month) or ''
 		return_var["birthday_year"] = str(user_obj.account.birthday_date.year) or ''
+		return_var["can_be_shown"] = user_obj.account.can_be_shown or ''
 		return_var["age"] = str(relativedelta(date.today(), user_obj.account.birthday_date).years) or ''
 		return_var["hair"] = user_obj.account.hair or ''
 		return_var["eyes"] = user_obj.account.eyes or ''
@@ -514,10 +526,6 @@ class Account(models.Model):
         return_var = False
         # logger.debug("NOME FILTRO: " + str(filters_list["filter_name"]))
 
-        # filter only catwalker users that can parade on the catwalk:
-        # (gruppo catwalk e permesso can_parade_on_the_catwalk)
-        can_parade_on_the_catwalk_permission = Permission.objects.get(codename='can_parade_on_the_catwalk')  
-
         # order by "latest_registered" filter
         if filters_list["filter_name"] == "latest_registered":
             return_var = Account.objects.values('user__first_name', 'user__last_name', 'user__email', 'user__id', 'user__account__newsletters_bitmask').filter(contest_type__code=contest_type)
@@ -527,7 +535,7 @@ class Account(models.Model):
         if filters_list["filter_name"] == "classification":
             # "contest__status" to identify point about current contest
             # più leggera ma non mostra gli utenti che non hanno ancora punti
-            return_var = Point.objects.values('user__first_name', 'user__last_name', 'user__email', 'user__id', 'user__account__newsletters_bitmask').annotate(total_points=Sum('points'))
+            return_var = Point.objects.values('user__first_name', 'user__last_name', 'user__email', 'user__id', 'user__account__newsletters_bitmask').filter(contest__status=project_constants.CONTEST_ACTIVE, contest__contest_type__code=contest_type).annotate(total_points=Sum('points'))
             # più pesante e mostra anche gli utenti che non hanno ancora punti
             # return_var = Account.objects.values('user__first_name', 'user__last_name', 'user__email', 'user__id').filter(user__groups__name=project_constants.CATWALK_GROUP_NAME, contest_type__contest__status=project_constants.CONTEST_ACTIVE).annotate(total_points=Sum('user__point__points'))
             return_var = return_var.order_by('-total_points', 'user__id')
@@ -536,7 +544,7 @@ class Account(models.Model):
         if filters_list["filter_name"] == "most_beautiful_smile":
             # "contest__status" to identify point about current contest
             # più leggera ma non mostra gli utenti che non hanno ancora punti
-            return_var = Point.objects.values('user__first_name', 'user__last_name', 'user__email', 'user__id', 'user__account__newsletters_bitmask').filter(metric__name=project_constants.VOTE_METRICS_LIST["smile_metric"]).annotate(total_points=Sum('points'))
+            return_var = Point.objects.values('user__first_name', 'user__last_name', 'user__email', 'user__id', 'user__account__newsletters_bitmask').filter(contest__status=project_constants.CONTEST_ACTIVE, contest__contest_type__code=contest_type, metric__name=project_constants.VOTE_METRICS_LIST["smile_metric"]).annotate(total_points=Sum('points'))
             # più pesante e mostra anche gli utenti che non hanno ancora punti
             # return_var = Account.objects.values('user__first_name', 'user__last_name', 'user__email', 'user__id').filter(Q(user__point__metric__name=project_constants.VOTE_METRICS_LIST["smile_metric"]) | Q(user__point__isnull=True), user__groups__name=project_constants.CATWALK_GROUP_NAME, contest_type__contest__status=project_constants.CONTEST_ACTIVE).annotate(total_points=Sum('user__point__points'))
             return_var = return_var.order_by('-total_points', 'user__id')
@@ -545,19 +553,18 @@ class Account(models.Model):
         if filters_list["filter_name"] == "look_more_beautiful":
             # "contest__status" to identify point about current contest
             # più leggera ma non mostra gli utenti che non hanno ancora punti
-            return_var = Point.objects.values('user__first_name', 'user__last_name', 'user__email', 'user__id', 'user__account__newsletters_bitmask').filter(metric__name=project_constants.VOTE_METRICS_LIST["look_metric"]).annotate(total_points=Sum('points'))
+            return_var = Point.objects.values('user__first_name', 'user__last_name', 'user__email', 'user__id', 'user__account__newsletters_bitmask').filter(contest__status=project_constants.CONTEST_ACTIVE, contest__contest_type__code=contest_type, metric__name=project_constants.VOTE_METRICS_LIST["look_metric"]).annotate(total_points=Sum('points'))
             # più pesante e mostra anche gli utenti che non hanno ancora punti
             # return_var = Account.objects.values('user__first_name', 'user__last_name', 'user__email', 'user__id').filter(user__groups__name=project_constants.CATWALK_GROUP_NAME, contest_type__contest__status=project_constants.CONTEST_ACTIVE).filter(Q(user__point__metric__name=project_constants.VOTE_METRICS_LIST["look_metric"]) | Q(user__point__metric__isnull=True)).annotate(total_points=Sum('user__point__points'))
             return_var = return_var.order_by('-total_points', 'user__id')
 
         # applico i filtri di base
-        if return_var:
-            return_var = self.apply_catwalker_filters(contest_type=contest_type, queryset=return_var)
+	return_var = self.apply_catwalker_filters(contest_type=contest_type, queryset=return_var)
 
         # limits filter
-        #logger.debug("limite da: " + str(filters_list["start_limit"]))
-        #logger.debug("limite numero elementi: " + str(filters_list["show_limit"]))
-        if filters_list.get("start_limit") and filters_list.get("show_limit"):
+        # logger.debug("limite da: " + str(filters_list["start_limit"]))
+        # logger.debug("limite numero elementi: " + str(filters_list["show_limit"]))
+	if filters_list.get("start_limit") and filters_list.get("show_limit"):
             return_var = return_var[filters_list["start_limit"]:filters_list["show_limit"]]
 
         #logger.debug("@@@: " + str(return_var))
@@ -568,14 +575,11 @@ class Account(models.Model):
 
     def apply_catwalker_filters(self, contest_type, queryset):
         """Function to add base catwalker filters to elements list"""
-        return_var = None
+        return_var = queryset
 
         # filter only catwalker users that can parade on the catwalk:
-        # (gruppo catwalk e permesso can_parade_on_the_catwalk)
-        can_parade_on_the_catwalk_permission = Permission.objects.get(codename='can_parade_on_the_catwalk')  
-
-        if queryset:
-            return_var = queryset.filter(user__groups__name=project_constants.CATWALK_GROUP_NAME, user__user_permissions=can_parade_on_the_catwalk_permission, contest__status=project_constants.CONTEST_ACTIVE, contest__contest_type__code=contest_type)
+        # (gruppo catwalk e permesso can_be_shown=1)
+	return_var = queryset.filter(user__groups__name=project_constants.CATWALK_GROUP_NAME, user__account__can_be_shown=1)
 
         return return_var
 
@@ -586,12 +590,12 @@ class Account(models.Model):
         # questo potrebbe non piacere a molti -> http://stackoverflow.com/questions/18846174/django-detect-database-backend
         if connection.vendor == "postgresql":
             # PostgreSQL query
-            cursor.execute('SELECT "ranking_table"."ranking", "user_id" FROM( SELECT row_number() OVER (ORDER BY SUM("contest_app_point"."points") DESC) as "ranking", "contest_app_point"."user_id", SUM("contest_app_point"."points") AS "total_points" FROM "contest_app_point" INNER JOIN "auth_user" ON ( "contest_app_point"."user_id" = "auth_user"."id" ) INNER JOIN "auth_user_groups" ON ( "auth_user"."id" = "auth_user_groups"."user_id" ) INNER JOIN "auth_group" ON ( "auth_user_groups"."group_id" = "auth_group"."id" ) INNER JOIN "contest_app_contest" ON ( "contest_app_point"."contest_id" = "contest_app_contest"."id_contest" ) INNER JOIN "contest_app_contest_type" ON ( "contest_app_contest"."contest_type_id" = "contest_app_contest_type"."id_contest_type" ) WHERE "auth_group"."name" = \'catwalk_user\' AND "contest_app_contest_type"."code" = %(contest_type)s AND "contest_app_contest"."status" = \'active\' GROUP BY "contest_app_point"."user_id" ORDER BY "total_points" DESC, "contest_app_point"."user_id" ASC) AS "ranking_table" WHERE "user_id" = %(user_id)s', {"user_id": user_id, "contest_type": contest_type})
+            cursor.execute('SELECT "ranking_table"."ranking", "user_id" FROM( SELECT row_number() OVER (ORDER BY SUM("contest_app_point"."points") DESC) as "ranking", "contest_app_point"."user_id", SUM("contest_app_point"."points") AS "total_points" FROM "contest_app_point" INNER JOIN "auth_user" ON ( "contest_app_point"."user_id" = "auth_user"."id" ) INNER JOIN "auth_user_groups" ON ( "auth_user"."id" = "auth_user_groups"."user_id" ) INNER JOIN "auth_group" ON ( "auth_user_groups"."group_id" = "auth_group"."id" ) INNER JOIN "contest_app_contest" ON ( "contest_app_point"."contest_id" = "contest_app_contest"."id_contest" ) INNER JOIN "contest_app_contest_type" ON ( "contest_app_contest"."contest_type_id" = "contest_app_contest_type"."id_contest_type" ) INNER JOIN "account_app_account" ON ("account_app_account"."user_id" = "auth_user"."id" ) WHERE "account_app_account"."can_be_shown" = 1 AND "auth_group"."name" = \'catwalk_user\' AND "contest_app_contest_type"."code" = %(contest_type)s AND "contest_app_contest"."status" = \'active\' GROUP BY "contest_app_point"."user_id" ORDER BY "total_points" DESC, "contest_app_point"."user_id" ASC) AS "ranking_table" WHERE "user_id" = %(user_id)s', {"user_id": user_id, "contest_type": contest_type})
         else:
             # MySQL query
             cursor.execute("SET @row_number:=0;")
             # cursor.execute("SELECT `ranking_table`.`ranking` FROM (SELECT @row_number:=@row_number+1 AS `ranking`, `contest_app_point`.`user_id`, SUM(`contest_app_point`.`points`) AS `total_points` FROM `contest_app_point` INNER JOIN `auth_user` ON ( `contest_app_point`.`user_id` = `auth_user`.`id` ) INNER JOIN `auth_user_groups` ON ( `auth_user`.`id` = `auth_user_groups`.`user_id` ) INNER JOIN `auth_group` ON ( `auth_user_groups`.`group_id` = `auth_group`.`id` ) INNER JOIN `contest_app_contest` ON ( `contest_app_point`.`contest_id` = `contest_app_contest`.`id_contest` ) WHERE (`auth_group`.`name` = 'catwalk_user' AND `contest_app_contest`.`status` = 'active') GROUP BY `contest_app_point`.`user_id` ORDER BY `total_points` DESC, `contest_app_point`.`user_id` ASC) AS `ranking_table` WHERE `user_id` = %s", [user_id])
-            cursor.execute("SELECT `ranking` FROM (SELECT @row_number:=@row_number+1 AS `ranking`, `user_id`, `total_points` FROM (SELECT `contest_app_point`.`user_id`, SUM(`contest_app_point`.`points`) AS `total_points` FROM `contest_app_point` INNER JOIN `auth_user` ON ( `contest_app_point`.`user_id` = `auth_user`.`id` ) INNER JOIN `auth_user_groups` ON ( `auth_user`.`id` = `auth_user_groups`.`user_id` ) INNER JOIN `auth_group` ON ( `auth_user_groups`.`group_id` = `auth_group`.`id` ) INNER JOIN `contest_app_contest` ON ( `contest_app_point`.`contest_id` = `contest_app_contest`.`id_contest` ) INNER JOIN `contest_app_contest_type` ON ( `contest_app_contest`.`contest_type_id` = `contest_app_contest_type`.`id_contest_type` ) WHERE (`auth_group`.`name` = 'catwalk_user' AND `contest_app_contest_type`.`code` = %(contest_type)s AND `contest_app_contest`.`status` = 'active') GROUP BY `contest_app_point`.`user_id` ORDER BY `total_points` DESC, `contest_app_point`.`user_id` ASC) AS `ranking_table`) AS `user_ranking` WHERE `user_id` = %(user_id)s", {"user_id": user_id, "contest_type": contest_type})
+            cursor.execute("SELECT `ranking` FROM (SELECT @row_number:=@row_number+1 AS `ranking`, `user_id`, `total_points` FROM (SELECT `contest_app_point`.`user_id`, SUM(`contest_app_point`.`points`) AS `total_points` FROM `contest_app_point` INNER JOIN `auth_user` ON ( `contest_app_point`.`user_id` = `auth_user`.`id` ) INNER JOIN `auth_user_groups` ON ( `auth_user`.`id` = `auth_user_groups`.`user_id` ) INNER JOIN `auth_group` ON ( `auth_user_groups`.`group_id` = `auth_group`.`id` ) INNER JOIN `contest_app_contest` ON ( `contest_app_point`.`contest_id` = `contest_app_contest`.`id_contest` ) INNER JOIN `contest_app_contest_type` ON ( `contest_app_contest`.`contest_type_id` = `contest_app_contest_type`.`id_contest_type` ) INNER JOIN `account_app_account` ON (`account_app_account`.`user_id` = `auth_user`.`id` ) WHERE (`account_app_account`.`can_be_shown` = 1 AND `auth_group`.`name` = 'catwalk_user' AND `contest_app_contest_type`.`code` = %(contest_type)s AND `contest_app_contest`.`status` = 'active') GROUP BY `contest_app_point`.`user_id` ORDER BY `total_points` DESC, `contest_app_point`.`user_id` ASC) AS `ranking_table`) AS `user_ranking` WHERE `user_id` = %(user_id)s", {"user_id": user_id, "contest_type": contest_type})
 
         row = cursor.fetchall()
         return_var = row[0][0] if row else None

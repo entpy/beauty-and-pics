@@ -416,8 +416,8 @@ class ajaxManager():
             # se è stata uploadata l'immagine del profilo abilito l'utente a
             # sfilare sulla passerella
             if image_data["image_type"] == project_constants.IMAGE_TYPE["profile"]:
-                # TODO: aggiungo permesso "can_parade_on_the_catwalk"
-                Account_obj.add_user_permission(user=self.request.user, permission_codename="can_parade_on_the_catwalk")
+                # ora l'utente può essere visto nella passerella
+                Account_obj.set_user_can_be_shown(value=1, user=self.request.user)
             data = {'success' : True, 'image_url': saved_image_url, 'image_id': saved_image_id, 'message': "immagine salvata correttamente!"}
 
         # build JSON response

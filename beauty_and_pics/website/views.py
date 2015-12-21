@@ -288,14 +288,38 @@ def www_podium(request, contest_type, contest_year, user_id):
 @ensure_csrf_cookie
 def catwalk_index(request, contest_type=None):
     # set current contest_type
-    contest_obj = Contest()
-    contest_obj.set_contest_type(request=request, contest_type=contest_type)
+    contest_winner = None
+    HallOfFame_obj = HallOfFame()
+    Contest_obj = Contest()
 
-    # debug only
-    # messages.add_message(request, settings.POPUP_ALERT, 'popup di prova success')
-    # messages.add_message(request, settings.POPUP_SUCCESS, 'popup di prova success')
+    # common function to set contest type
+    Contest_obj.common_view_set_contest_type(request=request, contest_type=contest_type)
 
-    return render(request, 'website/catwalk/catwalk_index.html', False)
+    # retrieve contest_type
+    contest_type = Contest_obj.get_contest_type_from_session(request=request)
+
+    # last contest winner
+    try:
+	contest_winner = HallOfFame_obj.get_hall_of_fame_user(contest_type=contest_type)
+    except ContestClosedNotExistsError, ContestTypeRequiredError:
+	# non esistono ancora concorsi chiusi o nessun contest type passato
+	pass
+
+    if contest_winner:
+	# retrieve contest type code
+	woman_contest_code = project_constants.WOMAN_CONTEST
+	man_contest_code = project_constants.MAN_CONTEST
+	# identify contest winner title
+	if contest_winner.get("user__account__contest_type__code") == woman_contest_code:
+	    contest_winner["contest_winner_title"] = "Vincitrice"
+	elif contest_winner.get("user__account__contest_type__code") == man_contest_code:
+	    contest_winner["contest_winner_title"] = "Vincitore"
+
+    context = {
+	"contest_winner": contest_winner,
+    }
+
+    return render(request, 'website/catwalk/catwalk_index.html', context)
 
 @ensure_csrf_cookie
 def catwalk_profile(request, user_id):

@@ -71,6 +71,7 @@ class HallOfFame(models.Model):
 		'user__id',
 		'user__first_name',
 		'user__last_name',
+		'user__account__contest_type__code',
 		'ranking',
 		'points',
 		'disqualified',
