@@ -58,8 +58,6 @@ class HallOfFame(models.Model):
 
         return True
 
-    # TODO: testare elenco utenti per contest e anno.
-    # testare anche utente vincitore
     def get_contest_top_100(self, contest_type, contest_year, user_id=False):
         """Function to retrieve top 100 users about a contest"""
         return_var = None
@@ -153,6 +151,26 @@ class HallOfFame(models.Model):
         if hall_of_fame_user_row:
             if int(hall_of_fame_user_row.get("ranking")) >= 1 and int(hall_of_fame_user_row.get("ranking")) <= 5:
                 return_var = True
+
+        return return_var
+
+    # TODO: testare
+    def get_user_for_winner_block(self, contest_type):
+        """Function to retrieve data used in catawalk index"""
+        return_var = None
+        # last contest winner
+        try:
+            return_var = self.get_hall_of_fame_user(contest_type=contest_type)
+        except ContestClosedNotExistsError, ContestTypeRequiredError:
+            # non esistono ancora concorsi chiusi o nessun contest_type passato
+            pass
+
+        if return_var:
+            # identify contest winner title
+            if return_var.get("user__account__contest_type__code") == project_constants.WOMAN_CONTEST:
+                return_var["contest_winner_title"] = "Vincitrice"
+            elif return_var.get("user__account__contest_type__code") == project_constants.MAN_CONTEST:
+                return_var["contest_winner_title"] = "Vincitore"
 
         return return_var
 

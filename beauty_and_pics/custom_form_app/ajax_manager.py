@@ -413,10 +413,8 @@ class ajaxManager():
             logger.error("Image type inserito non valido: " + str(self.request) + " | error code: " + str(imageTypeWrongError.get_error_code))
             data = {'error' : True, 'message': "Errore inaspettato (codice=" + str(imageTypeWrongError.get_error_code) + "), sii gentile contatta l'amministratore!"}
         else:
-            # se è stata uploadata l'immagine del profilo abilito l'utente a
-            # sfilare sulla passerella
             if image_data["image_type"] == project_constants.IMAGE_TYPE["profile"]:
-                # ora l'utente può essere visto nella passerella
+                # se è stata uploadata l'immagine del profilo, abilito l'utente a sfilare sulla passerella
                 Account_obj.set_user_can_be_shown(value=1, user=self.request.user)
             data = {'success' : True, 'image_url': saved_image_url, 'image_id': saved_image_id, 'message': "immagine salvata correttamente!"}
 

@@ -197,7 +197,7 @@ def www_register(request):
     return render(request, 'website/www/www_register.html', context)
 
 def www_ranking_contest(request, contest_type, contest_year):
-    # view to show a ranking table about contest and year
+    """view to show a ranking table about contest and year"""
     # se l'anno non è specificato mi baso sull'ultimo contest chiuso
     Contest_Type_obj = Contest_Type()
     HallOfFame_obj = HallOfFame()
@@ -205,7 +205,6 @@ def www_ranking_contest(request, contest_type, contest_year):
     # check if contest_type exists, otherwise redirect in home page
     current_contest_type_obj = Contest_Type_obj.get_contest_type_by_code(code=contest_type)
     if not current_contest_type_obj:
-        # return HttpResponseRedirect('/')
         raise Http404()
 
     # retrieve top 100 users
@@ -219,8 +218,7 @@ def www_ranking_contest(request, contest_type, contest_year):
         pass
 
     # retrieve contest year (ho fatto così perchè se contest_year non venisse passato ci si riferirebbe
-    # all'ultimo concorso chiuso prima di questo attivo, in questa maniera riesco a prelevare la
-    # data corretta
+    # all'ultimo concorso chiuso prima di questo attivo, in questa maniera riesco a prelevare la data corretta
     contest_start_date = None
     if top_100_users:
 	contest_start_date = top_100_users[0]["contest__start_date"]
@@ -238,7 +236,7 @@ def www_ranking_contest(request, contest_type, contest_year):
     return render(request, 'website/www/www_ranking_contest.html', context)
 
 def www_podium(request, contest_type, contest_year, user_id):
-    # view to to show podium user about contest_type, contest_year and user_id
+    """view to to show podium user about contest_type, contest_year and user_id"""
     # se l'anno non è specificato mi baso sull'ultimo contest chiuso
     Contest_Type_obj = Contest_Type()
     HallOfFame_obj = HallOfFame()
@@ -254,7 +252,7 @@ def www_podium(request, contest_type, contest_year, user_id):
         try:
             hall_of_fame_user = HallOfFame_obj.get_hall_of_fame_user(contest_type=contest_type, contest_year=contest_year, user_id=user_id)
         except ContestClosedNotExistsError, ContestTypeRequiredError:
-	# non esistono ancora concorsi chiusi o nessun contest type passato
+            # non esistono ancora concorsi chiusi o nessun contest type passato
             raise Http404()
 
     # check if user is a podium user (posizione compresa tra 1 e 5)
@@ -264,8 +262,7 @@ def www_podium(request, contest_type, contest_year, user_id):
         raise Http404()
 
     # retrieve contest year (ho fatto così perchè se contest_year non venisse passato ci si riferirebbe
-    # all'ultimo concorso chiuso prima di questo attivo, in questa maniera riesco a prelevare la
-    # data corretta
+    # all'ultimo concorso chiuso prima di questo attivo, in questa maniera riesco a prelevare la data corretta
     contest_start_date = None
     if hall_of_fame_user:
 	contest_start_date = hall_of_fame_user["contest__start_date"]
@@ -298,22 +295,8 @@ def catwalk_index(request, contest_type=None):
     # retrieve contest_type
     contest_type = Contest_obj.get_contest_type_from_session(request=request)
 
-    # last contest winner
-    try:
-	contest_winner = HallOfFame_obj.get_hall_of_fame_user(contest_type=contest_type)
-    except ContestClosedNotExistsError, ContestTypeRequiredError:
-	# non esistono ancora concorsi chiusi o nessun contest type passato
-	pass
-
-    if contest_winner:
-	# retrieve contest type code
-	woman_contest_code = project_constants.WOMAN_CONTEST
-	man_contest_code = project_constants.MAN_CONTEST
-	# identify contest winner title
-	if contest_winner.get("user__account__contest_type__code") == woman_contest_code:
-	    contest_winner["contest_winner_title"] = "Vincitrice"
-	elif contest_winner.get("user__account__contest_type__code") == man_contest_code:
-	    contest_winner["contest_winner_title"] = "Vincitore"
+    # retrieve contest winner for catwalk index
+    contest_winner = HallOfFame_obj.get_user_for_winner_block(contest_type=contest_type)
 
     context = {
 	"contest_winner": contest_winner,

@@ -5,7 +5,6 @@ from django.conf import settings
 from account_app.models.accounts import *
 from account_app.models.images import *
 from contest_app.models.contests import *
-from contest_app.models.hall_of_fame import *
 # from image_contest_app.models import ImageContestImage, ImageContest #imagecontestapptag
 from notify_system_app.models import Notify
 from beauty_and_pics.consts import project_constants
@@ -19,7 +18,6 @@ def common_contest_processors(request):
     account_obj =  Account()
     book_obj = Book()
     contest_obj = Contest()
-    hall_of_fame_obj = HallOfFame()
     # ImageContest_obj = ImageContest() #imagecontestapptag
     # ImageContestImage_obj = ImageContestImage() #imagecontestapptag
     Notify_obj = Notify()

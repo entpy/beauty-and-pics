@@ -113,7 +113,11 @@ class Book(models.Model):
         return return_var
 
     def get_all_photobook_list(self, contest_type, filters_list=None):
-        """Function to retrieve a list of photobook about all users ordered by date"""
+        """
+            Function to retrieve a list of photobook about all users ordered by date
+            prelevo solo le foto degli utenti che appartengono al gruppo "catwalker"
+            e che hanno flag can_be_shown=1
+        """
 	from account_app.models import Account
 	Account_obj = Account()
 

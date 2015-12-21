@@ -29,7 +29,7 @@ class Account(models.Model):
     id_account = models.AutoField(primary_key=True)
     user = models.OneToOneField(User, null=True)
     contest_type = models.ForeignKey(Contest_Type, null=True)
-    # TODO: https://github.com/coderholic/django-cities
+    # https://github.com/coderholic/django-cities # per la scelta della country
     country = models.CharField(max_length=100, null=True, blank=True)
     city = models.CharField(max_length=100, null=True, blank=True)
     gender = models.CharField(max_length=100, null=True)
@@ -479,7 +479,6 @@ class Account(models.Model):
 
         return contest_account_info
 
-    # TODO: testare
     def get_top_100_contest_user(self, contest_type):
         """Function to retrieve the '100 best of' contest users"""
         filters_list = {"filter_name": "classification", "start_limit": "0", "show_limit": "100"}
@@ -500,7 +499,6 @@ class Account(models.Model):
 
         return best_users
 
-    # TODO: testare
     def get_top_five_contest_user(self, contest_type):
         """Function to retrieve the top five contest user"""
         book_obj = Book()
@@ -522,7 +520,11 @@ class Account(models.Model):
         return top_five_account
 
     def get_filtered_accounts_list(self, contest_type, filters_list=None):
-        """Function to retrieve a list of filtere accounts"""
+        """
+            Function to retrieve a list of filtered accounts
+            prelevo solo gli utenti che appartengono al gruppo "catwalker"
+            e che hanno flag can_be_shown=1
+        """
         return_var = False
         # logger.debug("NOME FILTRO: " + str(filters_list["filter_name"]))
 
@@ -599,6 +601,13 @@ class Account(models.Model):
 
         row = cursor.fetchall()
         return_var = row[0][0] if row else None
+
+        """
+        # questa non sembra male
+        SELECT `id`, (SELECT COUNT(*) FROM `table` WHERE `user_id` <= user_id.id) AS `position`, `name`
+        FROM `table`
+        WHERE `user_id` = user_id.id
+        """
 
         return return_var
 
