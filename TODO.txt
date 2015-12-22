@@ -69,3 +69,18 @@ aggiungere una seconda e terza immagine nel photoboard e testare nuovamente i ca
 per riabilitare il contest delle immagini cercare nel codice il tag: #imagecontestapptag
 ----
 
+*** per la produzione ***
+$source bin/activate
+- installare con pip le app necessarie
+$git branch (per sicurezza)
+$git pull
+$cd beauty_and_pics
+$python manage.py collectstatic
+$python manage.py makemigration
+$python manage.py migrate
+$python manage.py syncdb
+- reload del webserver
+- connettersi urgentemente al db (di produzione) ed eseguire la seguente query:
+UPDATE `account_app_account` SET `can_be_shown` = '1';
+- ora che tutti gli utenti sono felicemente ri-visibili impostare a '0' il flag 'can_be_shown'
+  per quelli che non hanno caricato un'immagine profilo
