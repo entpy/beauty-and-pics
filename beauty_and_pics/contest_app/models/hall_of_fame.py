@@ -42,8 +42,9 @@ class HallOfFame(models.Model):
         # retrieve best 100 users about current contest_type
         top_users = account_obj.get_top_100_contest_user(contest_type=contest_type)
 
-        # retrieve active contest
+        # retrieve active contest (in questo preciso istante il contest è ancora attivo)
         active_contest = contest_obj.get_active_contests_by_type(contest_type=contest_type)
+
         if top_users:
             ranking = 1
             for single_user in top_users:
@@ -154,7 +155,6 @@ class HallOfFame(models.Model):
 
         return return_var
 
-    # TODO: testare
     def get_user_for_winner_block(self, contest_type):
         """Function to retrieve data used in catawalk index"""
         return_var = None

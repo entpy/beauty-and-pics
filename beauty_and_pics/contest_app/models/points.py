@@ -53,6 +53,15 @@ class Point(models.Model):
 
         return return_var
 
+    def delete_all_points_about_contest_type(self, contest_type):
+        """Function to delete all points about a contest type"""
+        return_var = False
+        if contest_type:
+            Point.objects.filter(contest__contest_type__code=contest_type).delete()
+            return_var = True
+
+        return return_var
+
     def get_single_user_contest_info(self, user_id=None):
         """Function to retrieve a dictionary with account contest info
         {

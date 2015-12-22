@@ -77,7 +77,7 @@ textarea { resize: none; }
 /* footer style }}} */
 
 /* www index page */
-.catwalk_container { float: left; width: 100%; }
+.catwalk_container { float: left; margin-bottom: 20px; width: 100%; }
 .catwalk_container .catwalk_block { background: -moz-linear-gradient(top, rgba(0,0,0,0.6) 0%, rgba(0,0,0,0.6) 100%); /* FF3.6-15 */ background: -webkit-linear-gradient(top, rgba(0,0,0,0.6) 0%,rgba(0,0,0,0.6) 100%); /* Chrome10-25,Safari5.1-6 */ background: linear-gradient(to bottom, rgba(0,0,0,0.6) 0%,rgba(0,0,0,0.6) 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#99000000', endColorstr='#99000000',GradientType=0 ); /* IE6-9 */ }
 .catwalk_container .catwalk_block > div { float: left; text-align: center; width: 100%; }
 .catwalk_container .catwalk_block .title_container { color: #fff; padding: 9px 0; }

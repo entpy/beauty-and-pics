@@ -202,7 +202,7 @@ def www_ranking_contest(request, contest_type, contest_year):
     Contest_Type_obj = Contest_Type()
     HallOfFame_obj = HallOfFame()
 
-    # check if contest_type exists, otherwise redirect in home page
+    # check if contest_type exists, otherwise raise a 404
     current_contest_type_obj = Contest_Type_obj.get_contest_type_by_code(code=contest_type)
     if not current_contest_type_obj:
         raise Http404()
@@ -240,8 +240,9 @@ def www_podium(request, contest_type, contest_year, user_id):
     # se l'anno non è specificato mi baso sull'ultimo contest chiuso
     Contest_Type_obj = Contest_Type()
     HallOfFame_obj = HallOfFame()
+    hall_of_fame_user = None
 
-    # check if contest_type exists, otherwise redirect in home page
+    # check if contest_type exists, otherwise raise a 404
     current_contest_type_obj = Contest_Type_obj.get_contest_type_by_code(code=contest_type)
     if not current_contest_type_obj:
         raise Http404()

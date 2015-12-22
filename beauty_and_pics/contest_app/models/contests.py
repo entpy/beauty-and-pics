@@ -63,6 +63,7 @@ class Contest(models.Model):
     def __close_contests(self):
         from contest_app.models.hall_of_fame import HallOfFame
         from account_app.models.accounts import Account
+        from contest_app.models.points import Point
         """Function to close contests
         Funzione per chiudere i concorsi()
 
@@ -72,6 +73,7 @@ class Contest(models.Model):
                 - notifico tutti gli utenti (TUTTI!) che il concorso è stato chiuso
 
         """
+        Point_obj = Point()
         send_email = False
         contest_list = Contest.objects.filter(status=project_constants.CONTEST_ACTIVE)
         for contest in contest_list:
@@ -81,7 +83,11 @@ class Contest(models.Model):
                 hall_of_fame_obj = HallOfFame()
                 hall_of_fame_obj.save_active_contest_hall_of_fame(contest_type=contest.contest_type.code)
                 send_email = True
+                # delete all points about contest_type
+                Point_obj.delete_all_points_about_contest_type(contest_type=contest.contest_type.code)
                 pass
+
+        # close all expired active contests
         Contest.objects.filter(status=project_constants.CONTEST_ACTIVE, end_date__lte=timezone.now()).update(status=project_constants.CONTEST_CLOSED)
 
         # send emails

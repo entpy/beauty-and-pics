@@ -483,7 +483,7 @@ class Account(models.Model):
         """Function to retrieve the '100 best of' contest users"""
         filters_list = {"filter_name": "classification", "start_limit": "0", "show_limit": "100"}
         filtered_elements = self.get_filtered_accounts_list(filters_list=filters_list, contest_type=contest_type)
-        best_users = []
+        return_var = []
         for user_info in filtered_elements:
             try:
 		user_obj = {}
@@ -491,13 +491,14 @@ class Account(models.Model):
             except User.DoesNotExist:
                 # l'utente potrebbe essere stato eliminato nel bel mezzo del for
 		pass
-	    best_users.append({
-		"user_id": user_info["user__id"],
-		"user": user_obj, # Ottimizzare, ma non credo si riesca
-		"user_total_points": user_info["total_points"],
-	    }),
+            else:
+                return_var.append({
+                    "user_id": user_info["user__id"],
+                    "user": user_obj, # Ottimizzare, ma non credo si riesca
+                    "user_total_points": user_info["total_points"],
+                }),
 
-        return best_users
+        return return_var
 
     def get_top_five_contest_user(self, contest_type):
         """Function to retrieve the top five contest user"""

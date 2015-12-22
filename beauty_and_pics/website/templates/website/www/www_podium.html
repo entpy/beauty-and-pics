@@ -5,7 +5,7 @@
 {% block title %}{{ site_name }} | il podio{% endblock %}
 
 {# page description #}
-{% block description %}Il podio di {{ site_name }}. [mettere desc]{% endblock %}
+{% block description %}Il podio di {{ site_name }}. {{ podium_string }}: {{ podium_user.user__first_name }} {{ podium_user.user__last_name }}, anno {{ contest_start_date | date:"Y" }}{% endblock %}
 
 {% block block0_0_title_h1 %}{{ podium_user.user__first_name }} {{ podium_user.user__last_name }}{% endblock %}
 {% block block0_0_title_h4 %}<a href="/classifica/{{ contest_type }}/{{ contest_start_date | date:"Y" }}/">{{ contest_name }}</a>, anno {{ contest_start_date | date:"Y" }}{% endblock %}
