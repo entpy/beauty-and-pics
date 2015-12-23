@@ -169,7 +169,7 @@ class Vote(models.Model):
 
                     # saving that user voted this catwalker
 		    self.create_votation(user_id=user_id, ip_address=ip_address)
-		    logger.debug("VOTAZIONE EFFETTUATA da " + str(ip_address) + " per " + str(user_instance.email) + " (" + str(user_instance.id) + ")")
+		    logger.debug("VOTAZIONE EFFETTUATA da " + str(ip_address) + " (" + str(request.META.get('HTTP_USER_AGENT', '')) + ") per " + str(user_instance.email) + " (" + str(user_instance.id) + ")")
                     pass
 
         return True
