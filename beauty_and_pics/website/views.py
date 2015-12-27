@@ -106,6 +106,9 @@ def www_contest_info(request):
 def www_privacy(request):
     return render(request, 'website/www/www_privacy.html', False)
 
+def www_terms(request):
+    return render(request, 'website/www/www_terms.html', False)
+
 def www_cookie_policy(request):
     return render(request, 'website/www/www_cookie_policy.html', False)
 
