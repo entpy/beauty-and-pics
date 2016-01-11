@@ -55,7 +55,9 @@ class HallOfFame(models.Model):
                 hall_of_fame_obj.ranking = ranking
                 hall_of_fame_obj.points = single_user["user_total_points"]
                 hall_of_fame_obj.save()
-                ranking +=1
+
+                # TODO: se ranking == 1 setto lo status gift dell'utente a 1 (può richiedere il premio)
+                ranking += 1
 
         return True
 

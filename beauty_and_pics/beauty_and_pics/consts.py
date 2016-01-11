@@ -6,30 +6,31 @@ In this module will be defined all constanst about Beauty & Pics
 class project_constants(object):
     # contest status {{{
     CONTEST_OPENING = "opening"
-
     CONTEST_ACTIVE = "active"
-
     CONTEST_CLOSED = "closed"
     # contest status }}}
 
     # contest types {{{
     MAN_CONTEST = "man-contest"
-
     WOMAN_CONTEST = "woman-contest"
     # contest types }}}
 
     # account gender {{{
     MAN_GENDER = "man"
-
     WOMAN_GENDER = "woman"
     # account gender }}}
+
+    # prize consts {{{
+    PRIZE_CANNOT_BE_REDEEMED = 0
+    PRIZE_CAN_BE_REDEEMED = 1
+    PRIZE_ALREADY_REDEEMED = 2
+    # prize consts }}}
 
     # contest details {{{
     # see here -> http://www.epochconverter.com/epoch/daynumbers.php
     # CONTEST_OPENING_DAYS = 35
     # XXX: debug, use this instead --^
     CONTEST_OPENING_DAYS = 30
-
     CONTEST_EXPIRING_DAYS = 165
     # contest details }}}
 

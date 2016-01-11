@@ -71,14 +71,18 @@ class Contest(models.Model):
             se la data corrente è >= della scadenza del concorso
                 - chiudo il concorso (settando lo status=2  |1 -> 2|)
                 - notifico tutti gli utenti (TUTTI!) che il concorso è stato chiuso
-
         """
+
+        account_obj = Account()
         Point_obj = Point()
         send_email = False
         contest_list = Contest.objects.filter(status=project_constants.CONTEST_ACTIVE)
         for contest in contest_list:
             if timezone.now() >= contest.end_date:
                 logger.info("contest chiuso:" + str(contest))
+                # setto il prize_status per tutti gli utenti di questo contest_type a '0'
+                account_obj.set_reset_prize_status(contest_type=contest.contest_type.code)
+
                 # save best users inside hall of fame
                 hall_of_fame_obj = HallOfFame()
                 hall_of_fame_obj.save_active_contest_hall_of_fame(contest_type=contest.contest_type.code)
@@ -95,7 +99,6 @@ class Contest(models.Model):
             for contest in contest_list:
                 if timezone.now() >= contest.end_date:
                     # send close contest emails
-                    account_obj = Account()
                     account_obj.send_contest_closing_emails(contest_type=contest.contest_type.code)
 
         return True

@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
 
 from django import forms
-from datetime import date
-from dateutil.relativedelta import *
 from custom_form_app.forms.base_form_class import *
 from account_app.models import *
 from website.exceptions import *
+from email_template.email.email_template import *
+from beauty_and_pics.consts import project_constants
 import calendar, logging, sys
 
 # force utf8 read data
@@ -38,27 +38,25 @@ class GetPrizeForm(forms.Form, FormCommonUtils):
         self.validation_form = super(GetPrizeForm, self)
 
         # setting addictional data to form fields
-        self.fields["size"].choices=self.get_size()
+        self.fields["size"].choices=self.get_size_for_select()
 
     def clean(self):
 	super(GetPrizeForm, self).clean_form_custom()
         return True
 
-    def save_form(self):
+    def form_actions(self):
+        """Function to perform form actions"""
         return_var = False
         if super(GetPrizeForm, self).form_can_perform_actions():
-	    self.form_validated_data.get("address")
-	    self.form_validated_data.get("size")
-	    self.form_validated_data.get("note")
-            # TODO send email to admin with prize info
-            return_var = True
+            account_obj = Account()
 
-        return return_var
+            # send email to admin with prize info
+            self.send_email()
 
-    def form_actions(self):
-        """Function to create new user and logging into website"""
-        return_var = False
-        if self.save_form():
+            # update account info (prize is now redeemed)
+            self.form_validated_data["prize_status"] = project_constants.PRIZE_ALREADY_REDEEMED
+            account_obj.update_data(save_data=self.form_validated_data, user_obj=self.request_data.user)
+
             return_var = True
 
         return return_var
@@ -66,7 +64,7 @@ class GetPrizeForm(forms.Form, FormCommonUtils):
     """
     Custom form functions
     """
-    def get_size(self):
+    def get_size_for_select(self):
         """Create a list of size for select element"""
         select_choices = []
         select_choices.append(("s", "S"))
@@ -74,3 +72,22 @@ class GetPrizeForm(forms.Form, FormCommonUtils):
         select_choices.append(("l", "L"))
 
         return select_choices
+
+    def send_email(self):
+        # send email to admin
+        email_context = { 
+            "user_email": self.request_data.user.email,
+            "user_id": self.request_data.user.id,
+            "user_profile_url": settings.SITE_URL + "/passerella/dettaglio-utente/" + str(self.request_data.user.id) + "/",
+            "address": self.form_validated_data.get("address"),
+            "size": self.form_validated_data.get("size"),
+            "note": self.form_validated_data.get("note"),
+        }
+        CustomEmailTemplate(
+	    email_name="get_prize_email",
+	    email_context=email_context,
+	    template_type="user",
+	    email_from=self.request_data.user.email,
+	)
+
+        return True

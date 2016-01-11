@@ -1,9 +1,9 @@
 {% extends "website/inc/base_profile.html" %}
 {% load staticfiles %}
 
-{% block title %}{{ site_name }} | ottieni il premio{% endblock %}
+{% block title %}{{ site_name }} | richiedi il premio{% endblock %}
 
-{% block description %}Ottieni il premio: in questa pagina è possibile richiedere il premio del concorso.{% endblock %}
+{% block description %}Richiedi il premio: in questa sezione è possibile richiedere il premio del concorso.{% endblock %}
 
 {# navigation tabs active element #}
 {% block container4_navigation_profile_preferences %}active{% endblock %}
@@ -11,12 +11,18 @@
 {% block container4_content %}
 <div class="row">
 	<div class="col-md-12">
-		<h3>Ottieni il premio</h3>
+		<h3>Richiedi il premio</h3>
 	</div>
 	<div class="col-md-12">
-		<div class="alert alert-info">
-			<p>Inserisci le informazioni richieste per ottenere la maglietta con grafica personalizzata di {{ site_name }}.</p>
-		</div>
+		{% if not prize_was_already_redeemed %}
+			<div class="alert alert-info">
+				<p>Inserisci le informazioni richieste per ricevere la <b>fantastica maglietta</b> di {{ site_name }}.</p>
+			</div>
+		{% else %}
+			<div class="alert alert-warning">
+				<p>La richiesta è stata inoltrata correttamente!</p>
+			</div>
+		{% endif %}
 	</div>
 	<div class="col-md-12">
 		{# messages block #}
@@ -32,50 +38,45 @@
 							{% endfor %}
 						</ul>
 					</div>
-				{% else %}
-					<div class="alert alert-success">
-						<h4>Ottimo!</h4>
-						{% for message in messages %}
-							<div>{{ message }}</div>
-						{% endfor %}
-					</div>
 				{% endif %}
 			</div>
 		{% endif %}
-		<form class="form-horizontal ajax_form" method="post" action="">
-			{% csrf_token %}
-			<input type="hidden" name="form_class" value="GetPrizeForm">
-			<fieldset class="col-md-9">
-				<div class="form-group {% if form.address.errors %}has-error{% endif %}">
-					<label for="{{ form.address.id_for_label }}" class="col-md-4 control-label">{{ form.address.label }} *</label>
-					<div class="col-md-8">
-						<input name="{{ form.address.name }}" class="form-control" id="{{ form.address.id_for_label }}" placeholder="{{ form.address.label }}" value="{{ post.address }}" maxlength="100" type="text">
+		{% if not prize_was_already_redeemed %}
+			<form class="form-horizontal ajax_form" method="post" action="">
+				{% csrf_token %}
+				<input type="hidden" name="form_class" value="GetPrizeForm">
+				<fieldset class="col-md-9">
+					<div class="form-group {% if form.address.errors %}has-error{% endif %}">
+						<label for="{{ form.address.id_for_label }}" class="col-md-4 control-label">{{ form.address.label }} *</label>
+						<div class="col-md-8">
+							<input name="{{ form.address.name }}" class="form-control" id="{{ form.address.id_for_label }}" placeholder="Indirizzo (es. Via Roma, 54, 10121 Torino)" value="{{ post.address }}" maxlength="100" type="text">
+						</div>
 					</div>
-				</div>
-				<div class="form-group {% if form.size.errors %}has-error{% endif %}">
-					<label for="{{ form.size.id_for_label }}" class="col-md-4 control-label">{{ form.size.label }} *</label>
-					<div class="col-md-4">
-						<select name="{{ form.size.name }}" class="form-control" id="{{ form.size.id_for_label }}">
-							<option selected="selected">{{ form.size.label }}</option>
-							{% for key,value in form.fields.size.choices %}
-								<option value="{{ key }}" {% if post.size == key|slugify %}selected="selected"{% endif %}>{{ value }}</option>
-							{% endfor %}
-						</select>
+					<div class="form-group {% if form.size.errors %}has-error{% endif %}">
+						<label for="{{ form.size.id_for_label }}" class="col-md-4 control-label">{{ form.size.label }} *</label>
+						<div class="col-md-4">
+							<select name="{{ form.size.name }}" class="form-control" id="{{ form.size.id_for_label }}">
+								<option selected="selected">{{ form.size.label }}</option>
+								{% for key,value in form.fields.size.choices %}
+									<option value="{{ key }}" {% if post.size == key|slugify %}selected="selected"{% endif %}>{{ value }}</option>
+								{% endfor %}
+							</select>
+						</div>
 					</div>
-				</div>
-				<div class="form-group {% if form.note.errors %}has-error{% endif %}">
-					<label for="{{ form.note.id_for_label }}" class="col-md-4 control-label">{{ form.note.label }}</label>
-					<div class="col-md-8">
-						<textarea name="{{ form.note.name }}" class="form-control" id="{{ form.note.id_for_label }}" placeholder="{{ form.note.label }}" maxlength="300">{{ post.note }}</textarea>
+					<div class="form-group {% if form.note.errors %}has-error{% endif %}">
+						<label for="{{ form.note.id_for_label }}" class="col-md-4 control-label">{{ form.note.label }}</label>
+						<div class="col-md-8">
+							<textarea name="{{ form.note.name }}" class="form-control" id="{{ form.note.id_for_label }}" placeholder="Eventuali note aggiuntive per la spedizione" maxlength="300">{{ post.note }}</textarea>
+						</div>
 					</div>
-				</div>
-				<div class="form-group">
-					<div class="col-md-8 col-md-offset-4">
-						<button type="submit" class="btn btn-success submitButtonClickAction">Ottieni premio</button>
+					<div class="form-group">
+						<div class="col-md-8 col-md-offset-4">
+							<button type="submit" class="btn btn-success submitButtonClickAction">Ottieni premio</button>
+						</div>
 					</div>
-				</div>
-			</fieldset>
-		</form>
+				</fieldset>
+			</form>
+		{% endif %}
 	</div>
 </div>
 {% endblock container4_content %}
@@ -84,14 +85,18 @@
 <script>
 	$(document).ready(function(){
 		$(".submitButtonClickAction").click(function(event){
-			// preventing default click event
-			event.preventDefault();
-			// serialize form data
-			ajaxFormValidation.callData["data"] = $(".ajax_form").serialize();
-			// performing ajax call
-			ajaxFormValidation.validateForm();
+			var returnVar = false;
+			if (confirm("Confermi le informazioni inserite? (Non sarà più possibile modificarle)")) {
+				// preventing default click event
+				event.preventDefault();
+				// serialize form data
+				ajaxFormValidation.callData["data"] = $(".ajax_form").serialize();
+				// performing ajax call
+				ajaxFormValidation.validateForm();
+				returnVar = true;
+			}
 
-			return true;
+			return returnVar;
 		});
 	});
 </script>

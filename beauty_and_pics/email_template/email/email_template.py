@@ -39,35 +39,39 @@ class CustomEmailTemplate():
     available_email_name = {
 	'recover_password_email' : {
 	    'email_from' : settings.NO_REPLY_EMAIL_ADDRESS,
-	    'email_to' : 'user_email' ,
+	    'email_to' : 'user_email',
 	},
 	'signup_email' : {
 	    'email_from' : settings.NO_REPLY_EMAIL_ADDRESS,
-	    'email_to' : 'user_email' ,
+	    'email_to' : 'user_email',
 	},
 	'contest_closed' : {
 	    'email_from' : settings.NO_REPLY_EMAIL_ADDRESS,
-	    'email_to' : 'user_email' ,
+	    'email_to' : 'user_email',
 	},
 	'contest_opened' : {
 	    'email_from' : settings.NO_REPLY_EMAIL_ADDRESS,
-	    'email_to' : 'user_email' ,
+	    'email_to' : 'user_email',
 	},
 	'contest_report' : {
 	    'email_from' : settings.NO_REPLY_EMAIL_ADDRESS,
-	    'email_to' : 'user_email' ,
+	    'email_to' : 'user_email',
 	},
 	'help_request_email' : {
 	    'email_from' : False,
-	    'email_to' : 'info_email' ,
+	    'email_to' : 'info_email',
 	},
 	'report_user_email' : {
 	    'email_from' : False,
-	    'email_to' : 'info_email' ,
+	    'email_to' : 'info_email',
 	},
 	'custom_notify_email' : {
 	    'email_from' : settings.NO_REPLY_EMAIL_ADDRESS,
-	    'email_to' : 'user_email' ,
+	    'email_to' : 'user_email',
+	},
+	'get_prize_email' : {
+	    'email_from' : False,
+	    'email_to' : 'info_email',
 	},
    }
 
@@ -592,6 +596,100 @@ class CustomEmailTemplate():
 
         # email subject
         self.email_subject = str(self.email_context.get("title"))
+
+        return True
+
+    def get_prize_email(self):
+        """
+        Email custom notify creation
+        Context vars required:
+        ->    ['user_email','user_id','user_profile_url','address','size','note']
+        """
+
+	# common email blocks
+	self.email_html_blocks["dear_block"] = ""
+	self.email_html_blocks["main_title_block"] = "Richiesta premio"
+	# html text email blocks
+	self.email_html_blocks["html_main_text_block"] = """
+            <p>E' stata inoltrata la richiesta di un premio, ecco le informazioni a riguardo:</p><br />
+            <table style="width: 100%;">
+                <tr>
+                    <td>
+                        <b>Email (di chi ha richiesto il premio):</b>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        """ + str(self.email_context.get("user_email")) + """
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <b>Identificativo dell'utente:</b>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        """ + str(self.email_context.get("user_id")) + """
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <b>Profilo dell'utente:</b>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <a target="_blank" href='""" + str(self.email_context.get("user_profile_url")) + """'>""" + str(self.email_context.get("user_profile_url")) + """</a>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <b>Indirizzo:</b>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        """ + str(self.email_context.get("address")) + """
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <b>Taglia:</b>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        """ + str(self.email_context.get("size")) + """
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <b>Note aggiuntive:</b>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        """ + str(self.email_context.get("note", "-")) + """
+                    </td>
+                </tr>
+            </table>
+        """
+	self.email_html_blocks["plain_main_text_block"] = """
+            * Email (di chi ha richiesto il premio) *: """ + str(self.email_context.get("email")) + """ \n
+            * Identificativo dell'utente *: """ + str(self.email_context.get("user_id")) + """ \n
+            * Profilo dell'utente *: """ + str(self.email_context.get("user_profile_url")) + """ \n
+            * Indirizzo *: """ + str(self.email_context.get("address")) + """ \n
+            * Taglia *: """ + str(self.email_context.get("size")) + """ \n
+            * Note aggiuntive *: """ + str(self.email_context.get("note", "-")) + """ \n
+        """
+
+        # la mail non ha call to action al fondo, setto tutto a false
+	self.email_html_blocks["html_call_to_action_block"] = ""
+	self.email_html_blocks["plain_call_to_action_block"] = ""
+
+        # email subject
+        self.email_subject = "Richiesta premio"
 
         return True
     """Functions to create email inner block }}}"""

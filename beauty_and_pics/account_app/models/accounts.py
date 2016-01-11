@@ -42,6 +42,7 @@ class Account(models.Model):
     creation_date = models.DateTimeField(auto_now_add=True)
     update_date = models.DateTimeField(auto_now=True)
     can_be_shown = models.IntegerField(default=0) # indica se l'utente può essere mostrato nella passerella
+    prize_status = models.IntegerField(default=project_constants.PRIZE_CANNOT_BE_REDEEMED, null=True, blank=True) # 0 l'utente NON può richiedere il premio, 1 l'utente può richiedere il premio, 2 l'utente ha già richiesto il premio
 
     class Meta:
         app_label = 'account_app'
@@ -308,6 +309,9 @@ class Account(models.Model):
                 user_obj.account.eyes = save_data["eyes"]
             if "height" in save_data:
                 user_obj.account.height = save_data["height"]
+            if "prize_status" in save_data:
+                user_obj.account.prize_status = save_data["prize_status"]
+
             # save addictiona models data
             user_obj.save()
             user_obj.account.save()
@@ -438,6 +442,7 @@ class Account(models.Model):
 		return_var["birthday_month"] = str(user_obj.account.birthday_date.month) or ''
 		return_var["birthday_year"] = str(user_obj.account.birthday_date.year) or ''
 		return_var["can_be_shown"] = user_obj.account.can_be_shown or ''
+		return_var["prize_status"] = user_obj.account.prize_status or ''
 		return_var["age"] = str(relativedelta(date.today(), user_obj.account.birthday_date).years) or ''
 		return_var["hair"] = user_obj.account.hair or ''
 		return_var["eyes"] = user_obj.account.eyes or ''
@@ -700,3 +705,25 @@ class Account(models.Model):
 		)
 
         return True
+
+    def set_reset_prize_status(self, contest_type):
+        """Function to reset prize_status to '0'"""
+        Account.objects.filter(contest_type__code=contest_type).update(prize_status=project_constants.PRIZE_CANNOT_BE_REDEEMED)
+
+        return True
+
+    def get_if_prize_can_be_redeemed(self, prize_status=False):
+        """Function to get if prize can be redeemed"""
+	return_var = False
+        if prize_status:
+            return_var = True
+
+	return return_var
+
+    def get_if_prize_was_already_redeemed(self, prize_status=False):
+        """Function to get if user prize was already redeemed"""
+	return_var = False
+        if prize_status == project_constants.PRIZE_ALREADY_REDEEMED:
+            return_var = True
+
+	return return_var

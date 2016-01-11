@@ -744,7 +744,18 @@ def profile_control_panel(request):
     contest_obj = Contest()
     contest_obj.set_contest_type(request=request, contest_type=account_info["contest_type"])
 
-    return render(request, 'website/profile/profile_control_panel.html', False)
+    # se l'utente non è abilitato per richiedere il premio, nascondo il box
+    user_can_show_get_prize_button = False
+    prize_can_be_redeemed = account_obj.get_if_prize_can_be_redeemed(prize_status=account_info["prize_status"])
+    prize_was_already_redeemed = account_obj.get_if_prize_was_already_redeemed(prize_status=account_info["prize_status"])
+    if prize_can_be_redeemed or prize_was_already_redeemed:
+        user_can_show_get_prize_button = True
+
+    context = {
+        "user_can_show_get_prize_button": user_can_show_get_prize_button,
+    }
+
+    return render(request, 'website/profile/profile_control_panel.html', context)
 
 @login_required
 @user_passes_test(check_if_is_a_catwalker_user)
@@ -891,6 +902,11 @@ def profile_get_prize(request):
     contest_obj = Contest()
     contest_obj.set_contest_type(request=request, contest_type=autenticated_user_data["contest_type"])
 
+    # check if user can redeem prize
+    if not account_obj.get_if_prize_can_be_redeemed(prize_status=autenticated_user_data["prize_status"]):
+        # redirect to control panel page
+        return HttpResponseRedirect('/profilo/pannello-di-controllo/')
+
     # if this is a POST request we need to process the form data
     if request.method == 'POST':
         # create a form instance and populate it with data from the request:
@@ -899,8 +915,7 @@ def profile_get_prize(request):
 
         # check whether it's valid:
         if form.is_valid() and form.form_actions():
-            messages.add_message(request, messages.SUCCESS, 'Richiesta premio completata!')
-            # redirect to user profile
+            # redirect to get_prize page
             return HttpResponseRedirect('/profilo/ottieni-premio/')
 
     # if a GET (or any other method) we'll create a blank form
@@ -909,13 +924,14 @@ def profile_get_prize(request):
         request.POST = autenticated_user_data
         form = GetPrizeForm()
 
+    # check if prize was already redeemed
+    prize_was_already_redeemed = account_obj.get_if_prize_was_already_redeemed(prize_status=autenticated_user_data["prize_status"])
+
     context = {
         "post" : request.POST,
         "form": form,
+        "prize_was_already_redeemed": prize_was_already_redeemed,
     }
-
-    # TODO: se l'utente non è tra i primi 5 non può richiedere il premio e quindi la
-    #       form non deve essere visibile
 
     return render(request, 'website/profile/profile_get_prize.html', context)
 # }}}
