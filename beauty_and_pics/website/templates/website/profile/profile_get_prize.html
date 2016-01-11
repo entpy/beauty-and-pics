@@ -1,0 +1,98 @@
+{% extends "website/inc/base_profile.html" %}
+{% load staticfiles %}
+
+{% block title %}{{ site_name }} | ottieni il premio{% endblock %}
+
+{% block description %}Ottieni il premio: in questa pagina è possibile richiedere il premio del concorso.{% endblock %}
+
+{# navigation tabs active element #}
+{% block container4_navigation_profile_preferences %}active{% endblock %}
+
+{% block container4_content %}
+<div class="row">
+	<div class="col-md-12">
+		<h3>Ottieni il premio</h3>
+	</div>
+	<div class="col-md-12">
+		<div class="alert alert-info">
+			<p>Inserisci le informazioni richieste per ottenere la maglietta con grafica personalizzata di {{ site_name }}.</p>
+		</div>
+	</div>
+	<div class="col-md-12">
+		{# messages block #}
+		<div class="error_container"></div>
+		{% if form.errors or messages %}
+			<div class="server_msg_container">
+				{% if form.errors %}
+					<div class="alert alert-danger">
+						<h4>Uhm qualcosa non va!</h4>
+						<ul>
+							{% for form_error in form.non_field_errors %}
+								<li>{{ form_error }}</li>
+							{% endfor %}
+						</ul>
+					</div>
+				{% else %}
+					<div class="alert alert-success">
+						<h4>Ottimo!</h4>
+						{% for message in messages %}
+							<div>{{ message }}</div>
+						{% endfor %}
+					</div>
+				{% endif %}
+			</div>
+		{% endif %}
+		<form class="form-horizontal ajax_form" method="post" action="">
+			{% csrf_token %}
+			<input type="hidden" name="form_class" value="GetPrizeForm">
+			<fieldset class="col-md-9">
+				<div class="form-group {% if form.address.errors %}has-error{% endif %}">
+					<label for="{{ form.address.id_for_label }}" class="col-md-4 control-label">{{ form.address.label }} *</label>
+					<div class="col-md-8">
+						<input name="{{ form.address.name }}" class="form-control" id="{{ form.address.id_for_label }}" placeholder="{{ form.address.label }}" value="{{ post.address }}" maxlength="100" type="text">
+					</div>
+				</div>
+				<div class="form-group {% if form.size.errors %}has-error{% endif %}">
+					<label for="{{ form.size.id_for_label }}" class="col-md-4 control-label">{{ form.size.label }} *</label>
+					<div class="col-md-4">
+						<select name="{{ form.size.name }}" class="form-control" id="{{ form.size.id_for_label }}">
+							<option selected="selected">{{ form.size.label }}</option>
+							{% for key,value in form.fields.size.choices %}
+								<option value="{{ key }}" {% if post.size == key|slugify %}selected="selected"{% endif %}>{{ value }}</option>
+							{% endfor %}
+						</select>
+					</div>
+				</div>
+				<div class="form-group {% if form.note.errors %}has-error{% endif %}">
+					<label for="{{ form.note.id_for_label }}" class="col-md-4 control-label">{{ form.note.label }}</label>
+					<div class="col-md-8">
+						<textarea name="{{ form.note.name }}" class="form-control" id="{{ form.note.id_for_label }}" placeholder="{{ form.note.label }}" maxlength="300">{{ post.note }}</textarea>
+					</div>
+				</div>
+				<div class="form-group">
+					<div class="col-md-8 col-md-offset-4">
+						<button type="submit" class="btn btn-success submitButtonClickAction">Ottieni premio</button>
+					</div>
+				</div>
+			</fieldset>
+		</form>
+	</div>
+</div>
+{% endblock container4_content %}
+{% block custom_js %}
+{{ block.super }}
+<script>
+	$(document).ready(function(){
+		$(".submitButtonClickAction").click(function(event){
+			// preventing default click event
+			event.preventDefault();
+			// serialize form data
+			ajaxFormValidation.callData["data"] = $(".ajax_form").serialize();
+			// performing ajax call
+			ajaxFormValidation.validateForm();
+
+			return true;
+		});
+	});
+</script>
+{% endblock custom_js %}

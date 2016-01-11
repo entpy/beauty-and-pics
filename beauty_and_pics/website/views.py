@@ -29,6 +29,7 @@ from custom_form_app.forms.help_request_form import *
 from custom_form_app.forms.report_user_form import *
 from custom_form_app.forms.upload_book_form import *
 from custom_form_app.forms.unsubscribe_form import *
+from custom_form_app.forms.get_prize_form import GetPrizeForm
 from notify_system_app.models import Notify
 from image_contest_app.settings import ICA_LIKE_LIMIT
 from website.exceptions import ContestClosedNotExistsError
@@ -880,6 +881,43 @@ def profile_photoboard(request, image_add_success):
         render_page = 'website/profile/profile_photoboard_list.html'
 
     return render(request, render_page, context)
+
+@login_required
+@user_passes_test(check_if_is_a_catwalker_user)
+def profile_get_prize(request):
+    # set current contest_type
+    account_obj =  Account()
+    autenticated_user_data = account_obj.get_autenticated_user_data(request=request)
+    contest_obj = Contest()
+    contest_obj.set_contest_type(request=request, contest_type=autenticated_user_data["contest_type"])
+
+    # if this is a POST request we need to process the form data
+    if request.method == 'POST':
+        # create a form instance and populate it with data from the request:
+        form = GetPrizeForm(request.POST)
+        form.set_current_request(request=request)
+
+        # check whether it's valid:
+        if form.is_valid() and form.form_actions():
+            messages.add_message(request, messages.SUCCESS, 'Richiesta premio completata!')
+            # redirect to user profile
+            return HttpResponseRedirect('/profilo/ottieni-premio/')
+
+    # if a GET (or any other method) we'll create a blank form
+    else:
+        # pre-prepopulate post dictionary with current user data
+        request.POST = autenticated_user_data
+        form = GetPrizeForm()
+
+    context = {
+        "post" : request.POST,
+        "form": form,
+    }
+
+    # TODO: se l'utente non è tra i primi 5 non può richiedere il premio e quindi la
+    #       form non deve essere visibile
+
+    return render(request, 'website/profile/profile_get_prize.html', context)
 # }}}
 
 # test email {{{
