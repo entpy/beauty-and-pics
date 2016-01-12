@@ -38,6 +38,7 @@ def common_contest_processors(request):
     # exists_active_photoboard = ImageContest_obj.exists_active_contest(contest_type=contest_type) #imagecontestapptag
     # last photoboard contest winner
     # photoboard_contest_winner = ImageContestImage_obj.get_closed_contest_info(contest_type=contest_type) #imagecontestapptag
+    show_email_confirm_bar = True # flag to show/hide email confirmation bar
 
     # shown user notify popup
     check_user_notify = False
@@ -76,4 +77,5 @@ def common_contest_processors(request):
             'message_tags': settings.POPUP_TAGS,
             'exists_active_photoboard': exists_active_photoboard,
             'static_url': settings.STATIC_URL,
+            'show_email_confirm_bar': show_email_confirm_bar,
     }

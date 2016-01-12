@@ -30,19 +30,16 @@ textarea { resize: none; }
 .image_background_container { background: url(../img/background_page.jpg) no-repeat center top; -webkit-background-size: cover; -moz-background-size: cover; -o-background-size: cover; background-size: cover; /* max-height: 450px; */ height: 100%; }
 
 /* cookie law {{{ */
-#cookie-law {
-	background: #000 none repeat scroll 0 0;
-	margin: 0 auto;
-	width: 100%;
-}
-#cookie-law p {
-    color: #fff;
-    font-size: 1em;
-    margin: 0;
-    padding: 10px;
-    text-align: center;
-}
+#cookie-law { background: #000 none repeat scroll 0 0; margin: 0 auto; width: 100%; }
+#cookie-law p { color: #fff; font-size: 1em; margin: 0; padding: 10px; text-align: center; }
 /* cookie law }}} */
+
+/* confirm email bar {{{ */
+.confirm-email { background-color: #FF8D00; margin: 0 auto; width: 100%; }
+.confirm-email p { color: #fff; font-size: 1em; margin: 0; padding: 10px; text-align: center; }
+.confirm-email p a { background-color: #fff; border-radius: 4px; color: #444; display: inline-block; margin: 4px 0; padding: 3px 7px; }
+.confirm-email p a:hover, .confirm-email p a:active { background-color: #E6E6E6; text-decoration: none; }
+/* confirm email bar }}} */
 
 /* colors */
 .title_block h1, .title_block h2, .title_block h3, .title_block h4, .title_block h5, .title_block h6 { color: #fff; }

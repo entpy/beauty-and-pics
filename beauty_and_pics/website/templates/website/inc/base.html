@@ -49,6 +49,9 @@
 		{% endblock head %}
 	</head>
 	<body>
+		{% if show_email_confirm_bar %}
+		    <div class="confirm-email"><p>Non hai ancora confermato il tuo indirizzo email <a rel="nofollow" href="#">Reinviami&nbsp;email&nbsp;di&nbsp;attivazione</a></p></div>
+		{% endif %}
 		{% block header %}
 		<header class="left_100">
 			<div class="header first_color left_100">
