@@ -4,7 +4,7 @@ from django.shortcuts import render
 from django.http import HttpResponseRedirect, HttpResponse, Http404
 from django.template import RequestContext
 from django.contrib import messages
-from django.shortcuts import render_to_response
+from django.shortcuts import render_to_response, get_object_or_404
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib.auth import logout
 from django.views.decorators.csrf import ensure_csrf_cookie
@@ -35,7 +35,7 @@ from image_contest_app.settings import ICA_LIKE_LIMIT
 from website.exceptions import ContestClosedNotExistsError
 from image_contest_app.exceptions import ImageAlreadyVotedError, ImageContestClosedError
 from image_contest_app.models import ImageContest, ImageContestImage, ImageContestVote
-import logging, time
+import logging, time, urllib
 
 # Get an instance of a logger
 logger = logging.getLogger(__name__)
@@ -62,6 +62,25 @@ def check_if_is_staff_user(user):
 # view decorators }}}
 
 # www {{{
+def www_email_confirm(request, auth_token):
+    """View to confirm email address"""
+
+    # check if there is Account which matches the activation key (if not then display 404)
+    account_obj = get_object_or_404(Account, activation_key=auth_token)
+
+    # check if user email was already confirmed
+    if account_obj.has_permission(user_obj=account_obj.user, permission_codename='user_verified'):
+        return HttpResponseRedirect('/profilo/')
+
+    # setting user as verified
+    account_obj.add_user_permission(user_obj=account_obj.user, permission_codename='user_verified')
+    # TODO: pagina dove spiego che cosa può fare ora l'utente
+    return HttpResponseRedirect('/profilo/email-confermata/')
+
+def www_email_successfully_confirmed(request, auth_token):
+    """View shown after email confirmation"""
+    return render(request, 'website/www/www_email_successfully_confirmed.html', False)
+
 def www_index(request):
     """View to show home page, and contest_type winners if exist"""
     HallOfFame_obj = HallOfFame()
@@ -128,6 +147,7 @@ def www_login(request):
 		# redirect to custom url
 		return HttpResponseRedirect(request.GET.get('next'))
 	    else:
+                # TODO: far funzionare il flag show_welcome_page (è posto a 1 solo quando si attiva l'account)
 		# redirect to catwalk
 		return HttpResponseRedirect('/passerella/' + str(autenticated_user_data["contest_type"]))
 
@@ -185,7 +205,6 @@ def www_register(request):
 
         # check whether it's valid:
         if form.is_valid() and form.form_actions():
-
             # redirect to user profile
             return HttpResponseRedirect('/profilo/1')
 

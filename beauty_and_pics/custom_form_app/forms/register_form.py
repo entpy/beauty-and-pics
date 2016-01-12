@@ -80,9 +80,10 @@ class RegisterForm(forms.Form, FormCommonUtils):
 	    # uppercase first name and last name
 	    self.form_validated_data["first_name"] = self.form_validated_data["first_name"].title()
 	    self.form_validated_data["last_name"] = self.form_validated_data["last_name"].title()
+            # generate auth token
+            self.form_validated_data["auth_token"] = account_obj.create_auth_token(email=self.form_validated_data["email"])
 
             account_obj.register_account(user_info=self.form_validated_data)
-            return_var = True
         except UserCreateError:
             # bad
             logger.error("Errore nel salvataggio del nuovo User e/o Account: " + str(self.form_validated_data) + " | error code: " + str(UserCreateError.get_error_code))
@@ -92,23 +93,44 @@ class RegisterForm(forms.Form, FormCommonUtils):
             logger.error("Errore nell'aggiornamento dei dati dell'account dopo la creazione: " + str(self.form_validated_data) + " | error code: " + str(UserUpdateDataError.get_error_code))
             self._errors = {"__all__": ["Errore nel salvataggio del tuo account. Sii gentile, segnala il problema (Codice " + str(UserUpdateDataError.get_error_code) + ")"]}
         else:
-            logger.info("Utente salvato con successo, preparo il login")
-            pass
+            logger.info("Utente salvato con successo, invio la mail con token di conferma")
+            # send email with activation key
+            self.send_activation_email()
+            return_var = True
 
         return return_var
 
+    """
     def send_welcome_email(self):
-            """Function to send a welcome email"""
-            email_context = {
-		"first_name": self.form_validated_data["first_name"],
-		"last_name": self.form_validated_data["last_name"]
-	    }
-            CustomEmailTemplate(
-		email_name="signup_email",
-		email_context=email_context,
-		template_type="user",
-		recipient_list=[self.form_validated_data["email"],]
-	    )
+        ""Function to send a welcome email""
+        email_context = {
+            "first_name": self.form_validated_data["first_name"],
+            "last_name": self.form_validated_data["last_name"]
+        }
+        CustomEmailTemplate(
+            email_name="signup_email",
+            email_context=email_context,
+            template_type="user",
+            recipient_list=[self.form_validated_data["email"],]
+        )
+    """
+
+    def send_activation_email(self):
+        """Function to send an activation email"""
+
+        email_context = {
+            "first_name": self.form_validated_data["first_name"],
+            "last_name": self.form_validated_data["last_name"],
+            "auth_token": self.form_validated_data["auth_token"],
+        }
+        CustomEmailTemplate(
+            email_name="user_activate_email",
+            email_context=email_context,
+            template_type="user",
+            recipient_list=[self.form_validated_data["email"],]
+        )
+
+        return True
 
     def log_user(self):
         """Function to create login session"""
@@ -141,10 +163,10 @@ class RegisterForm(forms.Form, FormCommonUtils):
         if super(RegisterForm, self).form_can_perform_actions():
             # try to save form data
             if self.save_form():
+                # send welcome email
+                # self.send_welcome_email()
                 # try to log user in
                 if self.log_user():
-                    # send welcome email
-                    self.send_welcome_email()
                     return_var = True
 
         return return_var

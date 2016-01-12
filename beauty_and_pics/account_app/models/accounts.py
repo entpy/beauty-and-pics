@@ -5,7 +5,7 @@ from django.db import connection
 from datetime import date
 from dateutil.relativedelta import *
 from django.contrib.auth import authenticate, login, logout
-from django.contrib.auth.models import User, Group
+from django.contrib.auth.models import Permission, User, Group
 from contest_app.models.contest_types import Contest_Type
 from contest_app.models.points import Point
 from account_app.models.images import Book
@@ -13,7 +13,7 @@ from email_template.email.email_template import *
 from website.exceptions import *
 from beauty_and_pics.consts import project_constants
 from django.db.models import Q, F, Count, Sum
-import sys, logging, base64, hashlib, string, random
+import sys, logging, base64, hashlib, string, random, datetime
 
 # force utf8 read data
 reload(sys)
@@ -43,16 +43,15 @@ class Account(models.Model):
     update_date = models.DateTimeField(auto_now=True)
     can_be_shown = models.IntegerField(default=0) # indica se l'utente può essere mostrato nella passerella
     prize_status = models.IntegerField(default=project_constants.PRIZE_CANNOT_BE_REDEEMED, null=True, blank=True) # 0 l'utente NON può richiedere il premio, 1 l'utente può richiedere il premio, 2 l'utente ha già richiesto il premio
+    # activation via email
+    activation_key = models.CharField(max_length=40, blank=True)
 
     class Meta:
         app_label = 'account_app'
         # custom account permission
-	""" questa in futuro potrebbe servire
         permissions = (
-            # ("can_receive_votes", "Indica se l'utente può essere votato"),
-            ("can_parade_on_the_catwalk", "Utente visualizzato nella passerella"),
+            ("user_verified", "Utente verificato"),
         )
-	"""
 
     def __unicode__(self):
         return self.user.username
@@ -78,23 +77,25 @@ class Account(models.Model):
 
 	return True
 
-    """
     # permissions functions {{{
-    def add_user_permission(self, user, permission_codename):
-        #""Function to add a new user permission""
+    def add_user_permission(self, user_obj, permission_codename):
+        """Function to add a new user permission"""
         permission = Permission.objects.get(codename=permission_codename)
-        user.user_permissions.add(permission)
+        user_obj.user_permissions.add(permission)
 
         return True
 
-    def remove_user_permission(self, user, permission_codename):
-        #""Function to remove a user permission""
+    def remove_user_permission(self, user_obj, permission_codename):
+        """Function to remove a user permission"""
         permission = Permission.objects.get(codename=permission_codename)
-        user.user_permissions.remove(permission)
+        user_obj.user_permissions.remove(permission)
 
         return True
+
+    def has_permission(self, user_obj, permission_codename):
+        """Function to check a user permission"""
+        return user_obj.has_perm(permission_codename)
     # permissions functions }}}
-    """
 
     def check_if_email_exists(self, email_to_check=None):
         """Function to check if an email already exists"""
@@ -192,7 +193,7 @@ class Account(models.Model):
         if user_info:
             account_obj = Account()
             # create new account
-            new_user = account_obj.create_user_account(email=user_info["email"], password=user_info["password"])
+            new_user = account_obj.create_user_account(email=user_info["email"], password=user_info["password"], auth_token=user_info["auth_token"])
 
             # identify contest type
             contest_type_obj = Contest_Type()
@@ -209,7 +210,16 @@ class Account(models.Model):
 
         return return_var
 
-    def create_user_account(self, email=None, password=None):
+    def create_auth_token(self, email):
+        """Function to create an auth token http://ipasic.com/article/user-registration-and-email-confirmation-django/"""
+        return_var = False
+        if email:
+            salt = hashlib.sha1(str(random.random())).hexdigest()[:5]            
+            return_var = hashlib.sha1(salt+email).hexdigest()            
+
+        return return_var
+
+    def create_user_account(self, email, password, auth_token=False):
         """Function to create user and related account"""
         return_var = False
         account_obj = Account()
@@ -218,6 +228,11 @@ class Account(models.Model):
                 account_obj.user = User.objects.create_user(username=self.__email_to_username(email), email=email, password=password)
                 # add "catwalk_user" group in user groups
                 account_obj.user.groups.add(self.__create_default_user_group())
+
+                # set token and token expiring
+                if auth_token:
+                    account_obj.activation_key = auth_token
+
                 account_obj.save()
                 return_var = account_obj.user
 

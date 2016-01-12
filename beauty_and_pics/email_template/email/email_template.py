@@ -73,6 +73,10 @@ class CustomEmailTemplate():
 	    'email_from' : False,
 	    'email_to' : 'info_email',
 	},
+	'user_activate_email' : {
+	    'email_from' : settings.NO_REPLY_EMAIL_ADDRESS,
+	    'email_to' : 'user_email',
+	},
    }
 
     # email template directory
@@ -690,6 +694,36 @@ class CustomEmailTemplate():
 
         # email subject
         self.email_subject = "Richiesta premio"
+
+        return True
+
+    # TODO: conferma email
+    def user_activate_email(self):
+        """
+        Email on signup form
+        Context vars required:
+        ->    ['first_name', 'last_name', 'auth_token']
+        """
+
+	# common email blocks
+	self.email_html_blocks["dear_block"] = self.build_dear_block()
+	self.email_html_blocks["main_title_block"] = "conferma la tua email"
+	# html text email blocks
+	self.email_html_blocks["html_main_text_block"] = """
+	    <p>Grazie per la tua registrazione <b>""" + str(self.email_context.get("first_name")) + """</b>,</p>
+            <p>ti manca poco per iniziare ad utilizzare Beauty and Pics, devi solo confermare il tuo indirizzo email.</p>
+            <p>Per farlo clicca sul pulsante sotto.</p>
+	"""
+	# plain text email blocks
+	self.email_html_blocks["plain_main_text_block"] = "Grazie per la tua registrazione " + str(self.email_context.get("first_name")) + ",\nti manca poco per iniziare ad utilizzare Beauty and Pics, devi solo confermare il tuo indirizzo email.\nPer farlo clicca sul link sotto."
+
+        # action blocks
+        activation_url = self.base_url + "/conferma-email/" + str(self.email_context.get("auth_token")) + "/"
+	self.email_html_blocks["html_call_to_action_block"] = self.get_call_to_action_template(href=activation_url, label="Conferma email")
+	self.email_html_blocks["plain_call_to_action_block"] = "Conferma email: " + activation_url
+
+        # email subject
+        self.email_subject = "Beauty and Pics: conferma il tuo indirizzo email"
 
         return True
     """Functions to create email inner block }}}"""
