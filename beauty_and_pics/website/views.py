@@ -41,7 +41,6 @@ import logging, time, urllib
 logger = logging.getLogger(__name__)
 
 # view decorators {{{
-# TODO: togliere questo tipo di check e inserire i permessi
 def check_if_is_a_catwalker_user(user):
     """ Function to detect if user is a catwalker user """
     account_obj =  Account()
@@ -74,10 +73,10 @@ def www_email_confirm(request, auth_token):
 
     # setting user as verified
     account_obj.add_user_permission(user_obj=account_obj.user, permission_codename='user_verified')
-    # TODO: pagina dove spiego che cosa può fare ora l'utente
-    return HttpResponseRedirect('/profilo/email-confermata/')
 
-def www_email_successfully_confirmed(request, auth_token):
+    return HttpResponseRedirect('/email-confermata/')
+
+def www_email_successfully_confirmed(request):
     """View shown after email confirmation"""
     return render(request, 'website/www/www_email_successfully_confirmed.html', False)
 
@@ -147,7 +146,6 @@ def www_login(request):
 		# redirect to custom url
 		return HttpResponseRedirect(request.GET.get('next'))
 	    else:
-                # TODO: far funzionare il flag show_welcome_page (è posto a 1 solo quando si attiva l'account)
 		# redirect to catwalk
 		return HttpResponseRedirect('/passerella/' + str(autenticated_user_data["contest_type"]))
 

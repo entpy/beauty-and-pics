@@ -94,7 +94,7 @@ class Account(models.Model):
 
     def has_permission(self, user_obj, permission_codename):
         """Function to check a user permission"""
-        return user_obj.has_perm(permission_codename)
+        return user_obj.has_perm('account_app.'+str(permission_codename))
     # permissions functions }}}
 
     def check_if_email_exists(self, email_to_check=None):
@@ -326,6 +326,8 @@ class Account(models.Model):
                 user_obj.account.height = save_data["height"]
             if "prize_status" in save_data:
                 user_obj.account.prize_status = save_data["prize_status"]
+            if "activation_key" in save_data:
+                user_obj.account.activation_key = save_data["activation_key"]
 
             # save addictiona models data
             user_obj.save()
@@ -462,6 +464,7 @@ class Account(models.Model):
 		return_var["hair"] = user_obj.account.hair or ''
 		return_var["eyes"] = user_obj.account.eyes or ''
 		return_var["height"] = user_obj.account.height or ''
+		return_var["activation_key"] = user_obj.account.activation_key or ''
 	    except Account.DoesNotExist:
 		pass
             # from account model }}}

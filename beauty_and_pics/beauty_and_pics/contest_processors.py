@@ -23,6 +23,7 @@ def common_contest_processors(request):
     Notify_obj = Notify()
     contest_type = contest_obj.get_contest_type_from_session(request=request)
     logged_user_id = None
+    show_email_confirm_bar = False
     logger.info("@@@current contest_type: " + str(contest_type))
 
     ### template context vars {{{ ###
@@ -38,7 +39,6 @@ def common_contest_processors(request):
     # exists_active_photoboard = ImageContest_obj.exists_active_contest(contest_type=contest_type) #imagecontestapptag
     # last photoboard contest winner
     # photoboard_contest_winner = ImageContestImage_obj.get_closed_contest_info(contest_type=contest_type) #imagecontestapptag
-    show_email_confirm_bar = True # flag to show/hide email confirmation bar
 
     # shown user notify popup
     check_user_notify = False
@@ -60,6 +60,10 @@ def common_contest_processors(request):
 	# check if user notify popup must be shown: if not exists cookie -> show user notify popup
         if not request.COOKIES.get(project_constants.USER_NOTIFY_POPUP_SHOWN_COOKIE_NAME):
             check_user_notify = True
+
+        # check if user email was already confirmed
+        if not account_obj.has_permission(user_obj=request.user, permission_codename='user_verified'):
+            show_email_confirm_bar = True # flag to show/hide email confirmation bar
     else:
         # user NOT LOGGED in
         pass

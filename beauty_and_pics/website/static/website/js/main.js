@@ -67,6 +67,20 @@ $(document).ready(function(){
 		}
 	});
 
+	/* open modal to resend email confirmation */
+	$(document).on("click",".openResendConfirmationModalClickAction", function(){
+		bootstrapModalsObect.showSendValidationEmail();
+
+		return false;
+	});
+
+	/* function to resend a confirmation email */
+	$(document).on("click",".resendConfirmationEmailClickAction", function(){
+		resendConfirmationEmail();
+
+		return false;
+	});
+
 	// hide law cookie bar on window scroll event
 	// per ora lo commento
 	/*$(document).on('scroll', window, function() {
@@ -345,6 +359,28 @@ function writeCountdownEndString(contestStatus) {
 		$('.contest_timedelta_string_container').html("Il contest è stato appena aperto!");
 		$('.contest_status_container').html("");
 	}
+}
+
+/* Function to resend a confirmation email */
+function resendConfirmationEmail() {
+	var resendConfirmationEmailAjaxAction = customAjaxAction;
+	// set async to false
+	resendConfirmationEmailAjaxAction.setAsyncFlag(false);
+	// setting action name
+	resendConfirmationEmailAjaxAction.setActionName("resend_confirmation_email");
+	// success callback function
+	var successCallback = function(jsonResponse) {
+	    // hide resend button and show alert
+	    var htmlSuccessBlock = '<div class="alert alert-info">';
+	    htmlSuccessBlock += '<p>Una nuova email di verifica ti è stata appena inviata, <b>clicca il link</b> al suo interno per confermare il tuo account.</p>';
+	    htmlSuccessBlock += '</div>';
+	    $(".resendEmailConfirmationContainerAction").html(htmlSuccessBlock);
+	};
+	resendConfirmationEmailAjaxAction.setAjaxSuccessCallbackFunction(successCallback);
+	// perform ajax call to add favorite
+	resendConfirmationEmailAjaxAction.performAjaxAction();
+
+	return true;
 }
 
 /* Object to manage bootstrap modals */
@@ -656,6 +692,26 @@ var bootstrapModalsObect = {
 			$(".bootstrap_modal").find('.modal-body').html(messageBlockTemplate);
 			this.showBootstrapModal();
 		}
+
+		return false;
+	},
+
+	/* Function to build and show send validation email bootstrap modal */
+	showSendValidationEmail: function() {
+		this.resetBootstrapModal();
+		var messageBlockTemplate = '';
+		messageBlockTemplate += '<div class="row">';
+		messageBlockTemplate += '<div class="col-md-12 resendEmailConfirmationContainerAction">';
+		messageBlockTemplate += '<p>';
+		messageBlockTemplate += 'Una mail di verifica ti è stata inviata in fase di registrazione, tuttavia puoi riceverne un\'altra premendo il pulsante <b>"Inviami email di verifica"</b> sottostante.<br />Infine, per confermare il tuo account, clicca sul link ricevuto.';
+		messageBlockTemplate += '</p>';
+		messageBlockTemplate += '<div class="row"><div class="col-xs-12 text-center"><button type="button" class="btn btn-success resendConfirmationEmailClickAction">Inviami email di verifica</button></div></div>';
+		messageBlockTemplate += '</div>';
+		messageBlockTemplate += '</div>';
+		$(".bootstrap_modal").find('.modal-title').html("Conferma il tuo account");
+		$(".bootstrap_modal").find('.modal-footer').html('<button type="button" class="btn btn-default" data-dismiss="modal">Chiudi</button>');
+		$(".bootstrap_modal").find('.modal-body').html(messageBlockTemplate);
+		this.showBootstrapModal();
 
 		return false;
 	},

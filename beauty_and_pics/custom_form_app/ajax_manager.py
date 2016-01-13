@@ -51,6 +51,7 @@ class ajaxManager():
         self.__valid_action_list += ('add_image_to_photoboard',)
         self.__valid_action_list += ('remove_image_from_photoboard',)
         self.__valid_action_list += ('add_photoboard_like',)
+        self.__valid_action_list += ('resend_confirmation_email',)
 
         # retrieve action to perform
         self.ajax_action = request.POST.get("ajax_action")
@@ -677,6 +678,45 @@ class ajaxManager():
             data = {'error' : True, 'message': msg}
         else:
             data = {'success' : True, 'message': msg}
+
+        # build JSON response
+        json_data_string = json.dumps(data)
+        self.set_json_response(json_response=json_data_string)
+
+        return True
+
+    def resend_confirmation_email(self):
+        """Function to resend a confirmation email"""
+        logger.debug("ajax_function: @@resend_confirmation_email@@")
+        logger.debug("parametri della chiamata: " + str(self.request.POST))
+
+        # retrieve account info
+        account_obj = Account()
+        user_obj = self.request.user
+        user_id = user_obj.id
+        account_info = account_obj.custom_user_id_data(user_id=user_id)
+
+        # if activation_key is empty then generating a new ones
+        if not account_info["activation_key"]:
+            account_info["activation_key"] = account_obj.create_auth_token(email=account_info["email"])
+            # save activation_key into account object
+            save_data = {'activation_key' : account_info["activation_key"]}
+            account_obj.update_data(save_data=save_data, user_obj=user_obj)
+
+        # resend confirmation email
+        email_context = {
+            "first_name": account_info["first_name"],
+            "last_name": account_info["last_name"],
+            "auth_token": account_info["activation_key"],
+        }
+        CustomEmailTemplate(
+            email_name="user_activate_email",
+            email_context=email_context,
+            template_type="user",
+            recipient_list=[account_info["email"],]
+        )
+
+        data = {'success' : True}
 
         # build JSON response
         json_data_string = json.dumps(data)

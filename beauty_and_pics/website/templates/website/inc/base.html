@@ -23,7 +23,7 @@
 		<!-- Firefox, Chrome, Safari, IE 11+ and Opera. 196x196 pixels in size. -->
 		<link rel="icon" href="{% static "website/favicon.png" %}">
 
-		<title>{% block title %}Beauty and Pics: il concorso di bellezza più fico dell'universo{% endblock title %}</title>
+		<title>{% block title %}{{ site_name }}: il concorso di bellezza più fico dell'universo{% endblock title %}</title>
 
 		<link rel="stylesheet" href="{% static "website/css/bootstrap.css" %}">
 		{# <link rel="stylesheet" href="{% static "website/css/bootstrap_custom.css" %}"> #}
@@ -50,7 +50,7 @@
 	</head>
 	<body>
 		{% if show_email_confirm_bar %}
-		    <div class="confirm-email"><p>Non hai ancora confermato il tuo indirizzo email <a rel="nofollow" href="#">Reinviami&nbsp;email&nbsp;di&nbsp;attivazione</a></p></div>
+		<div class="confirm-email"><p>Non hai ancora verificato il tuo indirizzo email, confermalo per utilizzare tutte le funzionalità di {{ site_name }}.<br /><a class="openResendConfirmationModalClickAction" href="#">Inviami&nbsp;email&nbsp;di&nbsp;verifica</a></p></div>
 		{% endif %}
 		{% block header %}
 		<header class="left_100">
@@ -59,7 +59,7 @@
 					{# logo container #}
 					<div class="logo_container">
 						<a href="/">
-							<img alt="Beauty and Pics" src="{% static "website/img/logo.png" %}" width="189" height="79">
+							<img alt="{{ site_name }}" src="{% static "website/img/logo.png" %}" width="189" height="79">
 						</a>
 					</div>
 					{# toggle menu button #}
@@ -291,7 +291,7 @@
 				<div class="centered_page max_width_page text-center">
 					<div class="footer_container">
 						<div class="footer_image_continer display_only_big">
-							<img alt="Beauty and Pics" src="{% static "website/img/unicorn_left.png" %}">
+							<img alt="{{ site_name }}" src="{% static "website/img/unicorn_left.png" %}">
 						</div>
 						<div class="powered_by_container">
 							<div class="footer_nav">
@@ -308,7 +308,7 @@
 							<span><span class="footer_year">{% now "Y" %}</span><span class="display_only_big">&nbsp;|&nbsp;</span>Proudly powered by <b>Entpy Software</b></span>
 						</div>
 						<div class="footer_image_continer display_only_big">
-							<img alt="Beauty and Pics" src="{% static "website/img/unicorn_right.png" %}">
+							<img alt="{{ site_name }}" src="{% static "website/img/unicorn_right.png" %}">
 						</div>
 					</div>
 				</div>
