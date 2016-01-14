@@ -139,66 +139,57 @@
 		{% if not user_already_voted %}
 		<div class="voteFormContainerAction generic_container_content">
 			<div class="background_container1 vote_user_container">
+				<!-- vote user block -->
+				<div class="vote_user_block global_vote">
+					<div class="vote_user_metric_name">
+						Globale
+					</div>
+					<div>
+						<ul class="pagination pagination-md">
+							<li class="voteTypeClick" data-vote-type="global_vote_points" data-vote-value="1"><a href="#">1</a></li>
+							<li class="voteTypeClick" data-vote-type="global_vote_points" data-vote-value="2"><a href="#">2</a></li>
+							<li class="voteTypeClick" data-vote-type="global_vote_points" data-vote-value="3"><a href="#">3</a></li>
+							<li class="voteTypeClick" data-vote-type="global_vote_points" data-vote-value="4"><a href="#">4</a></li>
+							<li class="voteTypeClick" data-vote-type="global_vote_points" data-vote-value="5"><a href="#">5</a></li>
+						</ul>
+					</div>
+				</div>
+				<!-- vote user block -->
+				<div class="vote_user_block smile_vote">
+					<div class="vote_user_metric_name">
+						Sorriso
+					</div>
+					<div>
+						<ul class="pagination pagination-md">
+							<li class="voteTypeClick" data-vote-type="smile_vote_points" data-vote-value="1"><a href="#">1</a></li>
+							<li class="voteTypeClick" data-vote-type="smile_vote_points" data-vote-value="2"><a href="#">2</a></li>
+							<li class="voteTypeClick" data-vote-type="smile_vote_points" data-vote-value="3"><a href="#">3</a></li>
+							<li class="voteTypeClick" data-vote-type="smile_vote_points" data-vote-value="4"><a href="#">4</a></li>
+							<li class="voteTypeClick" data-vote-type="smile_vote_points" data-vote-value="5"><a href="#">5</a></li>
+						</ul>
+					</div>
+				</div>
+				<!-- vote user block -->
+				<div class="vote_user_block look_vote">
+					<div class="vote_user_metric_name">
+						Sguardo
+					</div>
+					<div>
+						<ul class="pagination pagination-md">
+							<li class="voteTypeClick" data-vote-type="look_vote_points" data-vote-value="1"><a href="#">1</a></li>
+							<li class="voteTypeClick" data-vote-type="look_vote_points" data-vote-value="2"><a href="#">2</a></li>
+							<li class="voteTypeClick" data-vote-type="look_vote_points" data-vote-value="3"><a href="#">3</a></li>
+							<li class="voteTypeClick" data-vote-type="look_vote_points" data-vote-value="4"><a href="#">4</a></li>
+							<li class="voteTypeClick" data-vote-type="look_vote_points" data-vote-value="5"><a href="#">5</a></li>
+						</ul>
+					</div>
+				</div>
 				<div class="vote_user_button_container">
-					<a href="#" class="btn btn-success showVoteModalClickAction">Vota l'utente</a>
+					<a href="#" class="btn btn-success submitVoteButtonClickAction">Vota</a>
 				</div>
 			</div>
 		</div>
 		{% endif %}
-	</div>
-	<div class="div_temporaneo">
-		<div class="row">
-			<div class="col-md-12">
-				<p>Una mail di verifica ti è stata inviata in fase di registrazione, tuttavia puoi riceverne un\'altra premendo il pulsante <b>"Inviami email di verifica"</b> sottostante.<br />Infine, per confermare il tuo account, clicca sul link ricevuto.</p>
-				<div class="row">
-					<div class="col-md-5">
-						<div class="vote_type_list">
-							<a href="#">Sguardo ammaliante</a>
-							<a href="#">Persona solare</a>
-							<a href="#">Troppo stile</a>
-							<a href="#">Che classe</a>
-							<a href="#">Impeccabile</a>
-							<a href="#">Notevole</a>
-						</div>
-					</div>
-					<div class="col-md-7">
-						<div class="vote_division_wrapper">
-							<!-- stats block -->
-							<div class="stats_bar_label">Sorriso: 4 punti</div>
-							<div class="stats_bar">
-								<div class="progress">
-									<div class="progress-bar progress-bar-warning" role="progressbar" aria-valuenow="{{ user_contest_info.global.metric_rate_percentage }}" aria-valuemin="0" aria-valuemax="100" style="width: 80%"></div>
-								</div>
-							</div>
-							<!-- stats block -->
-							<div class="stats_bar_label">Sguardo: 1 punti</div>
-							<div class="stats_bar">
-								<div class="progress">
-									<div class="progress-bar progress-bar-warning" role="progressbar" aria-valuenow="{{ user_contest_info.global.metric_rate_percentage }}" aria-valuemin="0" aria-valuemax="100" style="width: 20%"></div>
-								</div>
-							</div>
-							<!-- stats block -->
-							<div class="stats_bar_label">Globale: 3 punti</div>
-							<div class="stats_bar">
-								<div class="progress">
-									<div class="progress-bar progress-bar-warning" role="progressbar" aria-valuenow="{{ user_contest_info.global.metric_rate_percentage }}" aria-valuemin="0" aria-valuemax="100" style="width: 60%"></div>
-								</div>
-							</div>
-							<!-- stats block -->
-							<div class="stats_bar_label">Stile: 5 punti</div>
-							<div class="stats_bar">
-								<div class="progress">
-									<div class="progress-bar progress-bar-warning" role="progressbar" aria-valuenow="{{ user_contest_info.global.metric_rate_percentage }}" aria-valuemin="0" aria-valuemax="100" style="width: 90%"></div>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-				<div class="text-center">
-					<button type="button" class="btn btn-success resendConfirmationEmailClickAction">Inviami email di verifica</button>
-				</div>
-			</div>
-		</div>
 	</div>
 	<div class="generic_container user_details_right">
 		<div class="row">
@@ -231,6 +222,15 @@
 	elementsListObject.setElementsPerCall(20);
 
 	$(document).ready(function(){
+		// single vote type click
+		$("body").on("click",".voteTypeClick", function(){
+			voteUserObject.addParam($(this).data("voteType"), $(this).data("voteValue"));
+			deactivateGroupVoteType($(this));
+			activateVoteType($(this));
+
+			return false;
+		});
+
 		// perform vote action
 		$("body").on("click",".submitVoteButtonClickAction", function(){
 			voteUserObject.addParam("user_id", "{{ user_info.user_id }}");
@@ -311,6 +311,28 @@
 			addToFavoriteCustomAjaxAction.setAjaxErrorCallbackFunction(errorCallback);
 			// perform ajax call to add favorite
 			addToFavoriteCustomAjaxAction.performAjaxAction();
+		}
+
+		return true;
+	}
+
+	/* function to remove "active" class to all vote type elements */
+	function deactivateGroupVoteType(voteTypeElement) {
+		if ($(voteTypeElement).length) {
+			$(voteTypeElement).siblings("li").removeClass("active");
+		}
+
+		return true;
+	}
+
+	/* function to add "active" class to a selected vote type element */
+	function activateVoteType(voteTypeElement) {
+		if ($(voteTypeElement).length) {
+			// remove error class
+			$(voteTypeElement).parents(".vote_user_block").removeClass(voteUserObject.votationBlockErrorClassName);
+
+			// add active class
+			$(voteTypeElement).addClass("active");
 		}
 
 		return true;

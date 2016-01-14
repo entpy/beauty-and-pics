@@ -715,6 +715,26 @@ var bootstrapModalsObect = {
 
 		return false;
 	},
+
+	/* Function to build and show vote user bootstrap modal */
+	showVoteUserModal: function() {
+		this.resetBootstrapModal();
+		var messageBlockTemplate = '';
+		messageBlockTemplate += '<div class="row">';
+		messageBlockTemplate += '<div class="col-md-12">';
+		messageBlockTemplate += '<p>';
+		messageBlockTemplate += 'Una mail di verifica ti è stata inviata in fase di registrazione, tuttavia puoi riceverne un\'altra premendo il pulsante <b>"Inviami email di verifica"</b> sottostante.<br />Infine, per confermare il tuo account, clicca sul link ricevuto.';
+		messageBlockTemplate += '</p>';
+		messageBlockTemplate += '<div class="row"><div class="col-xs-12 text-center"><button type="button" class="btn btn-success resendConfirmationEmailClickAction">Inviami email di verifica</button></div></div>';
+		messageBlockTemplate += '</div>';
+		messageBlockTemplate += '</div>';
+		$(".bootstrap_modal").find('.modal-title').html("Dai il tuo voto a <b>Nome Cognome</b>");
+		$(".bootstrap_modal").find('.modal-footer').html('<button type="button" class="btn btn-default" data-dismiss="modal">Chiudi</button>');
+		$(".bootstrap_modal").find('.modal-body').html(messageBlockTemplate);
+		this.showBootstrapModal();
+
+		return false;
+	},
 	/* custom bootstrap modal functions }}} */
 
 	/* modal image block, with must be a size: eg. '100%' or '129px' or '12em' ecc... */

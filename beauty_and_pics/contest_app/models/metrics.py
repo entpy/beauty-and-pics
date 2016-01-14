@@ -53,4 +53,3 @@ class Metric(models.Model):
 	    return_var = False
 
 	return return_var
-

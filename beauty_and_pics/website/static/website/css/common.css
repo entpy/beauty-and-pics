@@ -142,6 +142,9 @@ textarea { resize: none; }
 .vote_user_container .vote_user_block ul { background-color: #3498db; border: 2px solid #3498db; margin: 0; padding: 3px; }
 .vote_user_container .vote_user_block.votation_block_error ul { border: 2px solid red; }
 .vote_user_container .vote_user_block.votation_block_error .vote_user_metric_name { color: red; }
+.vote_type_list { margin-top: 30px; }
+.vote_type_list > a { clear: both; display: inline-block; float: left; margin-bottom: 15px; }
+.vote_division_wrapper { border: 3px solid #999; padding: 20px; }
 
 /* image grids {{{ */
 ul.grid_container { list-style: none; font-size: 0px; padding: 0px; }

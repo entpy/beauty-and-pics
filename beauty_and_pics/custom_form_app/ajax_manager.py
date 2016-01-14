@@ -343,40 +343,37 @@ class ajaxManager():
         return True
 
     def perform_voting(self):
-        """Function to vote a catwalker"""
+        """Function to perform a vote action"""
         logger.debug("ajax_function: @@perform_voting@@")
         logger.debug("parametri della chiamata: " + str(self.request.POST))
 
-        # common method class init
         CommonUtils_obj = CommonUtils()
+        Vote_obj = Vote()
 
-        # build votation dictionary
-        votation_data = {}
-        votation_data["user_id"] = self.request.POST.get("user_id")
-        votation_data["global_vote_points"] = self.request.POST.get("global_vote_points")
-        votation_data["smile_vote_points"] = self.request.POST.get("smile_vote_points")
-        votation_data["look_vote_points"] = self.request.POST.get("look_vote_points")
+        from_user_id = self.request.user.id
+        to_user_id = self.request.POST.get("user_id")
+        vote_code = self.request.POST.get("vote_code")
         error_msg = ""
 
         try:
-            vote_obj = Vote()
-            vote_obj.perform_votation(votation_data, self.request.POST.get("user_id"), CommonUtils_obj.get_ip_address(request=self.request), request=self.request)
-        except VoteUserIdMissingError:
+            # check if user can be voted
+            Vote_obj.check_if_user_can_vote(from_user_id=from_user_id, to_user_id=to_user_id, request=self.request)
+        except User.DoesNotExist:
+            logger.error("perform_voting error, to_user non esistente in db")
             error_msg = "Non è stato possibile eseguire la votazione, sii gentile, contatta l'amministratore."
-        except VoteMetricMissingError:
-            error_msg = "Seleziona un valore per ogni metrica."
-        except VoteMetricWrongValueError:
-            error_msg = "I valori per ogni metrica devono essere compresi tra 1 e 5."
         except ContestNotActiveError:
+            logger.error("perform_voting error, contest non attivo | error code: " + str(ContestNotActiveError.get_error_code))
             error_msg = "Non è possibile votare fino all'apertura del concorso."
         except UserAlreadyVotedError:
+            logger.error("perform_voting error, utente già votato | error code: " + str(UserAlreadyVotedError.get_error_code))
             error_msg = "Non puoi votare più volte lo stesso utente nell'arco di 7 giorni."
         else:
-            # votation performing seems ok, attach cookie to response
+            # perform voting
+            Vote_obj.perform_votation(from_user_id=from_user_id, to_user_id=to_user_id, vote_code=vote_code, request=self.request)
+            # votation performed, attach cookie to response
             self.cookie_key = project_constants.USER_ALREADY_VOTED_COOKIE_NAME + str(self.request.POST.get("user_id"))
             self.cookie_value = True
             self.cookie_expiring = project_constants.SECONDS_BETWEEN_VOTATION
-            pass
 
         if error_msg:
             data = {'error' : True, 'message': error_msg}

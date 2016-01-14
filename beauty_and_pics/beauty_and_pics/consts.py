@@ -41,7 +41,7 @@ class project_constants(object):
     # vote seconds min limit
     SECONDS_BETWEEN_VOTATION = 604800 # 604800 seconds = 7 days
 
-    VOTE_METRICS_LIST = {"global_metric": "global", "smile_metric": "smile", "look_metric": "look"}
+    VOTE_METRICS_LIST = {"smile_metric": "smile", "look_metric": "look", "global_metric": "global", "style_metric": "style"}
 
     IMAGE_TYPE = {"profile": "profile_image", "book": "book_image"}
 
