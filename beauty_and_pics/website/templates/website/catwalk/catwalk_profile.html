@@ -146,60 +146,6 @@
 		</div>
 		{% endif %}
 	</div>
-	<div class="div_temporaneo">
-		<div class="row">
-			<div class="col-md-12">
-				<p>Una mail di verifica ti è stata inviata in fase di registrazione, tuttavia puoi riceverne un\'altra premendo il pulsante <b>"Inviami email di verifica"</b> sottostante.<br />Infine, per confermare il tuo account, clicca sul link ricevuto.</p>
-				<div class="row">
-					<div class="col-md-5">
-						<div class="vote_type_list">
-							<a href="#">Sguardo ammaliante</a>
-							<a href="#">Persona solare</a>
-							<a href="#">Troppo stile</a>
-							<a href="#">Che classe</a>
-							<a href="#">Impeccabile</a>
-							<a href="#">Notevole</a>
-						</div>
-					</div>
-					<div class="col-md-7">
-						<div class="vote_division_wrapper">
-							<!-- stats block -->
-							<div class="stats_bar_label">Sorriso: 4 punti</div>
-							<div class="stats_bar">
-								<div class="progress">
-									<div class="progress-bar progress-bar-warning" role="progressbar" aria-valuenow="{{ user_contest_info.global.metric_rate_percentage }}" aria-valuemin="0" aria-valuemax="100" style="width: 80%"></div>
-								</div>
-							</div>
-							<!-- stats block -->
-							<div class="stats_bar_label">Sguardo: 1 punti</div>
-							<div class="stats_bar">
-								<div class="progress">
-									<div class="progress-bar progress-bar-warning" role="progressbar" aria-valuenow="{{ user_contest_info.global.metric_rate_percentage }}" aria-valuemin="0" aria-valuemax="100" style="width: 20%"></div>
-								</div>
-							</div>
-							<!-- stats block -->
-							<div class="stats_bar_label">Globale: 3 punti</div>
-							<div class="stats_bar">
-								<div class="progress">
-									<div class="progress-bar progress-bar-warning" role="progressbar" aria-valuenow="{{ user_contest_info.global.metric_rate_percentage }}" aria-valuemin="0" aria-valuemax="100" style="width: 60%"></div>
-								</div>
-							</div>
-							<!-- stats block -->
-							<div class="stats_bar_label">Stile: 5 punti</div>
-							<div class="stats_bar">
-								<div class="progress">
-									<div class="progress-bar progress-bar-warning" role="progressbar" aria-valuenow="{{ user_contest_info.global.metric_rate_percentage }}" aria-valuemin="0" aria-valuemax="100" style="width: 90%"></div>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-				<div class="text-center">
-					<button type="button" class="btn btn-success resendConfirmationEmailClickAction">Inviami email di verifica</button>
-				</div>
-			</div>
-		</div>
-	</div>
 	<div class="generic_container user_details_right">
 		<div class="row">
 			<div class="col-sm-12">
@@ -231,6 +177,13 @@
 	elementsListObject.setElementsPerCall(20);
 
 	$(document).ready(function(){
+		// open vote modal
+		$("body").on("click",".showVoteModalClickAction", function(){
+			bootstrapModalsObect.showVoteUserModal("{% static 'website/img/selezione.png' %}");
+
+			return false;
+		});
+
 		// perform vote action
 		$("body").on("click",".submitVoteButtonClickAction", function(){
 			voteUserObject.addParam("user_id", "{{ user_info.user_id }}");

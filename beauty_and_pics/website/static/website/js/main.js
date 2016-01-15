@@ -717,17 +717,61 @@ var bootstrapModalsObect = {
 	},
 
 	/* Function to build and show vote user bootstrap modal */
-	showVoteUserModal: function() {
+	showVoteUserModal: function(selectionImageUrl) {
 		this.resetBootstrapModal();
-		var messageBlockTemplate = '';
-		messageBlockTemplate += '<div class="row">';
-		messageBlockTemplate += '<div class="col-md-12">';
-		messageBlockTemplate += '<p>';
-		messageBlockTemplate += 'Una mail di verifica ti è stata inviata in fase di registrazione, tuttavia puoi riceverne un\'altra premendo il pulsante <b>"Inviami email di verifica"</b> sottostante.<br />Infine, per confermare il tuo account, clicca sul link ricevuto.';
-		messageBlockTemplate += '</p>';
-		messageBlockTemplate += '<div class="row"><div class="col-xs-12 text-center"><button type="button" class="btn btn-success resendConfirmationEmailClickAction">Inviami email di verifica</button></div></div>';
-		messageBlockTemplate += '</div>';
-		messageBlockTemplate += '</div>';
+		var messageBlockTemplate = `<div class="row">
+			<div class="col-md-12">
+				<p>Seleziona quale voto vuoi assegnare all'utente. In base al voto scelto i punti verranno ripartiti su ogni metrica di valutazione.</p>
+				<div class="row select_vote_type_container">
+					<div class="col-md-6">
+						<div class="vote_type_list">
+							<a href="#"><img alt="Selezione" src="` + selectionImageUrl + `">Sguardo ammaliante</a>
+							<a href="#"><img alt="Selezione" src="` + selectionImageUrl + `">Persona solare</a>
+							<a href="#"><img alt="Selezione" src="` + selectionImageUrl + `">Troppo stile</a>
+							<a href="#"><img alt="Selezione" src="` + selectionImageUrl + `">Che classe</a>
+							<a href="#"><img alt="Selezione" src="` + selectionImageUrl + `">Impeccabile</a>
+							<a href="#"><img alt="Selezione" src="` + selectionImageUrl + `">Notevole</a>
+						</div>
+					</div>
+					<div class="col-md-6">
+						<h4>Ripartizione punti:</h4>
+						<div class="vote_division_wrapper background_container1">
+							<!-- stats block -->
+							<div class="stats_bar_label">Sorriso <b>4</b> punti</div>
+							<div class="stats_bar">
+								<div class="progress">
+									<div class="progress-bar progress-bar-warning" role="progressbar" aria-valuenow="{{ user_contest_info.global.metric_rate_percentage }}" aria-valuemin="0" aria-valuemax="100" style="width: 80%"></div>
+								</div>
+							</div>
+							<!-- stats block -->
+							<div class="margin_top_15 stats_bar_label">Sguardo <b>1</b> punti</div>
+							<div class="stats_bar">
+								<div class="progress">
+									<div class="progress-bar progress-bar-warning" role="progressbar" aria-valuenow="{{ user_contest_info.global.metric_rate_percentage }}" aria-valuemin="0" aria-valuemax="100" style="width: 20%"></div>
+								</div>
+							</div>
+							<!-- stats block -->
+							<div class="margin_top_15 stats_bar_label">Globale <b>3</b> punti</div>
+							<div class="stats_bar">
+								<div class="progress">
+									<div class="progress-bar progress-bar-warning" role="progressbar" aria-valuenow="{{ user_contest_info.global.metric_rate_percentage }}" aria-valuemin="0" aria-valuemax="100" style="width: 60%"></div>
+								</div>
+							</div>
+							<!-- stats block -->
+							<div class="margin_top_15 stats_bar_label">Stile <b>5</b> punti</div>
+							<div class="stats_bar">
+								<div class="progress">
+									<div class="progress-bar progress-bar-warning" role="progressbar" aria-valuenow="{{ user_contest_info.global.metric_rate_percentage }}" aria-valuemin="0" aria-valuemax="100" style="width: 90%"></div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="text-center">
+					<button type="button" class="btn btn-success">Conferma il voto</button>
+				</div>
+			</div>
+		</div>`;
 		$(".bootstrap_modal").find('.modal-title').html("Dai il tuo voto a <b>Nome Cognome</b>");
 		$(".bootstrap_modal").find('.modal-footer').html('<button type="button" class="btn btn-default" data-dismiss="modal">Chiudi</button>');
 		$(".bootstrap_modal").find('.modal-body').html(messageBlockTemplate);

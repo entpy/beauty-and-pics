@@ -135,16 +135,21 @@ textarea { resize: none; }
 .user_top_info_container .user_top_info_space { min-width: 20px; width: 5%; }
 
 .user_details_container { display: inline-block; width: 100%; }
-.vote_user_container { display: inline-block; text-align: center; }
+/*.vote_user_container { display: inline-block; text-align: center; }
 .vote_user_container .vote_user_block { display: inline-block; margin: 0 auto 11px; }
 .vote_user_container .vote_user_button_container { margin-top: 10px; }
 .vote_user_container .vote_user_block .vote_user_metric_name { margin-bottom: 5px; text-align: left; }
 .vote_user_container .vote_user_block ul { background-color: #3498db; border: 2px solid #3498db; margin: 0; padding: 3px; }
 .vote_user_container .vote_user_block.votation_block_error ul { border: 2px solid red; }
-.vote_user_container .vote_user_block.votation_block_error .vote_user_metric_name { color: red; }
-.vote_type_list { margin-top: 30px; }
-.vote_type_list > a { clear: both; display: inline-block; float: left; margin-bottom: 15px; }
-.vote_division_wrapper { border: 3px solid #999; padding: 20px; }
+.vote_user_container .vote_user_block.votation_block_error .vote_user_metric_name { color: red; }*/
+.select_vote_type_container { margin: 0 auto; }
+.vote_type_list { margin-top: 42px; }
+.vote_type_list a { clear: both; float: left; display: inline-block; margin-bottom: 15px; }
+.vote_type_list a:hover, .vote_type_list a:active { font-weight: bold; text-decoration: none; }
+.vote_type_list a img { margin-right: 5px; visibility: hidden; }
+.vote_type_list a:hover img { visibility: visible; }
+.vote_division_wrapper h4 { margin-top: 0px; margin-bottom: 15px; }
+.vote_division_wrapper .progress { margin-bottom: 0px; }
 
 /* image grids {{{ */
 ul.grid_container { list-style: none; font-size: 0px; padding: 0px; }
