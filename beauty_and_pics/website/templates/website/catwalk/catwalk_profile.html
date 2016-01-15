@@ -184,10 +184,17 @@
 			return false;
 		});
 
+		/* Funtion to show points about this vote_code */
+		$("body").on("click",".voteItemAction", function(){
+			voteUserObject.manageVoteCodeSelected($(this).data("voteCode"));
+			voteUserObject.setVoteAsSelected($(this));
+
+			return false;
+		});
+
 		// perform vote action
-		$("body").on("click",".submitVoteButtonClickAction", function(){
-			voteUserObject.addParam("user_id", "{{ user_info.user_id }}");
-			voteUserObject.performVotingAction();
+		$("body").on("click",".confirmVoteButtonAction", function(){
+			voteUserObject.confirmVoteButtonClickAction();
 
 			return false;
 		});

@@ -147,9 +147,10 @@ textarea { resize: none; }
 .vote_type_list a { clear: both; float: left; display: inline-block; margin-bottom: 15px; }
 .vote_type_list a:hover, .vote_type_list a:active { font-weight: bold; text-decoration: none; }
 .vote_type_list a img { margin-right: 5px; visibility: hidden; }
-.vote_type_list a:hover img { visibility: visible; }
+.vote_type_list a:hover img, .vote_type_list a.selected_vote img { visibility: visible; }
 .vote_division_wrapper h4 { margin-top: 0px; margin-bottom: 15px; }
 .vote_division_wrapper .progress { margin-bottom: 0px; }
+.vote_bottom_container { margin-top: 15px; }
 
 /* image grids {{{ */
 ul.grid_container { list-style: none; font-size: 0px; padding: 0px; }

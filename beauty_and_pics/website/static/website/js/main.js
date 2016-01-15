@@ -81,6 +81,12 @@ $(document).ready(function(){
 		return false;
 	});
 
+	/* function to change dropdown text element select */
+	$(document).on("click",".dropdown-menu li a", function(){
+		var selText = $(this).text();
+		$(this).parents('.btn-group').find('.dropdown-toggle').html(selText+' <span class="caret"></span>');
+	});
+
 	// hide law cookie bar on window scroll event
 	// per ora lo commento
 	/*$(document).on('scroll', window, function() {
@@ -717,63 +723,98 @@ var bootstrapModalsObect = {
 	},
 
 	/* Function to build and show vote user bootstrap modal */
-	showVoteUserModal: function(selectionImageUrl) {
+	showVoteUserModal: function(selectionImageUrl, contestOpen, emailVerified, userRegistered) {
 		this.resetBootstrapModal();
 		var messageBlockTemplate = `<div class="row">
 			<div class="col-md-12">
 				<p>Seleziona quale voto vuoi assegnare all'utente. In base al voto scelto i punti verranno ripartiti su ogni metrica di valutazione.</p>
 				<div class="row select_vote_type_container">
-					<div class="col-md-6">
-						<div class="vote_type_list">
-							<a href="#"><img alt="Selezione" src="` + selectionImageUrl + `">Sguardo ammaliante</a>
-							<a href="#"><img alt="Selezione" src="` + selectionImageUrl + `">Persona solare</a>
-							<a href="#"><img alt="Selezione" src="` + selectionImageUrl + `">Troppo stile</a>
-							<a href="#"><img alt="Selezione" src="` + selectionImageUrl + `">Che classe</a>
-							<a href="#"><img alt="Selezione" src="` + selectionImageUrl + `">Impeccabile</a>
-							<a href="#"><img alt="Selezione" src="` + selectionImageUrl + `">Notevole</a>
+					<div class="col-sm-6">
+						<!-- mobile size dropdown -->
+						<div class="btn-group hidden">
+							<a aria-expanded="false" href="#" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+								Seleziona voto <span class="caret"></span>
+							</a>
+							<ul class="dropdown-menu">
+								<li><a class="voteItemAction" data-vote-code="sguardo_ammaliante" href="#">Sguardo ammaliante</a></li>
+								<li><a class="voteItemAction" data-vote-code="persona_solare" href="#">Persona solare</a></li>
+								<li><a class="voteItemAction" data-vote-code="troppo_stile" href="#">Troppo stile</a></li>
+								<li><a class="voteItemAction" data-vote-code="che_classe" href="#">Che classe</a></li>
+								<li><a class="voteItemAction" data-vote-code="impeccabile" href="#">Impeccabile</a></li>
+								<li><a class="voteItemAction" data-vote-code="notevole" href="#">Notevole</a></li>
+							</ul>
+						</div>
+						<div class="vote_type_list hidden-xs">
+							<a class="voteItemAction" data-vote-code="sguardo_ammaliante" href="#"><img alt="Selezione" src="` + selectionImageUrl + `">Sguardo ammaliante</a>
+							<a class="voteItemAction" data-vote-code="persona_solare" href="#"><img alt="Selezione" src="` + selectionImageUrl + `">Persona solare</a>
+							<a class="voteItemAction" data-vote-code="troppo_stile" href="#"><img alt="Selezione" src="` + selectionImageUrl + `">Troppo stile</a>
+							<a class="voteItemAction" data-vote-code="che_classe" href="#"><img alt="Selezione" src="` + selectionImageUrl + `">Che classe</a>
+							<a class="voteItemAction" data-vote-code="impeccabile" href="#"><img alt="Selezione" src="` + selectionImageUrl + `">Impeccabile</a>
+							<a class="voteItemAction" data-vote-code="notevole" href="#"><img alt="Selezione" src="` + selectionImageUrl + `">Notevole</a>
 						</div>
 					</div>
-					<div class="col-md-6">
+					<div class="col-sm-6">
 						<h4>Ripartizione punti:</h4>
 						<div class="vote_division_wrapper background_container1">
 							<!-- stats block -->
-							<div class="stats_bar_label">Sorriso <b>4</b> punti</div>
-							<div class="stats_bar">
-								<div class="progress">
-									<div class="progress-bar progress-bar-warning" role="progressbar" aria-valuenow="{{ user_contest_info.global.metric_rate_percentage }}" aria-valuemin="0" aria-valuemax="100" style="width: 80%"></div>
+							<div class="smile_metric">
+								<div class="stats_bar_label">Sorriso <b class="metric_points">0</b> punti</div>
+								<div class="stats_bar">
+									<div class="progress">
+										<div class="progress-bar progress-bar-warning" role="progressbar" style="width: 0%"></div>
+									</div>
 								</div>
 							</div>
 							<!-- stats block -->
-							<div class="margin_top_15 stats_bar_label">Sguardo <b>1</b> punti</div>
-							<div class="stats_bar">
-								<div class="progress">
-									<div class="progress-bar progress-bar-warning" role="progressbar" aria-valuenow="{{ user_contest_info.global.metric_rate_percentage }}" aria-valuemin="0" aria-valuemax="100" style="width: 20%"></div>
+							<div class="look_metric">
+								<div class="margin_top_15 stats_bar_label">Sguardo <b class="metric_points">0</b> punti</div>
+								<div class="stats_bar">
+									<div class="progress">
+										<div class="progress-bar progress-bar-warning" role="progressbar" style="width: 0%"></div>
+									</div>
 								</div>
 							</div>
 							<!-- stats block -->
-							<div class="margin_top_15 stats_bar_label">Globale <b>3</b> punti</div>
-							<div class="stats_bar">
-								<div class="progress">
-									<div class="progress-bar progress-bar-warning" role="progressbar" aria-valuenow="{{ user_contest_info.global.metric_rate_percentage }}" aria-valuemin="0" aria-valuemax="100" style="width: 60%"></div>
+							<div class="global_metric">
+								<div class="margin_top_15 stats_bar_label">Globale <b class="metric_points">0</b> punti</div>
+								<div class="stats_bar">
+									<div class="progress">
+										<div class="progress-bar progress-bar-warning" role="progressbar" style="width: 0%"></div>
+									</div>
 								</div>
 							</div>
 							<!-- stats block -->
-							<div class="margin_top_15 stats_bar_label">Stile <b>5</b> punti</div>
-							<div class="stats_bar">
-								<div class="progress">
-									<div class="progress-bar progress-bar-warning" role="progressbar" aria-valuenow="{{ user_contest_info.global.metric_rate_percentage }}" aria-valuemin="0" aria-valuemax="100" style="width: 90%"></div>
+							<div class="style_metric">
+								<div class="margin_top_15 stats_bar_label">Stile <b class="metric_points">0</b> punti</div>
+								<div class="stats_bar">
+									<div class="progress">
+										<div class="progress-bar progress-bar-warning" role="progressbar" style="width: 0%"></div>
+									</div>
 								</div>
 							</div>
 						</div>
 					</div>
 				</div>
-				<div class="text-center">
-					<button type="button" class="btn btn-success">Conferma il voto</button>
-				</div>
+				<div class="text-center vote_bottom_container">`;
+				// debug var
+				userRegistered = true;
+				contestOpen = true;
+				emailVerified = true;
+				if (contestOpen && emailVerified && userRegistered) {
+					messageBlockTemplate += '<button type="button" class="btn btn-success vote_not_selected confirmVoteButtonAction">Conferma il voto</button>';
+				} else if (!userRegistered) {
+					messageBlockTemplate += '<div class="alert alert-warning"><p>Per poter votare occorre essere registrati.<br /><a class="alert-link" href="#">Registrati ora</a> per dare il tuo primo voto!</p></div>';
+				} else if (!contestOpen) {
+					messageBlockTemplate += '<div class="alert alert-warning"><p>Ci spiace, fino all\'apertura del concorso non sarà possibile votare.</p></div>';
+				} else if (!emailVerified) {
+					messageBlockTemplate += '<div class="alert alert-danger"><p>Attenzione per poter votare occorre verificare il proprio indirizzo email.<br /><a class="alert-link" href="#">Clicca qui</a> per verificarlo ora.</p></div>';
+				}
+				messageBlockTemplate += `</div>
 			</div>
 		</div>`;
 		$(".bootstrap_modal").find('.modal-title').html("Dai il tuo voto a <b>Nome Cognome</b>");
-		$(".bootstrap_modal").find('.modal-footer').html('<button type="button" class="btn btn-default" data-dismiss="modal">Chiudi</button>');
+		// $(".bootstrap_modal").find('.modal-footer').html('<button type="button" class="btn btn-default" data-dismiss="modal">Chiudi</button>');
+		$(".bootstrap_modal").find('.modal-footer').remove();
 		$(".bootstrap_modal").find('.modal-body').html(messageBlockTemplate);
 		this.showBootstrapModal();
 
@@ -905,163 +946,136 @@ var customAjaxAction = {
 
 /* Object to perform votes */
 var voteUserObject = {
-	__ajaxCallParams : {
-		"global_vote_points" : null, // point about global vote
-		"smile_vote_points" : null, // point about smile vote
-		"look_vote_points" : null, // point about look vote
-		"user_id" : null, // id account to vote
+	__maxPoints : 15,
+	__metrics_list : {
+		'smile_metric' : 'smile_metric',
+		'look_metric' : 'look_metric',
+		'global_metric' : 'global_metric',
+		'style_metric' : 'style_metric'
 	},
-	globalVoteContainerClass : ".global_vote",
-	smileVoteContainerClass : ".smile_vote",
-	lookVoteContainerClass : ".look_vote",
-	votationBlockErrorClassName : "votation_block_error",
-	messageBlockText : "Potrai votare nuovamente questo partecipante quando saranno passati 7 giorni dalla tua votazione.",
-	messageBlockClass : "msgTextAction",
-	messageContainerClass : ".msgContainerAction",
-	voteFormContainerClass : ".voteFormContainerAction",
-	ajaxCallUrl : "/ajax/", // the ajax call url
-	voteButtonClassName : ".submitVoteButtonClickAction", // vote button class name
+	/* Function to calculate points percentage */
+	getPointPercentage : function(points) {
+		return pointPercentage = parseInt((points / this.__maxPoints) * 100);
+	},
 
-	/* Function to add a new AND filter */
-	addParam : function(paramName, paramValue) {
-		if (paramName) {
-			if (!paramValue) paramValue = null
-			// retrieve previously added filters
-			var existing_params = this.getParamsList();
-			// override or add new filter
-			existing_params[paramName] = paramValue;
-			// setting new filters object
-			this.setParamsList(existing_params);
+	/* Function called on vote_code selection */
+	manageVoteCodeSelected : function(voteCode) {
+		if (voteCode) {
+			// retrieve vote_code info
+			var singleVoteCodeData = this.getSingleVoteCodeData(voteCode);
+			// show metric points on html
+			this.setVoteCodeSettings(this.__metrics_list["smile_metric"], singleVoteCodeData[this.__metrics_list["smile_metric"]])
+			this.setVoteCodeSettings(this.__metrics_list["look_metric"], singleVoteCodeData[this.__metrics_list["look_metric"]])
+			this.setVoteCodeSettings(this.__metrics_list["global_metric"], singleVoteCodeData[this.__metrics_list["global_metric"]])
+			this.setVoteCodeSettings(this.__metrics_list["style_metric"], singleVoteCodeData[this.__metrics_list["style_metric"]])
 		}
+
+		return false;
+	},
+
+	/* Function to set clicked element as active */
+	setVoteAsSelected : function(element) {
+		$(".voteItemAction").removeClass("selected_vote");
+		$(element).addClass("selected_vote");
+
+		// set confirm vote as enabled
+		$(".confirmVoteButtonAction").removeClass("vote_not_selected");
 
 		return true;
 	},
 
-	/* Function to set a list of ajax call params */
-	setParamsList : function(paramsList) {
-		if (paramsList) {
-			this.__ajaxCallParams = paramsList
-		}
+	/* Function to show metric info about a vote_code on html */
+	setVoteCodeSettings : function(metricCode, metricPoints) {
+		// setting point into label
+		$("." + metricCode + " .metric_points").html(metricPoints);
+		// setting bar width
+		$("." + metricCode + " .progress-bar").css("width", this.getPointPercentage(metricPoints) + "%");
 
 		return true;
 	},
 
-	/* Function to retrieve a list of ajax call params */
-	getParamsList : function() { return this.__ajaxCallParams; },
-
-	/* Function to check if all votes were done */
-	checkVoteActionErrors : function() {
-		var returnVar = true;
-		var existing_params = this.getParamsList();
-
-		// global votation check {{{
-		if (existing_params["global_vote_points"]) {
-			this.removeGlobalTypeError();
-		} else {
-			this.showGlobalTypeError();
-			returnVar = false;
-		}
-		// global votation check }}}
-		// smile votation check {{{
-		if (existing_params["smile_vote_points"]) {
-			this.removeSmileTypeError();
-		} else {
-			this.showSmileTypeError();
-			returnVar = false;
-		}
-		// smile votation check }}}
-		// look votation check {{{
-		if (existing_params["look_vote_points"]) {
-			this.removeLookTypeError();
-		} else {
-			this.showLookTypeError();
-			returnVar = false;
-		}
-		// look votation check }}}
-
-		if (!returnVar) {
-		} else if (!confirm("Confermi il voto? Potrai ri-votare questa persona tra 7 giorni!")) {
-				returnVar = false;
-		}
-
-		// user_id check {{{
-		if (!existing_params["user_id"]) {
-			console.log("errore inaspettato, user_id non settato, contattare l'amministratore.");
-			returnVar = false;
-		}
-		// user_id check }}}
-
-		return returnVar;
-	},
-
-	// Function to add error class to votation block
-	showGlobalTypeError : function() { $(this.globalVoteContainerClass).addClass(this.votationBlockErrorClassName); },
-	showSmileTypeError : function() { $(this.smileVoteContainerClass).addClass(this.votationBlockErrorClassName); },
-	showLookTypeError : function() { $(this.lookVoteContainerClass).addClass(this.votationBlockErrorClassName); },
-
-	// Function to remove error class to votation block
-	removeGlobalTypeError : function() { $(this.globalVoteContainerClass).removeClass(this.votationBlockErrorClassName); },
-	removeSmileTypeError : function() { $(this.smileVoteContainerClass).removeClass(this.votationBlockErrorClassName); },
-	removeLookTypeError : function() { $(this.lookVoteContainerClass).removeClass(this.votationBlockErrorClassName); },
-
-	/* Function to perform a votation */
-	performVotingAction : function() {
-		if (this.checkVoteActionErrors()) {
-			// hide vote button
-			this.hideVoteButton();
-			// reading csrfmiddlewaretoken from cookie
-			var csrftoken = readCsrftokenFromCookie();
-			var ajaxCallData = {
-				url : this.ajaxCallUrl,
-				data : $.param(this.getParamsList()) + "&ajax_action=perform_voting",
-				async : false,
-				headers: { "X-CSRFToken": csrftoken },
-				success : function(jsonResponse) {
-					// functions to manage JSON response
-					console.log("==========risultato chiamata==========");
-					console.log(jsonResponse);
-					if (jsonResponse.success) {
-						voteUserObject.successVotingAction(jsonResponse.message)
-					} else if (jsonResponse.error) {
-						voteUserObject.errorVotingAction(jsonResponse.message)
-					}
-				},
-				error : function(jsonResponse) {
-					// ...fuck
-					// console.log(jsonResponse);
-				}
+	/* Function to retrieve info about all vote_codes */
+	getAllVoteCodesData : function() {
+		return {
+			'sguardo_ammaliante' : {
+				'smile_metric' : '2',
+				'look_metric' : '8',
+				'global_metric' : '3',
+				'style_metric' : '2'
+			},
+			'persona_solare' : {
+				'smile_metric' : '8',
+				'look_metric' : '2',
+				'global_metric' : '2',
+				'style_metric' : '3'
+			},
+			'troppo_stile' : {
+				'smile_metric' : '3',
+				'look_metric' : '2',
+				'global_metric' : '3',
+				'style_metric' : '7'
+			},
+			'che_classe' : {
+				'smile_metric' : '2',
+				'look_metric' : '2',
+				'global_metric' : '8',
+				'style_metric' : '3'
+			},
+			'impeccabile' : {
+				'smile_metric' : '4',
+				'look_metric' : '4',
+				'global_metric' : '3',
+				'style_metric' : '4'
+			},
+			'notevole' : {
+				'smile_metric' : '4',
+				'look_metric' : '4',
+				'global_metric' : '4',
+				'style_metric' : '3'
 			}
-			// performing ajax call
-			loadDataWrapper.performAjaxCall(ajaxCallData);
+		}
+	},
+
+	/* Function to retrieve info about a single vote_code */
+	getSingleVoteCodeData : function(voteCode) {
+		var return_var = false;
+		if (voteCode) {
+			var allVoteCodesData = this.getAllVoteCodesData();
+			/*console.log("all vote_codes");
+			console.log(allVoteCodesData[voteCode]);*/
+			return_var = allVoteCodesData[voteCode];
 		}
 
-		return true;
+		return return_var;
 	},
 
-	errorVotingAction : function(message) {
-		// show error messages
-		alert(message);
+	/* Function to perform an action after confirm vote button click */
+	confirmVoteButtonClickAction : function() {
+		if ($(".confirmVoteButtonAction").hasClass("vote_not_selected")) {
+			alert("Per continuare è necessario selezionare il voto.");
+		} else {
+			if (confirm("Confermi il voto? Potrai votare nuovamente questa persona tra 7 giorni.")) {
+				// TODO: this.performVoteAction();
+			}
+		}
+
+		return false;
 	},
 
-	successVotingAction : function(message) {
-		// show success messages
-		alert(message);
-		$(this.messageBlockClass).html(this.messageBlockText);
-		$(this.messageContainerClass).removeClass("hide");
+	/* Function to perform a vote action */
+	performVoteAction : function() {
 
-		// hide vote form
-		$(this.voteFormContainerClass).addClass("hide");
 	},
 
-	hideVoteButton : function() {
-	/* Function to hide action button */
-		$(this.voteButtonClassName).addClass("display_none");
+	/* Success callback function  */
+	performVoteSuccessCallback : function() {
+
 	},
 
-	showVoteButton : function() {
-	/* Function to show action button */
-		$(this.voteButtonClassName).removeClass("display_none");
-	},
+	/* Error callback function  */
+	performVoteErrorCallback : function() {
+
+	}
 };
 
 /* Object to retrieve a filtered list of elements (user, photo book, favorites, notify, photoboard) */
