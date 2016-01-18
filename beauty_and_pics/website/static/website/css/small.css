@@ -78,6 +78,10 @@
 
 /* profile section }}} */
 
+/* catwalk section {{{ */
+.vote_type_list a { margin-bottom: 10px; }
+/* catwalk section }}} */
+
 .generic_container8 .left { margin-bottom: 15px; text-align: center; }
 .user_action_link_container { margin-top: 15px; }
 .generic_container8, .vote_user_container { display: block; margin: 0 auto; width: 95%; }

@@ -81,6 +81,10 @@
 .user_details_container > div { float: left }
 .user_details_container .user_details_left { width: 38%; margin-right: 2%; }
 .user_details_container .user_details_right { width: 60%; }
+.vote_type_list { margin-top: 42px; }
+.vote_type_list a { margin-bottom: 15px; }
+.vote_type_list a:hover img { visibility: visible; }
+.select_vote_type_container .stats_bar_label { margin: 15px 0 0 0; }
 
 /* image grids {{{ */
 ul.grid_container { margin-left: -2.5%; }

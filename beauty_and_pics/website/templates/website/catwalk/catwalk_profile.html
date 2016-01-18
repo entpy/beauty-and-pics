@@ -186,8 +186,9 @@
 
 		/* Funtion to show points about this vote_code */
 		$("body").on("click",".voteItemAction", function(){
+			// set vote as selected
 			voteUserObject.manageVoteCodeSelected($(this).data("voteCode"));
-			voteUserObject.setVoteAsSelected($(this));
+			voteUserObject.setVoteAsSelected($(this).data("voteCode"));
 
 			return false;
 		});

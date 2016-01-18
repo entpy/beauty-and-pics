@@ -725,40 +725,61 @@ var bootstrapModalsObect = {
 	/* Function to build and show vote user bootstrap modal */
 	showVoteUserModal: function(selectionImageUrl, contestOpen, emailVerified, userRegistered) {
 		this.resetBootstrapModal();
+		var descriptionMessageBlock = "";
+		// debug var
+		userRegistered = true;
+		contestOpen = true;
+		emailVerified = true;
+		if (contestOpen && emailVerified && userRegistered) {
+			descriptionMessageBlock = '<p>Seleziona quale voto vuoi assegnare all\'utente. In base al voto scelto i punti verranno ripartiti su ogni metrica di valutazione.</p>';
+		} else if (!userRegistered) {
+			descriptionMessageBlock = '<div class="alert alert-warning"><p>Per poter votare occorre essere registrati.<br /><a class="alert-link" href="#">Registrati ora</a> per dare il tuo primo voto!</p></div>';
+		} else if (!contestOpen) {
+			descriptionMessageBlock = '<div class="alert alert-warning"><p>Ci spiace, fino all\'apertura del concorso non sarà possibile votare.</p></div>';
+		} else if (!emailVerified) {
+			descriptionMessageBlock = '<div class="alert alert-danger"><p>Attenzione per poter votare occorre verificare il proprio indirizzo email.<br /><a class="alert-link" href="#">Clicca qui</a> per verificarlo ora.</p></div>';
+		}
 		var messageBlockTemplate = `<div class="row">
-			<div class="col-md-12">
-				<p>Seleziona quale voto vuoi assegnare all'utente. In base al voto scelto i punti verranno ripartiti su ogni metrica di valutazione.</p>
-				<div class="row select_vote_type_container">
-					<div class="col-sm-6">
-						<!-- mobile size dropdown -->
-						<div class="btn-group hidden">
-							<a aria-expanded="false" href="#" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-								Seleziona voto <span class="caret"></span>
-							</a>
-							<ul class="dropdown-menu">
-								<li><a class="voteItemAction" data-vote-code="sguardo_ammaliante" href="#">Sguardo ammaliante</a></li>
-								<li><a class="voteItemAction" data-vote-code="persona_solare" href="#">Persona solare</a></li>
-								<li><a class="voteItemAction" data-vote-code="troppo_stile" href="#">Troppo stile</a></li>
-								<li><a class="voteItemAction" data-vote-code="che_classe" href="#">Che classe</a></li>
-								<li><a class="voteItemAction" data-vote-code="impeccabile" href="#">Impeccabile</a></li>
-								<li><a class="voteItemAction" data-vote-code="notevole" href="#">Notevole</a></li>
-							</ul>
+			<div class="col-md-12">`;
+				messageBlockTemplate += descriptionMessageBlock;
+				messageBlockTemplate += "</div>";
+				messageBlockTemplate += "</div>";
+				messageBlockTemplate += `<div class="row select_vote_type_container">
+					<div class="col-sm-6 col-xs-12 no-gutter">
+						<!-- per visualizzazione desktop -->
+						<div class="col-xs-12 vote_type_list no-gutter hidden-xs">
+							<a class="voteItemAction voteItem_sguardo_ammaliante" data-vote-code="sguardo_ammaliante" href="#"><img alt="Selezione" src="` + selectionImageUrl + `">Sguardo ammaliante</a>
+							<a class="voteItemAction voteItem_persona_solare" data-vote-code="persona_solare" href="#"><img alt="Selezione" src="` + selectionImageUrl + `">Persona solare</a>
+							<a class="voteItemAction voteItem_troppo_stile" data-vote-code="troppo_stile" href="#"><img alt="Selezione" src="` + selectionImageUrl + `">Troppo stile</a>
+							<a class="voteItemAction voteItem_che_classe" data-vote-code="che_classe" href="#"><img alt="Selezione" src="` + selectionImageUrl + `">Che classe</a>
+							<a class="voteItemAction voteItem_impeccabile" data-vote-code="impeccabile" href="#"><img alt="Selezione" src="` + selectionImageUrl + `">Impeccabile</a>
+							<a class="voteItemAction voteItem_notevole" data-vote-code="notevole" href="#"><img alt="Selezione" src="` + selectionImageUrl + `">Notevole</a>
 						</div>
-						<div class="vote_type_list hidden-xs">
-							<a class="voteItemAction" data-vote-code="sguardo_ammaliante" href="#"><img alt="Selezione" src="` + selectionImageUrl + `">Sguardo ammaliante</a>
-							<a class="voteItemAction" data-vote-code="persona_solare" href="#"><img alt="Selezione" src="` + selectionImageUrl + `">Persona solare</a>
-							<a class="voteItemAction" data-vote-code="troppo_stile" href="#"><img alt="Selezione" src="` + selectionImageUrl + `">Troppo stile</a>
-							<a class="voteItemAction" data-vote-code="che_classe" href="#"><img alt="Selezione" src="` + selectionImageUrl + `">Che classe</a>
-							<a class="voteItemAction" data-vote-code="impeccabile" href="#"><img alt="Selezione" src="` + selectionImageUrl + `">Impeccabile</a>
-							<a class="voteItemAction" data-vote-code="notevole" href="#"><img alt="Selezione" src="` + selectionImageUrl + `">Notevole</a>
+						<!-- per visualizzazione desktop -->
+						<div class="col-xs-12 visible-xs-block vote_type_list no-gutter text-center">
+							<div class="btn-group open">
+								<a aria-expanded="true" href="#" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+									Dropdown <span class="caret"></span>
+								</a>
+								<ul class="dropdown-menu">
+									<li><a class="voteItem_sguardo_ammaliante" data-vote-code="sguardo_ammaliante" href="#">Sguardo ammaliante</a>
+									<li><a class="voteItem_persona_solare" data-vote-code="persona_solare" href="#">Persona solare</a>
+									<li><a class="voteItem_troppo_stile" data-vote-code="troppo_stile" href="#">Troppo stile</a>
+									<li><a class="voteItem_che_classe" data-vote-code="che_classe" href="#">Che classe</a>
+									<li><a class="voteItem_impeccabile" data-vote-code="impeccabile" href="#">Impeccabile</a>
+									<li><a class="voteItem_notevole" data-vote-code="notevole" href="#">Notevole</a>
+								</ul>
+							</div>
 						</div>
 					</div>
-					<div class="col-sm-6">
-						<h4>Ripartizione punti:</h4>
-						<div class="vote_division_wrapper background_container1">
+					<div class="col-sm-6 col-xs-12 no-gutter">
+						<div class="col-xs-12">
+							<h4>Ripartizione punti:</h4>
+						</div>
+						<div class="col-xs-6 col-sm-12">
 							<!-- stats block -->
 							<div class="smile_metric">
-								<div class="stats_bar_label">Sorriso <b class="metric_points">0</b> punti</div>
+								<div class="stats_bar_label nomargin">Sorriso +<b class="metric_points">0</b></div>
 								<div class="stats_bar">
 									<div class="progress">
 										<div class="progress-bar progress-bar-warning" role="progressbar" style="width: 0%"></div>
@@ -767,16 +788,18 @@ var bootstrapModalsObect = {
 							</div>
 							<!-- stats block -->
 							<div class="look_metric">
-								<div class="margin_top_15 stats_bar_label">Sguardo <b class="metric_points">0</b> punti</div>
+								<div class="stats_bar_label">Sguardo +<b class="metric_points">0</b></div>
 								<div class="stats_bar">
 									<div class="progress">
 										<div class="progress-bar progress-bar-warning" role="progressbar" style="width: 0%"></div>
 									</div>
 								</div>
 							</div>
+						</div>
+						<div class="col-xs-6 col-sm-12">
 							<!-- stats block -->
 							<div class="global_metric">
-								<div class="margin_top_15 stats_bar_label">Globale <b class="metric_points">0</b> punti</div>
+								<div class="stats_bar_label">Globale +<b class="metric_points">0</b></div>
 								<div class="stats_bar">
 									<div class="progress">
 										<div class="progress-bar progress-bar-warning" role="progressbar" style="width: 0%"></div>
@@ -785,7 +808,7 @@ var bootstrapModalsObect = {
 							</div>
 							<!-- stats block -->
 							<div class="style_metric">
-								<div class="margin_top_15 stats_bar_label">Stile <b class="metric_points">0</b> punti</div>
+								<div class="stats_bar_label">Stile +<b class="metric_points">0</b></div>
 								<div class="stats_bar">
 									<div class="progress">
 										<div class="progress-bar progress-bar-warning" role="progressbar" style="width: 0%"></div>
@@ -794,27 +817,9 @@ var bootstrapModalsObect = {
 							</div>
 						</div>
 					</div>
-				</div>
-				<div class="text-center vote_bottom_container">`;
-				// debug var
-				userRegistered = true;
-				contestOpen = true;
-				emailVerified = true;
-				if (contestOpen && emailVerified && userRegistered) {
-					messageBlockTemplate += '<button type="button" class="btn btn-success vote_not_selected confirmVoteButtonAction">Conferma il voto</button>';
-				} else if (!userRegistered) {
-					messageBlockTemplate += '<div class="alert alert-warning"><p>Per poter votare occorre essere registrati.<br /><a class="alert-link" href="#">Registrati ora</a> per dare il tuo primo voto!</p></div>';
-				} else if (!contestOpen) {
-					messageBlockTemplate += '<div class="alert alert-warning"><p>Ci spiace, fino all\'apertura del concorso non sarà possibile votare.</p></div>';
-				} else if (!emailVerified) {
-					messageBlockTemplate += '<div class="alert alert-danger"><p>Attenzione per poter votare occorre verificare il proprio indirizzo email.<br /><a class="alert-link" href="#">Clicca qui</a> per verificarlo ora.</p></div>';
-				}
-				messageBlockTemplate += `</div>
-			</div>
-		</div>`;
+				</div>`;
 		$(".bootstrap_modal").find('.modal-title').html("Dai il tuo voto a <b>Nome Cognome</b>");
-		// $(".bootstrap_modal").find('.modal-footer').html('<button type="button" class="btn btn-default" data-dismiss="modal">Chiudi</button>');
-		$(".bootstrap_modal").find('.modal-footer').remove();
+		$(".bootstrap_modal").find('.modal-footer').html('<button type="button" class="btn btn-default" data-dismiss="modal">Chiudi</button><button type="button" class="btn btn-success vote_not_selected confirmVoteButtonAction">Conferma il voto</button>');
 		$(".bootstrap_modal").find('.modal-body').html(messageBlockTemplate);
 		this.showBootstrapModal();
 
@@ -946,7 +951,7 @@ var customAjaxAction = {
 
 /* Object to perform votes */
 var voteUserObject = {
-	__maxPoints : 15,
+	__maxPoints : 8,
 	__metrics_list : {
 		'smile_metric' : 'smile_metric',
 		'look_metric' : 'look_metric',
@@ -974,11 +979,19 @@ var voteUserObject = {
 	},
 
 	/* Function to set clicked element as active */
-	setVoteAsSelected : function(element) {
+	setVoteAsSelected : function(voteCode) {
+		// rimuovo la classe "selected_vote" dall'elenco dei voti
 		$(".voteItemAction").removeClass("selected_vote");
+
+		// dall'elemento select di bootstrap rimuovo la selezione
+
+		// applico la selezione corrente all'elemento select di bootstrap
+		// $(this).parents('.btn-group').find('.dropdown-toggle').html(selText+' <span class="caret"></span>');
+
+		// aggiungo la classe "selected_vote" al voto cliccato
 		$(element).addClass("selected_vote");
 
-		// set confirm vote as enabled
+		// abilito il pulsante per votare
 		$(".confirmVoteButtonAction").removeClass("vote_not_selected");
 
 		return true;
