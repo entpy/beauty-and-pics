@@ -352,30 +352,46 @@ def catwalk_profile(request, user_id):
 
     # check if this catwalker can be voted
     vote_obj = Vote()
-    user_already_voted = False
 
-    # TODO: ripristinare
-    """
-    try:
-        vote_obj.check_if_user_can_vote(from_user_id=None, to_user_id=user_id, request=request)
-    except UserAlreadyVotedError:
-        user_already_voted = True
-    """
+    contest_is_open = False
+    user_already_registered = False
+    email_is_verified = False
+    user_already_voted = False
 
     # check if favorite already exists for this account 
     favorite_obj = Favorite()
     user_already_favorite = favorite_obj.check_if_favorite_exists(user_id=request.user.id, favorite_user_id=user_id)
 
-    # logger.debug("info account(" + str(user_id) + "): " + str(account_info))
+    # controlli annidati
+    # 1 contest is open? -- nel popup
+    # 3 userRegistered? -- nel popup
+    # 4 emailVerified? -- nel popup
+    # 2 user already voted? -- fuori dal popup
+
+    # 1) controllo che il contest sia aperto
+    if contest_obj.check_if_account_contest_is_active(user_id=user_id):
+        contest_is_open = True
+        # 2) controllo che l'utente sia registrato
+        if request.user.id:
+            user_already_registered = True
+            # 3) controllo che la mail dell'utente sia verificata
+            if account_obj.has_permission(user_obj=request.user, permission_codename='user_verified'):
+                email_is_verified = True
+                # 4) controllo che l'utente non abbia già votato
+                if not vote_obj.check_if_user_can_vote(from_user_id=request.user.id, to_user_id=user_id, request=request):
+                    user_already_voted = True
 
     context = {
         "user_info" : account_info,
         "user_contest_info" : contest_account_info,
-        "user_already_voted" : user_already_voted,
         "profile_image_url" : profile_image_url,
         "user_already_favorite" : user_already_favorite,
         "user_is_authenticated" : request.user.is_authenticated,
         "absolute_uri" : request.build_absolute_uri(),
+        "contest_is_open" : contest_is_open,
+        "user_already_registered" : user_already_registered,
+        "email_is_verified" : email_is_verified,
+        "user_already_voted" : user_already_voted,
     }
 
     return render(request, 'website/catwalk/catwalk_profile.html', context)

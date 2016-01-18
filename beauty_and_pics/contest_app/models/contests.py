@@ -397,3 +397,20 @@ class Contest(models.Model):
             return_var = True
 
         return return_var
+
+    def check_if_account_contest_is_active(self, user_id):
+        """Function to check if contest about account is active"""
+	from account_app.models.accounts import Account
+        return_var = False
+        Account_obj = Account()
+
+        try:
+            # retrieving account contest code
+            account_data = Account_obj.custom_user_id_data(user_id=user_id)
+        except User.DoesNotExist:
+            pass
+        else:
+            if self.get_contests_type_status(contest_type=account_data["contest_type"]) == project_constants.CONTEST_ACTIVE:
+                return_var = True
+
+        return return_var

@@ -349,31 +349,31 @@ class ajaxManager():
 
         CommonUtils_obj = CommonUtils()
         Vote_obj = Vote()
+        Contest_obj = Contest()
 
         from_user_id = self.request.user.id
         to_user_id = self.request.POST.get("user_id")
         vote_code = self.request.POST.get("vote_code")
         error_msg = ""
 
-        try:
-            # check if user can be voted
-            Vote_obj.check_if_user_can_vote(from_user_id=from_user_id, to_user_id=to_user_id, request=self.request)
-        except User.DoesNotExist:
-            logger.error("perform_voting error, to_user non esistente in db")
-            error_msg = "Non è stato possibile eseguire la votazione, sii gentile, contatta l'amministratore."
-        except ContestNotActiveError:
+        # controllo che il contest sia aperto
+        if not Contest_obj.check_if_account_contest_is_active(user_id=to_user_id):
             logger.error("perform_voting error, contest non attivo | error code: " + str(ContestNotActiveError.get_error_code))
             error_msg = "Non è possibile votare fino all'apertura del concorso."
-        except UserAlreadyVotedError:
-            logger.error("perform_voting error, utente già votato | error code: " + str(UserAlreadyVotedError.get_error_code))
-            error_msg = "Non puoi votare più volte lo stesso utente nell'arco di 7 giorni."
         else:
-            # perform voting
-            Vote_obj.perform_votation(from_user_id=from_user_id, to_user_id=to_user_id, vote_code=vote_code, request=self.request)
-            # votation performed, attach cookie to response
-            self.cookie_key = project_constants.USER_ALREADY_VOTED_COOKIE_NAME + str(self.request.POST.get("user_id"))
-            self.cookie_value = True
-            self.cookie_expiring = project_constants.SECONDS_BETWEEN_VOTATION
+            try:
+                # check if user can be voted
+                Vote_obj.check_if_user_can_vote(from_user_id=from_user_id, to_user_id=to_user_id, request=self.request)
+            except UserAlreadyVotedError:
+                logger.error("perform_voting error, utente già votato | error code: " + str(UserAlreadyVotedError.get_error_code))
+                error_msg = "Non puoi votare più volte lo stesso utente nell'arco di 7 giorni."
+            else:
+                # perform voting
+                Vote_obj.perform_votation(from_user_id=from_user_id, to_user_id=to_user_id, vote_code=vote_code, request=self.request)
+                # votation performed, attach cookie to response
+                self.cookie_key = project_constants.USER_ALREADY_VOTED_COOKIE_NAME + str(self.request.POST.get("user_id"))
+                self.cookie_value = True
+                self.cookie_expiring = project_constants.SECONDS_BETWEEN_VOTATION
 
         if error_msg:
             data = {'error' : True, 'message': error_msg}

@@ -126,24 +126,36 @@
 				<h3>Vota</h3>
 			</div>
 		</div>
-		{# messages block #}
-		<div class="msgContainerAction {% if not user_already_voted %}hide{% endif %}">
-			<div class="row">
-				<div class="col-md-12">
-					<div class="alert alert-warning">
-						<span class="msgTextAction">Potrai votare nuovamente questo partecipante quando saranno passati 7 giorni dalla tua votazione.</span>
+		{% if user_already_voted %}
+			{# message block #}
+			<div class="msgContainerAction">
+				<div class="row">
+					<div class="col-md-12">
+						<div class="alert alert-warning">
+							<span class="msgTextAction">Potrai votare nuovamente questo partecipante quando saranno passati 7 giorni dalla tua votazione.</span>
+						</div>
 					</div>
 				</div>
 			</div>
-		</div>
-		{% if not user_already_voted %}
-		<div class="voteFormContainerAction generic_container_content">
-			<div class="background_container1 vote_user_container">
-				<div class="vote_user_button_container">
-					<a href="#" class="btn btn-success showVoteModalClickAction">Vota l'utente</a>
+		{% else %}
+			{# message block #}
+			<div class="msgContainerAction">
+				<div class="row">
+					<div class="col-md-12">
+						<div class="alert alert-info">
+							<span class="msgTextAction">Dai un giudizio a {{ user_info.first_name }} premendo il pulsante sotto.</span>
+						</div>
+					</div>
 				</div>
 			</div>
-		</div>
+			{# vote buttom block #}
+			<div class="voteFormContainerAction generic_container_content">
+				<div class="background_container1 vote_user_container">
+					<div class="vote_user_button_container text-center">
+						<a href="#" class="btn btn-success showVoteModalClickAction">Vota adesso</a>
+					</div>
+				</div>
+			</div>
 		{% endif %}
 	</div>
 	<div class="generic_container user_details_right">
@@ -176,31 +188,42 @@
 	// set elements retrieved per call
 	elementsListObject.setElementsPerCall(20);
 
+	// init vote user object
+	var voteUserObjInstance = voteUserObject;
+
 	$(document).ready(function(){
-		// open vote modal
+		/* Function to open vote modal and reset vote info */
 		$("body").on("click",".showVoteModalClickAction", function(){
-			bootstrapModalsObect.showVoteUserModal("{% static 'website/img/selezione.png' %}");
+			var contestIsOpen = {% if contest_is_open %}true{% else %}false{% endif %};
+			var userIsRegistered = {% if user_already_registered %}true{% else %}false{% endif %};
+			var emailIsVerified = {% if email_is_verified %}true{% else %}false{% endif %};
+			// reset votation data
+			voteUserObjInstance.resetVotation();
+			// open bootstrap modal
+			// (selectionImageUrl, contestOpen, userRegistered, emailVerified) {
+			bootstrapModalsObect.showVoteUserModal("{% static 'website/img/selezione.png' %}", contestIsOpen, userIsRegistered, emailIsVerified);
 
 			return false;
 		});
 
-		/* Funtion to show points about this vote_code */
+		/* Function to show points about this vote_code */
 		$("body").on("click",".voteItemAction", function(){
 			// set vote as selected
-			voteUserObject.manageVoteCodeSelected($(this).data("voteCode"));
-			voteUserObject.setVoteAsSelected($(this).data("voteCode"));
+			var userId = "{{ user_info.user_id }}";
+			var voteCode = $(this).data("voteCode");
+			voteUserObjInstance.manageVoteCodeSelected(voteCode, userId);
 
 			return false;
 		});
 
-		// perform vote action
+		/* Function to perform a vote action */
 		$("body").on("click",".confirmVoteButtonAction", function(){
-			voteUserObject.confirmVoteButtonClickAction();
+			voteUserObjInstance.confirmVoteButtonClickAction();
 
 			return false;
 		});
 
-		// load more photo action
+		/* Function to load more photo */
 		$("body").on("click",".loadMoreElementsAction", function(){
 			elementsListObject.setElementsListType("photobook");
 			elementsListObject.addFilter("user_id", "{{ user_info.user_id }}");
@@ -209,7 +232,7 @@
 			return false;
 		});
 
-		// open zoomed image action
+		/* Function to open a zoomed image */
 		$("body").on("click",".zoom-image", function(){
 			var imageUrl = "";
 			if ($(this).attr("data-fullimage-url")) {
@@ -221,7 +244,7 @@
 			return false;
 		});
 
-		// add to favorites action
+		/* Function to add a new favorite */
 		$("body").on("click",".addToFavoritesClickAction", function(){
 			{% if not user_is_authenticated %}
 				bootstrapModalsObect.showPerformLoginModal();
@@ -236,7 +259,7 @@
 			return false;
 		});
 
-		// share on Facebook action
+		/* Function to share user profile via Facebook */
 		$("body").on("click",".shareOnFacebookClickAction", function(){
 
 			// create facebook share dialog
@@ -245,6 +268,7 @@
 			return false;
 		});
 
+		// default click to load a bunch of images
 		$(".loadMoreElementsAction").click();
 	});
 

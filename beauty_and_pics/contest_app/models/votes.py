@@ -35,27 +35,18 @@ class Vote(models.Model):
     def check_if_user_can_vote(self, from_user_id, to_user_id, request):
         """
         Function to check if a user can (re-)vote another user
-        1) controllo che il contest sia aperto
-        2) controllo il cookie
-        3) controllo data ultima votazione
-        4) controllo che gli ip non coincidano con un'altra votazione (più email da stesso ip)
+        1) controllo il cookie
+        2) controllo data ultima votazione
+        3) controllo che gli ip non coincidano con un'altra votazione (più email da stesso ip)
         """
 
-        # 1) controllo che il contest sia aperto
-        try:
-            self.check_if_account_contest_is_active(to_user_id=to_user_id)
-        except User.DoesNotExist:
-            raise
-        except ContestNotActiveError:
-            raise
-
-        # 2) controllo il cookie
+        # 1) controllo il cookie
         if request.COOKIES.get(project_constants.USER_ALREADY_VOTED_COOKIE_NAME + str(to_user_id)):
             raise UserAlreadyVotedError
 
         try:
             vote_obj = Vote.objects.get(from_user__id=from_user_id, to_user__id=to_user_id)
-            # 3) controllo data ultima votazione
+            # 2) controllo data ultima votazione
             # user already voted this catwalker, if vote date is < project_constants.SECONDS_BETWEEN_VOTATION
             # user can't revote
             datediff = datetime.now() - vote_obj.date
@@ -63,7 +54,7 @@ class Vote(models.Model):
                 # user can't re-vote, raise an exception
                 raise UserAlreadyVotedError
             else:
-                # 4) controllo che gli ip non coincidano con un'altra votazione (più email da stesso ip)
+                # 3) controllo che gli ip non coincidano con un'altra votazione (più email da stesso ip)
                 if self.check_if_ipaddress_already_exists(ip_address=vote_obj.ip_address, request=request):
                     # user can't re-vote, raise an exception
                     raise UserAlreadyVotedError
@@ -86,24 +77,6 @@ class Vote(models.Model):
             return_var = True
 
         return return_var
-
-    def check_if_account_contest_is_active(self, to_user_id):
-        """Function to check if contest about account to vote is active"""
-	from account_app.models.accounts import Account
-	from contest_app.models.contests import Contest
-        Account_obj = Account()
-        Contest_obj = Contest()
-
-        try:
-            # retrieving account contest code
-            account_data = Account_obj.custom_user_id_data(user_id=to_user_id)
-        except User.DoesNotExist:
-            raise
-        else:
-            if Contest_obj.get_contests_type_status(contest_type=account_data["contest_type"]) != project_constants.CONTEST_ACTIVE:
-                raise ContestNotActiveError
-
-        return True
 
     def perform_votation(self, from_user_id, to_user_id, vote_code, request):
         """Function to perform a votation after validity check"""
