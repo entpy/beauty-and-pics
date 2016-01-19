@@ -745,85 +745,85 @@ var bootstrapModalsObect = {
 			msg_text = 'Verifica il tuo indirizzo email per votare.';
 			descriptionMessageBlock = '<div class="alert alert-danger"><p>Attenzione per poter votare occorre verificare il proprio indirizzo email.<br /><a class="alert-link openResendConfirmationModalClickAction" href="#">Clicca qui</a> per verificarlo ora.</p></div>';
 		}
-		var messageBlockTemplate = `<div class="row">
-			<div class="col-md-12">`;
-				messageBlockTemplate += descriptionMessageBlock;
-				messageBlockTemplate += "</div>";
-				messageBlockTemplate += "</div>";
-				messageBlockTemplate += `<div class="row select_vote_type_container">
-					<div class="col-sm-6 col-xs-12 no-gutter">
-						<!-- per visualizzazione desktop -->
-						<div class="col-xs-12 vote_type_list no-gutter hidden-xs">
-							<a class="voteItemAction voteItem_sguardo_ammaliante" data-vote-code="sguardo_ammaliante" href="#"><img alt="Selezione" src="` + selectionImageUrl + `">Sguardo ammaliante</a>
-							<a class="voteItemAction voteItem_persona_solare" data-vote-code="persona_solare" href="#"><img alt="Selezione" src="` + selectionImageUrl + `">Persona solare</a>
-							<a class="voteItemAction voteItem_troppo_stile" data-vote-code="troppo_stile" href="#"><img alt="Selezione" src="` + selectionImageUrl + `">Troppo stile</a>
-							<a class="voteItemAction voteItem_che_classe" data-vote-code="che_classe" href="#"><img alt="Selezione" src="` + selectionImageUrl + `">Che classe</a>
-							<a class="voteItemAction voteItem_impeccabile" data-vote-code="impeccabile" href="#"><img alt="Selezione" src="` + selectionImageUrl + `">Impeccabile</a>
-							<a class="voteItemAction voteItem_notevole" data-vote-code="notevole" href="#"><img alt="Selezione" src="` + selectionImageUrl + `">Notevole</a>
-						</div>
-						<!-- per visualizzazione mobile -->
-						<div class="col-xs-12 visible-xs-block vote_type_dropdown no-gutter margin_bottom_15 text-center">
-							<div class="btn-group">
-								<a aria-expanded="false" href="#" class="btn btn-primary dropdown-toggle voteItemsDropdowAction" data-toggle="dropdown">
-									Seleziona voto <span class="caret"></span>
-								</a>
-								<ul class="dropdown-menu">
-									<li><a class="voteItemAction voteItem_sguardo_ammaliante" data-vote-code="sguardo_ammaliante" href="#">Sguardo ammaliante</a>
-									<li><a class="voteItemAction voteItem_persona_solare" data-vote-code="persona_solare" href="#">Persona solare</a>
-									<li><a class="voteItemAction voteItem_troppo_stile" data-vote-code="troppo_stile" href="#">Troppo stile</a>
-									<li><a class="voteItemAction voteItem_che_classe" data-vote-code="che_classe" href="#">Che classe</a>
-									<li><a class="voteItemAction voteItem_impeccabile" data-vote-code="impeccabile" href="#">Impeccabile</a>
-									<li><a class="voteItemAction voteItem_notevole" data-vote-code="notevole" href="#">Notevole</a>
-								</ul>
-							</div>
-						</div>
-					</div>
-					<div class="col-sm-6 col-xs-12 no-gutter">
-						<div class="col-xs-12">
-							<h4>Ripartizione punti:</h4>
-						</div>
-						<div class="col-xs-6 col-sm-12">
-							<!-- stats block -->
-							<div class="smile_metric">
-								<div class="stats_bar_label">Sorriso +<b class="metric_points">0</b></div>
-								<div class="stats_bar">
-									<div class="progress">
-										<div class="progress-bar progress-bar-warning" role="progressbar" style="width: 0%"></div>
-									</div>
-								</div>
-							</div>
-							<!-- stats block -->
-							<div class="look_metric">
-								<div class="stats_bar_label">Sguardo +<b class="metric_points">0</b></div>
-								<div class="stats_bar">
-									<div class="progress">
-										<div class="progress-bar progress-bar-warning" role="progressbar" style="width: 0%"></div>
-									</div>
-								</div>
-							</div>
-						</div>
-						<div class="col-xs-6 col-sm-12">
-							<!-- stats block -->
-							<div class="global_metric">
-								<div class="stats_bar_label">Globale +<b class="metric_points">0</b></div>
-								<div class="stats_bar">
-									<div class="progress">
-										<div class="progress-bar progress-bar-warning" role="progressbar" style="width: 0%"></div>
-									</div>
-								</div>
-							</div>
-							<!-- stats block -->
-							<div class="style_metric">
-								<div class="stats_bar_label">Stile +<b class="metric_points">0</b></div>
-								<div class="stats_bar">
-									<div class="progress">
-										<div class="progress-bar progress-bar-warning" role="progressbar" style="width: 0%"></div>
-									</div>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>`;
+		var messageBlockTemplate = '<div class="row">'
+		messageBlockTemplate += '<div class="col-md-12">';
+		messageBlockTemplate += descriptionMessageBlock;
+		messageBlockTemplate += '</div>';
+		messageBlockTemplate += '</div>';
+		messageBlockTemplate += '<div class="row select_vote_type_container">';
+		messageBlockTemplate += '<div class="col-sm-6 col-xs-12 no-gutter">';
+		messageBlockTemplate += '<!-- per visualizzazione desktop -->';
+		messageBlockTemplate += '<div class="col-xs-12 vote_type_list no-gutter hidden-xs">';
+		messageBlockTemplate += '<a class="voteItemAction voteItem_sguardo_ammaliante" data-vote-code="sguardo_ammaliante" href="#"><img alt="Selezione" src="' + selectionImageUrl + '">Sguardo ammaliante</a>';
+		messageBlockTemplate += '<a class="voteItemAction voteItem_persona_solare" data-vote-code="persona_solare" href="#"><img alt="Selezione" src="' + selectionImageUrl + '">Persona solare</a>';
+		messageBlockTemplate += '<a class="voteItemAction voteItem_troppo_stile" data-vote-code="troppo_stile" href="#"><img alt="Selezione" src="' + selectionImageUrl + '">Troppo stile</a>';
+		messageBlockTemplate += '<a class="voteItemAction voteItem_che_classe" data-vote-code="che_classe" href="#"><img alt="Selezione" src="' + selectionImageUrl + '">Che classe</a>';
+		messageBlockTemplate += '<a class="voteItemAction voteItem_impeccabile" data-vote-code="impeccabile" href="#"><img alt="Selezione" src="' + selectionImageUrl + '">Impeccabile</a>';
+		messageBlockTemplate += '<a class="voteItemAction voteItem_notevole" data-vote-code="notevole" href="#"><img alt="Selezione" src="' + selectionImageUrl + '">Notevole</a>';
+		messageBlockTemplate += '</div>';
+		messageBlockTemplate += '<!-- per visualizzazione mobile -->';
+		messageBlockTemplate += '<div class="col-xs-12 visible-xs-block vote_type_dropdown no-gutter margin_bottom_15 text-center">';
+		messageBlockTemplate += '<div class="btn-group">';
+		messageBlockTemplate += '<a aria-expanded="false" href="#" class="btn btn-primary dropdown-toggle voteItemsDropdowAction" data-toggle="dropdown">';
+		messageBlockTemplate += 'Seleziona voto <span class="caret"></span>';
+		messageBlockTemplate += '</a>';
+		messageBlockTemplate += '<ul class="dropdown-menu">';
+		messageBlockTemplate += '<li><a class="voteItemAction voteItem_sguardo_ammaliante" data-vote-code="sguardo_ammaliante" href="#">Sguardo ammaliante</a>';
+		messageBlockTemplate += '<li><a class="voteItemAction voteItem_persona_solare" data-vote-code="persona_solare" href="#">Persona solare</a>';
+		messageBlockTemplate += '<li><a class="voteItemAction voteItem_troppo_stile" data-vote-code="troppo_stile" href="#">Troppo stile</a>';
+		messageBlockTemplate += '<li><a class="voteItemAction voteItem_che_classe" data-vote-code="che_classe" href="#">Che classe</a>';
+		messageBlockTemplate += '<li><a class="voteItemAction voteItem_impeccabile" data-vote-code="impeccabile" href="#">Impeccabile</a>';
+		messageBlockTemplate += '<li><a class="voteItemAction voteItem_notevole" data-vote-code="notevole" href="#">Notevole</a>';
+		messageBlockTemplate += '</ul>';
+		messageBlockTemplate += '</div>';
+		messageBlockTemplate += '</div>';
+		messageBlockTemplate += '</div>';
+		messageBlockTemplate += '<div class="col-sm-6 col-xs-12 no-gutter">';
+		messageBlockTemplate += '<div class="col-xs-12">';
+		messageBlockTemplate += '<h4>Ripartizione punti:</h4>';
+		messageBlockTemplate += '</div>';
+		messageBlockTemplate += '<div class="col-xs-6 col-sm-12">';
+		messageBlockTemplate += '<!-- stats block -->';
+		messageBlockTemplate += '<div class="smile_metric">';
+		messageBlockTemplate += '<div class="stats_bar_label">Sorriso +<b class="metric_points">0</b></div>';
+		messageBlockTemplate += '<div class="stats_bar">';
+		messageBlockTemplate += '<div class="progress">';
+		messageBlockTemplate += '<div class="progress-bar progress-bar-warning" role="progressbar" style="width: 0%"></div>';
+		messageBlockTemplate += '</div>';
+		messageBlockTemplate += '</div>';
+		messageBlockTemplate += '</div>';
+		messageBlockTemplate += '<!-- stats block -->';
+		messageBlockTemplate += '<div class="look_metric">';
+		messageBlockTemplate += '<div class="stats_bar_label">Sguardo +<b class="metric_points">0</b></div>';
+		messageBlockTemplate += '<div class="stats_bar">';
+		messageBlockTemplate += '<div class="progress">';
+		messageBlockTemplate += '<div class="progress-bar progress-bar-warning" role="progressbar" style="width: 0%"></div>';
+		messageBlockTemplate += '</div>';
+		messageBlockTemplate += '</div>';
+		messageBlockTemplate += '</div>';
+		messageBlockTemplate += '</div>';
+		messageBlockTemplate += '<div class="col-xs-6 col-sm-12">';
+		messageBlockTemplate += '<!-- stats block -->';
+		messageBlockTemplate += '<div class="global_metric">';
+		messageBlockTemplate += '<div class="stats_bar_label">Globale +<b class="metric_points">0</b></div>';
+		messageBlockTemplate += '<div class="stats_bar">';
+		messageBlockTemplate += '<div class="progress">';
+		messageBlockTemplate += '<div class="progress-bar progress-bar-warning" role="progressbar" style="width: 0%"></div>';
+		messageBlockTemplate += '</div>';
+		messageBlockTemplate += '</div>';
+		messageBlockTemplate += '</div>';
+		messageBlockTemplate += '<!-- stats block -->';
+		messageBlockTemplate += '<div class="style_metric">';
+		messageBlockTemplate += '<div class="stats_bar_label">Stile +<b class="metric_points">0</b></div>';
+		messageBlockTemplate += '<div class="stats_bar">';
+		messageBlockTemplate += '<div class="progress">';
+		messageBlockTemplate += '<div class="progress-bar progress-bar-warning" role="progressbar" style="width: 0%"></div>';
+		messageBlockTemplate += '</div>';
+		messageBlockTemplate += '</div>';
+		messageBlockTemplate += '</div>';
+		messageBlockTemplate += '</div>';
+		messageBlockTemplate += '</div>';
+		messageBlockTemplate += '</div>';
 		// modal title
 		$(".bootstrap_modal").find('.modal-title').html("Dai il tuo voto a <b>" + userFirstName + "</b>");
 		// modal footer
