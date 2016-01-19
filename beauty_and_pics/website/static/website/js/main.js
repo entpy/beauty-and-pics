@@ -425,28 +425,30 @@ var bootstrapModalsObect = {
 
 	/* Function to reset bootstrap modal */
 	resetBootstrapModal: function() {
-		// se una modal è aperta, la chiudo e attendo ~1 sec
-		if (($('.bootstrap_modal').data('bs.modal') || {}).isShown) {
-			this.hideBootstrapModal();
-		}
+		// chiudo eventuali modal aperte
+		this.hideBootstrapModal();
 		$(".bootstrap_modal").removeData();
 		$(".bootstrap_modal").remove();
 		this.writeModalInsideBodyTag();
+
+		return true;
 	},
 
 	/* Function to show bootstrap modal */
 	showBootstrapModal: function() {
-	    $(".bootstrap_modal").modal('show');
+		$(".bootstrap_modal").modal('show');
+
+		return true;
 	},
 
 	/* Function to hide bootstrap modal */
 	hideBootstrapModal: function() {
 		// close previously opened bootstrap modal
 		$('.bootstrap_modal').modal('hide');
-		// TODO: se non utilizzassi questa sleep, la modal verrebbe
-		// aperta su quella precedente, rendendone impossibile
-		// la chiusura
-		setTimeout("function(){ return true; }", 1000);
+		// fix per aprire modal in modo consecutivo
+		$('.modal-backdrop').hide();
+
+		return true;
 	},
 
 	/* Function to show popup message with bootstrap modal */
