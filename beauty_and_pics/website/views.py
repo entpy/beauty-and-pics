@@ -190,7 +190,9 @@ def www_forgot_password(request):
 
     return render(request, 'website/www/www_forgot_password.html', context)
 
-def www_register(request):
+def www_register(request, user_id):
+    """View to show register page"""
+
     # if user already registered, redirect to profile page
     if request.user.is_authenticated():
 	return HttpResponseRedirect('/profilo/')
@@ -203,8 +205,13 @@ def www_register(request):
 
         # check whether it's valid:
         if form.is_valid() and form.form_actions():
-            # redirect to user profile
-            return HttpResponseRedirect('/profilo/1')
+            if user_id:
+                # se settato uno user id faccio redirect verso l'utente, mostrando un messaggio di successo
+                messages.add_message(request, settings.POPUP_SIMPLE_MESSAGE, 'Grazie per registrazione, ora puoi proseguire con la tua votazione.')
+                return HttpResponseRedirect('/passerella/dettaglio-utente/' + str(user_id))
+            else:
+                # altrimenti redirect to user profile
+                return HttpResponseRedirect('/profilo/1')
 
     # if a GET (or any other method) we'll create a blank form
     else:
@@ -378,7 +385,10 @@ def catwalk_profile(request, user_id):
             if account_obj.has_permission(user_obj=request.user, permission_codename='user_verified'):
                 email_is_verified = True
                 # 4) controllo che l'utente non abbia già votato
-                if not vote_obj.check_if_user_can_vote(from_user_id=request.user.id, to_user_id=user_id, request=request):
+                try:
+                    vote_obj.check_if_user_can_vote(from_user_id=request.user.id, to_user_id=user_id, request=request)
+                except UserAlreadyVotedError:
+                    # user already voted
                     user_already_voted = True
 
     context = {

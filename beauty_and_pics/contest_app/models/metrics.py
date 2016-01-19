@@ -19,15 +19,16 @@ class Metric(models.Model):
     def __create_default_metrics(self):
         """Function to create default metrics"""
         for default_metric in project_constants.VOTE_METRICS_LIST:
-            metric_obj = Metric(name=project_constants.VOTE_METRICS_LIST[default_metric])
-            metric_obj.save()
+            if not self.get_metric_by_name(project_constants.VOTE_METRICS_LIST[default_metric]):
+                metric_obj = Metric(name=project_constants.VOTE_METRICS_LIST[default_metric])
+                metric_obj.save()
 
         return True
 
     def __check_default_metrics_exist(self):
         """Function to check if default metrics exist"""
         return_var = False
-        if Metric.objects.count():
+        if Metric.objects.count() == len(project_constants.VOTE_METRICS_LIST):
             # default metrics exists
             return_var = True
 

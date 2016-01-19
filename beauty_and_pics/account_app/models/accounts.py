@@ -493,7 +493,7 @@ class Account(models.Model):
                 contest_account_info[single_metric["metric__name"]] = {}
                 contest_account_info[single_metric["metric__name"]]["total_points"] = single_metric["total_points"]
                 contest_account_info[single_metric["metric__name"]]["total_votes"] = single_metric["total_votes"]
-                contest_account_info[single_metric["metric__name"]]["metric_rate_percentage"] = int((single_metric["total_points"] / (single_metric["total_votes"] * 5.0)) * 100)
+                contest_account_info[single_metric["metric__name"]]["metric_rate_percentage"] = int((single_metric["total_points"] / (single_metric["total_votes"] * 8.0)) * 100)
                 contest_account_info["total_points"] += single_metric["total_points"]
 
         # retrieve user ranking

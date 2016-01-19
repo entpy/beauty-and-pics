@@ -69,6 +69,7 @@ class Point(models.Model):
             u'global': {'total_points': 9, 'total_votes': 5},
             u'look': {'total_points': 13, 'total_votes': 5},
             u'smile': {'total_points': 17, 'total_votes': 5}
+            u'style': {'total_points': 6, 'total_votes': 5}
         }
         """
 

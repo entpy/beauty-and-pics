@@ -95,13 +95,6 @@
 		<div class="bottom">
 			<div class="stats_bar_container">
 				<!-- stats block -->
-				<div class="stats_bar_label">Globale: {{ user_contest_info.global.total_points|default:"0" }} punti</div>
-				<div class="stats_bar">
-					<div class="progress">
-						<div class="progress-bar progress-bar-warning" role="progressbar" aria-valuenow="{{ user_contest_info.global.metric_rate_percentage }}" aria-valuemin="0" aria-valuemax="100" style="width: {{ user_contest_info.global.metric_rate_percentage }}%"></div>
-					</div>
-				</div>
-				<!-- stats block -->
 				<div class="stats_bar_label">Sorriso: {{ user_contest_info.smile.total_points|default:"0" }} punti</div>
 				<div class="stats_bar">
 					<div class="progress">
@@ -115,6 +108,20 @@
 						<div class="progress-bar progress-bar-warning" role="progressbar" aria-valuenow="{{ user_contest_info.look.metric_rate_percentage }}" aria-valuemin="0" aria-valuemax="100" style="width: {{ user_contest_info.look.metric_rate_percentage }}%"></div>
 					</div>
 				</div>
+				<!-- stats block -->
+				<div class="stats_bar_label">Globale: {{ user_contest_info.global.total_points|default:"0" }} punti</div>
+				<div class="stats_bar">
+					<div class="progress">
+						<div class="progress-bar progress-bar-warning" role="progressbar" aria-valuenow="{{ user_contest_info.global.metric_rate_percentage }}" aria-valuemin="0" aria-valuemax="100" style="width: {{ user_contest_info.global.metric_rate_percentage }}%"></div>
+					</div>
+				</div>
+				<!-- stats block -->
+				<div class="stats_bar_label">Stile: {{ user_contest_info.style.total_points|default:"0" }} punti</div>
+				<div class="stats_bar">
+					<div class="progress">
+						<div class="progress-bar progress-bar-warning" role="progressbar" aria-valuenow="{{ user_contest_info.style.metric_rate_percentage }}" aria-valuemin="0" aria-valuemax="100" style="width: {{ user_contest_info.style.metric_rate_percentage }}%"></div>
+					</div>
+				</div>
 			</div>
 		</div>
 	</div>
@@ -126,28 +133,27 @@
 				<h3>Vota</h3>
 			</div>
 		</div>
-		{% if user_already_voted %}
-			{# message block #}
-			<div class="msgContainerAction">
-				<div class="row">
-					<div class="col-md-12">
-						<div class="alert alert-warning">
-							<span class="msgTextAction">Potrai votare nuovamente questo partecipante quando saranno passati 7 giorni dalla tua votazione.</span>
-						</div>
+		{# success vote message block #}
+		<div class="msgContainerAction successVoteMessageAction {% if not user_already_voted %}hide{% endif %}">
+			<div class="row">
+				<div class="col-md-12">
+					<div class="alert alert-warning">
+						<span class="msgTextAction">Potrai votare nuovamente questo partecipante quando saranno passati 7 giorni dalla tua votazione.</span>
 					</div>
 				</div>
 			</div>
-		{% else %}
-			{# message block #}
-			<div class="msgContainerAction">
-				<div class="row">
-					<div class="col-md-12">
-						<div class="alert alert-info">
-							<span class="msgTextAction">Dai un giudizio a {{ user_info.first_name }} premendo il pulsante sotto.</span>
-						</div>
+		</div>
+		{# default info message block #}
+		<div class="msgContainerAction voteInfoMessageAction {% if user_already_voted %}hide{% endif %}">
+			<div class="row">
+				<div class="col-md-12">
+					<div class="alert alert-info">
+						<span class="msgTextAction">Dai un giudizio a {{ user_info.first_name }} premendo il pulsante sotto.</span>
 					</div>
 				</div>
 			</div>
+		</div>
+		{% if not user_already_voted %}
 			{# vote buttom block #}
 			<div class="voteFormContainerAction generic_container_content">
 				<div class="background_container1 vote_user_container">
@@ -194,14 +200,17 @@
 	$(document).ready(function(){
 		/* Function to open vote modal and reset vote info */
 		$("body").on("click",".showVoteModalClickAction", function(){
+			// load vote modal info
+			var userId = "{{ user_info.user_id }}";
+			var userFirstName = "{{ user_info.first_name }}";
+			var selectionImagePath = "{% static 'website/img/selezione.png' %}";
 			var contestIsOpen = {% if contest_is_open %}true{% else %}false{% endif %};
 			var userIsRegistered = {% if user_already_registered %}true{% else %}false{% endif %};
 			var emailIsVerified = {% if email_is_verified %}true{% else %}false{% endif %};
-			// reset votation data
+			// reset votation data object
 			voteUserObjInstance.resetVotation();
-			// open bootstrap modal
-			// (selectionImageUrl, contestOpen, userRegistered, emailVerified) {
-			bootstrapModalsObect.showVoteUserModal("{% static 'website/img/selezione.png' %}", contestIsOpen, userIsRegistered, emailIsVerified);
+			// open bootstrap vote modal
+			bootstrapModalsObect.showVoteUserModal(userId, userFirstName, selectionImagePath, contestIsOpen, userIsRegistered, emailIsVerified);
 
 			return false;
 		});
@@ -225,6 +234,23 @@
 
 			return false;
 		});
+
+		/* Function to show an alert on disabled vote button click */
+		$("body").on("click",".alertVoteButtonAction", function(){
+			var alertText = $(this).data("alertText");
+			alert(alertText);
+
+			return true;
+		});
+
+		/* Function to show send confirmation email modal */
+		/*$("body").on("click",".confirmationModalClickAction", function(){
+			// close previously opened bootstrap modal
+			$('.bootstrap_modal').modal('hide');
+			setTimeout("bootstrapModalsObect.showSendValidationEmail();", 1000);
+
+			return true;
+		});*/
 
 		/* Function to load more photo */
 		$("body").on("click",".loadMoreElementsAction", function(){

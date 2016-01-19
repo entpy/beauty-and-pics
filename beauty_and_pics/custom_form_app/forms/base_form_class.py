@@ -158,7 +158,32 @@ class FormCommonUtils():
         """Validation method to check if an email already exists"""
         account_obj = Account()
         validated_email = self.form_validated_data.get(self.addictional_validation_fields["email"])
-        # if form email is != from current logged in user email, checking if email exists or not
+        # if form email is != current logged in user email, checking if email exists or not
+	if validated_email != account_obj.get_autenticated_user_email(self.request_data):
+            if (account_obj.check_if_email_exists(email_to_check=validated_email) == True):
+	        # raise an exception if email already exists
+	        self.add_validation_error(None, "La mail \"" + str(validated_email) + "\" è già presente.")
+                self.add_validation_error(self.addictional_validation_fields["email"], True)
+
+        return True
+
+    # XXX: not yet implemented
+    def check_gmail_email_already_exists(self):
+        """
+            Validation method to check if a gmail email already exists.
+            Le caselle email di gmail hanno i punti che creano alias, cioè:
+
+            mail.diprova1@gmail.com = maildiprova1@gmail.com
+            ma.il.di.Prova1@gmail.com = maildiprova1@gmail.com
+            mail.DI.prova1@gmail.com = maildiprova1@gmail.com
+
+            per eseguire un check corretto devo convertire tutto in minuscolo
+            e rimuovere i punti
+        """
+
+        account_obj = Account()
+        validated_email = self.form_validated_data.get(self.addictional_validation_fields["email"])
+        # if form email is != current logged in user email, checking if email exists or not
 	if validated_email != account_obj.get_autenticated_user_email(self.request_data):
             if (account_obj.check_if_email_exists(email_to_check=validated_email) == True):
 	        # raise an exception if email already exists

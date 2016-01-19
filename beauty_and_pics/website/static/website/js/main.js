@@ -81,17 +81,6 @@ $(document).ready(function(){
 		return false;
 	});
 
-	/* function to change dropdown text element select */
-	/*$(".dropdown-menu li").on("click","a", function(){
-		console.log("bla");
-		// var selText = $(this).text();
-		// $(this).parents('.btn-group').find('.dropdown-toggle').html(selText+' <span class="caret"></span>');
-		alert("s");
-		// e.preventDefault();
-
-		return true;
-	});*/
-
 	// hide law cookie bar on window scroll event
 	// per ora lo commento
 	/*$(document).on('scroll', window, function() {
@@ -434,8 +423,12 @@ var bootstrapModalsObect = {
 		return bootstrapModal;
 	},
 
-	/* Function to reset bootstrap modal DEPRECATED */
+	/* Function to reset bootstrap modal */
 	resetBootstrapModal: function() {
+		// se una modal è aperta, la chiudo e attendo ~1 sec
+		if (($('.bootstrap_modal').data('bs.modal') || {}).isShown) {
+			this.hideBootstrapModal();
+		}
 		$(".bootstrap_modal").removeData();
 		$(".bootstrap_modal").remove();
 		this.writeModalInsideBodyTag();
@@ -443,17 +436,17 @@ var bootstrapModalsObect = {
 
 	/* Function to show bootstrap modal */
 	showBootstrapModal: function() {
-		// multiple click modal fix
-		// if (!(($(".bootstrap_modal").data('bs.modal') || {}).isShown)) {
-		    $(".bootstrap_modal").modal('show');
-		// } else {
-		    // this.hideBootstrapModal();
-		// }
+	    $(".bootstrap_modal").modal('show');
 	},
 
 	/* Function to hide bootstrap modal */
 	hideBootstrapModal: function() {
-		$(".bootstrap_modal").modal('hide');
+		// close previously opened bootstrap modal
+		$('.bootstrap_modal').modal('hide');
+		// TODO: se non utilizzassi questa sleep, la modal verrebbe
+		// aperta su quella precedente, rendendone impossibile
+		// la chiusura
+		setTimeout("function(){ return true; }", 1000);
 	},
 
 	/* Function to show popup message with bootstrap modal */
@@ -728,24 +721,27 @@ var bootstrapModalsObect = {
 	},
 
 	/* Function to build and show vote user bootstrap modal */
-	showVoteUserModal: function(selectionImageUrl, contestOpen, userRegistered, emailVerified) {
+	showVoteUserModal: function(userId, userFirstName, selectionImageUrl, contestOpen, userRegistered, emailVerified) {
 		this.resetBootstrapModal();
 		var descriptionMessageBlock = "";
-		var showVoteButton = false;
+		var enableVoteButton = false;
 		// debug var {{{
 		/*contestOpen = true;
 		userRegistered = true;
 		emailVerified = true;*/
 		// debug var }}}
 		if (contestOpen && emailVerified && userRegistered) {
-			descriptionMessageBlock = '<p>Seleziona quale voto vuoi assegnare all\'utente. In base al voto scelto i punti verranno ripartiti su ogni metrica di valutazione.</p>';
-			showVoteButton = true;
+			descriptionMessageBlock = '<div class="alert alert-info"><p>Seleziona quale voto vuoi assegnare all\'utente. In base al voto scelto i punti verranno ripartiti su ogni metrica di valutazione.</p></div>';
+			enableVoteButton = true;
 		} else if (!contestOpen) {
+			msg_text = 'Fino all\'apertura del concorso non sarà possibile votare.';
 			descriptionMessageBlock = '<div class="alert alert-warning"><p>Ci spiace, fino all\'apertura del concorso non sarà possibile votare.</p></div>';
 		} else if (!userRegistered) {
-			descriptionMessageBlock = '<div class="alert alert-warning"><p>Per poter votare occorre essere registrati.<br /><a class="alert-link" href="#">Registrati ora</a> per dare il tuo primo voto!</p></div>';
+			msg_text = 'Per poter votare occorre essere registrati.';
+			descriptionMessageBlock = '<div class="alert alert-warning"><p>Per poter votare occorre essere registrati.<br /><a class="alert-link" href="/registrati/' + userId + '/">Registrati ora</a> per dare il tuo primo voto!</p></div>';
 		} else if (!emailVerified) {
-			descriptionMessageBlock = '<div class="alert alert-danger"><p>Attenzione per poter votare occorre verificare il proprio indirizzo email.<br /><a class="alert-link" href="#">Clicca qui</a> per verificarlo ora.</p></div>';
+			msg_text = 'Verifica il tuo indirizzo email per votare.';
+			descriptionMessageBlock = '<div class="alert alert-danger"><p>Attenzione per poter votare occorre verificare il proprio indirizzo email.<br /><a class="alert-link openResendConfirmationModalClickAction" href="#">Clicca qui</a> per verificarlo ora.</p></div>';
 		}
 		var messageBlockTemplate = `<div class="row">
 			<div class="col-md-12">`;
@@ -766,7 +762,7 @@ var bootstrapModalsObect = {
 						<!-- per visualizzazione mobile -->
 						<div class="col-xs-12 visible-xs-block vote_type_dropdown no-gutter margin_bottom_15 text-center">
 							<div class="btn-group">
-								<a aria-expanded="false" href="#" class="btn btn-default dropdown-toggle voteItemsDropdowAction" data-toggle="dropdown">
+								<a aria-expanded="false" href="#" class="btn btn-primary dropdown-toggle voteItemsDropdowAction" data-toggle="dropdown">
 									Seleziona voto <span class="caret"></span>
 								</a>
 								<ul class="dropdown-menu">
@@ -826,12 +822,15 @@ var bootstrapModalsObect = {
 						</div>
 					</div>
 				</div>`;
-		$(".bootstrap_modal").find('.modal-title').html("Dai il tuo voto a <b>Nome Cognome</b>");
-		if (showVoteButton) {
+		// modal title
+		$(".bootstrap_modal").find('.modal-title').html("Dai il tuo voto a <b>" + userFirstName + "</b>");
+		// modal footer
+		if (enableVoteButton) {
 			$(".bootstrap_modal").find('.modal-footer').html('<button type="button" class="btn btn-default" data-dismiss="modal">Chiudi</button><button type="button" class="btn btn-success confirmVoteButtonAction">Conferma il voto</button>');
 		} else {
-			$(".bootstrap_modal").find('.modal-footer').html('<button type="button" class="btn btn-default" data-dismiss="modal">Chiudi</button>');
+			$(".bootstrap_modal").find('.modal-footer').html('<button type="button" class="btn btn-default" data-dismiss="modal">Chiudi</button><button type="button" class="btn btn-default disabled-only-graphics alertVoteButtonAction" data-alert-text="' + msg_text + '">Conferma il voto</button>');
 		}
+		// modal content
 		$(".bootstrap_modal").find('.modal-body').html(messageBlockTemplate);
 		this.showBootstrapModal();
 
@@ -973,7 +972,6 @@ var voteUserObject = {
 	selectedVoteCode : false,
 	votationIsValid : false,
 	selectedVoteCodeClass : "selected_vote",
-	// voteNotselectedClass : "vote_not_selected",
 	voteUserId : false,
 	ajaxCallUrl : "/ajax/",
 
@@ -1132,7 +1130,6 @@ var voteUserObject = {
 	/* Function to perform a vote action */
 	performVoteAction : function() {
 		if (this.getVotationIsEnabled()) {
-			// TODO: close bootstrap modal
 			// reading csrfmiddlewaretoken from cookie
 			var csrftoken = readCsrftokenFromCookie();
 			var ajaxCallData = {
@@ -1162,25 +1159,32 @@ var voteUserObject = {
 		return true;
 	},
 
-	/* TODO: Function to close bootstrap vote modal */
+	/* Function to close bootstrap vote modal */
 	closeVoteBootstrapModal : function() {
-
+		$('.bootstrap_modal').modal('hide');
 	},
 
-	/* TODO Success callback function  */
-	performVoteSuccessCallback : function() {
-		// show success messages
+	/* Success callback function  */
+	performVoteSuccessCallback : function(message) {
+		// show success message
                 alert(message);
-                $(this.messageBlockClass).html(this.messageBlockText);
-                $(this.messageContainerClass).removeClass("hide");
-
+                $(".successVoteMessageAction").removeClass("hide");
+		// hide default info text
+                $(".voteInfoMessageAction").addClass("hide");
                 // hide vote form
-                $(this.voteFormContainerClass).addClass("hide");
+                $(".voteFormContainerAction").addClass("hide");
+		// closing bootstrap modal
+		this.closeVoteBootstrapModal();
+
+		return true;
 	},
 
 	/* Error callback function  */
-	performVoteErrorCallback : function() {
+	performVoteErrorCallback : function(message) {
+		// show error message
+                alert(message);
 
+		return true;
 	}
 };
 
