@@ -207,13 +207,16 @@
 		});
 
 		/* Function to show points about this vote_code */
-		$("body").on("click",".voteItemAction", function(){
+		$("body").on("click",".voteItemAction", function(e){
 			// set vote as selected
 			var userId = "{{ user_info.user_id }}";
 			var voteCode = $(this).data("voteCode");
 			voteUserObjInstance.manageVoteCodeSelected(voteCode, userId);
 
-			return false;
+			// prevent default href event
+			e.preventDefault();
+
+			return true;
 		});
 
 		/* Function to perform a vote action */

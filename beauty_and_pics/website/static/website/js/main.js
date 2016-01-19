@@ -82,12 +82,15 @@ $(document).ready(function(){
 	});
 
 	/* function to change dropdown text element select */
-	$(document).on("click",".dropdown-menu li a", function(){
-		var selText = $(this).text();
-		$(this).parents('.btn-group').find('.dropdown-toggle').html(selText+' <span class="caret"></span>');
-		// todo:w
-		$(this).parents('.btn-group').removeClass()"";
-	});
+	/*$(".dropdown-menu li").on("click","a", function(){
+		console.log("bla");
+		// var selText = $(this).text();
+		// $(this).parents('.btn-group').find('.dropdown-toggle').html(selText+' <span class="caret"></span>');
+		alert("s");
+		// e.preventDefault();
+
+		return true;
+	});*/
 
 	// hide law cookie bar on window scroll event
 	// per ora lo commento
@@ -761,9 +764,9 @@ var bootstrapModalsObect = {
 							<a class="voteItemAction voteItem_notevole" data-vote-code="notevole" href="#"><img alt="Selezione" src="` + selectionImageUrl + `">Notevole</a>
 						</div>
 						<!-- per visualizzazione mobile -->
-						<div class="col-xs-12 visible-xs-block vote_type_dropdown no-gutter text-center">
+						<div class="col-xs-12 visible-xs-block vote_type_dropdown no-gutter margin_bottom_15 text-center">
 							<div class="btn-group">
-								<a aria-expanded="true" href="#" class="btn btn-default dropdown-toggle voteItemsDropdowAction" data-toggle="dropdown">
+								<a aria-expanded="false" href="#" class="btn btn-default dropdown-toggle voteItemsDropdowAction" data-toggle="dropdown">
 									Seleziona voto <span class="caret"></span>
 								</a>
 								<ul class="dropdown-menu">
@@ -784,7 +787,7 @@ var bootstrapModalsObect = {
 						<div class="col-xs-6 col-sm-12">
 							<!-- stats block -->
 							<div class="smile_metric">
-								<div class="stats_bar_label nomargin">Sorriso +<b class="metric_points">0</b></div>
+								<div class="stats_bar_label">Sorriso +<b class="metric_points">0</b></div>
 								<div class="stats_bar">
 									<div class="progress">
 										<div class="progress-bar progress-bar-warning" role="progressbar" style="width: 0%"></div>

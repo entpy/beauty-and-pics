@@ -32,6 +32,7 @@ class Vote(models.Model):
             * date
     """
 
+    # controllo che il from_user_id abbia la mail verificata
     def check_if_user_can_vote(self, from_user_id, to_user_id, request):
         """
         Function to check if a user can (re-)vote another user
@@ -82,15 +83,16 @@ class Vote(models.Model):
         """Function to perform a votation after validity check"""
 	from account_app.models.accounts import Account
 	from contest_app.models.contests import Contest
-
+	Account_obj = Account()
         return_var = False
+
         # controllo che il vote_code sia esistente, altrimenti non faccio nulla
         if vote_code:
             vote_code_data = self.get_single_vote_code_data(vote_code=vote_code)
             if vote_code_data:
                 # qualche get per ottenere gli oggetti
-                FromUser_obj = account_obj.get_user_about_id(user_id=from_user_id)
-                ToUser_obj = account_obj.get_user_about_id(user_id=to_user_id)
+                FromUser_obj = Account_obj.get_user_about_id(user_id=from_user_id)
+                ToUser_obj = Account_obj.get_user_about_id(user_id=to_user_id)
 
                 # insert points metrics
                 self.insert_votation_points(from_user_obj=FromUser_obj, to_user_obj=ToUser_obj)
@@ -101,20 +103,23 @@ class Vote(models.Model):
 
     def insert_votation_points(self, from_user_obj, to_user_obj):
         """Function to insert points for every metric"""
+	from contest_app.models.contests import Contest
 	from contest_app.models.metrics import Metric
+	Contest_obj = Contest()
+	Metric_obj = Metric()
 
-        Contest_obj = Contest_obj.get_active_contests_by_type(contest_type=to_user_obj.account.contest_type)
-        SmileMetric_obj = metric_obj.get_metric_by_name(name=project_constants.VOTE_METRICS_LIST["smile_metric"])
-        LookMetric_obj = metric_obj.get_metric_by_name(name=project_constants.VOTE_METRICS_LIST["look_metric"])
-        GlobalMetric_obj = metric_obj.get_metric_by_name(name=project_constants.VOTE_METRICS_LIST["global_metric"])
-        StyleMetric_obj = metric_obj.get_metric_by_name(name=project_constants.VOTE_METRICS_LIST["style_metric"])
+        ToUserContest_obj = Contest_obj.get_active_contests_by_type(contest_type=to_user_obj.account.contest_type)
+        SmileMetric_obj = Metric_obj.get_metric_by_name(name=project_constants.VOTE_METRICS_LIST["smile_metric"])
+        LookMetric_obj = Metric_obj.get_metric_by_name(name=project_constants.VOTE_METRICS_LIST["look_metric"])
+        GlobalMetric_obj = Metric_obj.get_metric_by_name(name=project_constants.VOTE_METRICS_LIST["global_metric"])
+        StyleMetric_obj = Metric_obj.get_metric_by_name(name=project_constants.VOTE_METRICS_LIST["style_metric"])
 
         # inserisco i punteggi per ogni metrica
         Point_obj = Point()
-        Point_obj.add_points(points=vote_code_data["points"][project_constants.VOTE_METRICS_LIST["smile_metric"]], metric_obj=SmileMetric_obj, user_obj=to_user_obj, contest_obj=Contest_obj)
-        Point_obj.add_points(points=vote_code_data["points"][project_constants.VOTE_METRICS_LIST["look_metric"]], metric_obj=LookMetric_obj, user_obj=to_user_obj, contest_obj=Contest_obj)
-        Point_obj.add_points(points=vote_code_data["points"][project_constants.VOTE_METRICS_LIST["global_metric"]], metric_obj=GlobalMetric_obj, user_obj=to_user_obj, contest_obj=Contest_obj)
-        Point_obj.add_points(points=vote_code_data["points"][project_constants.VOTE_METRICS_LIST["style_metric"]], metric_obj=StyleMetric_obj, user_obj=to_user_obj, contest_obj=Contest_obj)
+        Point_obj.add_points(points=vote_code_data["points"][project_constants.VOTE_METRICS_LIST["smile_metric"]], metric_obj=SmileMetric_obj, user_obj=to_user_obj, contest_obj=ToUserContest_obj)
+        Point_obj.add_points(points=vote_code_data["points"][project_constants.VOTE_METRICS_LIST["look_metric"]], metric_obj=LookMetric_obj, user_obj=to_user_obj, contest_obj=ToUserContest_obj)
+        Point_obj.add_points(points=vote_code_data["points"][project_constants.VOTE_METRICS_LIST["global_metric"]], metric_obj=GlobalMetric_obj, user_obj=to_user_obj, contest_obj=ToUserContest_obj)
+        Point_obj.add_points(points=vote_code_data["points"][project_constants.VOTE_METRICS_LIST["style_metric"]], metric_obj=StyleMetric_obj, user_obj=to_user_obj, contest_obj=ToUserContest_obj)
 
         return True
 

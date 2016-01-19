@@ -8,6 +8,7 @@ textarea { resize: none; }
 .margin_top_30 { margin-top: 30px; }
 .margin_top_20 { margin-top: 20px; }
 .margin_top_15 { margin-top: 15px; }
+.margin_bottom_15 { margin-bottom: 15px; }
 .margin_bottom_20 { margin-bottom: 20px; }
 .float_left { float: left; }
 .float_right { float: right; }
@@ -149,7 +150,7 @@ textarea { resize: none; }
 .vote_type_list a:hover, .vote_type_list a:active { text-decoration: none; }
 .vote_type_list a img { margin-right: 5px; visibility: hidden; }
 .vote_type_list a.selected_vote, .vote_type_list a.selected_vote img { font-weight: bold; visibility: visible; }
-.select_vote_type_container h4 { margin-top: 0px; margin-bottom: 15px; }
+.select_vote_type_container h4 { margin-top: 0px; margin-bottom: 0px; }
 .select_vote_type_container .progress { margin-bottom: 0px; }
 
 /* image grids {{{ */
