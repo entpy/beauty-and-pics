@@ -6850,12 +6850,6 @@ hr { border-color: #dcdcdc; }
 .breadcrumb > li span.separator { color: #cccccc; }
 .breadcrumb > li span.active_label { color: #2c3e50; font-size: 26px; }
 
-/* dropdown inside modal fix */
-.modal .dropdown-menu { z-index: 1051; -webkit-transform:translateZ(1051); }
-
-active_label
-/*.nav > li > a, h3, .h3, .alert { margin-left: 5px; margin-right: 5px; }*/
-
 /* new bootstrap column {{{ */
 .col-xs-15,
 .col-sm-15,

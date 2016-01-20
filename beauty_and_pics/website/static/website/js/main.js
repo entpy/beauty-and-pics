@@ -746,7 +746,14 @@ var bootstrapModalsObect = {
 			msg_text = 'Verifica il tuo indirizzo email per votare.';
 			descriptionMessageBlock = '<div class="alert alert-danger"><p>Attenzione per poter votare occorre verificare il proprio indirizzo email.<br /><a class="alert-link openResendConfirmationModalClickAction" href="#">Clicca qui</a> per verificarlo ora.</p></div>';
 		}
-		var messageBlockTemplate = '<div class="row">';
+
+		var messageBlockTemplate = '';
+		messageBlockTemplate += '<style>';
+		messageBlockTemplate += '/* dropdown css fix for android browser z-index error (only for this modal) */';
+		messageBlockTemplate += '.vote_points_container { position: relative; z-index: -1; }';
+		messageBlockTemplate += '.modal-content, .modal-footer { position: relative; z-index: -1; }';
+		messageBlockTemplate += '</style>';
+		messageBlockTemplate += '<div class="row">';
 		messageBlockTemplate += '<div class="col-md-12">';
 		messageBlockTemplate += descriptionMessageBlock;
 		messageBlockTemplate += '</div>';
@@ -779,7 +786,7 @@ var bootstrapModalsObect = {
 		messageBlockTemplate += '</div>';
 		messageBlockTemplate += '</div>';
 		messageBlockTemplate += '</div>';
-		messageBlockTemplate += '<div class="col-sm-6 col-xs-12 no-gutter">';
+		messageBlockTemplate += '<div class="vote_points_container col-sm-6 col-xs-12 no-gutter">';
 		messageBlockTemplate += '<div class="col-xs-12">';
 		messageBlockTemplate += '<h4>Ripartizione punti:</h4>';
 		messageBlockTemplate += '</div>';
