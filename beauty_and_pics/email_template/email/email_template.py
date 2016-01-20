@@ -697,7 +697,6 @@ class CustomEmailTemplate():
 
         return True
 
-    # TODO: conferma email
     def user_activate_email(self):
         """
         Email on signup form

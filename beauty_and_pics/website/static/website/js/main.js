@@ -744,7 +744,7 @@ var bootstrapModalsObect = {
 			descriptionMessageBlock = '<div class="alert alert-warning"><p>Per votare occorre essere registrati, fallo ora per dare il tuo primo voto: <a class="alert-link" href="/registrazione-rapida/' + userId + '/">registrazione rapida</a></p></div>';
 		} else if (!emailVerified) {
 			msg_text = 'Verifica il tuo indirizzo email per votare.';
-			descriptionMessageBlock = '<div class="alert alert-danger"><p>Attenzione per poter votare occorre verificare il proprio indirizzo email.<br /><a class="alert-link openResendConfirmationModalClickAction" href="#">Clicca qui</a> per verificarlo ora.</p></div>';
+			descriptionMessageBlock = '<div class="alert alert-danger"><p>Attenzione per poter votare devi verificare il tuo indirizzo email.<br /><a class="alert-link openResendConfirmationModalClickAction" href="#">Clicca qui</a> per verificarlo ora.</p></div>';
 		}
 
 		var messageBlockTemplate = '';
@@ -787,8 +787,8 @@ var bootstrapModalsObect = {
 		messageBlockTemplate += '</div>';
 		messageBlockTemplate += '</div>';
 		messageBlockTemplate += '<div class="vote_points_container col-sm-6 col-xs-12 no-gutter">';
-		messageBlockTemplate += '<div class="col-xs-12">';
-		messageBlockTemplate += '<h4>Ripartizione punti:</h4>';
+		messageBlockTemplate += '<div class="vote_points_container_title col-xs-12">';
+		messageBlockTemplate += '<h4>Ripartizione punti</h4>';
 		messageBlockTemplate += '</div>';
 		messageBlockTemplate += '<div class="col-xs-6 col-sm-12">';
 		messageBlockTemplate += '<!-- stats block -->';
