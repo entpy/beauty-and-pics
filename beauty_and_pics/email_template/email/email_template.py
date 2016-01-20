@@ -41,7 +41,7 @@ class CustomEmailTemplate():
 	    'email_from' : settings.NO_REPLY_EMAIL_ADDRESS,
 	    'email_to' : 'user_email',
 	},
-	'signup_email' : {
+	'welcome_email' : {
 	    'email_from' : settings.NO_REPLY_EMAIL_ADDRESS,
 	    'email_to' : 'user_email',
 	},
@@ -393,11 +393,11 @@ class CustomEmailTemplate():
 
         return True
 
-    def signup_email(self):
+    def welcome_email(self):
         """
         Email on signup form
         Context vars required:
-        ->    ['first_name', 'last_name',]
+        ->    ['first_name']
         """
 
 	# common email blocks
@@ -441,10 +441,10 @@ class CustomEmailTemplate():
             </table><br />
             Se hai dubbi, domande o consigli non esitare a chiedere :)...premendo il pulsante sotto!
 	"""
-	self.email_html_blocks["html_call_to_action_block"] = self.get_call_to_action_template(href=self.base_url + "/passerella/richiesta-aiuto", label="Richiedi aiuto")
+	self.email_html_blocks["html_call_to_action_block"] = self.get_call_to_action_template(href=self.base_url + "/passerella/richiesta-aiuto/", label="Richiedi aiuto")
 	# plain text email blocks
 	self.email_html_blocks["plain_main_text_block"] = "Ciao e grazie per la tua registrazione " + str(self.email_context.get("first_name")) + ".\nBeauty and Pics: il concorso più fico dell'universo."
-	self.email_html_blocks["plain_call_to_action_block"] = "Richiedi aiuto: " + self.base_url + "/passerella/richiesta-aiuto"
+	self.email_html_blocks["plain_call_to_action_block"] = "Richiedi aiuto: " + self.base_url + "/passerella/richiesta-aiuto/"
 
         # email subject
         self.email_subject = "Beauty & Pics ti da il benvenuto."

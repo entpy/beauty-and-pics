@@ -72,6 +72,10 @@ def www_email_confirm(request, auth_token):
     if account_obj.has_permission(user_obj=account_obj.user, permission_codename='user_verified'):
         return HttpResponseRedirect('/profilo/')
 
+    # send welcome email
+    email_context = { "first_name": account_obj.user.first_name }
+    CustomEmailTemplate(email_name="welcome_email", email_context=email_context, template_type="user", recipient_list=[account_obj.user.email,])
+
     # setting user as verified
     account_obj.add_user_permission(user_obj=account_obj.user, permission_codename='user_verified')
 
