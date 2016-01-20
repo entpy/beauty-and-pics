@@ -425,8 +425,8 @@ var bootstrapModalsObect = {
 
 	/* Function to reset bootstrap modal */
 	resetBootstrapModal: function() {
-		// chiudo eventuali modal aperte
-		// this.hideBootstrapModal();
+		// questo è un layer che non scompare se vengono aperte
+		// modal in modo consecutivo, quindi lo nascondo io forzatamente
 		$('.modal-backdrop').hide();
 		$(".bootstrap_modal").removeData();
 		$(".bootstrap_modal").remove();
@@ -443,14 +443,14 @@ var bootstrapModalsObect = {
 	},
 
 	/* Function to hide bootstrap modal */
-	hideBootstrapModal: function() {
+	/*hideBootstrapModal: function() {
 		// close previously opened bootstrap modal
 		$('.bootstrap_modal').modal('hide');
 		// fix per aprire modal in modo consecutivo
 		$('.modal-backdrop').hide();
 
 		return true;
-	},
+	},*/
 
 	/* Function to show popup message with bootstrap modal */
 	showPopupMessage : function(message, message_tags){
@@ -746,7 +746,7 @@ var bootstrapModalsObect = {
 			msg_text = 'Verifica il tuo indirizzo email per votare.';
 			descriptionMessageBlock = '<div class="alert alert-danger"><p>Attenzione per poter votare occorre verificare il proprio indirizzo email.<br /><a class="alert-link openResendConfirmationModalClickAction" href="#">Clicca qui</a> per verificarlo ora.</p></div>';
 		}
-		var messageBlockTemplate = '<div class="row">'
+		var messageBlockTemplate = '<div class="row">';
 		messageBlockTemplate += '<div class="col-md-12">';
 		messageBlockTemplate += descriptionMessageBlock;
 		messageBlockTemplate += '</div>';
