@@ -426,7 +426,8 @@ var bootstrapModalsObect = {
 	/* Function to reset bootstrap modal */
 	resetBootstrapModal: function() {
 		// chiudo eventuali modal aperte
-		this.hideBootstrapModal();
+		// this.hideBootstrapModal();
+		$('.modal-backdrop').hide();
 		$(".bootstrap_modal").removeData();
 		$(".bootstrap_modal").remove();
 		this.writeModalInsideBodyTag();
