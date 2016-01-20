@@ -762,6 +762,30 @@ var bootstrapModalsObect = {
 		messageBlockTemplate += '<a class="voteItemAction voteItem_impeccabile" data-vote-code="impeccabile" href="#"><img alt="Selezione" src="' + selectionImageUrl + '">Impeccabile</a>';
 		messageBlockTemplate += '<a class="voteItemAction voteItem_notevole" data-vote-code="notevole" href="#"><img alt="Selezione" src="' + selectionImageUrl + '">Notevole</a>';
 		messageBlockTemplate += '</div>';
+
+
+
+				messageBlockTemplate += '<!-- io sono un test -->';
+				messageBlockTemplate += '<div class="btn-group">';
+					messageBlockTemplate += '<a href="#" class="btn btn-default">8</a>';
+					messageBlockTemplate += '<div class="btn-group">';
+					messageBlockTemplate += '	<a href="#" class="btn btn-default dropdown-toggle" data-toggle="dropdown">Dropdown <span class="caret"></span></a>';
+					messageBlockTemplate += '	<ul class="dropdown-menu">';
+							messageBlockTemplate += '<li><a href="#">Dropdown link</a></li>';
+							messageBlockTemplate += '<li><a href="#">Dropdown link</a></li>';
+							messageBlockTemplate += '<li><a href="#">Dropdown link</a></li>';
+							messageBlockTemplate += '<li><a href="#">Dropdown link</a></li>';
+							messageBlockTemplate += '<li><a href="#">Dropdown link</a></li>';
+							messageBlockTemplate += '<li><a href="#">Dropdown link</a></li>';
+							messageBlockTemplate += '<li><a href="#">Dropdown link</a></li>';
+							messageBlockTemplate += '<li><a href="#">Dropdown link</a></li>';
+							messageBlockTemplate += '<li><a href="#">Dropdown link</a></li>';
+						messageBlockTemplate += '</ul>';
+					messageBlockTemplate += '</div>';
+				messageBlockTemplate += '</div>';
+
+
+
 		messageBlockTemplate += '<!-- per visualizzazione mobile -->';
 		messageBlockTemplate += '<div class="col-xs-12 visible-xs-block vote_type_dropdown no-gutter margin_bottom_15 text-center">';
 		messageBlockTemplate += '<div class="btn-group">';
