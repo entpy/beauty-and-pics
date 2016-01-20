@@ -57,6 +57,7 @@ class FormCommonUtils():
 	FormCommonUtils.__valid_form_class_list += ('ReportUserForm',)
 	FormCommonUtils.__valid_form_class_list += ('UnsubscribeForm',)
 	FormCommonUtils.__valid_form_class_list += ('GetPrizeForm',)
+	FormCommonUtils.__valid_form_class_list += ('FastRegisterForm',)
 
     def check_if_validation_method_is_valid(self, validation_method=False):
         """Checking if a validation method exists"""

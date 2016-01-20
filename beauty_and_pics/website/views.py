@@ -20,6 +20,7 @@ from beauty_and_pics.common_utils import CommonUtils
 from email_template.email.email_template import *
 # loading forms
 from custom_form_app.forms.register_form import *
+from custom_form_app.forms.fast_register_form import *
 from custom_form_app.forms.login_form import *
 from custom_form_app.forms.password_recover import *
 from custom_form_app.forms.account_edit_form import *
@@ -190,7 +191,7 @@ def www_forgot_password(request):
 
     return render(request, 'website/www/www_forgot_password.html', context)
 
-def www_register(request, user_id):
+def www_register(request):
     """View to show register page"""
 
     # if user already registered, redirect to profile page
@@ -205,13 +206,8 @@ def www_register(request, user_id):
 
         # check whether it's valid:
         if form.is_valid() and form.form_actions():
-            if user_id:
-                # se settato uno user id faccio redirect verso l'utente, mostrando un messaggio di successo
-                messages.add_message(request, settings.POPUP_SIMPLE_MESSAGE, 'Grazie per registrazione, ora puoi proseguire con la tua votazione.')
-                return HttpResponseRedirect('/passerella/dettaglio-utente/' + str(user_id))
-            else:
-                # altrimenti redirect to user profile
-                return HttpResponseRedirect('/profilo/1')
+            # altrimenti redirect to user profile
+            return HttpResponseRedirect('/profilo/1')
 
     # if a GET (or any other method) we'll create a blank form
     else:
@@ -223,6 +219,43 @@ def www_register(request, user_id):
     }
 
     return render(request, 'website/www/www_register.html', context)
+
+def www_fast_register(request, user_id):
+    """
+        View to show a fast register page, will be requested only:
+        first_name, gender, email, password
+    """
+
+    # if user already registered, redirect to profile page
+    if request.user.is_authenticated():
+	return HttpResponseRedirect('/profilo/')
+
+    # if this is a POST request we need to process the form data
+    if request.method == 'POST':
+        # create a form instance and populate it with data from the request:
+        form = FastRegisterForm(request.POST)
+        form.set_current_request(request=request)
+
+        # check whether it's valid:
+        if form.is_valid() and form.form_actions():
+            if user_id:
+                # se settato uno user id faccio redirect verso l'utente, mostrando un messaggio di successo
+                messages.add_message(request, settings.POPUP_SIMPLE_MESSAGE, 'Grazie per la registrazione, ora puoi proseguire con le votazioni.')
+                return HttpResponseRedirect('/passerella/dettaglio-utente/' + str(user_id))
+            else:
+                # altrimenti redirect to user profile
+                return HttpResponseRedirect('/profilo/1')
+
+    # if a GET (or any other method) we'll create a blank form
+    else:
+        form = FastRegisterForm()
+
+    context = {
+        "post" : request.POST,
+        "form": form,
+    }
+
+    return render(request, 'website/www/www_fast_register.html', context)
 
 def www_ranking_contest(request, contest_type, contest_year):
     """view to show a ranking table about contest and year"""

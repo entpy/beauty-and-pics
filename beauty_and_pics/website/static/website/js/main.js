@@ -741,7 +741,7 @@ var bootstrapModalsObect = {
 			descriptionMessageBlock = '<div class="alert alert-warning"><p>Ci spiace, fino all\'apertura del concorso non sarà possibile votare.</p></div>';
 		} else if (!userRegistered) {
 			msg_text = 'Per poter votare occorre essere registrati.';
-			descriptionMessageBlock = '<div class="alert alert-warning"><p>Per poter votare occorre essere registrati.<br /><a class="alert-link" href="/registrati/' + userId + '/">Registrati ora</a> per dare il tuo primo voto!</p></div>';
+			descriptionMessageBlock = '<div class="alert alert-warning"><p>Per votare occorre essere registrati, fallo ora per dare il tuo primo voto: <a class="alert-link" href="/registrazione-rapida/' + userId + '/">registrazione rapida</a></p></div>';
 		} else if (!emailVerified) {
 			msg_text = 'Verifica il tuo indirizzo email per votare.';
 			descriptionMessageBlock = '<div class="alert alert-danger"><p>Attenzione per poter votare occorre verificare il proprio indirizzo email.<br /><a class="alert-link openResendConfirmationModalClickAction" href="#">Clicca qui</a> per verificarlo ora.</p></div>';

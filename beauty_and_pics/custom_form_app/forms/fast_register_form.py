@@ -16,13 +16,9 @@ sys.setdefaultencoding("utf8")
 # Get an instance of a logger
 logger = logging.getLogger(__name__)
 
-class RegisterForm(forms.Form, FormCommonUtils):
+class FastRegisterForm(forms.Form, FormCommonUtils):
 
     first_name = forms.CharField(label='Nome', max_length=20, required=True)
-    last_name = forms.CharField(label='Cognome', max_length=20, required=False)
-    birthday_day = forms.ChoiceField(label='Giorno', required=True)
-    birthday_month = forms.ChoiceField(label='Mese', required=True)
-    birthday_year = forms.ChoiceField(label='Anno', required=True)
     gender = forms.ChoiceField(label='Sesso', required=True)
     email = forms.CharField(label='Email (valida)', max_length=75, required=True)
     password = forms.CharField(label='Password', max_length=100, required=True)
@@ -30,16 +26,12 @@ class RegisterForm(forms.Form, FormCommonUtils):
     # list of validator for this form
     custom_validation_list = (
         'check_all_fields_valid',
-        'check_user_is_adult',
 	'check_email_already_exists',
 	'check_email_is_valid',
     )
 
     # list of addictional validator fied
     addictional_validation_fields = {
-        "year":"birthday_year",
-        "month":"birthday_month",
-        "day":"birthday_day",
         "email":"email",
     }
 
@@ -48,38 +40,28 @@ class RegisterForm(forms.Form, FormCommonUtils):
 
     def __init__(self, *args, **kwargs):
         # parent forms.Form init
-        super(RegisterForm, self).__init__(*args, **kwargs)
+        super(FastRegisterForm, self).__init__(*args, **kwargs)
         FormCommonUtils.__init__(self)
 
 	# current form instance
-        self.validation_form = super(RegisterForm, self)
+        self.validation_form = super(FastRegisterForm, self)
 
         # setting addictional data to form fields
-        self.fields["birthday_day"].choices=self.get_days_select_choices()
-        self.fields["birthday_month"].choices=self.get_months_select_choices()
-        self.fields["birthday_year"].choices=self.get_years_select_choices()
         self.fields["gender"].choices=self.get_genders_select_choices()
 
     def clean(self):
-	super(RegisterForm, self).clean_form_custom()
+	super(FastRegisterForm, self).clean_form_custom()
         return True
 
     def save_form(self):
         return_var = False
         account_obj = Account()
-        # setting addictional fields
-        # building birthday date
-        birthday_date = account_obj.create_date(date_dictionary={"day" : self.form_validated_data.get("birthday_day"), "month" : self.form_validated_data.get("birthday_month"), "year" : self.form_validated_data.get("birthday_year")}, get_isoformat=True)
-        if (birthday_date):
-            self.form_validated_data["birthday_date"] = birthday_date
-
         # saving new account
         try:
 	    self.form_validated_data["status"] = 1
 
 	    # uppercase first name and last name
 	    self.form_validated_data["first_name"] = self.form_validated_data["first_name"].title()
-	    self.form_validated_data["last_name"] = self.form_validated_data["last_name"].title()
             # generate auth token
             self.form_validated_data["auth_token"] = account_obj.create_auth_token(email=self.form_validated_data["email"])
 
@@ -94,8 +76,6 @@ class RegisterForm(forms.Form, FormCommonUtils):
             self._errors = {"__all__": ["Errore nel salvataggio del tuo account. Sii gentile, segnala il problema (Codice " + str(UserUpdateDataError.get_error_code) + ")"]}
         else:
             logger.info("Utente salvato con successo, invio la mail con token di conferma")
-            # send email with activation key
-            self.send_activation_email()
             return_var = True
 
         return return_var
@@ -160,11 +140,13 @@ class RegisterForm(forms.Form, FormCommonUtils):
     def form_actions(self):
         """Function to create new user and logging into website"""
         return_var = False
-        if super(RegisterForm, self).form_can_perform_actions():
+        if super(FastRegisterForm, self).form_can_perform_actions():
             # try to save form data
             if self.save_form():
                 # send welcome email
                 # self.send_welcome_email()
+                # send email with activation key
+                self.send_activation_email()
                 # try to log user in
                 if self.log_user():
                     return_var = True
