@@ -710,7 +710,7 @@ var bootstrapModalsObect = {
 		messageBlockTemplate += '<div class="row">';
 		messageBlockTemplate += '<div class="col-md-12 resendEmailConfirmationContainerAction">';
 		messageBlockTemplate += '<p>';
-		messageBlockTemplate += 'Una mail di verifica ti è stata inviata in fase di registrazione, tuttavia puoi riceverne un\'altra premendo il pulsante <b>"Inviami email di verifica"</b> sottostante.<br />Infine, per confermare il tuo account, clicca sul link ricevuto.';
+		messageBlockTemplate += 'Una email di verifica ti è stata inviata in fase di registrazione, tuttavia puoi riceverne un\'altra premendo il pulsante <b>"Inviami email di verifica"</b>.<br />Infine, per confermare il tuo account, clicca sul link ricevuto via email.';
 		messageBlockTemplate += '</p>';
 		messageBlockTemplate += '<div class="row"><div class="col-xs-12 text-center"><button type="button" class="btn btn-success resendConfirmationEmailClickAction">Inviami email di verifica</button></div></div>';
 		messageBlockTemplate += '</div>';

@@ -448,6 +448,7 @@ class Account(models.Model):
             return_var["email"] = user_obj.email or ''
             # from user model }}}
             # from account model {{{
+
 	    try:
 		return_var["city"] = user_obj.account.city or ''
 		return_var["country"] = user_obj.account.country or ''
@@ -455,9 +456,15 @@ class Account(models.Model):
 		return_var["contest_type"] = user_obj.account.contest_type or ''
 		return_var["contest_type_code"] = user_obj.account.contest_type.code or ''
 		return_var["birthday_date"] = user_obj.account.birthday_date or ''
-		return_var["birthday_day"] = str(user_obj.account.birthday_date.day) or ''
-		return_var["birthday_month"] = str(user_obj.account.birthday_date.month) or ''
-		return_var["birthday_year"] = str(user_obj.account.birthday_date.year) or ''
+		return_var["birthday_day"] = None
+		if user_obj.account.birthday_date:
+		    return_var["birthday_day"] = str(user_obj.account.birthday_date.day) or ''
+		return_var["birthday_month"] = None
+		if user_obj.account.birthday_date:
+		    return_var["birthday_month"] = str(user_obj.account.birthday_date.month) or ''
+		return_var["birthday_year"] = None
+		if user_obj.account.birthday_date:
+		    return_var["birthday_year"] = str(user_obj.account.birthday_date.year) or ''
 		return_var["can_be_shown"] = user_obj.account.can_be_shown or ''
 		return_var["prize_status"] = user_obj.account.prize_status or ''
 		return_var["age"] = str(relativedelta(date.today(), user_obj.account.birthday_date).years) or ''

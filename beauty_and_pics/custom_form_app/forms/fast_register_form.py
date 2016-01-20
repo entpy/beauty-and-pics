@@ -100,7 +100,6 @@ class FastRegisterForm(forms.Form, FormCommonUtils):
 
         email_context = {
             "first_name": self.form_validated_data["first_name"],
-            "last_name": self.form_validated_data["last_name"],
             "auth_token": self.form_validated_data["auth_token"],
         }
         CustomEmailTemplate(
