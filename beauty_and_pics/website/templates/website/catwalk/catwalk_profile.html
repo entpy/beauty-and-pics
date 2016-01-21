@@ -204,13 +204,14 @@
 			var userId = "{{ user_info.user_id }}";
 			var userFirstName = "{{ user_info.first_name }}";
 			var selectionImagePath = "{% static 'website/img/selezione.png' %}";
+			var howItWorksImagePath = "{% static 'website/img/question-point.png' %}";
 			var contestIsOpen = {% if contest_is_open %}true{% else %}false{% endif %};
 			var userIsRegistered = {% if user_already_registered %}true{% else %}false{% endif %};
 			var emailIsVerified = {% if email_is_verified %}true{% else %}false{% endif %};
 			// reset votation data object
 			voteUserObjInstance.resetVotation();
 			// open bootstrap vote modal
-			bootstrapModalsObect.showVoteUserModal(userId, userFirstName, selectionImagePath, contestIsOpen, userIsRegistered, emailIsVerified);
+			bootstrapModalsObect.showVoteUserModal(userId, userFirstName, howItWorksImagePath, selectionImagePath, contestIsOpen, userIsRegistered, emailIsVerified);
 
 			return false;
 		});

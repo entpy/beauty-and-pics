@@ -724,7 +724,7 @@ var bootstrapModalsObect = {
 	},
 
 	/* Function to build and show vote user bootstrap modal */
-	showVoteUserModal: function(userId, userFirstName, selectionImageUrl, contestOpen, userRegistered, emailVerified) {
+	showVoteUserModal: function(userId, userFirstName, howItWorksImageUrl, selectionImageUrl, contestOpen, userRegistered, emailVerified) {
 		this.resetBootstrapModal();
 		var descriptionMessageBlock = "";
 		var enableVoteButton = false;
@@ -750,6 +750,7 @@ var bootstrapModalsObect = {
 		var messageBlockTemplate = '';
 		messageBlockTemplate += '<style>';
 		messageBlockTemplate += '/* dropdown css fix for android browser z-index error (only for this modal) */';
+		messageBlockTemplate += '.select_vote_type_container { position: relative; z-index: 1; }';
 		messageBlockTemplate += '.vote_points_container { position: relative; z-index: -1; }';
 		messageBlockTemplate += '.modal-content, .modal-footer { position: relative; z-index: -1; }';
 		messageBlockTemplate += '</style>';
@@ -771,6 +772,8 @@ var bootstrapModalsObect = {
 		messageBlockTemplate += '</div>';
 		messageBlockTemplate += '<!-- per visualizzazione mobile -->';
 		messageBlockTemplate += '<div class="col-xs-12 visible-xs-block vote_type_dropdown no-gutter margin_bottom_15 text-center">';
+		messageBlockTemplate += '<div class="display_table centered_page">';
+		messageBlockTemplate += '<div class="display_table_cell vertical_align_middle">';
 		messageBlockTemplate += '<div class="btn-group">';
 		messageBlockTemplate += '<a aria-expanded="false" href="#" class="btn btn-primary dropdown-toggle voteItemsDropdowAction" data-toggle="dropdown">';
 		messageBlockTemplate += 'Seleziona voto <span class="caret"></span>';
@@ -785,10 +788,16 @@ var bootstrapModalsObect = {
 		messageBlockTemplate += '</ul>';
 		messageBlockTemplate += '</div>';
 		messageBlockTemplate += '</div>';
+		messageBlockTemplate += '<div class="display_table_cell vertical_align_middle">';
+		messageBlockTemplate += '<a class="vote_how_it_works_link" href="#"><img class="vote_how_it_works_image" src="' + howItWorksImageUrl + '" alt="Come funziona?"></a>';
+		messageBlockTemplate += '</div>';
+		messageBlockTemplate += '</div>';
+		messageBlockTemplate += '</div>';
 		messageBlockTemplate += '</div>';
 		messageBlockTemplate += '<div class="vote_points_container col-sm-6 col-xs-12 no-gutter">';
 		messageBlockTemplate += '<div class="hidden-xs vote_points_container_title col-xs-12">';
-		messageBlockTemplate += '<h4>Ripartizione punti</h4>';
+		messageBlockTemplate += '<div><h4>Ripartizione punti</h4></div>';
+		messageBlockTemplate += '<div><a class="btn-link btn-xs no-gutter" href="#">Come funziona?</a></div>';
 		messageBlockTemplate += '</div>';
 		messageBlockTemplate += '<div class="col-xs-6 col-sm-12">';
 		messageBlockTemplate += '<!-- stats block -->';

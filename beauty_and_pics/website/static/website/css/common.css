@@ -21,6 +21,7 @@ textarea { resize: none; }
 .display_none { display: none; }
 .contest_timedelta { font-weight: bold; }
 .vertical_align_top { vertical-align: top; }
+.vertical_align_middle { vertical-align: middle; }
 .custom_checkbox { padding-top: 0px!important; }
 .custom_checkbox label { font-weight: bold; }
 .grid_disabled_link, .grid_disabled_link:hover, .grid_disabled_link:focus, .grid_disabled_link:active { color: gray; cursor: default; border-color: #e4e4e4!important; background-color: #e4e4e4!important; color: gray!important; }
@@ -28,6 +29,9 @@ textarea { resize: none; }
 .podium_user_image { max-width: 100%; }
 .no-gutter { padding-right: 0; padding-left: 0; }
 .disabled-only-graphics { box-shadow: none; cursor: not-allowed; opacity: 0.65; }
+/* table with div */
+.display_table { display: table; }
+.display_table_cell { display: table-cell; }
 
 
 /* page title block */
@@ -140,13 +144,6 @@ textarea { resize: none; }
 .user_top_info_container .user_top_info_space { min-width: 20px; width: 5%; }
 
 .user_details_container { display: inline-block; width: 100%; }
-/*.vote_user_container { display: inline-block; text-align: center; }
-.vote_user_container .vote_user_block { display: inline-block; margin: 0 auto 11px; }
-.vote_user_container .vote_user_button_container { margin-top: 10px; }
-.vote_user_container .vote_user_block .vote_user_metric_name { margin-bottom: 5px; text-align: left; }
-.vote_user_container .vote_user_block ul { background-color: #3498db; border: 2px solid #3498db; margin: 0; padding: 3px; }
-.vote_user_container .vote_user_block.votation_block_error ul { border: 2px solid red; }
-.vote_user_container .vote_user_block.votation_block_error .vote_user_metric_name { color: red; }*/
 .select_vote_type_container { margin: 0 auto; }
 .vote_type_list a { clear: both; float: left; display: inline-block; margin-bottom: 15px; }
 .vote_type_list a:hover, .vote_type_list a:active { text-decoration: none; }
@@ -154,6 +151,9 @@ textarea { resize: none; }
 .vote_type_list a.selected_vote, .vote_type_list a.selected_vote img { font-weight: bold; visibility: visible; }
 .select_vote_type_container h4 { margin-top: 0px; margin-bottom: 0px; }
 .select_vote_type_container .progress { margin-bottom: 0px; }
+.select_vote_type_container .vote_points_container_title { position: relative: z-index: 99991; }
+.select_vote_type_container .vote_type_dropdown .vote_how_it_works_link { margin-left: 15px; }
+.select_vote_type_container .vote_how_it_works_image { padding: 10px; }
 
 /* image grids {{{ */
 ul.grid_container { list-style: none; font-size: 0px; padding: 0px; }
