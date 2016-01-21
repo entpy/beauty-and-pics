@@ -7,6 +7,7 @@
 .nav.nav-tabs { margin: 10px 0 25px; }
 .nav-tabs > li { margin-bottom: 10px; width: 50%; }
 .form-control { margin-bottom: 5px; }
+.small-no-padding { padding: 0px; }
 /* bootstrap elements fix }}} */
 
 .display_only_small { display: inline-block; }

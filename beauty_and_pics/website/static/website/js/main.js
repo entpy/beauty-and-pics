@@ -754,7 +754,7 @@ var bootstrapModalsObect = {
 		messageBlockTemplate += '.modal-content, .modal-footer { position: relative; z-index: -1; }';
 		messageBlockTemplate += '</style>';
 		messageBlockTemplate += '<div class="row">';
-		messageBlockTemplate += '<div class="col-md-12">';
+		messageBlockTemplate += '<div class="col-md-12 small-no-padding">';
 		messageBlockTemplate += descriptionMessageBlock;
 		messageBlockTemplate += '</div>';
 		messageBlockTemplate += '</div>';
@@ -787,7 +787,7 @@ var bootstrapModalsObect = {
 		messageBlockTemplate += '</div>';
 		messageBlockTemplate += '</div>';
 		messageBlockTemplate += '<div class="vote_points_container col-sm-6 col-xs-12 no-gutter">';
-		messageBlockTemplate += '<div class="vote_points_container_title col-xs-12">';
+		messageBlockTemplate += '<div class="hidden-xs vote_points_container_title col-xs-12">';
 		messageBlockTemplate += '<h4>Ripartizione punti</h4>';
 		messageBlockTemplate += '</div>';
 		messageBlockTemplate += '<div class="col-xs-6 col-sm-12">';
