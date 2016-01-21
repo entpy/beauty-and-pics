@@ -405,8 +405,7 @@ class CustomEmailTemplate():
 	self.email_html_blocks["main_title_block"] = "Beauty and Pics ti da il benvenuto!"
 	# html text email blocks
 	self.email_html_blocks["html_main_text_block"] = """
-	    Ciao e grazie per la tua registrazione <b>""" + str(self.email_context.get("first_name")) + """</b>,<br />
-	    ecco alcuni consigli per iniziare a scalare la classifica di Beauty and Pics.<br />
+	    Prova anche tu a scalare la classifica di Beauty and Pics, ecco alcuni consigli per diventare una star del web.<br />
             <table style="width: 100%;">
                 <tr>
                     <td style="padding-top: 30px;">
