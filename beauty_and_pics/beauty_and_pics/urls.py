@@ -32,6 +32,8 @@ urlpatterns = patterns('',
     # activate account
     url(r'^conferma-email/(?P<auth_token>\w+)/$', 'website.views.www_email_confirm', name='www_email_confirm'),
     url(r'^email-confermata/$', 'website.views.www_email_successfully_confirmed', name='www_email_successfully_confirmed'),
+    # howto
+    url(r'^howto/le-votazioni$', 'website.views.www_howto_votations', name='www_howto_votations'),
 
     # catwalk
     url(r'^passerella/dettaglio-utente/(?P<user_id>\d+)/$', 'website.views.catwalk_profile', name='catwalk_profile'),
