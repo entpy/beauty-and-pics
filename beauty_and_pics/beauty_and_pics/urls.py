@@ -20,7 +20,7 @@ urlpatterns = patterns('',
     url(r'^logout/$', 'website.views.www_logout', name='www_logout'),
     url(r'^recupera-password/$', 'website.views.www_forgot_password', name='www_forgot_password'),
     url(r'^registrati/$', 'website.views.www_register', name='www_register'),
-    url(r'^registrazione-rapida/(?:(?P<user_id>\d+)/)$', 'website.views.www_fast_register', name='www_fast_register'),
+    url(r'^registrazione-rapida/(?:(?P<user_id>\d+)/)?$', 'website.views.www_fast_register', name='www_fast_register'),
     url(r'^privacy/$', 'website.views.www_privacy', name='www_privacy'),
     url(r'^termini-di-utilizzo/$', 'website.views.www_terms', name='www_terms'),
     url(r'^cookie-policy/$', 'website.views.www_cookie_policy', name='www_cookie_policy'),
@@ -33,7 +33,7 @@ urlpatterns = patterns('',
     url(r'^conferma-email/(?P<auth_token>\w+)/$', 'website.views.www_email_confirm', name='www_email_confirm'),
     url(r'^email-confermata/$', 'website.views.www_email_successfully_confirmed', name='www_email_successfully_confirmed'),
     # howto
-    url(r'^howto/le-votazioni$', 'website.views.www_howto_votations', name='www_howto_votations'),
+    url(r'^howto/le-votazioni/$', 'website.views.www_howto_votations', name='www_howto_votations'),
 
     # catwalk
     url(r'^passerella/dettaglio-utente/(?P<user_id>\d+)/$', 'website.views.catwalk_profile', name='catwalk_profile'),

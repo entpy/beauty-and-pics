@@ -81,6 +81,13 @@ $(document).ready(function(){
 		return false;
 	});
 
+	/* Function to manage toggle block like FAQ questions */
+	$(".toggle_block").on("click",".toggle_block_action", function(){
+		$(this).siblings(".toggle_block_content").toggle();
+
+		return false;
+	});
+
 	// hide law cookie bar on window scroll event
 	// per ora lo commento
 	/*$(document).on('scroll', window, function() {
@@ -427,7 +434,8 @@ var bootstrapModalsObect = {
 	resetBootstrapModal: function() {
 		// questo è un layer che non scompare se vengono aperte
 		// modal in modo consecutivo, quindi lo nascondo io forzatamente
-		$('.modal-backdrop').hide();
+		$('.modal-backdrop').remove();
+		$('body').attr("style", "padding-right: 0px;");
 		$(".bootstrap_modal").removeData();
 		$(".bootstrap_modal").remove();
 		this.writeModalInsideBodyTag();
@@ -789,7 +797,7 @@ var bootstrapModalsObect = {
 		messageBlockTemplate += '</div>';
 		messageBlockTemplate += '</div>';
 		messageBlockTemplate += '<div class="display_table_cell vertical_align_middle">';
-		messageBlockTemplate += '<a class="vote_how_it_works_link" href="#"><img class="vote_how_it_works_image" src="' + howItWorksImageUrl + '" alt="Come funziona?"></a>';
+		messageBlockTemplate += '<a class="vote_how_it_works_link" href="/howto/le-votazioni/"><img class="vote_how_it_works_image" src="' + howItWorksImageUrl + '" alt="Come funziona?"></a>';
 		messageBlockTemplate += '</div>';
 		messageBlockTemplate += '</div>';
 		messageBlockTemplate += '</div>';
@@ -797,7 +805,7 @@ var bootstrapModalsObect = {
 		messageBlockTemplate += '<div class="vote_points_container col-sm-6 col-xs-12 no-gutter">';
 		messageBlockTemplate += '<div class="hidden-xs vote_points_container_title col-xs-12">';
 		messageBlockTemplate += '<div><h4>Ripartizione punti</h4></div>';
-		messageBlockTemplate += '<div><a class="btn-link btn-xs no-gutter" href="#">Come funziona?</a></div>';
+		messageBlockTemplate += '<div><a class="btn-link btn-xs no-gutter" href="/howto/le-votazioni/">Come funziona?</a></div>';
 		messageBlockTemplate += '</div>';
 		messageBlockTemplate += '<div class="col-xs-6 col-sm-12">';
 		messageBlockTemplate += '<!-- stats block -->';

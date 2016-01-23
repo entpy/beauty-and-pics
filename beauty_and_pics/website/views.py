@@ -248,7 +248,7 @@ def www_fast_register(request, user_id):
                 return HttpResponseRedirect('/passerella/dettaglio-utente/' + str(user_id))
             else:
                 # altrimenti redirect to user profile
-                return HttpResponseRedirect('/profilo/1')
+                return HttpResponseRedirect('/passerella/')
 
     # if a GET (or any other method) we'll create a blank form
     else:
