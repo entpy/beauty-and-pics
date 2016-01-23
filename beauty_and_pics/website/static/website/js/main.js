@@ -745,14 +745,14 @@ var bootstrapModalsObect = {
 			descriptionMessageBlock = '<div class="alert alert-info"><p>Seleziona quale voto vuoi assegnare all\'utente. In base al voto scelto i punti verranno ripartiti su ogni metrica di valutazione.</p></div>';
 			enableVoteButton = true;
 		} else if (!contestOpen) {
-			msg_text = 'Fino all\'apertura del concorso non sarà possibile votare.';
+			msg_text = 'Fino all\'apertura del concorso non sarà possibile votare';
 			descriptionMessageBlock = '<div class="alert alert-warning"><p>Ci spiace, fino all\'apertura del concorso non sarà possibile votare.</p></div>';
 		} else if (!userRegistered) {
-			msg_text = 'Per poter votare occorre essere registrati.';
-			descriptionMessageBlock = '<div class="alert alert-warning"><p>Per votare occorre essere registrati, fallo ora per dare il tuo primo voto: <a class="alert-link" href="/registrazione-rapida/' + userId + '/">registrazione rapida</a></p></div>';
+			msg_text = 'Per votare devi prima registrarti';
+			descriptionMessageBlock = '<div class="alert alert-warning"><p>Per votare devi prima registrarti, fallo ora per dare il tuo primo voto. <a class="alert-link" href="/registrazione-rapida/' + userId + '/">Registrazione rapida</a></p></div>';
 		} else if (!emailVerified) {
-			msg_text = 'Verifica il tuo indirizzo email per votare.';
-			descriptionMessageBlock = '<div class="alert alert-danger"><p>Attenzione per poter votare devi verificare il tuo indirizzo email.<br /><a class="alert-link openResendConfirmationModalClickAction" href="#">Clicca qui</a> per verificarlo ora.</p></div>';
+			msg_text = 'Verifica il tuo indirizzo email per votare';
+			descriptionMessageBlock = '<div class="alert alert-danger"><p>Attenzione per votare devi prima verificare il tuo indirizzo email.<br /><a class="alert-link openResendConfirmationModalClickAction" href="#">Clicca qui</a> per verificarlo ora.</p></div>';
 		}
 
 		var messageBlockTemplate = '';
