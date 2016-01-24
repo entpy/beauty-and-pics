@@ -90,7 +90,9 @@ class Vote(models.Model):
 	from account_app.models.accounts import Account
 	from contest_app.models.contests import Contest
 	Account_obj = Account()
+        CommonUtils_obj = CommonUtils()
         return_var = False
+        client_ip_address = CommonUtils_obj.get_ip_address(request=request)
 
         # controllo che il vote_code sia esistente, altrimenti non faccio nulla
         if vote_code:
@@ -105,6 +107,13 @@ class Vote(models.Model):
 
                 # insert row in votes (per non permettere più il voto di questo utente)
                 self.insert_vote(from_user_obj=FromUser_obj, to_user_obj=ToUser_obj, request=request)
+
+		logger.debug("##nuova votazione##")
+		logger.debug("utente votato: " + str(ToUser_obj.email) + " (id: " + str(ToUser_obj.id) + ")")
+		logger.debug("votato da: " + str(FromUser_obj.email) + " (id: " + str(FromUser_obj.id) + ")")
+		logger.debug("codice di voto: " + str(vote_code))
+		logger.debug("indirizzo del votante: " + str(client_ip_address))
+
         return True
 
     def insert_votation_points(self, vote_code_data, from_user_obj, to_user_obj):
