@@ -84,3 +84,26 @@ class ContestTypeRequiredError(Exception):
     """A contest type is required, function called without this param."""
     get_error_code = "020"
     pass
+
+### votes.py {{{
+class PerformVotationDataMissingError(Exception):
+    """La funzione è stata chiamata senza tutti i parametri richiesti"""
+    get_error_code = "021"
+    pass
+class PerformVotationVoteCodeDataError(Exception):
+    """Il vote_code passato non è esistente nel dizionario"""
+    get_error_code = "022"
+    pass
+class PerformVotationFromUserMissingError(Exception):
+    """Non è stato possibile prelevare il from_user"""
+    get_error_code = "023"
+    pass
+class PerformVotationToUserMissingError(Exception):
+    """Non è stato possibile prelevare il to_user"""
+    get_error_code = "024"
+    pass
+class PerformVotationUserContestMissingError(Exception):
+    """Non è stato possibile prelevare il contest relativo all'utente"""
+    get_error_code = "025"
+    pass
+### votes.py }}}

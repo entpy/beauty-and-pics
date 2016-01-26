@@ -491,7 +491,7 @@ def catwalk_report_user(request, user_id):
 
         # check whether it's valid:
         if form.is_valid() and form.form_actions():
-            messages.add_message(request, messages.SUCCESS, 'L\'utente è stato segnalato, prenderemo dei provvedimenti appena possibile')
+            messages.add_message(request, messages.SUCCESS, 'L\'utente è stato segnalato, stiamo verificando!')
             # redirect to user profile
             return HttpResponseRedirect('/passerella/segnalazione-utente/' + user_id + '/')
 

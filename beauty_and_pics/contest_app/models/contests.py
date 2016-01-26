@@ -411,6 +411,7 @@ class Contest(models.Model):
             pass
         else:
             if self.get_contests_type_status(contest_type=account_data["contest_type"]) == project_constants.CONTEST_ACTIVE:
+                # account contest is active
                 return_var = True
 
         return return_var

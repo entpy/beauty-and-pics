@@ -38,7 +38,6 @@ class Vote(models.Model):
         Function to check if a user can (re-)vote another user
         1) controllo il cookie
         2) controllo data ultima votazione
-        3) controllo che gli ip non coincidano con un'altra votazione (più email da stesso ip) per ora non lo considero
         """
 
         # 1) controllo il cookie
@@ -57,14 +56,7 @@ class Vote(models.Model):
                 # user can't re-vote, raise an exception
                 raise UserAlreadyVotedError
             else:
-                """
-                # 3) controllo che gli ip non coincidano con un'altra votazione (più email da stesso ip)
-                if self.check_if_ipaddress_already_exists(ip_address=vote_obj.ip_address, request=request):
-                    # user can't re-vote, raise an exception
-                    raise UserAlreadyVotedError
-                else:
-                """
-                # user can (re-)vote this catwalker, remove user row from db table
+                # user can revote this catwalker, remove user row from db table
                 vote_obj.delete()
         except Vote.DoesNotExist:
             # user can vote this catwalker
@@ -72,47 +64,55 @@ class Vote(models.Model):
 
         return True
 
-    """
-    def check_if_ipaddress_already_exists(self, ip_address, request):
-        ""Function to check if ip address already exists""
-        return_var = False
-        CommonUtils_obj = CommonUtils()
-        client_ip_address = CommonUtils_obj.get_ip_address(request=request)
-
-        if client_ip_address == ip_address:
-            return_var = True
-
-        return return_var
-    """
-
     def perform_votation(self, from_user_id, to_user_id, vote_code, request):
-        """Function to perform a votation after validity check"""
+        """
+            Function to perform a votation after validity check.
+            Exceptions:
+            - PerformVotationDataMissingError
+            - PerformVotationVoteCodeDataError
+            - PerformVotationFromUserMissingError
+            - PerformVotationToUserMissingError
+            - PerformVotationUserContestMissingError
+        """
 	from account_app.models.accounts import Account
 	from contest_app.models.contests import Contest
 	Account_obj = Account()
         CommonUtils_obj = CommonUtils()
-        return_var = False
-        client_ip_address = CommonUtils_obj.get_ip_address(request=request)
 
         # controllo che il vote_code sia esistente, altrimenti non faccio nulla
-        if vote_code:
-            vote_code_data = self.get_single_vote_code_data(vote_code=vote_code)
-            if vote_code_data:
-                # qualche get per ottenere gli oggetti
-                FromUser_obj = Account_obj.get_user_about_id(user_id=from_user_id)
-                ToUser_obj = Account_obj.get_user_about_id(user_id=to_user_id)
+        if not from_user_id or not to_user_id or not vote_code or not request:
+            raise PerformVotationDataMissingError
 
-                # insert points metrics
-                self.insert_votation_points(vote_code_data=vote_code_data, from_user_obj=FromUser_obj, to_user_obj=ToUser_obj)
+        vote_code_data = self.get_single_vote_code_data(vote_code=vote_code)
+        if not vote_code_data:
+            raise PerformVotationVoteCodeDataError
 
-                # insert row in votes (per non permettere più il voto di questo utente)
-                self.insert_vote(from_user_obj=FromUser_obj, to_user_obj=ToUser_obj, request=request)
+        # qualche get per ottenere gli oggetti
+        try:
+            FromUser_obj = Account_obj.get_user_about_id(user_id=from_user_id)
+        except User.DoesNotExist:
+            raise PerformVotationFromUserMissingError
+        try:
+            ToUser_obj = Account_obj.get_user_about_id(user_id=to_user_id)
+        except User.DoesNotExist:
+            raise PerformVotationToUserMissingError
 
-		logger.debug("##nuova votazione##")
-		logger.debug("utente votato: " + str(ToUser_obj.email) + " (id: " + str(ToUser_obj.id) + ")")
-		logger.debug("votato da: " + str(FromUser_obj.email) + " (id: " + str(FromUser_obj.id) + ")")
-		logger.debug("codice di voto: " + str(vote_code))
-		logger.debug("indirizzo del votante: " + str(client_ip_address))
+        try:
+            # insert points metrics
+            self.insert_votation_points(vote_code_data=vote_code_data, from_user_obj=FromUser_obj, to_user_obj=ToUser_obj)
+        except PerformVotationUserContestMissingError
+            raise
+
+        # insert row in votes (per non permettere più il voto di questo utente)
+        self.insert_vote(from_user_obj=FromUser_obj, to_user_obj=ToUser_obj, request=request)
+
+        # some debug info
+        client_ip_address = CommonUtils_obj.get_ip_address(request=request)
+        logger.debug("##nuova votazione##")
+        logger.debug("utente votato: " + str(ToUser_obj.email) + " (id: " + str(ToUser_obj.id) + ")")
+        logger.debug("votato da: " + str(FromUser_obj.email) + " (id: " + str(FromUser_obj.id) + ")")
+        logger.debug("codice di voto: " + str(vote_code))
+        logger.debug("indirizzo IP del votante: " + str(client_ip_address))
 
         return True
 
@@ -123,7 +123,12 @@ class Vote(models.Model):
 	Contest_obj = Contest()
 	Metric_obj = Metric()
 
+        # retrieve to_user contest_obj
         ToUserContest_obj = Contest_obj.get_active_contests_by_type(contest_type=to_user_obj.account.contest_type)
+        if not ToUserContest_obj:
+            raise PerformVotationUserContestMissingError
+
+        # retrieve metrics obj
         SmileMetric_obj = Metric_obj.get_metric_by_name(name=project_constants.VOTE_METRICS_LIST["smile_metric"])
         LookMetric_obj = Metric_obj.get_metric_by_name(name=project_constants.VOTE_METRICS_LIST["look_metric"])
         GlobalMetric_obj = Metric_obj.get_metric_by_name(name=project_constants.VOTE_METRICS_LIST["global_metric"])
