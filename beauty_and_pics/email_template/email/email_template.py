@@ -679,7 +679,7 @@ class CustomEmailTemplate():
             </table>
         """
 	self.email_html_blocks["plain_main_text_block"] = """
-            * Email (di chi ha richiesto il premio) *: """ + str(self.email_context.get("email")) + """ \n
+            * Email (di chi ha richiesto il premio) *: """ + str(self.email_context.get("user_email")) + """ \n
             * Identificativo dell'utente *: """ + str(self.email_context.get("user_id")) + """ \n
             * Profilo dell'utente *: """ + str(self.email_context.get("user_profile_url")) + """ \n
             * Indirizzo *: """ + str(self.email_context.get("address")) + """ \n
