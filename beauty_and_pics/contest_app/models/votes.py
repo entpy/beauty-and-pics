@@ -100,7 +100,7 @@ class Vote(models.Model):
         try:
             # insert points metrics
             self.insert_votation_points(vote_code_data=vote_code_data, from_user_obj=FromUser_obj, to_user_obj=ToUser_obj)
-        except PerformVotationUserContestMissingError
+        except PerformVotationUserContestMissingError:
             raise
 
         # insert row in votes (per non permettere più il voto di questo utente)

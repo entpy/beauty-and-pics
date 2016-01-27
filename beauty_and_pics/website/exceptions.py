@@ -1,5 +1,6 @@
-# list of custom exceptions with error code
+# -*- coding: utf-8 -*-
 
+# list of custom exceptions with error code
 class UserCreateError(Exception):
     """Error in create user."""
     get_error_code = "001"

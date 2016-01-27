@@ -348,6 +348,7 @@ class ajaxManager():
         logger.debug("ajax_function: @@perform_voting@@")
         logger.debug("parametri della chiamata: " + str(self.request.POST))
 
+        Account_obj = Account()
         CommonUtils_obj = CommonUtils()
         Vote_obj = Vote()
         Contest_obj = Contest()
@@ -357,8 +358,12 @@ class ajaxManager():
         vote_code = self.request.POST.get("vote_code")
         error_msg = ""
 
-        # controllo che il contest sia aperto
-        if not Contest_obj.check_if_account_contest_is_active(user_id=to_user_id):
+	# controllo che l'utente votante abbia verificato la mail
+        if not Account_obj.has_permission(user_obj=self.request.user, permission_codename='user_verified'):
+	    logger.error("perform_voting error, utente non verificato")
+            error_msg = "Non è possibile votare se non viene verificato l'account."
+        elif not Contest_obj.check_if_account_contest_is_active(user_id=to_user_id):
+	    # controllo che il contest sia aperto
             logger.error("perform_voting error, contest non attivo | error code: " + str(ContestNotActiveError.get_error_code))
             error_msg = "Non è possibile votare fino all'apertura del concorso."
         else:
@@ -372,7 +377,7 @@ class ajaxManager():
                 try:
                     # try to perform voting
                     Vote_obj.perform_votation(from_user_id=from_user_id, to_user_id=to_user_id, vote_code=vote_code, request=self.request)
-                except PerformVotationDataMissingError, PerformVotationVoteCodeDataError, PerformVotationFromUserMissingError, PerformVotationToUserMissingError, PerformVotationUserContestMissingError:
+                except (PerformVotationDataMissingError, PerformVotationVoteCodeDataError, PerformVotationFromUserMissingError, PerformVotationToUserMissingError, PerformVotationUserContestMissingError):
                     logger.error("errore nella votazione di: " + str(to_user_id) + " da parte di: " + str(from_user_id) + " con vote code: " + str(vote_code))
                     error_msg = "Errore inaspettato nella votazione, per favore riprova più tardi."
                 else:
