@@ -211,10 +211,6 @@ class FormCommonUtils():
 	if email_to_check:
 	    # regexp to check if this is a valid email
             match = re.search('^[a-zA-Z0-9_-][^@]*@(?:[^\.@]+\.)+[a-zA-Z0-9_-]+$', email_to_check)
-            logger.debug("email da controllare: " + str(email_to_check))
-            logger.debug("match: " + str(match))
-            if match:
-                logger.debug("match group 0: " + str(match.group(0)))
             if match is None or not match.group(0):
 	        self.add_validation_error(None, "La mail inserita non è valida")
                 self.add_validation_error(self.addictional_validation_fields["email"], True)
@@ -229,7 +225,6 @@ class FormCommonUtils():
         birthday_date = account_obj.create_date(date_dictionary={"day" : birthday_dictionary.get("birthday_day"), "month" : birthday_dictionary.get("birthday_month"), "year" : birthday_dictionary.get("birthday_year")})
         if birthday_date:
             # date(yy/mm/dd)
-	    # TODO: in teoria funziona il date.today()
             today_date = date(year=date.today().year,month=date.today().month,day=date.today().day)
 
             # diff between two dates
