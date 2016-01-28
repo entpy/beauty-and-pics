@@ -1146,7 +1146,7 @@ var voteUserObject = {
 		if (!this.getVotationIsEnabled()) {
 			alert("Devi prima selezionare un voto.");
 		} else {
-			if (confirm("Confermi il voto? Potrai votare nuovamente questa persona tra 7 giorni.")) {
+			if (confirm("Confermi il voto? Potrai votare nuovamente questo partecipante tra 7 giorni.")) {
 				this.performVoteAction();
 			}
 		}
