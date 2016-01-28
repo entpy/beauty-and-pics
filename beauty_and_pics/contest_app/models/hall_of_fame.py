@@ -14,7 +14,7 @@ logger = logging.getLogger(__name__)
 class HallOfFame(models.Model):
     id_hall_of_fame = models.AutoField(primary_key=True)
     contest = models.ForeignKey('Contest')
-    user = models.ForeignKey(User, null=True)
+    user = models.ForeignKey(User)
     ranking = models.IntegerField()
     points = models.IntegerField()
     disqualified = models.IntegerField(default=0)
