@@ -14,7 +14,7 @@ logger = logging.getLogger(__name__)
 class HallOfFame(models.Model):
     id_hall_of_fame = models.AutoField(primary_key=True)
     contest = models.ForeignKey('Contest')
-    user = models.ForeignKey(User, null=True, on_delete=models.SET_NULL)
+    user = models.ForeignKey(User, null=True)
     ranking = models.IntegerField()
     points = models.IntegerField()
     disqualified = models.IntegerField(default=0)
@@ -166,6 +166,10 @@ class HallOfFame(models.Model):
         except ContestClosedNotExistsError, ContestTypeRequiredError:
             # non esistono ancora concorsi chiusi o nessun contest_type passato
             pass
+
+	# controllo che sia stato trovato un utente e che abbia il ranking = 1
+	if return_var and not int(return_var.get("ranking")) == 1:
+	    return_var = None
 
         if return_var:
             # identify contest winner title

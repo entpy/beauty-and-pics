@@ -93,6 +93,11 @@ def www_index(request):
     woman_contest_code = project_constants.WOMAN_CONTEST
     man_contest_code = project_constants.MAN_CONTEST
 
+    # retrieve contest winners (if exists)
+    woman_contest_winner = HallOfFame_obj.get_user_for_winner_block(contest_type=project_constants.WOMAN_CONTEST)
+    man_contest_winner = HallOfFame_obj.get_user_for_winner_block(contest_type=project_constants.MAN_CONTEST)
+
+    """
     try:
         # se esiste un vincitore per l'ultimo contest chiuso, lo mostro in home page
         woman_contest_winner = {}
@@ -108,6 +113,7 @@ def www_index(request):
     except ContestClosedNotExistsError, ContestTypeRequiredError:
         # il contest_type non ha contest chiusi, mostro immagine di default
         pass
+    """
 
     context = {
         "woman_contest_code" : woman_contest_code,
