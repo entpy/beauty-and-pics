@@ -95,7 +95,7 @@ class HallOfFame(models.Model):
 	return_var = None
 	Book_obj = Book()
 
-	logger.info("prelevo un utente specifico tra i top 100, contest: " + str(contest_type) + ", contest_year: " + str(contest_year) + ", user_id: " + str(user_id))
+	logger.debug("prelevo un utente specifico tra i top 100, contest: " + str(contest_type) + ", contest_year: " + str(contest_year) + ", user_id: " + str(user_id))
 
 	try:
 	    return_var = self.get_hall_of_fame_elements(contest_type=contest_type, contest_year=contest_year, user_id=user_id)
@@ -111,11 +111,11 @@ class HallOfFame(models.Model):
 
             if return_var["disqualified"]:
                 # l'utente è stato squalificato per una serie di motivi, sarà
-                # visibile in classifica senza punteggio e non ci sarà foto in home e passerella
+                # visibile in classifica senza punteggio ma non ci sarà foto in home e passerella
                 return_var = None
             else:
                 # carico anche l'immagine profilo dell'utente prelevato
-                logger.info("prelevo immagine profilo per user: " + str(return_var))
+                logger.debug("prelevo immagine profilo per user: " + str(return_var))
                 return_var["profile_image"] = Book_obj.get_profile_thumbnail_image_url(user_id=return_var["user__id"])
                 return_var["profile_thumbnail_image"] = Book_obj.get_profile_image_url(user_id=return_var["user__id"])
 

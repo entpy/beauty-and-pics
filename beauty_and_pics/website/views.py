@@ -94,8 +94,8 @@ def www_index(request):
     man_contest_code = project_constants.MAN_CONTEST
 
     # retrieve contest winners (if exists)
-    woman_contest_winner = HallOfFame_obj.get_user_for_winner_block(contest_type=project_constants.WOMAN_CONTEST)
-    man_contest_winner = HallOfFame_obj.get_user_for_winner_block(contest_type=project_constants.MAN_CONTEST)
+    woman_contest_winner = HallOfFame_obj.get_user_for_winner_block(contest_type=woman_contest_code)
+    man_contest_winner = HallOfFame_obj.get_user_for_winner_block(contest_type=man_contest_code)
 
     """
     try:

@@ -142,13 +142,15 @@ class CustomEmailTemplate():
 	"""Function to build dear block"""
 	return_var = "Caro utente,"
 	first_name = self.email_context.get("first_name")
+        """
 	last_name = self.email_context.get("last_name")
 	if last_name:
 	    last_name = " " + last_name
+        """
 
 	if first_name:
 	    # return_var = "Caro/a " + str(first_name)+str(last_name)+"," Dear First Name Last name,
-	    return_var = "Ciao " + str(first_name) + "," # Dear First Name, <- now use this
+	    return_var = str(first_name) + "," # Dear First Name, <- now use this
 
 	return return_var
 
