@@ -8,50 +8,54 @@
 
 <url>
   <loc>http://www.beautyandpics.com/</loc>
-  <changefreq>monthly</changefreq>
+  <changefreq>daily</changefreq>
 </url>
 <url>
   <loc>http://www.beautyandpics.com/index/</loc>
-  <changefreq>monthly</changefreq>
+  <changefreq>daily</changefreq>
 </url>
 <url>
   <loc>http://www.beautyandpics.com/registrati/</loc>
-  <changefreq>monthly</changefreq>
+  <changefreq>daily</changefreq>
 </url>
 <url>
   <loc>http://www.beautyandpics.com/login/</loc>
-  <changefreq>monthly</changefreq>
+  <changefreq>daily</changefreq>
 </url>
 <url>
   <loc>http://www.beautyandpics.com/il-concorso/</loc>
-  <changefreq>monthly</changefreq>
+  <changefreq>daily</changefreq>
 </url>
 <url>
   <loc>http://www.beautyandpics.com/come-funziona/</loc>
-  <changefreq>monthly</changefreq>
+  <changefreq>daily</changefreq>
 </url>
 <url>
   <loc>http://www.beautyandpics.com/come-iscriversi/</loc>
-  <changefreq>monthly</changefreq>
+  <changefreq>daily</changefreq>
 </url>
 <url>
   <loc>http://www.beautyandpics.com/passerella/woman-contest/</loc>
-  <changefreq>monthly</changefreq>
+  <changefreq>daily</changefreq>
 </url>
 <url>
   <loc>http://www.beautyandpics.com/passerella/man-contest/</loc>
-  <changefreq>monthly</changefreq>
+  <changefreq>daily</changefreq>
 </url>
 <url>
   <loc>http://www.beautyandpics.com/passerella/richiesta-aiuto/</loc>
-  <changefreq>monthly</changefreq>
+  <changefreq>daily</changefreq>
 </url>
 <url>
   <loc>http://www.beautyandpics.com/recupera-password/</loc>
-  <changefreq>monthly</changefreq>
+  <changefreq>daily</changefreq>
 </url>
 <url>
   <loc>http://www.beautyandpics.com/passerella/</loc>
-  <changefreq>monthly</changefreq>
+  <changefreq>daily</changefreq>
+</url>
+<url>
+  <loc>http://www.beautyandpics.com/howto/le-votazioni/</loc>
+  <changefreq>daily</changefreq>
 </url>
 </urlset>

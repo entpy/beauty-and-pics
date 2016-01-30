@@ -2,6 +2,7 @@
 User-agent: *
 Disallow: 
 Disallow: /404/
+Disallow: /segnalazione-utente/*
 Disallow: /privacy/
 Disallow: /cookie-policy/
 Disallow: /email-test/
