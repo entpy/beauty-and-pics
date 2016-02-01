@@ -86,3 +86,15 @@ use beautyandpics_production;
 UPDATE `account_app_account` SET `can_be_shown` = '1';
 - ora che tutti gli utenti sono felicemente ri-visibili impostare a '0' il flag 'can_be_shown'
   per quelli che non hanno caricato un'immagine profilo
+
+
+TODO 30/01/2016
+---------------
+
+V Invio mail premio
+Creazione messaggio per il sito
+V Creazione e pubblicazione comunicati stampa
+Scrivere qualcosa sui social
+Finire il restyling grafico del www (solo grafica)
+Fix del loader delle immagini (apro upload immagine profilo, poi chiudo e riapro upload immagine book mi viene dato un messaggio rosso)
+Realizzare il restyling del www

@@ -1,0 +1,15 @@
+Produzione sul server
+=====================
+
+$ source bin/activate
+    - installare con pip le app necessarie
+$ source bin/activate
+$ git branch (per sicurezza)
+    - a questo punto fare un'istanza del server per maggiore sicurezza
+$ git pull
+$ cd beauty_and_pics/
+$ python manage.py collectstatic
+$ python manage.py makemigrations
+$ python manage.py migrate
+$ python manage.py syncdb
+    - reload del webserver, in genere un bel init 6, 30 secondi di down e vai fratello!
