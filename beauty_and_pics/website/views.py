@@ -353,8 +353,12 @@ def www_podium(request, contest_type, contest_year, user_id):
     return render(request, 'website/www/www_podium.html', context)
 
 def www_howto_votations(request):
-    """view to to show howto about votations"""
+    """view to show howto about votations"""
     return render(request, 'website/www/howto/www_howto_votations.html', False)
+
+def www_features(request):
+    """view to show platform features"""
+    return render(request, 'website/www/howto/www_features.html', False)
 # }}}
 
 # catwalk {{{
