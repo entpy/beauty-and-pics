@@ -110,6 +110,7 @@ textarea { resize: none; }
 
 .info_block { padding: 90px 2.5%; }
 .info_block .block-vspace { height: 50px; }
+.info_block h4 { color: #459fdd; }
 /* three elements block */
 .info_block.three_elements_block { background-color: #e6e6e6; }
 .info_block.three_elements_block h1 { margin: 0 0 50px; }
@@ -129,12 +130,6 @@ textarea { resize: none; }
 /* www containers */
 .styled_container1 { border-radius: 4px; -moz-border-radius: 4px; background-color: #E0E0E0; display: inline-block; padding: 20px; width: 100%; }
 .generic_container { display: inline-block; text-align: left; }
-.generic_container1 .generic_container_block > div { float: left; }
-.generic_container1 .generic_container_block1 > .right > .top { background-color: #0e141a; color: #fff; font-size: 17px; margin-bottom: 30px; text-align: right; }
-.generic_container1 .generic_container_block1 > .right > .bottom { color: #fff; margin-top: 12px; }
-.generic_container1 .generic_container_block2 > .left > .top { background-color: #0e141a; color: #fff; font-size: 17px; margin-bottom: 30px; text-align: left; }
-.generic_container1 .generic_container_block2 > .left > .bottom { color: #fff; margin-top: 12px; }
-.generic_container1 .generic_container_block2 ul.ul_metrics_details {  }
 
 /* backend containers */
 .generic_container3 > .generic_container { float: left; }

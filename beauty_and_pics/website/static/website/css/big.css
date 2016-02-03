@@ -46,18 +46,6 @@
 .catwalk_container .catwalk_block1 { margin-left: 10%; }
 .catwalk_container .catwalk_block2 { margin-right: 10%; }
 
-/* www containers */
-.generic_container1 { min-height: 400px; width: 800px; }
-.generic_container2 { width: 550px; }
-.generic_container1 .generic_container_block1 > .left { margin-top: 70px; text-align: center; width: 300px; }
-.generic_container1 .generic_container_block1 > .right { width: 500px; }
-.generic_container1 .generic_container_block1 > .right > .top { padding: 5px 50px 5px 5px; }
-.generic_container1 .generic_container_block1 > .right > .bottom { margin-right: 35px; }
-.generic_container1 .generic_container_block2 > .right { margin-top: 70px; text-align: center; width: 300px; }
-.generic_container1 .generic_container_block2 > .left { width: 500px; }
-.generic_container1 .generic_container_block2 > .left > .top { padding: 5px 5px 5px 50px }
-.generic_container1 .generic_container_block2 > .left > .bottom { margin-left: 35px; }
-
 /* backend containers */
 .generic_container4 { margin-right: 20px; width: 900px; }
 .generic_container5 { width: 280px; }

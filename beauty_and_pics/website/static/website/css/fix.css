@@ -25,16 +25,6 @@
 .catwalk_container .catwalk_block { max-width: 330px; width: 39%; }
 /* www index page }}} */
 
-/* how it works page {{{ */
-.generic_container1 { max-width: 800px; width: 80%; }
-.generic_container1 .generic_container_block1 > .left img { width: 90%; }
-.generic_container1 .generic_container_block1 > .left { margin-left: 1%; width: 29%; }
-.generic_container1 .generic_container_block1 > .right { margin-left: 5%; width: 65%; }
-.generic_container1 .generic_container_block2 > .right img { width: 90%; }
-.generic_container1 .generic_container_block2 > .right { margin-right: 1%; width: 29%; }
-.generic_container1 .generic_container_block2 > .left { margin-right: 5%; width: 65%; }
-/* how it works page }}} */
-
 /* catwalk user details style {{{ */
 .user_details_container .user_details_left { width: 100%; margin-right: 0%; }
 .user_details_container .user_details_right { width: 100%; }

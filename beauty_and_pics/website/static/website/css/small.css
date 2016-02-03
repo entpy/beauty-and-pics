@@ -49,18 +49,6 @@
 /* www style {{{ */
 .catwalk_block { display: inline-block; float: none; max-width: 280px; width: 90%; }
 .generic_container { width: 100%; }
-.generic_container2 { width: 95%; max-width: 500px; }
-.generic_container1 { width: 95%; max-width: 500px; }
-.generic_container1 .generic_container_block1 .left { }
-.generic_container1 .generic_container_block1 .right { width: 100%; }
-.generic_container1 .generic_container_block2 .right { }
-.generic_container1 .generic_container_block2 .left { width: 100%; }
-.generic_container1 .generic_container_block1 > .right > .top { padding-right: 10%; }
-.generic_container1 .generic_container_block2 > .left > .top { padding-left: 10%; }
-.generic_container1 .generic_container_block1 > .right > .bottom { padding-right: 10%; }
-.generic_container1 .generic_container_block2 > .left > .bottom { padding-left: 10%; }
-.generic_container1 .text_image { text-align: center; margin-bottom: 20px; width: 100%; }
-.generic_container1 .text_image img { max-width: 180px; width: 95%; }
 /* www style }}} */
 
 /* profile section {{{ */
