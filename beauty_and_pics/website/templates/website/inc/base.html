@@ -188,22 +188,18 @@
 		{% endblock header %}
 
 		{# content inside image div here {{{ #}
-		{% block block0_0 %}
-			<section class="height_100">
-				<div class="image_background_container">
-					{% block block0_0_title %}
-						<div class="title_block margin_top_20">
-							<h1 class="title">{% block block0_0_title_h1 %}Main title{% endblock block0_0_title_h1 %}</h1>
-							<h4 class="description">{% block block0_0_title_h4 %}Page description{% endblock block0_0_title_h4 %}</h4>
-						</div>
-					{% endblock block0_0_title %}
-					<div class="left_100 text-center">
-						{% block block0_0_content %}
-						{% endblock block0_0_content %}
+		{% block www_block %}
+			<section class="www_container">
+				{% block www_block_content_wrapper %}
+					<div class="title_block">
+						<h1 class="title">{% block www_block_content_title_h1 %}www main title{% endblock www_block_content_title_h1 %}</h1>
+						<h4 class="description">{% block www_block_content_title_h4 %}www page description{% endblock www_block_content_title_h4 %}</h4>
 					</div>
-				</div>
+				{% endblock www_block_content_wrapper %}
+				{% block www_block_content %}
+				{% endblock www_block_content %}
 			</section>
-		{% endblock block0_0 %}
+		{% endblock www_block %}
 		{# content inside image div here }}} #}
 
 		{# content without image div here {{{ #}

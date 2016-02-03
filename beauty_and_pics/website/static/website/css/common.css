@@ -30,6 +30,10 @@ textarea { resize: none; }
 .no-gutter { padding-right: 0; padding-left: 0; }
 .disabled-only-graphics { box-shadow: none; cursor: not-allowed; opacity: 0.65; }
 
+/* www main block */
+.www_container { height: 100%; }
+.www_container .title_block { margin: 0; }
+
 /* hr style */
 .hr_1 { border-color: #2c3e50; border-style: dashed; }
 
@@ -44,7 +48,7 @@ textarea { resize: none; }
 
 /* page title block */
 .title_block { float: left; margin-bottom: 25px; padding: 6px 0 20px; text-align: center; width: 100%; background: -moz-linear-gradient(top, rgba(0,0,0,0.4) 0%, rgba(0,0,0,0.4) 100%); /* FF3.6+ */ background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(0,0,0,0.4)), color-stop(100%,rgba(0,0,0,0.4))); /* Chrome,Safari4+ */ background: -webkit-linear-gradient(top, rgba(0,0,0,0.4) 0%,rgba(0,0,0,0.4) 100%); /* Chrome10+,Safari5.1+ */ background: -o-linear-gradient(top, rgba(0,0,0,0.4) 0%,rgba(0,0,0,0.4) 100%); /* Opera 11.10+ */ background: -ms-linear-gradient(top, rgba(0,0,0,0.4) 0%,rgba(0,0,0,0.4) 100%); /* IE10+ */ background: linear-gradient(to bottom, rgba(0,0,0,0.4) 0%,rgba(0,0,0,0.4) 100%); /* W3C */ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#66000000', endColorstr='#66000000',GradientType=0 ); /* IE6-9 */ }
-.image_background_container { background: url(../img/background_page.jpg) no-repeat center top; -webkit-background-size: cover; -moz-background-size: cover; -o-background-size: cover; background-size: cover; /* max-height: 450px; */ height: 100%; }
+.image_background_container { background: url(../img/background_page.jpg) no-repeat center top; background-attachment: fixed; -webkit-background-size: cover; -moz-background-size: cover; -o-background-size: cover; background-size: cover; /* max-height: 450px; */ height: 100%; }
 
 /* cookie law {{{ */
 #cookie-law { background: #000 none repeat scroll 0 0; margin: 0 auto; width: 100%; }
@@ -105,9 +109,7 @@ textarea { resize: none; }
 .catwalk_container .catwalk_block .button_container { padding: 17px 0; }
 
 .info_block { padding: 90px 2.5%; }
-.info_block a { color: #18bc9c; }
 .info_block .block-vspace { height: 50px; }
-.three_elements_block *, .left_image_block * { color: #1a242f; }
 /* three elements block */
 .info_block.three_elements_block { background-color: #e6e6e6; }
 .info_block.three_elements_block h1 { margin: 0 0 50px; }

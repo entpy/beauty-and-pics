@@ -7,24 +7,24 @@
 {# page description #}
 {% block description %}Come iscriversi al concorso: per partecipare occorre solo essere maggiorenni e inserire i dati richesti nella pagina di registrazione.{% endblock %}
 
-{% block block0_0_title_h1 %}Vuoi sfilare sulla passerella?{% endblock %}
-{% block block0_0_title_h4 %}Partecipa anche tu{% endblock %}
+{% block www_block_content_title_h1 %}Vuoi sfilare sulla passerella?{% endblock %}
+{% block www_block_content_title_h4 %}Partecipa anche tu{% endblock %}
 
-{% block block0_0_content %}
-<div class="centered_page generic_container generic_container1 second_color last_page_element_margin">
-	<div class="generic_container_block generic_container_block1 left_100">
-		<div class="left display_only_big">
-			<img src="{% static "website/img/come-iscriversi.png" %}" alt="Come iscriversi">
-		</div>
-		<div class="right">
-			<span class="readable_text2">
-				<h4>Come iscriversi</h4>
-				<p>Vuoi metterti in gioco? La prossima o il prossimo mister {{ site_name }} potresti essere tu! Occorre solo essere maggiorenni. Per partecipare basta iscriversi cliccando sul pulsante "<a href="/registrati">Partecipa</a>", inserire i dati richiesti e caricare gli scatti fotografici migliori!</p>
-			</span>
-			<div class="text_image display_only_small">
-				<img src="{% static "website/img/come-iscriversi.png" %}" alt="Come iscriversi">
+{% block www_block_content %}
+<div class="left_100 info_block image_block left_image_block">
+	<div class="centered_page max_width_page">
+		<div class="row">
+			<div class="col-md-offset-1 col-md-7 col-md-push-4 info_block_text_container">
+				<div class="col-lg-8 no-gutter readable_text1">
+					<p>Vuoi metterti in gioco? La prossima o il prossimo mister {{ site_name }} potresti essere tu! Occorre solo essere maggiorenni. Per partecipare basta iscriversi cliccando sul pulsante "<a href="/registrati">Partecipa</a>", inserire i dati richiesti e caricare gli scatti fotografici migliori!</p>
+				</div>
+				<div class="col-lg-12 no-gutter"><a href="#">Maggiori informazioni</a></div>
+			</div>
+			<div class="col-md-4 col-md-pull-8 text-center">
+				<div class="visible-sm-inline-block visible-xs-inline-block col-xs-12 block-vspace"></div>
+				<img alt="Scopri il lato più apprezzato" src="{% static "website/img/come-iscriversi.png" %}">
 			</div>
 		</div>
 	</div>
 </div>
-{% endblock block0_0_content %}
+{% endblock www_block_content %}

@@ -358,7 +358,7 @@ def www_howto_votations(request):
 
 def www_features(request):
     """view to show platform features"""
-    return render(request, 'website/www/howto/www_features.html', False)
+    return render(request, 'website/www/www_features.html', False)
 # }}}
 
 # catwalk {{{

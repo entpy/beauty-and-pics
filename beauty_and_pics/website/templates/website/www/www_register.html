@@ -7,114 +7,120 @@
 {# page description #}
 {% block description %}Partecipa anche tu: registrati e partecipa in prima persona al concorso. Inserisci le informazioni richieste, clicca sul pulsante registrati e...buon concorso!{% endblock %}
 
-{% block block0_0_title_h1 %}Registrati adesso{% endblock %}
-{% block block0_0_title_h4 %}Sfila sulla passerella in pochi click{% endblock %}
+{% block www_block_content_title_h1 %}Registrati adesso{% endblock %}
+{% block www_block_content_title_h4 %}Sfila sulla passerella in pochi click{% endblock %}
 
-{% block block0_0_content %}
-<div class="centered_page generic_container generic_container2 last_page_element_margin">
-	{# register block #}
-	<div class="well bs-component">
-		{# messages block #}
-		<div class="error_container"></div>
-		{% if form.errors %}
-			<div class="row">
-				<div class="col-md-12">
-					<div class="alert alert-danger">
-						<h4>Uhm qualcosa non va!</h4>
-						<ul>
-							{% for form_error in form.non_field_errors %}
-								<li>{{ form_error }}</li>
-							{% endfor %}
-						</ul>
-					</div>
+{% block www_block_content %}
+<div class="left_100 info_block image_block left_image_block">
+	<div class="centered_page max_width_page">
+		<div class="row">
+			<div class="col-md-offset-1 col-md-7 col-md-push-4 no-gutter info_block_text_container">
+				{# register block #}
+				<div class="well bs-component">
+					{# messages block #}
+					<div class="error_container"></div>
+					{% if form.errors %}
+						<div class="row">
+							<div class="col-md-12 no-gutter">
+								<div class="alert alert-danger">
+									<h4>Uhm qualcosa non va!</h4>
+									<ul>
+										{% for form_error in form.non_field_errors %}
+											<li>{{ form_error }}</li>
+										{% endfor %}
+									</ul>
+								</div>
+							</div>
+						</div>
+					{% endif %}
+					<form class="form-horizontal ajax_form" method="post" action="">
+						{% csrf_token %}
+						<input type="hidden" name="form_class" value="RegisterForm">
+						<fieldset>
+							<div class="form-group {% if form.first_name.errors %}has-error{% endif %}">
+								<label for="{{ form.first_name.id_for_label }}" class="col-lg-4 control-label">{{ form.first_name.label }} *</label>
+								<div class="col-lg-8">
+									<input name="{{ form.first_name.name }}" class="form-control" id="{{ form.first_name.id_for_label }}" placeholder="{{ form.first_name.label }}" value="{{ post.first_name }}" type="text">
+								</div>
+							</div>
+							<div class="form-group {% if form.last_name.errors %}has-error{% endif %}">
+								<label for="{{ form.last_name.id_for_label }}" class="col-lg-4 control-label">{{ form.last_name.label }}</label>
+								<div class="col-lg-8">
+									<input name="{{ form.last_name.name }}" class="form-control" id="{{ form.last_name.id_for_label }}" placeholder="{{ form.last_name.label }}" value="{{ post.last_name }}" type="text">
+								</div>
+							</div>
+							<div class="form-group {% if form.birthday_day.errors or form.birthday_month.errors or form.birthday_year.errors %}has-error{% endif %}">
+								<label for="{{ form.birthday_day.id_for_label }}" class="col-lg-4 control-label">Data di nascita *</label>
+								<div class="col-lg-8">
+									<div class="col-lg-4 no-gutters">
+										<select name="{{ form.birthday_day.name }}" class="form-control" id="{{ form.birthday_day.id_for_label }}">
+											<option selected="selected">{{ form.birthday_day.label }}</option>
+											{% for key,value in form.fields.birthday_day.choices %}
+												<option value="{{ key }}" {% if post.birthday_day == key|slugify %}selected="selected"{% endif %}>{{ value }}</option>
+											{% endfor %}
+										</select>
+									</div>
+									<div class="col-lg-4 no-gutters">
+										<select name="{{ form.birthday_month.name }}" class="form-control">
+											<option selected="selected">{{ form.birthday_month.label }}</option>
+											{% for key,value in form.fields.birthday_month.choices %}
+												<option value="{{ key }}" {% if post.birthday_month == key|slugify %}selected="selected"{% endif %}>{{ value }}</option>
+											{% endfor %}
+										</select>
+									</div>
+									<div class="col-lg-4 no-gutters">
+										<select name="{{ form.birthday_year.name }}" class="form-control">
+											<option selected="selected">{{ form.birthday_year.label }}</option>
+											{% for key,value in form.fields.birthday_year.choices %}
+												<option value="{{ key }}" {% if post.birthday_year == key|slugify %}selected="selected"{% endif %}>{{ value }}</option>
+											{% endfor %}
+										</select>
+									</div>
+								</div>
+							</div>
+							<div class="form-group {% if form.gender.errors %}has-error{% endif %}">
+								<label for="{{ form.gender.id_for_label }}" class="col-lg-4 control-label">{{ form.gender.label }} *</label>
+								<div class="col-lg-8">
+									<div class="col-lg-4 no-gutters">
+										<select name="{{ form.gender.name }}" class="form-control" id="{{ form.gender.id_for_label }}">
+											<option selected="selected">{{ form.gender.label }}</option>
+											{% for key,value in form.fields.gender.choices %}
+												<option value="{{ key }}" {% if post.gender == key|slugify %}selected="selected"{% endif %}>{{ value }}</option>
+											{% endfor %}
+										</select>
+									</div>
+								</div>
+							</div>
+							<legend>Dati di accesso</legend>
+							<div class="form-group {% if form.email.errors %}has-error{% endif %}">
+								<label for="{{ form.email.id_for_label }}" class="col-lg-4 control-label">{{ form.email.label }} *</label>
+								<div class="col-lg-8">
+									<input name="{{ form.email.name }}" class="form-control" id="{{ form.email.id_for_label }}" placeholder="{{ form.email.label }}" value="{{ post.email }}" type="email">
+								</div>
+							</div>
+							<div class="form-group {% if form.password.errors %}has-error{% endif %}">
+								<label for="{{ form.password.id_for_label }}" class="col-lg-4 control-label">{{ form.password.label }} *</label>
+								<div class="col-lg-8">
+									<input name="{{ form.password.name }}" class="form-control" id="{{ form.password.id_for_label }}" placeholder="{{ form.password.label }}" type="password">
+								</div>
+							</div>
+							<div class="form-group">
+								<div class="col-lg-8 col-lg-offset-4">
+									<button type="submit" class="btn btn-primary submitButtonClickAction">Registrati</button>
+								</div>
+							</div>
+						</fieldset>
+					</form>
 				</div>
 			</div>
-		{% endif %}
-		<form class="form-horizontal ajax_form" method="post" action="">
-			{% csrf_token %}
-			<input type="hidden" name="form_class" value="RegisterForm">
-			<fieldset>
-				<legend>Registrati</legend>
-				<span class="help-block">
-					La prossima star di <b>{{ site_name }}</b> potresti essere tu.<br />Registrati ora e partecipa al concorso più fico dell'universo.
-				</span>
-				<div class="form-group {% if form.first_name.errors %}has-error{% endif %}">
-					<label for="{{ form.first_name.id_for_label }}" class="col-lg-4 control-label">{{ form.first_name.label }} *</label>
-					<div class="col-lg-8">
-						<input name="{{ form.first_name.name }}" class="form-control" id="{{ form.first_name.id_for_label }}" placeholder="{{ form.first_name.label }}" value="{{ post.first_name }}" type="text">
-					</div>
-				</div>
-				<div class="form-group {% if form.last_name.errors %}has-error{% endif %}">
-					<label for="{{ form.last_name.id_for_label }}" class="col-lg-4 control-label">{{ form.last_name.label }}</label>
-					<div class="col-lg-8">
-						<input name="{{ form.last_name.name }}" class="form-control" id="{{ form.last_name.id_for_label }}" placeholder="{{ form.last_name.label }}" value="{{ post.last_name }}" type="text">
-					</div>
-				</div>
-				<div class="form-group {% if form.birthday_day.errors or form.birthday_month.errors or form.birthday_year.errors %}has-error{% endif %}">
-					<label for="{{ form.birthday_day.id_for_label }}" class="col-lg-4 control-label">Data di nascita *</label>
-					<div class="col-lg-8">
-						<div class="col-lg-4 no-gutters">
-							<select name="{{ form.birthday_day.name }}" class="form-control" id="{{ form.birthday_day.id_for_label }}">
-								<option selected="selected">{{ form.birthday_day.label }}</option>
-								{% for key,value in form.fields.birthday_day.choices %}
-									<option value="{{ key }}" {% if post.birthday_day == key|slugify %}selected="selected"{% endif %}>{{ value }}</option>
-								{% endfor %}
-							</select>
-						</div>
-						<div class="col-lg-4 no-gutters">
-							<select name="{{ form.birthday_month.name }}" class="form-control">
-								<option selected="selected">{{ form.birthday_month.label }}</option>
-								{% for key,value in form.fields.birthday_month.choices %}
-									<option value="{{ key }}" {% if post.birthday_month == key|slugify %}selected="selected"{% endif %}>{{ value }}</option>
-								{% endfor %}
-							</select>
-						</div>
-						<div class="col-lg-4 no-gutters">
-							<select name="{{ form.birthday_year.name }}" class="form-control">
-								<option selected="selected">{{ form.birthday_year.label }}</option>
-								{% for key,value in form.fields.birthday_year.choices %}
-									<option value="{{ key }}" {% if post.birthday_year == key|slugify %}selected="selected"{% endif %}>{{ value }}</option>
-								{% endfor %}
-							</select>
-						</div>
-					</div>
-				</div>
-				<div class="form-group {% if form.gender.errors %}has-error{% endif %}">
-					<label for="{{ form.gender.id_for_label }}" class="col-lg-4 control-label">{{ form.gender.label }} *</label>
-					<div class="col-lg-8">
-						<div class="col-lg-4 no-gutters">
-							<select name="{{ form.gender.name }}" class="form-control" id="{{ form.gender.id_for_label }}">
-								<option selected="selected">{{ form.gender.label }}</option>
-								{% for key,value in form.fields.gender.choices %}
-									<option value="{{ key }}" {% if post.gender == key|slugify %}selected="selected"{% endif %}>{{ value }}</option>
-								{% endfor %}
-							</select>
-						</div>
-					</div>
-				</div>
-				<legend>Dati di accesso</legend>
-				<div class="form-group {% if form.email.errors %}has-error{% endif %}">
-					<label for="{{ form.email.id_for_label }}" class="col-lg-4 control-label">{{ form.email.label }} *</label>
-					<div class="col-lg-8">
-						<input name="{{ form.email.name }}" class="form-control" id="{{ form.email.id_for_label }}" placeholder="{{ form.email.label }}" value="{{ post.email }}" type="email">
-					</div>
-				</div>
-				<div class="form-group {% if form.password.errors %}has-error{% endif %}">
-					<label for="{{ form.password.id_for_label }}" class="col-lg-4 control-label">{{ form.password.label }} *</label>
-					<div class="col-lg-8">
-						<input name="{{ form.password.name }}" class="form-control" id="{{ form.password.id_for_label }}" placeholder="{{ form.password.label }}" type="password">
-					</div>
-				</div>
-				<div class="form-group">
-					<div class="col-lg-8 col-lg-offset-4">
-						<button type="submit" class="btn btn-primary submitButtonClickAction">Registrati</button>
-					</div>
-				</div>
-			</fieldset>
-		</form>
+			<div class="col-md-4 col-md-pull-8 text-center">
+				<div class="visible-sm-inline-block visible-xs-inline-block col-xs-12 block-vspace"></div>
+				<img src="{% static "website/img/lato-apprezzato.png" %}" alt="Il concorso">
+			</div>
+		</div>
 	</div>
 </div>
-{% endblock block0_0_content %}
+{% endblock www_block_content %}
 {% block custom_js %}
 <script>
 	$(document).ready(function(){
