@@ -7,27 +7,38 @@
 {# page description #}
 {% block description %}Il podio di {{ site_name }}. {{ podium_string }}: {{ podium_user.user__first_name }} {{ podium_user.user__last_name }}, anno {{ contest_start_date | date:"Y" }}{% endblock %}
 
-{% block www_block_content_title_h1 %}{% endblock %}
+{% block www_block_content_title_h1 %}Il podio{% endblock %}
 {% block www_block_content_title_h4 %}<a href="/classifica/{{ contest_type }}/{{ contest_start_date | date:"Y" }}/">{{ contest_name }}</a>, anno {{ contest_start_date | date:"Y" }}{% endblock %}
 
 {% block www_block_content %}
 <div class="left_100 info_block image_block left_image_block">
 	<div class="centered_page max_width_page">
 		<div class="row">
-			<div class="col-md-offset-1 col-md-7 col-md-push-4 info_block_text_container">
+			<div class="col-md-offset-2 col-md-6 col-md-push-4 info_block_text_container">
 				<div class="col-lg-8 no-gutter readable_text1">
-					<h4></h4>
-					<p><i>{{ podium_user.user__first_name }} {{ podium_user.user__last_name }}, {{ podium_string }} del {{ contest_name }}</a>, anno {{ contest_start_date | date:"Y" }}</i></p>
-					<div class="col-sm-8 no-gutter">
-						<a href="/passerella/dettaglio-utente/{{ podium_user.user__id }}/">
-							<img class="img-circle podium_user_image" src="{{ podium_user.profile_image }}" alt="{{ podium_user.user__first_name }} {{ podium_user.user__last_name }}">
-						</a>
+					<div class="col-xs-12 no-gutter podium_block">
+						<h4>Partecipante</h4>
+						<p>{{ podium_user.user__first_name }} {{ podium_user.user__last_name }}</p>
+						<h4>Posizione</h4>
+						<p>{{ podium_string }}</p>
+						<h4>Punteggio totalizzato</h4>
+						<p>{{ podium_user.points }}</p>
+						<h4>Profilo</h4>
+						<p><a href="/passerella/dettaglio-utente/{{ podium_user.user__id }}/">Visita il profilo completo</a></p>
 					</div>
 				</div>
 			</div>
-			<div class="col-md-4 col-md-pull-8 text-center">
+			<div class="col-md-4 col-md-pull-8 info_block_image_container text-center">
 				<div class="visible-sm-inline-block visible-xs-inline-block col-xs-12 block-vspace"></div>
-				<img src="{% static "website/img/podio/posizione_"|str_cat:podium_user.ranking|str_cat:".png" %}" alt="{{ podium_user.ranking }} posizione">
+				<div class="col-xs-10 col-xs-offset-1 no-gutter">
+					<a href="/passerella/dettaglio-utente/{{ podium_user.user__id }}/">
+						<img class="img-circle podium_user_image" src="{{ podium_user.profile_image }}" alt="{{ podium_user.user__first_name }} {{ podium_user.user__last_name }}">
+					</a>
+				</div>
+				<div class="col-xs-12 block-vspace"></div>
+				<div class="col-xs-6 col-xs-offset-3 no-gutter">
+					<img class="podium_user_medal" src="{% static "website/img/podio/posizione_"|str_cat:podium_user.ranking|str_cat:".png" %}" alt="{{ podium_user.ranking }} posizione">
+				</div>
 			</div>
 		</div>
 	</div>
