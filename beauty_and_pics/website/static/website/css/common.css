@@ -120,7 +120,7 @@ textarea { resize: none; }
 .info_block.right_image_block { background-color: #e6e6e6; }
 .info_block.image_block h1 { margin-bottom: 20px; margin-top: 0; }
 .info_block.image_block h4 { margin-bottom: 4px; margin-top: 0; }
-.info_block.image_block a { display: inline-block; margin-top: 7px; }
+/*.info_block.image_block a { display: inline-block; margin-top: 7px; }*/
 .info_block.image_block img { width: 80%; max-width: 500px; }
 /* register now block */
 .info_block.register_now_block { background-color: #3498db; }

@@ -7,16 +7,24 @@
 {# page description #}
 {% block description %}email verificata.{% endblock %}
 
-{% block block0_0_title_h1 %}Email verificata correttamente{% endblock %}
-{% block block0_0_title_h4 %}{% endblock %}
+{% block www_block_content_title_h1 %}Email verificata correttamente{% endblock %}
+{% block www_block_content_title_h4 %}{% endblock %}
 
-{% block block0_0_content %}
-<div class="centered_page generic_container second_color last_page_element_margin">
-	<div class="generic_container_block1 left_100">
-		<span class="readable_text2">
-			<p>Grazie per aver verificato la tua email, ora puoi utilizzare tutte le funzionalità di {{ site_name }}.</p>
-			<p><a href="/">Torna</a> in home page.</p>
-		</span>
+{% block www_block_content %}
+<div class="left_100 info_block image_block right_image_block">
+	<div class="centered_page max_width_page">
+		<div class="row">
+			<div class="col-md-offset-1 col-md-7 info_block_text_container">
+				<div class="col-lg-8 no-gutter readable_text1">
+					<p>Grazie per aver verificato la tua email, ora puoi utilizzare tutte le funzionalità di {{ site_name }}.</p>
+					<p><a href="/">Torna</a> in home page.</p>
+				</div>
+			</div>
+			<div class="col-md-4 text-center">
+				<div class="visible-sm-inline-block visible-xs-inline-block col-xs-12 block-vspace"></div>
+				<img src="{% static "website/img/il-concorso.png" %}" alt="Come funziona">
+			</div>
+		</div>
 	</div>
 </div>
-{% endblock block0_0_content %}
+{% endblock www_block_content %}
