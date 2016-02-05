@@ -65,7 +65,6 @@ textarea { resize: none; }
 .title_block h1, .title_block h2, .title_block h3, .title_block h4, .title_block h5, .title_block h6 { color: #fff; }
 .first_color { background-color: #2C3E50; }
 .second_color { background-color: #1A242F; }
-.third_color { background-color: #ECF0F1; }
 .navigation_container a { color: white; }
 .link_color { color: #18bc9c; }
 .notify_details_container p a { color:  #2c3e50; }
@@ -89,7 +88,8 @@ textarea { resize: none; }
 /* text block closed like FAQ questions */
 .toggle_block > .toggle_block_content { display: none; }
 .toggle_block > .toggle_block_action { cursor: pointer; }
-.toggle_block > .toggle_block_action:hover { color: #fff; }
+.toggle_block > .toggle_block_action { color: #18bc9c; }
+.toggle_block > .toggle_block_action:hover { text-decoration: underline; }
 
 /* footer style {{{ */
 .footer_container { display: inline-block; }
@@ -107,16 +107,16 @@ textarea { resize: none; }
 .catwalk_container .catwalk_block .image_container .image_container_inner .winner_text_container { color: #fff; padding: 9px 0; }
 .catwalk_container .catwalk_block .button_container { padding: 17px 0; }
 
+.info_block_color1 { background-color: #fff; }
+.info_block_color2 { background-color: #e6e6e6; }
 .info_block { padding: 90px 2.5%; }
 .info_block .block-vspace { height: 50px; }
+.info_block .alert h4 { color: #fff; }
 .info_block h4 { color: #459fdd; }
 /* three elements block */
-.info_block.three_elements_block { background-color: #e6e6e6; }
 .info_block.three_elements_block h1 { margin: 0 0 50px; }
 .info_block.three_elements_block h4 { margin-bottom: 16.5px; margin-top: 30.5px; }
 /* left image block */
-.info_block.left_image_block { background-color: #ffffff; }
-.info_block.right_image_block { background-color: #e6e6e6; }
 .info_block.image_block h1 { margin-bottom: 20px; margin-top: 0; }
 .info_block.image_block h4 { margin-bottom: 4px; margin-top: 0; }
 /*.info_block.image_block a { display: inline-block; margin-top: 7px; }*/
@@ -125,10 +125,7 @@ textarea { resize: none; }
 .info_block.register_now_block { background-color: #3498db; }
 .info_block.register_now_block * { color: #ffffff; }
 .info_block.register_now_block a:hover, .info_block.register_now_block a:active { color: #3498db; }
-/* podium block */
-/*.podium_block > p { text-align: right; }*/
-.podium_block .podium_user_image { width: 100px; }
-.podium_block .podium_user_medal { width: 50px; }
+.podium_user_medal { width: 50px; }
 
 /* www containers */
 .styled_container1 { border-radius: 4px; -moz-border-radius: 4px; background-color: #E0E0E0; display: inline-block; padding: 20px; width: 100%; }

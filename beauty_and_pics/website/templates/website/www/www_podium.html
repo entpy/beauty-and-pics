@@ -14,30 +14,27 @@
 <div class="left_100 info_block image_block left_image_block">
 	<div class="centered_page max_width_page">
 		<div class="row">
-			<div class="col-md-offset-2 col-md-6 col-md-push-4 info_block_text_container">
-				<div class="col-lg-8 no-gutter readable_text1">
-					<div class="col-xs-12 no-gutter podium_block">
+			<div class="col-xs-12 info_block_text_container">
+				<div class="col-md-6 col-md-offset-3 no-gutter readable_text1">
+					<div class="col-md-5 text-xs-center text-md-left no-gutter">
 						<h4>Partecipante</h4>
 						<p>{{ podium_user.user__first_name }} {{ podium_user.user__last_name }}</p>
 						<h4>Posizione</h4>
 						<p>{{ podium_string }}</p>
 						<h4>Punteggio totalizzato</h4>
 						<p>{{ podium_user.points }}</p>
-						<h4>Profilo</h4>
-						<p><a href="/passerella/dettaglio-utente/{{ podium_user.user__id }}/">Visita il profilo completo</a></p>
+						<h4>Badge ottenuto</h4>
+						<img class="podium_user_medal" src="{% static "website/img/podio/posizione_"|str_cat:podium_user.ranking|str_cat:".png" %}" alt="{{ podium_user.ranking }} posizione">
 					</div>
-				</div>
-			</div>
-			<div class="col-md-4 col-md-pull-8 info_block_image_container text-center">
-				<div class="visible-sm-inline-block visible-xs-inline-block col-xs-12 block-vspace"></div>
-				<div class="col-xs-10 col-xs-offset-1 no-gutter">
-					<a href="/passerella/dettaglio-utente/{{ podium_user.user__id }}/">
-						<img class="img-circle podium_user_image" src="{{ podium_user.profile_image }}" alt="{{ podium_user.user__first_name }} {{ podium_user.user__last_name }}">
-					</a>
-				</div>
-				<div class="col-xs-12 block-vspace"></div>
-				<div class="col-xs-6 col-xs-offset-3 no-gutter">
-					<img class="podium_user_medal" src="{% static "website/img/podio/posizione_"|str_cat:podium_user.ranking|str_cat:".png" %}" alt="{{ podium_user.ranking }} posizione">
+					<div class="col-xs-12 visible-xs-inline-block visible-sm-inline-block block-vspace"></div>
+					<div class="col-md-7 no-gutter text-xs-center text-md-right">
+						<div class="inline_block text-center">
+							<a href="/passerella/dettaglio-utente/{{ podium_user.user__id }}/">
+								<img class="img-circle podium_user_image" src="{{ podium_user.profile_image }}" alt="{{ podium_user.user__first_name }} {{ podium_user.user__last_name }}">
+							</a>
+							<p><a href="/passerella/dettaglio-utente/{{ podium_user.user__id }}/">Visita il profilo completo</a></p>
+						</div>
+					</div>
 				</div>
 			</div>
 		</div>
