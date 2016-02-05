@@ -11,10 +11,11 @@
 {% block www_block_content_title_h4 %}{% endblock %}
 
 {% block www_block_content %}
-<div class="left_100 info_block image_block left_image_block">
-	<div class="centered_page max_width_page">
-		<div class="row">
-			<div class="col-md-offset-1 col-md-7 col-md-push-4 no-gutter info_block_text_container">
+{# left image block {{{ #}
+<div class="container-fluid info_block info_block_color1">
+	<div class="row">
+		<div class="col-md-10 col-md-offset-1 no-gutter">
+			<div class="col-md-offset-1 col-md-7 col-md-push-4 info_block_text_container">
 				{# login block #}
 				<div class="well bs-component">
 					{# messages block #}
@@ -60,13 +61,14 @@
 					</form>
 				</div>
 			</div>
-			<div class="col-md-4 col-md-pull-8 info_block_image_container text-center">
+			<div class="col-md-4 col-md-pull-8 info_block_image_container text-xs-center text-md-left">
 				<div class="visible-sm-inline-block visible-xs-inline-block col-xs-12 block-vspace"></div>
 				<img alt="Scopri il lato più apprezzato" src="{% static "website/img/lato-apprezzato.png" %}">
 			</div>
 		</div>
 	</div>
 </div>
+{# }}} #}
 {% endblock www_block_content %}
 {% block custom_js %}
 <script>

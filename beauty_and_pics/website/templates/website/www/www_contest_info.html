@@ -11,24 +11,24 @@
 {% block www_block_content_title_h4 %}Una rapida panoramica{% endblock %}
 
 {% block www_block_content %}
-<div class="left_100 info_block image_block left_image_block info_block_color2">
-	<div class="centered_page max_width_page">
-		<div class="row">
-			<div class="col-md-10 col-md-offset-1 no-gutter">
-				<div class="col-md-offset-1 col-md-7 col-md-push-4 info_block_text_container">
-					<div class="readable_text1">
-						<p>{{ site_name }} è il primo concorso di bellezza online fatto a misura di web: una passerella permette ai concorrenti di "sfilare" per essere votati. Il concorso ha una durata di 11 mesi, al termine dei quali chi avrà totalizzato più punti verrà decretato miss o mister {{ site_name }}.</p>
-						<p>{{ site_name }} nasce per rendere i concorsi di bellezza più divertenti, interattivi e aperti a tutti.<br />Leggi <a href="/come-funziona">come funziona</a> il concorso!</p>
-					</div>
+{# left image block {{{ #}
+<div class="container-fluid info_block info_block_color2">
+	<div class="row">
+		<div class="col-md-10 col-md-offset-1 no-gutter">
+			<div class="col-md-offset-1 col-md-7 col-md-push-4 info_block_text_container">
+				<div class="readable_text1">
+					<p>{{ site_name }} è il primo concorso di bellezza online fatto a misura di web: una passerella permette ai concorrenti di "sfilare" per essere votati. Il concorso ha una durata di 11 mesi, al termine dei quali chi avrà totalizzato più punti verrà decretato miss o mister {{ site_name }}.</p>
+					<p>{{ site_name }} nasce per rendere i concorsi di bellezza più divertenti, interattivi e aperti a tutti.<br />Leggi <a href="/come-funziona">come funziona</a> il concorso!</p>
 				</div>
-				<div class="col-md-4 col-md-pull-8 info_block_image_container text-xs-center text-md-left">
-					<div class="visible-sm-inline-block visible-xs-inline-block col-xs-12 block-vspace"></div>
-					<img src="{% static "website/img/come-funziona.png" %}" alt="Il concorso">
-				</div>
+			</div>
+			<div class="col-md-4 col-md-pull-8 info_block_image_container text-xs-center text-md-left">
+				<div class="visible-sm-inline-block visible-xs-inline-block col-xs-12 block-vspace"></div>
+				<img src="{% static "website/img/come-funziona.png" %}" alt="Il concorso">
 			</div>
 		</div>
 	</div>
 </div>
+{# }}} #}
 {# Signup emphasis bottom block #}
 {% include "website/inc/include_blocks/signup_emphasis_bottom_block.html" %}
 {% endblock www_block_content %}

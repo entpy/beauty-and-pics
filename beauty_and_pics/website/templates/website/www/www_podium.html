@@ -11,11 +11,11 @@
 {% block www_block_content_title_h4 %}<a href="/classifica/{{ contest_type }}/{{ contest_start_date | date:"Y" }}/">{{ contest_name }}</a>, anno {{ contest_start_date | date:"Y" }}{% endblock %}
 
 {% block www_block_content %}
-<div class="left_100 info_block image_block left_image_block">
-	<div class="centered_page max_width_page">
-		<div class="row">
+<div class="container-fluid info_block info_block_color2">
+	<div class="row">
+		<div class="col-md-10 col-md-offset-1 no-gutter">
 			<div class="col-xs-12 info_block_text_container">
-				<div class="col-md-6 col-md-offset-3 no-gutter readable_text1">
+				<div class="col-md-8 col-md-offset-2 no-gutter readable_text1">
 					<div class="col-md-5 text-xs-center text-md-left no-gutter">
 						<h4>Partecipante</h4>
 						<p>{{ podium_user.user__first_name }} {{ podium_user.user__last_name }}</p>
