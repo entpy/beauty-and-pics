@@ -133,7 +133,7 @@ textarea { resize: none; }
 .podium_user_image { margin-bottom: 15px; }
 /* grid list block */
 .grid_list_block img { text-align: left; width: 100%; }
-.winner_block img { width: 100%; height: 100%; }
+.winner_block img { width: 100%; }
 .info_block.winner_block h1 { color: #fff; }
 .info_block.winner_block a { margin-top: 10px!important; }
 .woman-hall-of-fame-winner a { background-color: #ff11b5; border-color: #fff; }
