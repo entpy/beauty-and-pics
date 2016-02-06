@@ -22,9 +22,10 @@
 /* footer style }}} */
 
 /* www index page {{{ */
-.catwalk_container .catwalk_block { max-width: 330px; width: 39%; }
+/*.catwalk_container .catwalk_block { max-width: 330px; width: 39%; }
 .catwalk_container .catwalk_block1 { margin-left: 10%; }
-.catwalk_container .catwalk_block2 { margin-right: 10%; }
+.catwalk_container .catwalk_block2 { margin-right: 10%; }*/
+.catwalk_button_block { margin-top: 5%; }
 /* www index page }}} */
 
 /* catwalk user details style {{{ */

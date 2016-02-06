@@ -6835,6 +6835,14 @@ a.list-group-item-danger.active:focus {
 /* bootstrap theme custom style {{{ */
 .btn-login { background-color: transparent; border-color: #fff; border-style: solid; color: #fff; }
 .btn-login:hover { background-color: #fff; color: #2c3e50; }
+
+.btn-woman-catwalk { background-color: #ff11b5; border-color: #fff; border-style: solid; color: #fff; }
+.btn-woman-catwalk:hover { background-color: #fff; border-color: #ff11b5; color: #ff11b5; }
+.btn-man-catwalk { background-color: #3498db; border-color: #fff; border-style: solid; color: #fff; }
+.btn-man-catwalk:hover { background-color: #fff; border-color: #3498db; color: #3498db; }
+
+
+
 .well { padding: 50px; }
 .no-gutters { padding-right: 0; padding-left: 0; }
 .progress { height: 16px; }

@@ -47,8 +47,9 @@
 /* footer style }}} */
 
 /* www style {{{ */
-.catwalk_block { display: inline-block; float: none; max-width: 280px; width: 90%; }
-.catwalk_container { margin-top: 15px; }
+/*.catwalk_block { display: inline-block; float: none; max-width: 280px; width: 90%; }*/
+.catwalk_button_block { margin-top: 5%; }
+/*.catwalk_container { margin-top: 15px; }*/
 .generic_container { width: 100%; }
 /* www style }}} */
 

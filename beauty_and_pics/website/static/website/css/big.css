@@ -41,10 +41,11 @@
 /* footer style }}} */
 
 /* www index page */
-.catwalk_container { margin-top: 35px; }
+/*.catwalk_container { margin-top: 35px; }
 .catwalk_container .catwalk_block { width: 330px; }
 .catwalk_container .catwalk_block1 { margin-left: 15%; }
-.catwalk_container .catwalk_block2 { margin-right: 15%; }
+.catwalk_container .catwalk_block2 { margin-right: 15%; }*/
+.catwalk_button_block { margin-top: 9%; }
 
 /* backend containers */
 .generic_container4 { margin-right: 20px; width: 900px; }
