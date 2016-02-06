@@ -38,7 +38,7 @@
 .title_block { padding: 0 2.5%; }
 
 /* footer style {{{ */
-.footer_block { margin-top: 30px; }
+/*.footer_block { margin-top: 30px; }*/
 .footer_block .powered_by_container { margin-left: 2%; margin-right: 2%; width: 100%; }
 .footer_container { padding: 100px 0 25px; }
 .footer_block .powered_by_container .footer_year { display: block; }

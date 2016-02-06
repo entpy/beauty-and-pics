@@ -20,37 +20,35 @@
 					{% if top_100_users %}
 						<h4>Risultati:</h4>
 						<p>La classifica completa con i top 100 del <b>{{ contest_name }}, anno {{ contest_start_date | date:"Y" }}</b>. Consultala quando vuoi per leggere punteggio e posizione, clicca sul link "Vai al profilo" per visitare il profilo del partecipante, clicca sul nome di uno dei primi 5 partecipanti per andare alla pagina podio del concorso.</p><br />
-						<div class="col-xs-12">
-							<div class="table-responsive">
-								<table class="table table-striped table-hover ">
-									<thead>
-										<tr>
-											<th>#</th>
-											<th>Nome</th>
-											<th>Cognome</th>
-											<th>Punteggio</th>
-											<th>Profilo</th>
-										</tr>
-									</thead>
-									<tbody>
-									{% for user in top_100_users %}
-										<tr>
-											<td>{% if user.disqualified %}<span data-toggle="tooltip" data-placement="top" data-original-title="Partecipante con votazioni falsate">-</span>{% else %}{{ user.ranking }}{% endif %}</td>
-											<td>
-												{% if user.ranking >= 1 and user.ranking <= 5 and not user.disqualified %}
-													<a href="/podio/{{ contest_type }}/{{ contest_start_date | date:"Y" }}/{{ user.user__id }}/">{{ user.user__first_name }}</a>
-												{% else %}
-													{{ user.user__first_name }}
-												{% endif %}
-											</td>
-											<td>{{ user.user__last_name }}</td>
-											<td>{{ user.points }}</td>
-											<td><a href="/passerella/dettaglio-utente/{{ user.user__id }}/">Vai al profilo</a></td>
-										</tr>
-									{% endfor %}
-									</tbody>
-								</table>
-							</div>
+						<div class="table-responsive">
+							<table class="table table-striped table-hover ">
+								<thead>
+									<tr>
+										<th>#</th>
+										<th>Nome</th>
+										<th>Cognome</th>
+										<th>Punteggio</th>
+										<th>Profilo</th>
+									</tr>
+								</thead>
+								<tbody>
+								{% for user in top_100_users %}
+									<tr>
+										<td>{% if user.disqualified %}<span data-toggle="tooltip" data-placement="top" data-original-title="Partecipante con votazioni falsate">-</span>{% else %}{{ user.ranking }}{% endif %}</td>
+										<td>
+											{% if user.ranking >= 1 and user.ranking <= 5 and not user.disqualified %}
+												<a href="/podio/{{ contest_type }}/{{ contest_start_date | date:"Y" }}/{{ user.user__id }}/">{{ user.user__first_name }}</a>
+											{% else %}
+												{{ user.user__first_name }}
+											{% endif %}
+										</td>
+										<td>{{ user.user__last_name }}</td>
+										<td>{{ user.points }}</td>
+										<td><a href="/passerella/dettaglio-utente/{{ user.user__id }}/">Vai al profilo</a></td>
+									</tr>
+								{% endfor %}
+								</tbody>
+							</table>
 						</div>
 					{% else %}
 						<h4>Attenzione:</h4>

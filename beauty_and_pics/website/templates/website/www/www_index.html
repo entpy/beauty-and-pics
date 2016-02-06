@@ -7,11 +7,27 @@
 {# page description #}
 {% block description %}{{ site_name }}: è il primo concorso di bellezza online fatto a misura di web, i modelli e le modelle sfilano sulla passerella, chi al termine del concorso avrà ricevuto più voti, verrà decretato vincitore. Iscriviti anche tu e carica i tuoi scatti fotografici migliori.{% endblock %}
 
+{# custom page css block #}
+{% block custom_css %}
+<style>
+	html, body { background: url({% static "website/img/background_page.jpg" %}) no-repeat center top; background-attachment: fixed; -webkit-background-size: cover; -moz-background-size: cover; -o-background-size: cover; background-size: cover; /* max-height: 450px; */ height: 100%; }
+	{# change opacity between small and big screen #}
+	@media (max-width: 991px) {
+		.title_block { background: -moz-linear-gradient(top, rgba(0,0,0,0.6) 0%, rgba(0,0,0,0.6) 100%); /* FF3.6-15 */ background: -webkit-linear-gradient(top, rgba(0,0,0,0.6) 0%,rgba(0,0,0,0.6) 100%); /* Chrome10-25,Safari5.1-6 */ background: linear-gradient(to bottom, rgba(0,0,0,0.6) 0%,rgba(0,0,0,0.6) 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#99000000', endColorstr='#99000000',GradientType=0 ); /* IE6-9 */ }
+		.catwalk_container .catwalk_block { background: -moz-linear-gradient(top, rgba(0,0,0,0.6) 0%, rgba(0,0,0,0.6) 100%); /* FF3.6-15 */ background: -webkit-linear-gradient(top, rgba(0,0,0,0.6) 0%,rgba(0,0,0,0.6) 100%); /* Chrome10-25,Safari5.1-6 */ background: linear-gradient(to bottom, rgba(0,0,0,0.6) 0%,rgba(0,0,0,0.6) 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#99000000', endColorstr='#99000000',GradientType=0 ); /* IE6-9 */ }
+	}
+	@media (min-width: 992px) {
+		.title_block { /* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#000000+0,000000+100&0.25+0,0.25+100 */ background: -moz-linear-gradient(top, rgba(0,0,0,0.25) 0%, rgba(0,0,0,0.25) 100%); /* FF3.6-15 */ background: -webkit-linear-gradient(top, rgba(0,0,0,0.25) 0%,rgba(0,0,0,0.25) 100%); /* Chrome10-25,Safari5.1-6 */ background: linear-gradient(to bottom, rgba(0,0,0,0.25) 0%,rgba(0,0,0,0.25) 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#40000000', endColorstr='#40000000',GradientType=0 ); /* IE6-9 */ }
+		.catwalk_container .catwalk_block { /* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#000000+0,000000+100&0.25+0,0.25+100 */ background: -moz-linear-gradient(top, rgba(0,0,0,0.25) 0%, rgba(0,0,0,0.25) 100%); /* FF3.6-15 */ background: -webkit-linear-gradient(top, rgba(0,0,0,0.25) 0%,rgba(0,0,0,0.25) 100%); /* Chrome10-25,Safari5.1-6 */ background: linear-gradient(to bottom, rgba(0,0,0,0.25) 0%,rgba(0,0,0,0.25) 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#40000000', endColorstr='#40000000',GradientType=0 ); /* IE6-9 */ }
+	}
+</style>
+{% endblock %}
+
 {% block www_block_content_wrapper %}
 <div class="image_background_container">
 	<div class="title_block">
-		<h1 class="title">Main title</h1>
-		<h4 class="description">Page description index</h4>
+		<h1 class="title">Sfoggia il tuo stile sul web</h1>
+		<h4 class="description">La prossima star di {{ site_name }} potresti essere tu!</h4>
 	</div>
 	<div class="left_100 text-center">
 		<div class="catwalk_container">
@@ -24,7 +40,7 @@
 					<div class="image_container_inner">
 						{% if woman_contest_winner %}
 							<img class="img-circle" alt="{{ woman_contest_winner.user__first_name }} {{ woman_contest_winner.user__last_name }}" src="{{ woman_contest_winner.profile_image }}" width="150" height="150">
-							<div class="winner_text_container">{{ woman_contest_winner.user__first_name }} {{ woman_contest_winner.user__last_name }}, <em><a href="classifica/{{ woman_contest_code }}/">vincitrice anno {{ woman_contest_winner.contest__start_date | date:"Y" }}</a></em></div>
+							<div class="winner_text_container"><em>{{ woman_contest_winner.user__first_name }} {{ woman_contest_winner.user__last_name }}</em>, <a href="classifica/{{ woman_contest_code }}/">vincitrice anno {{ woman_contest_winner.contest__start_date | date:"Y" }}</a></div>
 						{% else %}
 							<img alt="Passerella donna" src="{% static "website/img/passerella_donna.png" %}" width="200" height="107">
 						{% endif %}
@@ -43,7 +59,7 @@
 					<div class="image_container_inner">
 						{% if man_contest_winner %}
 							<img class="img-circle" alt="{{ man_contest_winner.user__first_name }} {{ man_contest_winner.user__last_name }}" src="{{ man_contest_winner.profile_image }}" width="150" height="150">
-							<div class="winner_text_container">{{ man_contest_winner.user__first_name }} {{ man_contest_winner.user__last_name }}, <em><a href="classifica/{{ man_contest_code }}/">vincitore anno {{ man_contest_winner.contest__start_date | date:"Y" }}</a></em></div>
+							<div class="winner_text_container"><em>{{ man_contest_winner.user__first_name }} {{ man_contest_winner.user__last_name }}</em>, <a href="classifica/{{ man_contest_code }}/">vincitore anno {{ man_contest_winner.contest__start_date | date:"Y" }}</a></div>
 						{% else %}
 							<img alt="Passerella uomo" src="{% static "website/img/passerella_uomo.png" %}" width="190" height="107">
 						{% endif %}
@@ -110,7 +126,7 @@
 				<div class="col-lg-8 no-gutter readable_text1">
 					Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus id turpis tincidunt, cursus ante quis, congue metus. Sed congue erat eu tellus imperdiet blandit. Vivamus leo turpis, placerat eu posuere id, dignissim ut sem. Sed tincidunt varius posuere.
 				</div>
-				<div class="col-lg-12 no-gutter"><a href="#">Maggiori informazioni</a></div>
+				<div class="col-lg-12 no-gutter"><a href="/caratteristiche/">Maggiori informazioni</a></div>
 			</div>
 			<div class="col-md-4 col-md-pull-8 info_block_image_container text-xs-center text-md-left">
 				<div class="visible-sm-inline-block visible-xs-inline-block col-xs-12 block-vspace"></div>
@@ -130,9 +146,9 @@
 				<div class="col-lg-8 no-gutter readable_text1">
 					Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus id turpis tincidunt, cursus ante quis, congue metus. Sed congue erat eu tellus imperdiet blandit. Vivamus leo turpis, placerat eu posuere id, dignissim ut sem. Sed tincidunt varius posuere.
 				</div>
-				<div class="col-lg-12 no-gutter"><a href="#">Maggiori informazioni</a></div>
+				<div class="col-lg-12 no-gutter"><a href="/caratteristiche/">Maggiori informazioni</a></div>
 			</div>
-			<div class="col-md-5 info_block_image_container text-xs-center text-md-right">
+			<div class="col-md-offset-1 col-md-4 info_block_image_container text-xs-center text-md-right">
 				<div class="visible-sm-inline-block visible-xs-inline-block col-xs-12 block-vspace"></div>
 				<img alt="Scopri il lato più apprezzato" src="{% static "website/img/hall-of-fame.png" %}">
 			</div>
@@ -150,7 +166,7 @@
 				<div class="col-lg-8 no-gutter readable_text1">
 					Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus id turpis tincidunt, cursus ante quis, congue metus. Sed congue erat eu tellus imperdiet blandit. Vivamus leo turpis, placerat eu posuere id, dignissim ut sem. Sed tincidunt varius posuere.
 				</div>
-				<div class="col-lg-12 no-gutter"><a href="#">Maggiori informazioni</a></div>
+				<div class="col-lg-12 no-gutter"><a href="/caratteristiche/">Maggiori informazioni</a></div>
 			</div>
 			<div class="col-md-4 col-md-pull-8 info_block_image_container text-xs-center text-md-left">
 				<div class="visible-sm-inline-block visible-xs-inline-block col-xs-12 block-vspace"></div>

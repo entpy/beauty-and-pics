@@ -7,6 +7,9 @@
 {# page description #}
 {% block description %}{% endblock %}
 
+{# custom page css block #}
+{% block custom_css %}{% endblock %}
+
 {# set navigation type #}
 {#% block login-navigation %}{% endblock %#}
 {#% block no-login-navigation %}{{ block.super }}{% endblock %#}
@@ -15,10 +18,6 @@
 
 {# Custom page script block #}
 {% block custom_page_script %}{% endblock %}
-
-{# title block text #}
-{% block block0_0_title_h1 %}Sfoggia il tuo stile sul web{% endblock %}
-{% block block0_0_title_h4 %}La prossima star di {{ site_name }} potresti essere tu!{% endblock %}
 
 {# container content #}
 {% block block0_0_content %}{% endblock %}
