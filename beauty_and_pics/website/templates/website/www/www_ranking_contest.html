@@ -2,12 +2,12 @@
 {% load staticfiles %}
 
 {# page title #}
-{% block title %}{{ site_name }} | la classifica{% endblock %}
+{% block title %}{{ site_name }} | hall of fame{% endblock %}
 
 {# page description #}
-{% block description %}La classifica di {{ site_name }}, {{ contest_name }}, anno {{ contest_start_date | date:"Y" }}. Scopri il vincitore del concorso e consulta la classifica dei top 100 in qualsisi momento.{% endblock %}
+{% block description %}La Hall Of Fame di {{ site_name }}, {{ contest_name }}, anno {{ contest_start_date | date:"Y" }}. Scopri il vincitore del concorso e consulta la classifica dei top 100 in qualsisi momento.{% endblock %}
 
-{% block www_block_content_title_h1 %}La classifica{% endblock %}
+{% block www_block_content_title_h1 %}La Hall Of Fame{% endblock %}
 {% block www_block_content_title_h4 %}{{ contest_name }}{% if top_100_users %}, anno {{ contest_start_date | date:"Y" }}{% endif %}{% endblock %}
 
 {% block www_block_content %}

@@ -28,6 +28,7 @@ textarea { resize: none; }
 .image_action_button_space { margin-left: 13px; margin-right: 13px; }
 .no-gutter { padding-right: 0; padding-left: 0; }
 .disabled-only-graphics { box-shadow: none; cursor: not-allowed; opacity: 0.65; }
+.positio-relative { position: relative; }
 
 /* www main block */
 .www_container { height: 100%; }
@@ -48,7 +49,9 @@ textarea { resize: none; }
 /* page title block */
 .title_block { float: left; margin-bottom: 25px; padding: 6px 0 20px; text-align: center; width: 100%; background: -moz-linear-gradient(top, rgba(0,0,0,0.25) 0%, rgba(0,0,0,0.25) 100%); /* FF3.6-15 */ background: -webkit-linear-gradient(top, rgba(0,0,0,0.25) 0%,rgba(0,0,0,0.25) 100%); /* Chrome10-25,Safari5.1-6 */ background: linear-gradient(to bottom, rgba(0,0,0,0.25) 0%,rgba(0,0,0,0.25) 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#40000000', endColorstr='#40000000',GradientType=0 ); /* IE6-9 */ }
 .image_background_container { height: 100%; }
+.catwalk_button_block { position: relative; }
 .catwalk_button_block a { margin-bottom: 10px; }
+.scroll-to-bottom { left: 0; margin-left: auto; margin-right: auto; position: absolute; right: 0; text-align: center; top: -30px; }
 
 /* cookie law {{{ */
 #cookie-law { background: #000 none repeat scroll 0 0; margin: 0 auto; width: 100%; }
@@ -133,11 +136,17 @@ textarea { resize: none; }
 .podium_user_image { margin-bottom: 15px; }
 /* grid list block */
 .grid_list_block img { text-align: left; width: 100%; }
-.winner_block img { width: 100%; }
-.info_block.winner_block h1 { color: #fff; }
+.info_block.winner_block img { width: 100%; }
+.info_block.winner_block h1 { color: #2c3e50; }
 .info_block.winner_block a { margin-top: 10px!important; }
-.woman-hall-of-fame-winner a { background-color: #ff11b5; border-color: #fff; }
-.man-hall-of-fame-winner a { background-color: #3498db; border-color: #fff; }
+.info_block.winner_block .woman-hall-of-fame-winner img { border: 3px solid #ff11b5; }
+.info_block.winner_block .man-hall-of-fame-winner img { border: 3px solid #3498db; }
+.woman-hall-of-fame-winner a.btn { background-color: #ff11b5; border-color: #fff; color: #fff; }
+.man-hall-of-fame-winner a.btn { background-color: #3498db; border-color: #fff; color: #fff; }
+.woman-hall-of-fame-winner a.btn:hover,
+.woman-hall-of-fame-winner a.btn:active,
+.man-hall-of-fame-winner a.btn:hover,
+.man-hall-of-fame-winner a.btn:active { background-color: #fff; border-color: #2c3e50; color: #2c3e50; }
 
 /* www containers */
 .styled_container1 { border-radius: 4px; -moz-border-radius: 4px; background-color: #E0E0E0; display: inline-block; padding: 20px; width: 100%; }
