@@ -51,7 +51,8 @@ textarea { resize: none; }
 .image_background_container { height: 100%; }
 .catwalk_button_block { position: relative; }
 .catwalk_button_block a { margin-bottom: 10px; }
-.scroll-to-bottom { left: 0; margin-left: auto; margin-right: auto; position: absolute; right: 0; text-align: center; top: -30px; }
+.scroll-to-bottom { left: 0; margin-left: auto; margin-right: auto; position: absolute; right: 0; text-align: center; top: -100px; }
+.scroll-to-bottom img { cursor: pointer; }
 
 /* cookie law {{{ */
 #cookie-law { background: #000 none repeat scroll 0 0; margin: 0 auto; width: 100%; }
@@ -137,7 +138,7 @@ textarea { resize: none; }
 /* grid list block */
 .grid_list_block img { text-align: left; width: 100%; }
 .info_block.winner_block img { width: 100%; }
-.info_block.winner_block h1 { color: #2c3e50; }
+.info_block.winner_block h1 { color: #fff; }
 .info_block.winner_block a { margin-top: 10px!important; }
 .info_block.winner_block .woman-hall-of-fame-winner img { border: 3px solid #ff11b5; }
 .info_block.winner_block .man-hall-of-fame-winner img { border: 3px solid #3498db; }
@@ -153,6 +154,7 @@ textarea { resize: none; }
 .generic_container { display: inline-block; text-align: left; }
 
 /* backend containers */
+.generic_container3 { margin-bottom: 30px; }
 .generic_container3 > .generic_container { float: left; }
 .generic_container4, .generic_container6, .generic_container7, .generic_container9, .tip_container { border-radius: 4px; -moz-border-radius: 4px; background-color: #ecf0f1; }
 .generic_container6, .generic_container7, .generic_container9, .tip_container { width: 100%; }

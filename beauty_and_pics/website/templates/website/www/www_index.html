@@ -33,8 +33,10 @@
 </div>
 {% endblock www_block_content_wrapper %}
 {% block www_block_content %}
-<div class="left_100 info_block three_elements_block positio-relative info_block_color2">
-	<div class="scroll-to-bottom">V</div>
+<div id="scroll-element-1" class="left_100 info_block three_elements_block positio-relative info_block_color2">
+	<div class="hidden-xs hidden-sm scroll-to-bottom">
+		<img class="scrollTriggerAction" alt="Ulteriori informazioni" src="{% static "website/img/home-page-arrow.png" %}">
+	</div>
 	<div class="centered_page max_width_page">
 		<h1 class="text-center">Partecipa in 3 semplici mosse</h1>
 		<div class="row">
@@ -182,3 +184,16 @@
 {# Signup emphasis bottom block #}
 {% include "website/inc/include_blocks/signup_emphasis_bottom_block.html" %}
 {% endblock www_block_content %}
+
+{# page extra js #}
+{% block custom_js %}
+{{ block.super }}
+<script src="{% static "website/js/vendor/jquery.scrollTo.min.js" %}"></script>
+<script>
+	$(document).ready(function(){
+		$(document).on("click", ".scrollTriggerAction", function() {
+			$(document).scrollTo('#scroll-element-1', {duration:2000});
+		});
+	});
+</script>
+{% endblock %}
