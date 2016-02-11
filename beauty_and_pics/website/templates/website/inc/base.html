@@ -25,6 +25,17 @@
 
 		<title>{% block title %}{{ site_name }}: il concorso di bellezza più fico dell'universo{% endblock title %}</title>
 
+                <link rel="stylesheet" href="{% static "website/css/bootstrap.css" %}">
+                {# <link rel="stylesheet" href="{% static "website/css/bootstrap_custom.css" %}"> #}
+                <link rel="stylesheet" href="{% static "website/css/common.css" %}">
+                <link rel="stylesheet" href="{% static "website/css/main.css" %}">
+
+                {# IE8 CSS fix style sheets #}
+                <!--[if lte IE 9]>
+                        <link rel="stylesheet" type="text/css" href="{% static "website/css/big.css" %}" />
+                        <link rel="stylesheet" type="text/css" href="{% static "website/css/ie8-ie9_fix.css" %}" />
+                <![endif]-->
+
 		{# Custom page css block #}
 		{% block custom_css %}
 		{% endblock custom_css %}
@@ -297,17 +308,6 @@
 			</div>
 		</footer>
 		{% endblock footer %}
-
-		{# render-blocking JavaScript and CSS in above-the-fold content FIX {{{ #}
-		<link rel="stylesheet" href="{% static "website/css/bootstrap.css" %}">
-		<link rel="stylesheet" href="{% static "website/css/common.css" %}">
-		<link rel="stylesheet" href="{% static "website/css/main.css" %}">
-		{# IE8 CSS fix style sheets #}
-		<!--[if lte IE 9]>
-			<link rel="stylesheet" type="text/css" href="{% static "website/css/big.css" %}" />
-			<link rel="stylesheet" type="text/css" href="{% static "website/css/ie8-ie9_fix.css" %}" />
-		<![endif]-->
-		{# }}} #}
 
 		<script src="{% static "website/js/vendor/bootstrap.min.js" %}"></script>
 		<script src="{% static "website/js/vendor/jquery.cookie.js" %}"></script>
