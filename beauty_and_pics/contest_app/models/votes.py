@@ -108,11 +108,12 @@ class Vote(models.Model):
 
         # some debug info
         client_ip_address = CommonUtils_obj.get_ip_address(request=request)
-        logger.debug("##nuova votazione##")
+        logger.debug("####nuova votazione####")
         logger.debug("utente votato: " + str(ToUser_obj.email) + " (id: " + str(ToUser_obj.id) + ")")
         logger.debug("votato da: " + str(FromUser_obj.email) + " (id: " + str(FromUser_obj.id) + ")")
         logger.debug("codice di voto: " + str(vote_code))
         logger.debug("indirizzo IP del votante: " + str(client_ip_address))
+        logger.debug("####nuova votazione####")
 
         return True
 
