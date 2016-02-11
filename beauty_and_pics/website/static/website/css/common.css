@@ -27,7 +27,7 @@ textarea { resize: none; }
 .grid_disabled_link, .grid_disabled_link:hover, .grid_disabled_link:focus, .grid_disabled_link:active { color: gray; cursor: default; border-color: #e4e4e4!important; background-color: #e4e4e4!important; color: gray!important; }
 .image_action_button_space { margin-left: 13px; margin-right: 13px; }
 .no-gutter { padding-right: 0; padding-left: 0; }
-.disabled-only-graphics { box-shadow: none; cursor: not-allowed; opacity: 0.65; }
+.disabled-only-graphics { box-shadow: none; cursor: not-allowed; border-color: #BAC4C5; background-color: #BAC4C5; }
 .positio-relative { position: relative; }
 
 /* www main block */

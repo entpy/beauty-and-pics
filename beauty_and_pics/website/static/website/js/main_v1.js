@@ -760,7 +760,7 @@ var bootstrapModalsObect = {
 		messageBlockTemplate += '/* dropdown css fix for android browser z-index error (only for this modal) */';
 		messageBlockTemplate += '.select_vote_type_container { position: relative; z-index: 1; }';
 		messageBlockTemplate += '.vote_points_container { position: relative; z-index: -1; }';
-		messageBlockTemplate += '.modal-content, .modal-footer { position: relative; z-index: -1; }';
+		messageBlockTemplate += '.modal-content, .modal-footer { position: static; z-index: -1; }';
 		messageBlockTemplate += '</style>';
 		messageBlockTemplate += '<div class="row">';
 		messageBlockTemplate += '<div class="col-md-12 small-no-padding">';
