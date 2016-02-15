@@ -1,11 +1,10 @@
-<div class="text-center inline_block generic_container9 margin_bottom_20">
+<div class="text-center inline_block generic_container9">
 	<div class="title">
 		<h4>{{ contest_winner_title }} anno {{ contest_date|date:"Y" }}</h4>
 	</div>
 	<div class="winner_block_wrapper">
 		<div class="winner_block_name">{{ contest_winner_first_name }} {{ contest_winner_last_name }}</div>
 		<div class="winner_block_img"><img alt="Vincitore concorso" src="{{ profile_thumbnail_image }}"></div>
-		<div class="winner_block_points">{{ contest_winner_points }} punti</div>
 		{% if contest_winner_user_id %}
 			<div class="winner_block_button"><a class="btn btn-danger" href="/passerella/dettaglio-utente/{{ contest_winner_user_id }}/">Vedi profilo</a></div>
 		{% endif %}

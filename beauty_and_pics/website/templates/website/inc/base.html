@@ -211,7 +211,7 @@
 						<h4 class="description">{% block block0_1_title_h4 %}Page description{% endblock block0_1_title_h4 %}</h4>
 					</div>
 				{% endblock block0_1_title %}
-				<div class="left_100 text-center">
+				<div class="left_100 text-center backend_container">
 					<div class="generic_container generic_container3">
 						{# left block (with catwalk) #}
 						<div class="generic_container generic_container4">
@@ -247,6 +247,10 @@
 							{% endblock container4_content %}
 						</div>
 						<div class="generic_container generic_container5">
+							<div class="contest_expiring_block">
+								<div class="contest_timedelta_string_container"></div>
+								<div class="contest_status_container"></div>
+							</div>
 								{# page tip block (blocco a destra con titolo e descrizione) #}
 							{% block page_tip %}{% endblock %}
 								{# banner winner user #}
@@ -255,7 +259,7 @@
 							{% block photoboard_winner_banner %}{% endblock %}
 								{# banner andare alla passerella #}
 							{% block catwalk_banner %}
-							{% include "website/inc/include_blocks/banner.html" with main_title="Vai alla passerella!" subtitle="" img_src=static_url|str_cat:"website/img/passerella.png" img_alt="La passerella" button_url="/passerella/" button_label="La passerella" button_class="btn-success" background_class="banner_bg_dark_blue" only %}
+							{% include "website/inc/include_blocks/banner.html" with main_title="Vai alla passerella!" subtitle="" img_src=static_url|str_cat:"website/img/passerella.png" img_alt="La passerella" button_url="/passerella/" button_label="La passerella" button_class="btn-success" background_class="banner_A" only %}
 							{% endblock catwalk_banner %}
 
 							{# TODO: scommentare quanto segue per riabilitare il photoboard #}
@@ -263,7 +267,7 @@
 							{% comment %}
 							{% if exists_active_photoboard %}
 								{% block photoboard_list_banner %}
-								{% include "website/inc/include_blocks/banner.html" with main_title="Beauty and Pics" subtitle="della settimana" img_src=static_url|str_cat:"website/img/catwalk/show_photoboard.png" img_alt="Vai alla bacheca fotografica" button_url="/passerella/bacheca/" button_label="Guarda &amp; Scegli" button_class="btn-danger" background_class="banner_bg_light_blue" only %}
+								{% include "website/inc/include_blocks/banner.html" with main_title="Beauty and Pics" subtitle="della settimana" img_src=static_url|str_cat:"website/img/catwalk/show_photoboard.png" img_alt="Vai alla bacheca fotografica" button_url="/passerella/bacheca/" button_label="Guarda &amp; Scegli" button_class="btn-danger" background_class="banner_B" only %}
 								{% endblock photoboard_list_banner %}
 							{% endif %}
 							{% endcomment %}
