@@ -1436,9 +1436,8 @@ var elementsListObject = {
 		$.each(elementsList, function(index, singleElement) {
 			blockUrl = "/passerella/dettaglio-utente/" + singleElement.user_id;
 			blockThumbnailImageUrl = singleElement.thumbnail_image_url;
-			items += elementsListObject.getSingleHtmlBlock(blockUrl, blockThumbnailImageUrl);
+			items += elementsListObject.getSingleHtmlBlock(blockUrl, blockThumbnailImageUrl, false, false, false, singleElement.user_first_name + " " + singleElement.user_last_name);
 		});
-
 		// return jQuery object
 		return $(items);
 	},
@@ -1496,7 +1495,7 @@ var elementsListObject = {
 		return $(items);
 	},
 
-	getSingleHtmlBlock : function(blockUrl, blockThumbnailImageUrl, blockImageUrl, imgTagClass, imgId) {
+	getSingleHtmlBlock : function(blockUrl, blockThumbnailImageUrl, blockImageUrl, imgTagClass, imgId, imgAlt) {
 
 		returnVar = "";
 		if (!imgTagClass) {
@@ -1505,6 +1504,10 @@ var elementsListObject = {
 
 		if (!imgId) {
 			imgId = "";
+		}
+
+		if (!imgAlt) {
+			imgAlt = "Immagine del book";
 		}
 
 		if (blockUrl && blockThumbnailImageUrl) {
@@ -1516,7 +1519,7 @@ var elementsListObject = {
 			// retrieve bootstrap block size
 			var blockSize = this.getBlockSize();
 			// build html block with link and image
-			var returnVar = '<div class="col-lg-' + blockSize["lg_size"] + ' col-md-' + blockSize["md_size"] + ' col-xs-' + blockSize["xs_size"] + ' col-sm-' + blockSize["sm_size"] + ' thumb imgBlockContainer_' + imgId + '"><a href="' + blockUrl + '" class="thumbnail"><img alt="Immagine del book" src="' + blockThumbnailImageUrl + '" data-fullimage-url="' + blockImageUrl + '" data-image-id="' + imgId + '" class="img-responsive ' + imgTagClass + '"></a></div>'
+			var returnVar = '<div class="col-lg-' + blockSize["lg_size"] + ' col-md-' + blockSize["md_size"] + ' col-xs-' + blockSize["xs_size"] + ' col-sm-' + blockSize["sm_size"] + ' thumb imgBlockContainer_' + imgId + '"><a href="' + blockUrl + '" class="thumbnail"><img alt="' + imgAlt + '" src="' + blockThumbnailImageUrl + '" data-fullimage-url="' + blockImageUrl + '" data-image-id="' + imgId + '" class="img-responsive ' + imgTagClass + '"></a></div>'
 		}
 
 		return returnVar;

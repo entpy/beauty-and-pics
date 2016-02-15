@@ -18,13 +18,6 @@
 {# Custom page script block #}
 {% block custom_page_script %}{% endblock %}
 
-{# title block text #}
-{% comment %}
-{% block block0_1_title_h1 %}<span class="contest_timedelta_string_container"></span>{% endblock block0_1_title_h1 %}
-{% block block0_1_title_h4 %}<span class="contest_status_container"></span>{% endblock block0_1_title_h4 %}
-{% endcomment %}
-{% block block0_1_title %}{% endblock %}
-
 {# container title block, the page inside profile doesn't use a title #}
 {% block container4_title_block %}{% endblock %}
 
@@ -34,7 +27,21 @@
 
 {% block www_block %}{% endblock %}
 {# navigation block #}
-{% block container4_navigation %}{{ block.super }}{% endblock %}
+{% block container4_navigation %}
+	<div class="row">
+		<div class="col-sm-12">
+			<ul class="nav nav-pills">
+			<li class="{% block container4_navigation_profile_index %}{% endblock %}"><a href="/profilo/">Album fotografico</a></li>
+			{# TODO: scommentare quanto segue per riabilitare il photoboard #}
+			{# <li class="{% block container4_navigation_profile_bacheca %}{% endblock %}"><a href="/profilo/foto-bacheca">Bacheca</a></li> #}
+			<li class="{% block container4_navigation_profile_favorites %}{% endblock %}"><a href="/profilo/preferiti/">Preferiti</a></li>
+			<li class="{% block container4_navigation_profile_stats %}{% endblock %}"><a href="/profilo/statistiche/">Statistiche</a></li>
+			<li class="{% block container4_navigation_profile_preferences %}{% endblock %}"><a href="/profilo/pannello-di-controllo/">Pannello di controllo</a></li>
+			<li class="{% block container4_navigation_profile_notify %}{% endblock %}"><a href="/profilo/notifiche/">Notifiche</a></li>
+			</ul>
+		</div>
+	</div>
+{% endblock %}
 
 {# navigation tabs active element #}
 {% block container4_navigation_profile_index %}{% endblock %}

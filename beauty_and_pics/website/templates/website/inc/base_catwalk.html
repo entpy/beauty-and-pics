@@ -10,13 +10,7 @@
 {# Open Graph metatags (es. Facebook) #}
 {% block og_metatags %}{% endblock %}
 
-{# set navigation type #}
-{#% block login-navigation %}{{ block.super }}{% endblock %#}
-{#% block no-login-navigation %}{% endblock %#}
-
 {% block www_block %}{% endblock %}
-{# navigation block #}
-{% block container4_navigation %}{% endblock %}
 
 {# catwalk banner #}
 {% block catwalk_banner %}{{ block.super }}{% endblock %}
@@ -29,13 +23,6 @@
 
 {# Custom page script block #}
 {% block custom_page_script %}{% endblock %}
-
-{# title block text #}
-{% comment %}
-{% block block0_1_title_h1 %}<span class="contest_timedelta_string_container"></span>{% endblock block0_1_title_h1 %}
-{% block block0_1_title_h4 %}<span class="contest_status_container"></span>{% endblock block0_1_title_h4 %}
-{% endcomment %}
-{% block block0_1_title %}{% endblock %}
 
 {# container title #}
 {% block container4_title_block %}{% endblock %}

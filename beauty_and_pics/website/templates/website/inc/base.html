@@ -71,22 +71,7 @@
 						</div>
 					</div>
 					{# navigation after login {{{ #}
-					{#% block login-navigation %#}
 					{% if user_is_authenticated %}
-						<!-- search user form
-						<div class="search_form_container display_only_big">
-							<form class="form-horizontal">
-								<fieldset>
-									<div class="input-group">
-										<input class="form-control" placeholder="Cerca una persona..." type="text">
-										<span class="input-group-btn">
-											<button class="btn btn-success" type="button">Cerca</button>
-										</span>
-									</div>
-								</fieldset>
-							</form>
-						</div>
-						-->
 						<div class="profile_container toggle_navigation">
 							<div class="profile_container_wrapper">
 								<div class="profile_name_image_container">
@@ -159,11 +144,9 @@
 								{# after login menu }}} #}
 							</div>
 						</div>
-						{#% endblock login-navigation %#}
 						{# navigation after login }}} #}
 					{% else %}
 						{# navigation before login {{{ #}
-						{#% block no-login-navigation %#}
 						<div class="header_button_container">
 							<div>
 								<a href="/registrati/" class="btn btn-success">Partecipa</a>
@@ -179,7 +162,6 @@
 								<a href="/passerella/man-contest" class="display_only_small"><div class="navigation_item link_color"><span class="navigation_label">Passerella uomo</span><span class="navigation_arrow display_only_big">v</span></div></a>
 							</nav>
 						</div>
-						{#% endblock no-login-navigation %#}
 						{# navigation before login }}} #}
 					{% endif %}
 				</div>
@@ -187,7 +169,7 @@
 		</header>
 		{% endblock header %}
 
-		{# content inside image div here {{{ #}
+		{# www content {{{ #}
 		{% block www_block %}
 			<section class="www_container">
 				{% block www_block_content_wrapper %}
@@ -200,17 +182,11 @@
 				{% endblock www_block_content %}
 			</section>
 		{% endblock www_block %}
-		{# content inside image div here }}} #}
+		{# www content }}} #}
 
-		{# content without image div here {{{ #}
+		{# catwalk/profile content {{{ #}
 		{% block block0_1 %}
 			<section class="height_100 page_section">
-				{% block block0_1_title %}
-					<div class="title_block">
-						<h1 class="title">{% block block0_1_title_h1 %}Main title{% endblock block0_1_title_h1 %}</h1>
-						<h4 class="description">{% block block0_1_title_h4 %}Page description{% endblock block0_1_title_h4 %}</h4>
-					</div>
-				{% endblock block0_1_title %}
 				<div class="left_100 text-center backend_container">
 					<div class="generic_container generic_container3">
 						{# left block (with catwalk) #}
@@ -228,25 +204,11 @@
 							</div>
 							{% endblock container4_title_block %}
 							{# navigation tabs #}
-							{% block container4_navigation %}
-							<div class="row">
-								<div class="col-sm-12">
-									<ul class="nav nav-pills">
-										<li class="{% block container4_navigation_profile_index %}{% endblock %}"><a href="/profilo/">Album fotografico</a></li>
-										{# TODO: scommentare quanto segue per riabilitare il photoboard #}
-										{# <li class="{% block container4_navigation_profile_bacheca %}{% endblock %}"><a href="/profilo/foto-bacheca">Bacheca</a></li> #}
-										<li class="{% block container4_navigation_profile_favorites %}{% endblock %}"><a href="/profilo/preferiti/">Preferiti</a></li>
-										<li class="{% block container4_navigation_profile_stats %}{% endblock %}"><a href="/profilo/statistiche/">Statistiche</a></li>
-										<li class="{% block container4_navigation_profile_preferences %}{% endblock %}"><a href="/profilo/pannello-di-controllo/">Pannello di controllo</a></li>
-										<li class="{% block container4_navigation_profile_notify %}{% endblock %}"><a href="/profilo/notifiche/">Notifiche</a></li>
-									</ul>
-								</div>
-							</div>
-							{% endblock container4_navigation %}
-							{% block container4_content %}
-							{% endblock container4_content %}
+							{% block container4_navigation %}{% endblock %}
+							{% block container4_content %}{% endblock %}
 						</div>
 						<div class="generic_container generic_container5">
+							{# block "contest expiring in 1 day 3 hours 12 min" #}
 							<div class="contest_expiring_block">
 								<div class="contest_timedelta_string_container"></div>
 								<div class="contest_status_container"></div>
@@ -283,7 +245,7 @@
 				</div>
 			</section>
 		{% endblock block0_1 %}
-		{# content without image div here }}} #}
+		{# catwalk/profile content }}} #}
 
 		{% block footer %}
 		<footer>

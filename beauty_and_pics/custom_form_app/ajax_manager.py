@@ -210,6 +210,8 @@ class ajaxManager():
                 logger.debug("element list: " + str(user_info))
                 json_account_element.append({
                         "user_id": user_info["user__id"],
+                        "user_first_name": user_info["user__first_name"],
+                        "user_last_name": user_info["user__last_name"],
                         "user_email": user_info["user__email"],
                         "total_points": user_info.get("total_points"),
                         "thumbnail_image_url": book_obj.get_profile_thumbnail_image_url(user_id=user_info["user__id"]),
@@ -301,7 +303,7 @@ class ajaxManager():
 	    account_creation_date = user_info.account.creation_date
 
             # tiro fuori filtered_list + 1 e la controllo con filtered_list,
-            # se ce un elemento in più non nascondo il pulsante, altrimenti lo nascondo
+            # se c'è un elemento in più non nascondo il pulsante, altrimenti lo nascondo
             filtered_list = notify_obj.user_notify_list(account_creation_date=account_creation_date, user_id=user_id, filters_list=filters_list)
             # return a valid filtered list, trick to hide "load more button"
             valid_filtered_list = self.return_valid_filtered_list(filtered_list=filtered_list, show_limit=filters_list["elements_per_call"])
