@@ -15,9 +15,9 @@
 .header .header_button_container { float: right; padding: 28px 0; }
 .header .header_button_container .btn { width: 100px; }
 .header .header_button_container .btn-success { margin-right: 5px; }
-.header .www_navigation { float: right; margin-right: 8%; }
 .header .navigation_container .navigation_item { float: left; padding: 39px 30px; }
 .header .navigation_container .navigation_label { margin-right: 10px; }
+.header .www_navigation { margin-left: 5px; }
 	/* after login */
 .header .navigation_container .navigation_item:hover, .header .navigation_container a:hover, .profile_container .navigation_container .menu_item_container:hover { background-color: #3498DB; }
 .profile_container .profile_container_wrapper .navigation_container .last_menu_item_container:hover { background-color: #e74c3c; }

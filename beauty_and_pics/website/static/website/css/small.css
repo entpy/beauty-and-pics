@@ -14,10 +14,9 @@
 .display_only_big { display: none; }
 
 /* header style {{{ */
-.header { padding-bottom: 10px; }
-.header .header_button_container { float: left; margin-bottom: 5px; margin-top: 15px; width: 100%; }
-.header .navigation_container { background-color: #1a242f; border-bottom: 1px solid black; display: none; float: left; margin-top: 10px; width: 100%; }
+.header .header_button_container { float: left; margin-bottom: 15px; margin-top: 15px; width: 100%; }
 .header .logged_navigation_container a { display: inline-block; }
+.header .navigation_container { background-color: #1a242f; display: none; float: left; width: 100%; }
 .header .navigation_container a { padding-bottom: 10px; padding-top: 10px; width: 100%; }
 .header .navigation_container .navigation_item .menu_item_image { float: left; margin-left: 5%; margin-right: 3%; }
 .header .navigation_container .navigation_item .navigation_label { vertical-align: middle; }
