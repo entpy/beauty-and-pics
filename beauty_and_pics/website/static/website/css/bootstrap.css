@@ -6835,6 +6835,7 @@ a.list-group-item-danger.active:focus {
 /* bootstrap theme custom style {{{ */
 .progress-bar { -webkit-box-shadow: none; box-shadow: none; }
 .alert { border-radius: 0px; }
+.modal-content { border: none; border-radius: 0px; -webkit-box-shadow: none; box-shadow: none; }
 
 .btn-login { background-color: transparent; border-color: #fff; border-style: solid; color: #fff; }
 .btn-login:hover { background-color: #fff; color: #2c3e50; }
