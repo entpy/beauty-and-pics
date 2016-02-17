@@ -14,6 +14,8 @@
 {% block photoboard_list_banner %}{% endblock %}
 {# hide photoboard winner banner #}
 {% block photoboard_winner_banner %}{% endblock %}
+{# hide top users banner#}
+{% block top_users_banner %}{% endblock %}
 
 {# Custom page script block #}
 {% block custom_page_script %}{% endblock %}
@@ -46,7 +48,7 @@
 {# page tip block (blocco a destra con titolo e descrizione) #}
 {% block page_tip %}
 {% autoescape off %}
-{% include "website/inc/include_blocks/page_tip.html" with title="Il tuo profilo" text="<b>"|str_cat:user.first_name|escape|str_cat:"</b>,<br />questa è la tua area privata. Da qui puoi modificare i dettagli del tuo profilo, aggiungere/rimuovere foto, visualizzare l'elenco dei preferiti che hai salvato e tante altre cose." only %}
+{% include "website/inc/include_blocks/page_tip.html" with title="Il mio profilo" text="<b>"|str_cat:user.first_name|escape|str_cat:"</b>, questa è la tua area privata. Da qui puoi modificare i dettagli del tuo profilo, aggiungere/rimuovere foto, visualizzare l'elenco dei preferiti che hai salvato e tante altre cose." only %}
 {% endautoescape %}
 {% endblock %}
 

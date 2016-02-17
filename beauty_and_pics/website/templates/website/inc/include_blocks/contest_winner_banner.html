@@ -4,9 +4,9 @@
 	</div>
 	<div class="winner_block_wrapper">
 		<div class="winner_block_name">{{ contest_winner_first_name }} {{ contest_winner_last_name }}</div>
-		<div class="winner_block_img"><img alt="Vincitore concorso" src="{{ profile_thumbnail_image }}"></div>
-		{% if contest_winner_user_id %}
-			<div class="winner_block_button"><a class="btn btn-danger" href="/passerella/dettaglio-utente/{{ contest_winner_user_id }}/">Vedi profilo</a></div>
-		{% endif %}
+		<div class="winner_block_img">
+		<a href="/passerella/dettaglio-utente/{{ contest_winner_user_id }}/">
+			<img alt="Vincitore concorso" src="{{ profile_thumbnail_image }}"></div>
+		</a>
 	</div>
 </div>

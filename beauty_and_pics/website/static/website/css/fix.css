@@ -10,7 +10,7 @@
 .logo_container img { width: 100%; height: auto; }
 /*.header .www_navigation { float: right; margin-right: 4%; min-width: 385px; }*/
 .header .navigation_container .navigation_item { float: left; padding: 39px 5px; }
-.header .navigation_container .navigation_label { margin-right: 3px; }
+.header .navigation_container .navigation_label { margin-right: 0px; }
 .header .navigation_container .navigation_arrow { display: none; }
 .header .logo_container { margin-left: 1%; }
 .header .header_button_container { margin-right: 1%; }

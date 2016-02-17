@@ -16,6 +16,7 @@
 .header .header_button_container .btn { width: 100px; }
 .header .header_button_container .btn-success { margin-right: 5px; }
 .header .navigation_container .navigation_item { float: left; padding: 39px 30px; }
+.header .navigation_container .navigation_item.active { background-color: #3498db; }
 .header .navigation_container .navigation_label { margin-right: 10px; }
 .header .www_navigation { margin-left: 5px; }
 	/* after login */

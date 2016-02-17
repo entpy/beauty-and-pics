@@ -1436,7 +1436,7 @@ var elementsListObject = {
 		$.each(elementsList, function(index, singleElement) {
 			blockUrl = "/passerella/dettaglio-utente/" + singleElement.user_id;
 			blockThumbnailImageUrl = singleElement.thumbnail_image_url;
-			items += elementsListObject.getSingleHtmlBlock(blockUrl, blockThumbnailImageUrl, false, false, false, singleElement.user_first_name + " " + singleElement.user_last_name);
+			items += elementsListObject.getSingleHtmlBlock(blockUrl, blockThumbnailImageUrl, false, false, false);
 		});
 		// return jQuery object
 		return $(items);

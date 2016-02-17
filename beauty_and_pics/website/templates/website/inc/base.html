@@ -155,9 +155,9 @@
 						</div>
 						<div class="navigation_container www_navigation toggle_navigation">
 							<nav>
-								<a href="/il-concorso" class="inline_block"><div class="navigation_item"><span class="navigation_label">Il concorso</span><span class="navigation_arrow display_only_big">v</span></div></a>
-								<a href="/come-funziona" class="inline_block"><div class="navigation_item"><span class="navigation_label">Come funziona</span><span class="navigation_arrow display_only_big">v</span></div></a>
-								<a href="/come-iscriversi" class="inline_block"><div class="navigation_item"><span class="navigation_label">Come iscriversi</span><span class="navigation_arrow display_only_big">v</span></div></a>
+								<a href="/il-concorso" class="inline_block"><div class="navigation_item {% block www_navigation_contest %}{% endblock %}"><span class="navigation_label">Il concorso</span><span class="navigation_arrow display_only_big">v</span></div></a>
+								<a href="/come-funziona" class="inline_block"><div class="navigation_item {% block www_navigation_how_it_works %}{% endblock %}"><span class="navigation_label">Come funziona</span><span class="navigation_arrow display_only_big">v</span></div></a>
+								<a href="/come-iscriversi" class="inline_block"><div class="navigation_item {% block www_navigation_signup %}{% endblock %}"><span class="navigation_label">Come iscriversi</span><span class="navigation_arrow display_only_big">v</span></div></a>
 								<a href="/passerella/woman-contest" class="display_only_small"><div class="navigation_item link_color"><span class="navigation_label">Passerella donna</span><span class="navigation_arrow display_only_big">v</span></div></a>
 								<a href="/passerella/man-contest" class="display_only_small"><div class="navigation_item link_color"><span class="navigation_label">Passerella uomo</span><span class="navigation_arrow display_only_big">v</span></div></a>
 							</nav>
@@ -237,7 +237,9 @@
 							{# right classification block {{{ #}
 								{# banner top 5 users #}
 							{% if top_five_account %}
+								{% block top_users_banner %}
 								{% include "website/inc/include_blocks/top_5_banner.html" with top_five_account=top_five_account only %}
+								{% endblock %}
 							{% endif %}
 							{# right classification block }}} #}
 						</div>
