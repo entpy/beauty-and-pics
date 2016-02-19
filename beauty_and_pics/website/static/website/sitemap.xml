@@ -62,4 +62,8 @@
   <loc>http://www.beautyandpics.com/caratteristiche/</loc>
   <changefreq>daily</changefreq>
 </url>
+<url>
+  <loc>http://www.beautyandpics.com/faq/</loc>
+  <changefreq>daily</changefreq>
+</url>
 </urlset>
