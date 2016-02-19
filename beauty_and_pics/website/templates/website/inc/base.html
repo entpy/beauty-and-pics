@@ -26,7 +26,6 @@
 		<title>{% block title %}{{ site_name }}: il concorso di bellezza più fico dell'universo{% endblock title %}</title>
 
                 <link rel="stylesheet" href="{% static "website/css/bootstrap.css" %}">
-                {# <link rel="stylesheet" href="{% static "website/css/bootstrap_custom.css" %}"> #}
                 <link rel="stylesheet" href="{% static "website/css/common.css" %}">
                 <link rel="stylesheet" href="{% static "website/css/main.css" %}">
 
@@ -150,16 +149,16 @@
 						<div class="header_button_container">
 							<div>
 								<a href="/registrati/" class="btn btn-success">Partecipa</a>
-								<a href="/login/" class="btn btn-login">Accedi</a>
+								<a href="/login/" class="btn btn-transparent">Accedi</a>
 							</div>
 						</div>
 						<div class="navigation_container www_navigation toggle_navigation">
 							<nav>
-								<a href="/il-concorso" class="inline_block"><div class="navigation_item {% block www_navigation_contest %}{% endblock %}"><span class="navigation_label">Il concorso</span><span class="navigation_arrow display_only_big">v</span></div></a>
-								<a href="/come-funziona" class="inline_block"><div class="navigation_item {% block www_navigation_how_it_works %}{% endblock %}"><span class="navigation_label">Come funziona</span><span class="navigation_arrow display_only_big">v</span></div></a>
-								<a href="/come-iscriversi" class="inline_block"><div class="navigation_item {% block www_navigation_signup %}{% endblock %}"><span class="navigation_label">Come iscriversi</span><span class="navigation_arrow display_only_big">v</span></div></a>
-								<a href="/passerella/woman-contest" class="display_only_small"><div class="navigation_item link_color"><span class="navigation_label">Passerella donna</span><span class="navigation_arrow display_only_big">v</span></div></a>
-								<a href="/passerella/man-contest" class="display_only_small"><div class="navigation_item link_color"><span class="navigation_label">Passerella uomo</span><span class="navigation_arrow display_only_big">v</span></div></a>
+								<a href="/il-concorso/" class="inline_block"><div class="navigation_item {% block www_navigation_contest %}{% endblock %}"><span class="navigation_label">Il concorso</span><span class="navigation_arrow display_only_big">v</span></div></a>
+								<a href="/come-funziona/" class="inline_block"><div class="navigation_item {% block www_navigation_how_it_works %}{% endblock %}"><span class="navigation_label">Come funziona</span><span class="navigation_arrow display_only_big">v</span></div></a>
+								<a href="/come-iscriversi/" class="inline_block"><div class="navigation_item {% block www_navigation_signup %}{% endblock %}"><span class="navigation_label">Come iscriversi</span><span class="navigation_arrow display_only_big">v</span></div></a>
+								<a href="/passerella/donna/" class="display_only_small"><div class="navigation_item link_color"><span class="navigation_label">Passerella donna</span><span class="navigation_arrow display_only_big">v</span></div></a>
+								<a href="/passerella/uomo/" class="display_only_small"><div class="navigation_item link_color"><span class="navigation_label">Passerella uomo</span><span class="navigation_arrow display_only_big">v</span></div></a>
 							</nav>
 						</div>
 						{# navigation before login }}} #}
@@ -221,7 +220,7 @@
 							{% block photoboard_winner_banner %}{% endblock %}
 								{# banner andare alla passerella #}
 							{% block catwalk_banner %}
-							{% include "website/inc/include_blocks/banner.html" with main_title="Vai alla passerella!" subtitle="" img_src=static_url|str_cat:"website/img/passerella.png" img_alt="La passerella" button_url="/passerella/" button_label="La passerella" button_class="btn-success" background_class="banner_A" only %}
+							{% include "website/inc/include_blocks/banner.html" with main_title="Vai alla passerella!" subtitle="" img_src=static_url|str_cat:"website/img/passerella.png" img_alt="La passerella" button_url="/passerella/" button_label="La passerella" button_class="btn-transparent" background_class="banner_A" only %}
 							{% endblock catwalk_banner %}
 
 							{# TODO: scommentare quanto segue per riabilitare il photoboard #}
@@ -260,7 +259,10 @@
 									<a href="/caratteristiche/">Caratteristiche</a>
 								</div>
 								<div>
-									<a href="/passerella/richiesta-aiuto/">Segnala un problema</a>
+									<a href="/faq/">FAQ</a>
+								</div>
+								<div>
+									<a href="/passerella/richiesta-aiuto/">Richiesta aiuto</a>
 								</div>
 								<div>
 									<a href="/privacy/">Privacy</a>

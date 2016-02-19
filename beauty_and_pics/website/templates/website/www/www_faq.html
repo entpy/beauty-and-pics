@@ -1,0 +1,94 @@
+{% extends "website/inc/base_www.html" %}
+{% load staticfiles %}
+
+{# page title #}
+{% block title %}{{ site_name }} | FAQ{% endblock %}
+
+{# page description #}
+{% block description %}FAQ di {{ site_name }}. Le risposte alle domande più frequenti.{% endblock %}
+
+{% block www_block_content_title_h1 %}FAQ{% endblock %}
+{% block www_block_content_title_h4 %}Hai qualche domanda particolare?{% endblock %}
+
+{% block www_block_content %}
+{# right image block {{{ #}
+<div class="container-fluid info_block info_block_color1">
+	<div class="row">
+		<div class="col-md-10 col-md-offset-1 no-gutter">
+			<div class="col-md-7 info_block_text_container">
+				<div class="readable_text1">
+					<div class="toggle_block">
+						<h4 class="toggle_block_action">Cosa occorre per partecipare?</h4>
+						<div class="toggle_block_content">
+							<p>Per partecipare occorre solo essere maggiorenni e aver voglia di divertirsi un po' mettendosi in gioco.</p>
+						</div>
+					</div>
+					<hr class="hr_1">
+					<div class="toggle_block">
+						<h4 class="toggle_block_action">Come faccio per partecipare?</h4>
+						<div class="toggle_block_content">
+							<p>Partecipare è molto semplice, devi solo cliccare sul pulsante "<a href="/registrati/">Partecipa</a>" e inserire i dati richiesti.</p>
+						</div>
+					</div>
+					<hr class="hr_1">
+					<div class="toggle_block">
+						<h4 class="toggle_block_action">Cosa implica la "partecipazione" al concorso?</h4>
+						<div class="toggle_block_content">
+							<p>Nulla, la "partecipazione" è una semplice registrazione sul sito senza vincoli, l'account di {{ site_name }} è eliminabile in qualsiasi momento.</p>
+						</div>
+					</div>
+					<hr class="hr_1">
+					<div class="toggle_block">
+						<h4 class="toggle_block_action">Come faccio a votare?</h4>
+						<div class="toggle_block_content">
+							<p>Clicca <a href="/howto/le-votazioni/">qui</a> per avere informazioni dettagliate sulla fase di votazione.</p>
+						</div>
+					</div>
+					<hr class="hr_1">
+					<div class="toggle_block">
+						<h4 class="toggle_block_action">Cosa succede al vincitore?</h4>
+						<div class="toggle_block_content">
+							<p>Il vincitore verrà inserito in cima ad una classifica chiamata "Hall of Fame", contenente i 100 migliori partecipanti, mantenuta nel tempo e liberamente consultabile in ogni momento. Inoltre, la sua foto profilo, verrà messa in evidenza nella <a href="/passerella/">passerella</a> e nella <a href="/index/">home page</a>.</p>
+						</div>
+					</div>
+					<hr class="hr_1">
+					<div class="toggle_block">
+						<h4 class="toggle_block_action">Cosa si vince?</h4>
+						<div class="toggle_block_content">
+							<p>Il concorso è fatto prima di tutto per <b>divertimento</b>. Il vincitore acquisisce più visibilità, inoltre i primi classificati <b>vinceranno</b> la nostra esclusiva maglietta con grafica personalizzata.</p>
+						</div>
+					</div>
+					<hr class="hr_1">
+					<div class="toggle_block">
+						<h4 class="toggle_block_action">Quanto costa?</h4>
+						<div class="toggle_block_content">
+							<p>Nulla, l'utilizzo della piattaforma {{ site_name }} è completamente <b>gratuito</b> in ogni suo aspetto.</p>
+						</div>
+					</div>
+					<hr class="hr_1">
+					<div class="toggle_block">
+						<h4 class="toggle_block_action">Che tipo di immagini posso caricare?</h4>
+						<div class="toggle_block_content">
+							<p>Puoi caricare qualsiasi immagine tu preferisca, purchè non violi quanto descritto nei nostri <a href="/termini-di-utilizzo/">Termini d'uso</a>.</p>
+						</div>
+					</div>
+					<hr class="hr_1">
+					<div class="toggle_block">
+						<h4 class="toggle_block_action">Posso caricare un numero illimitato di immagini?</h4>
+						<div class="toggle_block_content">
+							<p>Si, puoi creare il tuo book fotografico completo di tutte le foto che preferisci, senza alcun limite di tempo o spazio.</p>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="col-md-offset-1 col-md-4 info_block_image_container text-xs-center text-md-right">
+				<div class="visible-sm-inline-block visible-xs-inline-block col-xs-12 block-vspace"></div>
+				<img alt="Le votazioni" src="{% static "website/img/howto-votazioni.png" %}">
+			</div>
+		</div>
+	</div>
+</div>
+{# }}} #}
+{# Signup emphasis bottom block #}
+{% include "website/inc/include_blocks/signup_emphasis_bottom_block.html" %}
+{% endblock www_block_content %}

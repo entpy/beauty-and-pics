@@ -30,6 +30,7 @@ urlpatterns = patterns('',
     url(r'^classifica/(?P<contest_type>[a-z-]+)/(?:(?P<contest_year>\d+)/)?$', 'website.views.www_ranking_contest', name='www_ranking_contest'), # pagina con la classifica del concorso
     url(r'^podio/(?P<contest_type>[a-z-]+)/(?P<contest_year>\d+)/(?P<user_id>\d+)/?$', 'website.views.www_podium', name='www_podium'), # pagina podio per i primi 5 utenti
     url(r'^caratteristiche/$', 'website.views.www_features', name='www_features'),
+    url(r'^faq/$', 'website.views.www_faq', name='www_faq'),
     # activate account
     url(r'^conferma-email/(?P<auth_token>\w+)/$', 'website.views.www_email_confirm', name='www_email_confirm'),
     url(r'^email-confermata/$', 'website.views.www_email_successfully_confirmed', name='www_email_successfully_confirmed'),
