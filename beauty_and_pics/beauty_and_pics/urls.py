@@ -44,8 +44,8 @@ urlpatterns = patterns('',
     #imagecontestapptag
     # url(r'^passerella/bacheca/(?:(?P<user_id>\d+)/)$', 'website.views.catwalk_photoboard_details', name='catwalk_photoboard_details'),
     # url(r'^passerella/bacheca/$', 'website.views.catwalk_photoboard_list', name='catwalk_photoboard_list'),
-    url(r'^passerella/donna/$', 'website.views.catwalk_index', {"contest_type": "woman-contest" }, name='catwalk_index'),
-    url(r'^passerella/uomo/$', 'website.views.catwalk_index', {"contest_type": "man-contest" }, name='catwalk_index'),
+    url(r'^passerella/donna/$', 'website.views.catwalk_index', {"contest_type": "woman-contest"}, name='catwalk_index'),
+    url(r'^passerella/uomo/$', 'website.views.catwalk_index', {"contest_type": "man-contest"}, name='catwalk_index'),
     url(r'^passerella/(?:(?P<contest_type>[a-z-]+)/)?$', 'website.views.catwalk_index', name='catwalk_index'), # per il blocco catwalk questo va messo sempre al fondo
 
     # private profile
