@@ -60,6 +60,7 @@ urlpatterns = patterns('',
     url(r'^profilo/notifiche/$', 'website.views.profile_notify', name='profile_notify'),
     url(r'^profilo/ottieni-punti/$', 'website.views.profile_gain_points', name='profile_gain_points'),
     url(r'^profilo/ottieni-premio/$', 'website.views.profile_get_prize', name='profile_get_prize'),
+    url(r'^profilo/intervista/$', 'website.views.profile_interview', name='profile_interview'),
     #imagecontestapptag
     # url(r'^profilo/foto-bacheca/(?:(?P<image_add_success>\d+)/)?$', 'website.views.profile_photoboard', name='profile_photoboard'),
 

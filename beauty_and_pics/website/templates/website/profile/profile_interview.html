@@ -1,0 +1,189 @@
+{% extends "website/inc/base_profile.html" %}
+{% load staticfiles %}
+
+{% block title %}{{ site_name }} | informazioni principali{% endblock %}
+
+{% block description %}Informazioni principali: in questa pagina è possibile modificare le informazioni principali del tuo utente.{% endblock %}
+
+{# navigation tabs active element #}
+{% block container4_navigation_profile_preferences %}active{% endblock %}
+
+{% block container4_content %}
+<div class="row">
+	<div class="col-md-12">
+		<h3>Intervista</h3>
+	</div>
+	<div class="col-md-12">
+		<div class="alert alert-info">
+			<p>Rispondi alle domande e crea la tua intervista personalizzata per incrementare la tua visibilità e dare credibilità alla tua immagine.</p>
+		</div>
+	</div>
+	<div class="col-md-12">
+		{# messages block #}
+		<div class="error_container"></div>
+		{% if form.errors or messages %}
+			<div class="server_msg_container">
+				{% if form.errors %}
+					<div class="alert alert-danger">
+						<h4>Uhm qualcosa non va!</h4>
+						<ul>
+							{% for form_error in form.non_field_errors %}
+								<li>{{ form_error }}</li>
+							{% endfor %}
+						</ul>
+					</div>
+				{% else %}
+					<div class="alert alert-success">
+						<h4>Ottimo!</h4>
+						{% for message in messages %}
+							<div>{{ message }}</div>
+						{% endfor %}
+					</div>
+				{% endif %}
+			</div>
+		{% endif %}
+		<form class="form-horizontal ajax_form" method="post" action="">
+			{% csrf_token %}
+			<input type="hidden" name="form_class" value="SurveyForm">
+			<fieldset class="col-md-12">
+				{% for field in form %}
+					<div class="form-group {% if field.errors %}has-error{% endif %}">
+						<label for="{{ field.id_for_label }}" class="col-md-4 control-label">{{ field.label }} {% if field.field.required %}*{% endif %}</label>
+						<div class="col-md-7">
+							<textarea name="{{ field.name }}" class="form-control" id="{{ field.id_for_label }}" placeholder="{{ field.field.widget.attrs.placeholder }}">{{ post.first_name }}</textarea>
+						</div>
+					</div>
+				{% endfor %}
+				<div class="form-group">
+					<div class="col-md-8 col-md-offset-4">
+						<button type="submit" class="btn btn-success submitButtonClickAction">Salva</button>
+					</div>
+				</div>
+			</fieldset>
+		</form>
+		{% comment %}
+		<form method="POST" action="">
+			{% csrf_token %}
+			{{ form }}
+			<input type="submit" >
+		</form>
+		<form class="form-horizontal ajax_form" method="post" action="">
+			{% csrf_token %}
+			<input type="hidden" name="form_class" value="AccountEditForm">
+			<fieldset class="col-md-9">
+				<div class="form-group {% if form.first_name.errors %}has-error{% endif %}">
+					<label for="{{ form.first_name.id_for_label }}" class="col-md-4 control-label">{{ form.first_name.label }} *</label>
+					<div class="col-md-8">
+						<input name="{{ form.first_name.name }}" class="form-control" id="{{ form.first_name.id_for_label }}" placeholder="{{ form.first_name.label }}" value="{{ post.first_name }}" type="text">
+					</div>
+				</div>
+				<div class="form-group {% if form.last_name.errors %}has-error{% endif %}">
+					<label for="{{ form.last_name.id_for_label }}" class="col-md-4 control-label">{{ form.last_name.label }}</label>
+					<div class="col-md-8">
+						<input name="{{ form.last_name.name }}" class="form-control" id="{{ form.last_name.id_for_label }}" placeholder="{{ form.last_name.label }}" value="{{ post.last_name }}" type="text">
+					</div>
+				</div>
+				<div class="form-group {% if form.birthday_day.errors or form.birthday_month.errors or form.birthday_year.errors %}has-error{% endif %}">
+					<label for="{{ form.birthday_day.id_for_label }}" class="col-md-4 control-label">Data di nascita *</label>
+					<div class="col-md-8">
+						<div class="col-md-4 no-gutters">
+							<select name="{{ form.birthday_day.name }}" class="form-control" id="{{ form.birthday_day.id_for_label }}">
+								<option selected="selected">{{ form.birthday_day.label }}</option>
+								{% for key,value in form.fields.birthday_day.choices %}
+									<option value="{{ key }}" {% if post.birthday_day == key|slugify %}selected="selected"{% endif %}>{{ value }}</option>
+								{% endfor %}
+							</select>
+						</div>
+						<div class="col-md-4 no-gutters">
+							<select name="{{ form.birthday_month.name }}" class="form-control">
+								<option selected="selected">{{ form.birthday_month.label }}</option>
+								{% for key,value in form.fields.birthday_month.choices %}
+									<option value="{{ key }}" {% if post.birthday_month == key|slugify %}selected="selected"{% endif %}>{{ value }}</option>
+								{% endfor %}
+							</select>
+						</div>
+						<div class="col-md-4 no-gutters">
+							<select name="{{ form.birthday_year.name }}" class="form-control">
+								<option selected="selected">{{ form.birthday_year.label }}</option>
+								{% for key,value in form.fields.birthday_year.choices %}
+									<option value="{{ key }}" {% if post.birthday_year == key|slugify %}selected="selected"{% endif %}>{{ value }}</option>
+								{% endfor %}
+							</select>
+						</div>
+					</div>
+				</div>
+				<div class="form-group {% if form.gender.errors %}has-error{% endif %}">
+					<label for="{{ form.gender.id_for_label }}" class="col-md-4 control-label">{{ form.gender.label }} *</label>
+					<div class="col-md-4">
+						<select name="{{ form.gender.name }}" class="form-control" id="{{ form.gender.id_for_label }}">
+							<option selected="selected">{{ form.gender.label }}</option>
+							{% for key,value in form.fields.gender.choices %}
+								<option value="{{ key }}" {% if post.gender == key|slugify %}selected="selected"{% endif %}>{{ value }}</option>
+							{% endfor %}
+						</select>
+					</div>
+				</div>
+			</fieldset>
+			<div class="col-md-12">
+				<h3>Qualcosa su di te...</h3>
+			</div>
+			<div class="col-md-12">
+				<div class="alert alert-info">
+					<p>Fornisci qualche informazione più dettagliata su di te.</p>
+				</div>
+			</div>
+			<fieldset class="col-md-9">
+				<div class="form-group {% if form.hair.errors %}has-error{% endif %}">
+					<label for="{{ form.hair.id_for_label }}" class="col-md-4 control-label">{{ form.hair.label }} *</label>
+					<div class="col-md-4">
+						<select name="{{ form.hair.name }}" class="form-control" id="{{ form.hair.id_for_label }}">
+							{% for key,value in form.fields.hair.choices %}
+								<option value="{{ key }}" {% if post.hair == key|slugify %}selected="selected"{% endif %}>{{ value }}</option>
+							{% endfor %}
+						</select>
+					</div>
+				</div>
+				<div class="form-group {% if form.eyes.errors %}has-error{% endif %}">
+					<label for="{{ form.eyes.id_for_label }}" class="col-md-4 control-label">{{ form.eyes.label }} *</label>
+					<div class="col-md-4">
+						<select name="{{ form.eyes.name }}" class="form-control" id="{{ form.eyes.id_for_label }}">
+							{% for key,value in form.fields.eyes.choices %}
+								<option value="{{ key }}" {% if post.eyes == key|slugify %}selected="selected"{% endif %}>{{ value }}</option>
+							{% endfor %}
+						</select>
+					</div>
+				</div>
+				<div class="form-group {% if form.height.errors %}has-error{% endif %}">
+					<label for="{{ form.height.id_for_label }}" class="col-md-4 control-label">{{ form.height.label }} *</label>
+					<div class="col-md-4">
+						<input name="{{ form.height.name }}" class="form-control" id="{{ form.height.id_for_label }}" placeholder="Es. 167" value="{{ post.height }}" type="text">
+					</div>
+				</div>
+				<div class="form-group">
+					<div class="col-md-8 col-md-offset-4">
+						<button type="submit" class="btn btn-success submitButtonClickAction">Salva</button>
+					</div>
+				</div>
+			</fieldset>
+		</form>
+		{% endcomment %}
+	</div>
+</div>
+{% endblock container4_content %}
+{% block custom_js %}
+{{ block.super }}
+<script>
+	$(document).ready(function(){
+		$(".submitButtonClickAction").click(function(event){
+			// preventing default click event
+			event.preventDefault();
+			// serialize form data
+			ajaxFormValidation.callData["data"] = $(".ajax_form").serialize();
+			// performing ajax call
+			ajaxFormValidation.validateForm();
+
+			return true;
+		});
+	});
+</script>
+{% endblock custom_js %}

@@ -49,6 +49,7 @@ INSTALLED_APPS = (
     'ckeditor',
     # 'image_contest_app', # abilitare quando le votazioni saranno inespugnabili :( #imagecontestapptag
     'django_bootstrap_breadcrumbs',
+    'django_survey',
 )
 
 MIDDLEWARE_CLASSES = (

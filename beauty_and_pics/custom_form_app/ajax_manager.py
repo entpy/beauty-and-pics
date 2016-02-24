@@ -15,6 +15,7 @@ from custom_form_app.forms.report_user_form import *
 from custom_form_app.forms.unsubscribe_form import *
 from custom_form_app.forms.get_prize_form import GetPrizeForm
 from custom_form_app.forms.fast_register_form import FastRegisterForm
+from custom_form_app.forms.survey_form import SurveyForm
 from beauty_and_pics.consts import project_constants
 from beauty_and_pics.common_utils import CommonUtils
 from contest_app.models.votes import Vote
