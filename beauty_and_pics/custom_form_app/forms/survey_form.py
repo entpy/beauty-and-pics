@@ -24,6 +24,12 @@ class SurveyForm(forms.Form, FormCommonUtils):
         'check_all_fields_valid',
     )
 
+    ALREADY_MODEL_CHOICES = (
+	('', '-'),
+	('yes', 'Si'),
+	('no', 'No'),
+    )
+
     def __init__(self, *args, **kwargs):
         # parent forms.Form init
         super(SurveyForm, self).__init__(*args, **kwargs)
@@ -35,12 +41,15 @@ class SurveyForm(forms.Form, FormCommonUtils):
         # retrieve a list of questions about a survey
         question_obj = Question()
         questions_list = question_obj.get_all_questions_about_survey(survey_code=DS_SURVEYS_CODE_ABOUT_USER)
-        questions_list = questions_list.update(question_obj.get_all_questions_about_survey(survey_code=DS_SURVEYS_CODE_IS_MODEL))
-        questions_list = questions_list.update(question_obj.get_all_questions_about_survey(survey_code=DS_SURVEYS_CODE_IS_NOT_MODEL))
+        questions_list += question_obj.get_all_questions_about_survey(survey_code=DS_SURVEYS_CODE_IS_MODEL)
+        questions_list += question_obj.get_all_questions_about_survey(survey_code=DS_SURVEYS_CODE_IS_NOT_MODEL)
 
         for question in questions_list:
             question_info = question_obj.get_question_string_about_code(question_code=question.question_code)
-            self.fields[question.question_code] = forms.CharField(label=question_info.get("question_text_woman"), required=question_info.get("required"), widget=forms.TextInput(attrs={'placeholder': question_info.get("question_hint_woman")}))
+	    if question_info.get("question_type") == "text":
+		self.fields[question.question_code] = forms.CharField(label=question_info.get("question_text_woman"), required=question_info.get("required"), widget=forms.TextInput(attrs={'placeholder': question_info.get("question_hint_woman"), 'survey_code': question_info.get("survey_code"), 'question_type': question_info.get("question_type")}))
+	    else:
+		self.fields[question.question_code] = forms.ChoiceField(label=question_info.get("question_text_woman"), choices=self.ALREADY_MODEL_CHOICES, required=question_info.get("required"), widget=forms.TextInput(attrs={'placeholder': question_info.get("question_hint_woman"), 'survey_code': question_info.get("survey_code"), 'question_type': question_info.get("question_type")})) 
 
     def clean(self):
 	super(SurveyForm, self).clean_form_custom()

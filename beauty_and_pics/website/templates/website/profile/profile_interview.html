@@ -8,6 +8,14 @@
 {# navigation tabs active element #}
 {% block container4_navigation_profile_preferences %}active{% endblock %}
 
+{# Custom page css block #}
+{% block custom_css %}
+{{ block.super }}
+<style>
+    textarea.form-control { height: 170px; }
+</style>
+{% endblock custom_css %}
+
 {% block container4_content %}
 <div class="row">
 	<div class="col-md-12">
@@ -15,7 +23,7 @@
 	</div>
 	<div class="col-md-12">
 		<div class="alert alert-info">
-			<p>Rispondi alle domande e crea la tua intervista personalizzata per incrementare la tua visibilità e dare credibilità alla tua immagine.</p>
+			<p>Rispondi alle domande e crea la tua intervista personalizzata per incrementare la tua visibilità e dare credibilità alla tua immagine. Una volta che avrai risposto alle domande dell'intervista e cliccato sul pulsante salva, le risposte saranno visibili nel tuo profilo.</p>
 		</div>
 	</div>
 	<div class="col-md-12">
@@ -47,13 +55,23 @@
 			<input type="hidden" name="form_class" value="SurveyForm">
 			<fieldset class="col-md-12">
 				{% for field in form %}
-					<div class="form-group {% if field.errors %}has-error{% endif %}">
+					<div class="form-group {{ field.field.widget.attrs.survey_code }} {% if field.field.widget.attrs.survey_code != "about_user" %}hide{% endif %} {% if field.errors %}has-error{% endif %}">
 						<label for="{{ field.id_for_label }}" class="col-md-4 control-label">{{ field.label }} {% if field.field.required %}*{% endif %}</label>
 						<div class="col-md-7">
-							<textarea name="{{ field.name }}" class="form-control" id="{{ field.id_for_label }}" placeholder="{{ field.field.widget.attrs.placeholder }}">{{ post.first_name }}</textarea>
+							{% if field.field.widget.attrs.question_type == "text" %}
+								<textarea name="{{ field.name }}" class="form-control" id="{{ field.id_for_label }}" placeholder="{{ field.field.widget.attrs.placeholder }}">{{ post.first_name }}</textarea>
+							{% else %}
+								<select name="{{ field.name }}" class="form-control surveyChangeClickAction" id="{{ field.id_for_label }}">
+									{% for key,value in field.field.choices %}
+										<option value="{{ key }}" {% if post.eyes == key|slugify %}selected="selected"{% endif %}>{{ value }}</option>
+									{% endfor %}
+								</select>
+							{% endif %}
 						</div>
 					</div>
 				{% endfor %}
+				{# messages block #}
+				<div class="error_container"></div>
 				<div class="form-group">
 					<div class="col-md-8 col-md-offset-4">
 						<button type="submit" class="btn btn-success submitButtonClickAction">Salva</button>
@@ -174,6 +192,21 @@
 {{ block.super }}
 <script>
 	$(document).ready(function(){
+		$(document).on("change", ".surveyChangeClickAction", function(){
+			if ($(this).val() == "no") {
+			    $(".is_model").addClass("hide");
+			    $(".is_not_model").removeClass("hide");
+			} else if ($(this).val() == "yes") {
+			    $(".is_model").removeClass("hide");
+			    $(".is_not_model").addClass("hide");
+			} else {
+			    $(".is_model").addClass("hide");
+			    $(".is_not_model").addClass("hide");
+			}
+
+			return true;
+		});
+
 		$(".submitButtonClickAction").click(function(event){
 			// preventing default click event
 			event.preventDefault();

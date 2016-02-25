@@ -103,7 +103,7 @@ class Question(models.Model):
     def get_all_questions_about_survey(self, survey_code):
         """Function to retrieve all questions about a survey"""
 
-        return Question.objects.filter(survey__survey_code=survey_code)
+        return list(Question.objects.filter(survey__survey_code=survey_code).order_by("order"))
 
     def get_question_string_about_code(self, question_code):
         """Function to retrieve strings a question"""
@@ -119,6 +119,7 @@ class Question(models.Model):
             return_var["question_code"] = question.question_code
             return_var["question_type"] = question.question_type
             return_var["order"] = question.order
+            return_var["survey_code"] = question.survey.survey_code
 
         return return_var
 
