@@ -47,34 +47,22 @@ class SurveyForm(forms.Form, FormCommonUtils):
         for question in questions_list:
             question_info = question_obj.get_question_string_about_code(question_code=question.question_code)
 	    if question_info.get("question_type") == "text":
-		self.fields[question.question_code] = forms.CharField(label=question_info.get("question_text_woman"), required=question_info.get("required"), widget=forms.TextInput(attrs={'placeholder': question_info.get("question_hint_woman"), 'survey_code': question_info.get("survey_code"), 'question_type': question_info.get("question_type")}))
+		self.fields[question.question_code] = forms.CharField(label=question_info.get("question_text_woman"), required=question_info.get("required"), widget=forms.TextInput(attrs={'placeholder': question_info.get("question_hint_woman"), 'survey_code': question_info.get("survey_code"), 'default_hidden': question_info.get("default_hidden"), 'question_type': question_info.get("question_type")}))
 	    else:
-		self.fields[question.question_code] = forms.ChoiceField(label=question_info.get("question_text_woman"), choices=self.ALREADY_MODEL_CHOICES, required=question_info.get("required"), widget=forms.TextInput(attrs={'placeholder': question_info.get("question_hint_woman"), 'survey_code': question_info.get("survey_code"), 'question_type': question_info.get("question_type")})) 
+		self.fields[question.question_code] = forms.ChoiceField(label=question_info.get("question_text_woman"), choices=self.ALREADY_MODEL_CHOICES, required=question_info.get("required"), widget=forms.TextInput(attrs={'placeholder': question_info.get("question_hint_woman"), 'survey_code': question_info.get("survey_code"), 'default_hidden': question_info.get("default_hidden"), 'question_type': question_info.get("question_type")})) 
 
     def clean(self):
 	super(SurveyForm, self).clean_form_custom()
         return True
 
     def save_form(self):
-        return_var = False
-        """
-        if super(SurveyForm, self).form_can_perform_actions():
-            account_obj = Account()
-            # building birthday date
-            birthday_date = account_obj.create_date(date_dictionary={"day" : self.form_validated_data.get("birthday_day"), "month" : self.form_validated_data.get("birthday_month"), "year" : self.form_validated_data.get("birthday_year")}, get_isoformat=True)
-            if (birthday_date):
-                self.form_validated_data["birthday_date"] = birthday_date
-            # update account info
-            account_obj.update_data(save_data=self.form_validated_data, user_obj=self.request_data.user)
-            return_var = True
-        """
+        answer_obj = Answer();
+        answer_obj.save_answers_list(answers_list=self.form_validated_data, id_user=self.request_data.user.id)
 
-        return return_var
+        return True
 
     def form_actions(self):
         """Function to create new user and logging into website"""
-        return_var = False
-        if self.save_form():
-            return_var = True
+        self.save_form()
 
-        return return_var
+        return True

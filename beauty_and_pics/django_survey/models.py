@@ -64,6 +64,7 @@ class Question(models.Model):
     question_type = models.CharField(max_length=20)
     required = models.IntegerField(default=0)
     order = models.IntegerField(default=0)
+    default_hidden = models.IntegerField(default=0)
 
     class Meta:
         app_label = 'django_survey'
@@ -86,6 +87,7 @@ class Question(models.Model):
                     question_obj.question_type = question.get('question_type')
                     question_obj.required = question.get('required')
                     question_obj.order = question.get('order')
+                    question_obj.default_hidden = question.get('default_hidden')
                     question_obj.save()
 
         return True
@@ -105,6 +107,11 @@ class Question(models.Model):
 
         return list(Question.objects.filter(survey__survey_code=survey_code).order_by("order"))
 
+    def get_all_questions(self):
+        """Function to retrieve all questions"""
+
+        return list(Question.objects.all().order_by("order"))
+
     def get_question_string_about_code(self, question_code):
         """Function to retrieve strings a question"""
         return_var = {}
@@ -119,6 +126,7 @@ class Question(models.Model):
             return_var["question_code"] = question.question_code
             return_var["question_type"] = question.question_type
             return_var["order"] = question.order
+            return_var["default_hidden"] = question.default_hidden
             return_var["survey_code"] = question.survey.survey_code
 
         return return_var
@@ -129,6 +137,7 @@ class Answer(models.Model):
     survey = models.ForeignKey(Survey)
     user = models.ForeignKey(User)
     answer_text = models.CharField(max_length=500, null=True, blank=True)
+    update_date = models.DateTimeField(auto_now=True)
 
     class Meta:
         app_label = 'django_survey'
@@ -136,19 +145,48 @@ class Answer(models.Model):
     def __unicode__(self):
         return str(self.id_answer)
 
-"""
-    question = models.CharField(max_length=500)
-    gender = models.CharField(max_length=100, null=True)
-    status = models.IntegerField(null=True)
-    birthday_date = models.DateField(null=True)
-    hair = models.CharField(max_length=15, null=True, blank=True)
-    eyes = models.CharField(max_length=15, null=True, blank=True)
-    height = models.CharField(max_length=4, null=True, blank=True)
-    newsletters_bitmask = models.CharField(max_length=20, default=(project_constants.WEEKLY_REPORT_EMAIL_BITMASK + project_constants.CONTEST_REPORT_EMAIL_BITMASK), null=True)
-    creation_date = models.DateTimeField(auto_now_add=True)
-    update_date = models.DateTimeField(auto_now=True)
-    can_be_shown = models.IntegerField(default=0) # indica se l'utente può essere mostrato nella passerella
-    prize_status = models.IntegerField(default=project_constants.PRIZE_CANNOT_BE_REDEEMED, null=True, blank=True) # 0 l'utente NON può richiedere il premio, 1 l'utente può richiedere il premio, 2 l'utente ha già richiesto il premio
-    # activation via email
-    activation_key = models.CharField(max_length=40, blank=True)
-"""
+    def save_answers_list(answers_list, id_user):
+        """Function to save an answers list about user"""
+        question_obj = Question()
+        survey_obj = Survey()
+        questions_list = question_obj.get_all_questions()
+
+        if questions_list and user_obj:
+            for question in questions_list.iterkeys():
+                if answers_list[question.question_code]:
+                    # save user answer
+                    # TODO
+                    self.save_answers(answer_text=answers_list[question_code], id_question=question.id_question, id_survey=question.survey.id, id_user=id_user)
+
+        return True
+
+    def save_answers(answer_text, id_question, id_survey, id_user):
+        """Function to save/edit a single question's answers about user"""
+        answer_obj = Answer()
+
+        try:
+            # check if answer already exists
+            # TODO: controllare (stampando answer_obj) che se esiste carica quella esistente, altrimenti no
+            answer_obj = self.get_question_survey_answer(id_survey=id_survey, id_question=id_question)
+        except Answer.DoesNotExist:
+            pass
+
+        answer_obj.question.id = id_question
+        answer_obj.survey.id = id_survey
+        answer_obj.user.id = id_user
+        answer_obj.answer_text = answer_text
+        answer_obj.save()
+
+        return True
+
+    # TODO
+    def get_question_survey_answer(id_survey, id_question):
+        """Function to retrieve an answer about survey and question"""
+        return_var = False
+
+        try:
+            return_var = Answer.objects.get(survey__id=id_survey, question__id=id_question)
+        except Answer.DoesNotExist:
+            raise
+
+        return return_var
