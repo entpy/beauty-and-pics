@@ -45,11 +45,11 @@ class SurveyForm(forms.Form, FormCommonUtils):
         questions_list += question_obj.get_all_questions_about_survey(survey_code=DS_SURVEYS_CODE_IS_NOT_MODEL)
 
         for question in questions_list:
-            question_info = question_obj.get_question_string_about_code(question_code=question.question_code)
-	    if question_info.get("question_type") == "text":
-		self.fields[question.question_code] = forms.CharField(label=question_info.get("question_text_woman"), required=question_info.get("required"), widget=forms.TextInput(attrs={'placeholder': question_info.get("question_hint_woman"), 'survey_code': question_info.get("survey_code"), 'default_hidden': question_info.get("default_hidden"), 'question_type': question_info.get("question_type")}))
+            question_label = question_obj.get_label_about_question_code(question_code=question.question_code)
+	    if question.get("question_type") == "text":
+		self.fields[question.question_code] = forms.CharField(label=question_label.get("question_text_woman"), required=question.get("required"), widget=forms.TextInput(attrs={'placeholder': question_label.get("question_hint_woman"), 'survey_code': question.get("survey_code"), 'default_hidden': question.get("default_hidden"), 'question_type': question.get("question_type")}))
 	    else:
-		self.fields[question.question_code] = forms.ChoiceField(label=question_info.get("question_text_woman"), choices=self.ALREADY_MODEL_CHOICES, required=question_info.get("required"), widget=forms.TextInput(attrs={'placeholder': question_info.get("question_hint_woman"), 'survey_code': question_info.get("survey_code"), 'default_hidden': question_info.get("default_hidden"), 'question_type': question_info.get("question_type")})) 
+		self.fields[question.question_code] = forms.ChoiceField(label=question_label.get("question_text_woman"), choices=self.ALREADY_MODEL_CHOICES, required=question.get("required"), widget=forms.TextInput(attrs={'placeholder': question_label.get("question_hint_woman"), 'survey_code': question.get("survey_code"), 'default_hidden': question.get("default_hidden"), 'question_type': question.get("question_type")})) 
 
     def clean(self):
 	super(SurveyForm, self).clean_form_custom()
@@ -57,7 +57,9 @@ class SurveyForm(forms.Form, FormCommonUtils):
 
     def save_form(self):
         answer_obj = Answer();
-        answer_obj.save_answers_list(answers_list=self.form_validated_data, id_user=self.request_data.user.id)
+        logger.debug("elenco di risposte preparate per il salvataggio: " + str(self.form_validated_data))
+        logger.debug("id_user: " + str(self.request_data.user.id))
+        answer_obj.save_answers_list(id_user=self.request_data.user.id, answers_list=self.form_validated_data)
 
         return True
 
