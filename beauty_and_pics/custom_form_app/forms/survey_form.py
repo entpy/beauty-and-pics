@@ -25,7 +25,7 @@ class SurveyForm(forms.Form, FormCommonUtils):
     )
 
     ALREADY_MODEL_CHOICES = (
-	('', '-'),
+	('-', '-'),
 	('yes', 'Si'),
 	('no', 'No'),
     )
@@ -40,9 +40,7 @@ class SurveyForm(forms.Form, FormCommonUtils):
 
         # retrieve a list of questions about a survey
         question_obj = Question()
-        questions_list = question_obj.get_all_questions_about_survey(survey_code=DS_SURVEYS_CODE_ABOUT_USER)
-        questions_list += question_obj.get_all_questions_about_survey(survey_code=DS_SURVEYS_CODE_IS_MODEL)
-        questions_list += question_obj.get_all_questions_about_survey(survey_code=DS_SURVEYS_CODE_IS_NOT_MODEL)
+        questions_list = question_obj.get_all_questions_about_survey(survey_code_list=[DS_SURVEYS_CODE_ABOUT_USER, DS_SURVEYS_CODE_IS_MODEL, DS_SURVEYS_CODE_IS_NOT_MODEL])
 
         for question in questions_list:
             question_label = question_obj.get_label_about_question_code(question_code=question.get("question_code"))
@@ -59,7 +57,7 @@ class SurveyForm(forms.Form, FormCommonUtils):
         answer_obj = Answer();
         logger.debug("elenco di risposte preparate per il salvataggio: " + str(self.form_validated_data))
         logger.debug("id_user: " + str(self.request_data.user.id))
-        answer_obj.save_answers_list(id_user=self.request_data.user.id, answers_list=self.form_validated_data)
+        answer_obj.save_answers_list(id_user=self.request_data.user.id, answers_list=self.form_validated_data, survey_code_list=[DS_SURVEYS_CODE_ABOUT_USER, DS_SURVEYS_CODE_IS_MODEL, DS_SURVEYS_CODE_IS_NOT_MODEL])
 
         return True
 

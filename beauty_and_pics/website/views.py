@@ -37,6 +37,7 @@ from image_contest_app.settings import ICA_LIKE_LIMIT
 from website.exceptions import ContestClosedNotExistsError
 from image_contest_app.exceptions import ImageAlreadyVotedError, ImageContestClosedError
 from image_contest_app.models import ImageContest, ImageContestImage, ImageContestVote
+from django_survey.models import Answer
 import logging, time, urllib
 
 # Get an instance of a logger
@@ -1041,6 +1042,7 @@ def profile_get_prize(request):
 @user_passes_test(check_if_is_a_catwalker_user)
 def profile_interview(request):
     """Create interview view"""
+    answers_obj = Answer()
     # set current contest_type
     account_obj =  Account()
     autenticated_user_data = account_obj.get_autenticated_user_data(request=request)
@@ -1062,10 +1064,11 @@ def profile_interview(request):
     else:
         # pre-prepopulate post dictionary with current user data
         # request.POST = autenticated_user_data
+	request.POST = answers_obj.get_answers_about_survey_list(survey_list=['about_user', 'is_model', 'is_not_model'])
         form = SurveyForm()
 
     context = {
-        # "post" : request.POST,
+        "post" : request.POST,
         'form': form,
     }
 
