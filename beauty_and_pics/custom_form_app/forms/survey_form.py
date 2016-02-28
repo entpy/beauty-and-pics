@@ -45,11 +45,11 @@ class SurveyForm(forms.Form, FormCommonUtils):
         questions_list += question_obj.get_all_questions_about_survey(survey_code=DS_SURVEYS_CODE_IS_NOT_MODEL)
 
         for question in questions_list:
-            question_label = question_obj.get_label_about_question_code(question_code=question.question_code)
+            question_label = question_obj.get_label_about_question_code(question_code=question.get("question_code"))
 	    if question.get("question_type") == "text":
-		self.fields[question.question_code] = forms.CharField(label=question_label.get("question_text_woman"), required=question.get("required"), widget=forms.TextInput(attrs={'placeholder': question_label.get("question_hint_woman"), 'survey_code': question.get("survey_code"), 'default_hidden': question.get("default_hidden"), 'question_type': question.get("question_type")}))
+		self.fields[question.get("question_code")] = forms.CharField(label=question_label.get("question_text_woman"), required=question.get("required"), widget=forms.TextInput(attrs={'placeholder': question_label.get("question_hint_woman"), 'case_1_survey_code': question.get("case_1_survey__survey_code"), 'case_2_survey_code': question.get("case_2_survey__survey_code"), 'survey_code': question.get("survey__survey_code"), 'default_hidden': question.get("default_hidden"), 'question_type': question.get("question_type")}))
 	    else:
-		self.fields[question.question_code] = forms.ChoiceField(label=question_label.get("question_text_woman"), choices=self.ALREADY_MODEL_CHOICES, required=question.get("required"), widget=forms.TextInput(attrs={'placeholder': question_label.get("question_hint_woman"), 'survey_code': question.get("survey_code"), 'default_hidden': question.get("default_hidden"), 'question_type': question.get("question_type")})) 
+		self.fields[question.get("question_code")] = forms.ChoiceField(label=question_label.get("question_text_woman"), choices=self.ALREADY_MODEL_CHOICES, required=question.get("required"), widget=forms.TextInput(attrs={'placeholder': question_label.get("question_hint_woman"), 'case_1_survey_code': question.get("case_1_survey__survey_code"), 'case_2_survey_code': question.get("case_2_survey__survey_code"), 'survey_code': question.get("survey__survey_code"), 'default_hidden': question.get("default_hidden"), 'question_type': question.get("question_type")})) 
 
     def clean(self):
 	super(SurveyForm, self).clean_form_custom()

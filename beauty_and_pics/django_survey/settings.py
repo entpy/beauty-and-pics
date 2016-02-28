@@ -85,6 +85,8 @@ DS_SURVEYS_QUESTIONS = [
         'required' : 0,
         'order' : 70,
         'default_hidden' : 0,
+	'case_1_survey_code' : DS_SURVEYS_CODE_IS_MODEL,
+	'case_2_survey_code' : DS_SURVEYS_CODE_IS_NOT_MODEL,
     },
     # survey is_model
     {

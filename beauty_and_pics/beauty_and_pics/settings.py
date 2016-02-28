@@ -185,7 +185,7 @@ LOGGING = {
         'file_info':{
             'level':'INFO',
             'class': 'logging.FileHandler',
-            'filename': '/tmp/bep_debug.log',
+            'filename': '/tmp/bep_info.log',
             'formatter': 'simple',
         },
         # Warning messages are sent to admin emails

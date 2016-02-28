@@ -13,7 +13,7 @@ sys.setdefaultencoding("utf8")
 logger = logging.getLogger(__name__)
 
 class Survey(models.Model):
-    id_survey = models.AutoField(primary_key=True)
+    survey_id = models.AutoField(primary_key=True)
     survey_code = models.CharField(max_length=50)
     survey_description = models.CharField(max_length=150)
 
@@ -21,7 +21,7 @@ class Survey(models.Model):
         app_label = 'django_survey'
 
     def __unicode__(self):
-        return str(self.id_survey)
+        return str(self.survey_id)
 
     def _manage_surveys(self):
         """Function to create survey and related questions"""
@@ -58,19 +58,22 @@ class Survey(models.Model):
         return return_var
 
 class Question(models.Model):
-    id_question = models.AutoField(primary_key=True)
+    question_id = models.AutoField(primary_key=True)
     survey = models.ForeignKey(Survey)
     question_code = models.CharField(max_length=50)
     question_type = models.CharField(max_length=20)
     required = models.IntegerField(default=0)
     order = models.IntegerField(default=0)
     default_hidden = models.IntegerField(default=0)
+    case_1_survey = models.ForeignKey(Survey, null=True, blank=True, related_name='case_1_survey')
+    case_2_survey = models.ForeignKey(Survey, null=True, blank=True, related_name='case_2_survey')
 
     class Meta:
         app_label = 'django_survey'
+	unique_together = ('survey', 'question_code')
 
     def __unicode__(self):
-        return str(self.id_question)
+        return str(self.question_id)
 
     def _create_default_questions(self):
         """Function to create default questions"""
@@ -79,7 +82,10 @@ class Question(models.Model):
 
         if DS_SURVEYS_QUESTIONS:
             for question in DS_SURVEYS_QUESTIONS:
-                if not self.get_question_by_code(question_code=question.get('question_code')):
+                try:
+		    self.get_question_by_code(question_code=question.get('question_code'))
+		except:
+		    logger.info("inserisco default questions: " + str(question.get('question_code')))
                     # question must be saved
                     question_obj = Question()
                     question_obj.survey = survey_obj.get_survey_by_code(survey_code=question.get('survey_code'))
@@ -88,6 +94,8 @@ class Question(models.Model):
                     question_obj.required = question.get('required')
                     question_obj.order = question.get('order')
                     question_obj.default_hidden = question.get('default_hidden')
+                    question_obj.case_1_survey = survey_obj.get_survey_by_code(survey_code=question.get('case_1_survey_code'))
+                    question_obj.case_2_survey = survey_obj.get_survey_by_code(survey_code=question.get('case_2_survey_code'))
                     question_obj.save()
 
         return True
@@ -105,7 +113,7 @@ class Question(models.Model):
     def get_all_questions_about_survey(self, survey_code):
         """Function to retrieve all questions about a survey"""
 
-        return list(Question.objects.values('required', 'question_code', 'question_type', 'order', 'default_hidden', 'survey__survey_code').filter(survey__survey_code=survey_code).order_by("order"))
+        return list(Question.objects.values('required', 'question_code', 'question_type', 'order', 'default_hidden', 'survey__survey_code', 'case_1_survey__survey_code', 'case_2_survey__survey_code').filter(survey__survey_code=survey_code).order_by("order"))
 
     def get_all_questions(self):
         """Function to retrieve all questions"""
@@ -134,6 +142,7 @@ class Answer(models.Model):
 
     class Meta:
         app_label = 'django_survey'
+	unique_together = ('question', 'survey', 'user')
 
     def __unicode__(self):
         return str(self.id_answer)
@@ -151,40 +160,37 @@ class Answer(models.Model):
                 if answers_list[question.question_code]:
                     # save user answer
                     # TODO
-                    self.save_answers(answer_text=answers_list[question.question_code], id_question=question.id_question, id_survey=question.survey.id_survey, id_user=id_user)
+                    self.save_answers(answer_text=answers_list[question.question_code], question_id=question.question_id, survey_id=question.survey.survey_id, id_user=id_user)
 
         return True
 
-    def save_answers(self, answer_text, id_question, id_survey, id_user):
+    def save_answers(self, answer_text, question_id, survey_id, id_user):
         """Function to save/edit a single question's answers about user"""
         answer_obj = Answer()
 
-        """
         try:
             # check if answer already exists
-            # TODO: controllare (stampando answer_obj) che se esiste carica quella esistente, altrimenti no
-            answer_obj = self.get_question_survey_answer(id_survey=id_survey, id_question=id_question)
+            # controllare, se esiste carica quella esistente, altrimenti no
+            answer_obj = self.get_question_survey_answer(survey_id=survey_id, question_id=question_id)
         except Answer.DoesNotExist:
             pass
-        """
 
-        logger.debug("salvataggio risposta, answer_text: " + str(answer_text) + " id_question: " + str(id_question) + " id_survey: " + str(id_survey) + " id_user: " + str(id_user))
+        logger.info("salvataggio risposta, answer_text: " + str(answer_text) + " question_id: " + str(question_id) + " survey_id: " + str(survey_id) + " id_user: " + str(id_user))
 
-        answer_obj.id_question = id_question
-        answer_obj.id_survey = id_survey
+        answer_obj.question_id = question_id
+        answer_obj.survey_id = survey_id
         answer_obj.user_id = id_user
         answer_obj.answer_text = answer_text
         answer_obj.save()
 
         return True
 
-    # TODO
-    def get_question_survey_answer(self, id_survey, id_question):
+    def get_question_survey_answer(self, survey_id, question_id):
         """Function to retrieve an answer about survey and question"""
         return_var = False
 
         try:
-            return_var = Answer.objects.get(survey__id_survey=id_survey, question__id_question=id_question)
+            return_var = Answer.objects.get(survey__survey_id=survey_id, question__question_id=question_id)
         except Answer.DoesNotExist:
             raise
 

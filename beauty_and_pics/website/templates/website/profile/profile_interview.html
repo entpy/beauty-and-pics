@@ -55,13 +55,13 @@
 			<input type="hidden" name="form_class" value="SurveyForm">
 			<fieldset class="col-md-12">
 				{% for field in form %}
-					<div class="form-group {{ field.field.widget.attrs.survey_code }} {% if field.field.widget.attrs.default_hidden %}hide{% endif %} {% if field.errors %}has-error{% endif %}">
+					<div  class="form-group {{ field.field.widget.attrs.survey_code }} {% if field.field.widget.attrs.default_hidden %}hide{% endif %} {% if field.errors %}has-error{% endif %}">
 						<label for="{{ field.id_for_label }}" class="col-md-4 control-label">{{ field.label }} {% if field.field.required %}*{% endif %}</label>
 						<div class="col-md-7">
 							{% if field.field.widget.attrs.question_type == "text" %}
 								<textarea name="{{ field.name }}" class="form-control" id="{{ field.id_for_label }}" placeholder="{{ field.field.widget.attrs.placeholder }}">{{ post.first_name }}</textarea>
 							{% else %}
-								<select name="{{ field.name }}" class="form-control surveyChangeClickAction" id="{{ field.id_for_label }}">
+								<select data-survey1code="{{ field.field.widget.attrs.case_1_survey_code }}" data-survey2code="{{ field.field.widget.attrs.case_2_survey_code }}" name="{{ field.name }}" class="form-control surveyChangeClickAction" id="{{ field.id_for_label }}">
 									{% for key,value in field.field.choices %}
 										<option value="{{ key }}" {% if post.eyes == key|slugify %}selected="selected"{% endif %}>{{ value }}</option>
 									{% endfor %}
@@ -86,16 +86,17 @@
 {{ block.super }}
 <script>
 	$(document).ready(function(){
+		// todo: chiamare questa funzione per ogni select per precaricare i survey già inseriti
 		$(document).on("change", ".surveyChangeClickAction", function(){
 			if ($(this).val() == "no") {
-			    $(".is_model").addClass("hide");
-			    $(".is_not_model").removeClass("hide");
+			    $("." + $(this).data("survey1code")).addClass("hide");
+			    $("." + $(this).data("survey2code")).removeClass("hide");
 			} else if ($(this).val() == "yes") {
-			    $(".is_model").removeClass("hide");
-			    $(".is_not_model").addClass("hide");
+			    $("." + $(this).data("survey1code")).removeClass("hide");
+			    $("." + $(this).data("survey2code")).addClass("hide");
 			} else {
-			    $(".is_model").addClass("hide");
-			    $(".is_not_model").addClass("hide");
+			    $("." + $(this).data("survey1code")).addClass("hide");
+			    $("." + $(this).data("survey2code")).addClass("hide");
 			}
 
 			return true;
