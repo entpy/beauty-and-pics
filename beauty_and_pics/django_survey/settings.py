@@ -236,31 +236,35 @@ DS_SURVEYS_QUESTIONS_LABEL = {
 Ciao <nome_utente>, parliamo un po' di te!
 D: Dicci dove sei nata e le tue passioni
 D: Descrivici la tua giornata tipo
-D: Il tuo pregio più grande?
-D: Il tuo "peggior" difetto?
+D: Il tuo pregio più grande e il tuo "peggior" difetto?
 
-D: il tuo marchio preferito?
+D: Qual'è il marchio che ami di più indossare?
 if (Hai qualche hobby?) {
     D: Qual'è il tuo hobby?
 }
 
-D: Mare o montagna?
-D: Estate o inverno?
+D: Definisci il tuo concetto di "bellezza"?
 
-D: Una massima in cui ti rispecchi?,
+D: Una massima in cui ti rispecchi?
 
-if (Lavori nel settore della moda?) {
+if (Lavori nel settore fotografico e/o della moda?) {
     if (Sei una modella?) {
         D: Come hai iniziato a fare la modella?
         D: Lo/la stilista per cui vorresti sfilare?
         D: Cosa vorresti fare dopo la tua carriera di modella?
         D: Alcuni nomi con cui hai lavorato?
+        D: Alcuni nomi con cui non hai mai lavorato ma ti piacerebbe?
     } else {
+	D: Spiegagi meglio il tuo lavoro
         D: Con chi ti piacerebbe lavorare?
         D: 
     }
 } else {
-    D: Vorresti lavorare nel settore della moda?
+    if (Vorresti lavorare nel settore fotografico o della moda?) {
+	D: Cosa ti piacerebbe fare di preciso?
+    } else {
+
+    }
 }
 
 """
