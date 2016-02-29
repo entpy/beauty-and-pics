@@ -9,14 +9,15 @@ DS_SURVEYS_QUESTION_TYPE_TEXT = 'text' # se la risposta è campo libero
 DS_SURVEYS_QUESTION_TYPE_BOOLEAN = 'boolean' # se la risposta è si/no
 
 DS_SURVEYS_CODE_ABOUT_USER = 'about_user'
+DS_SURVEYS_CODE_ABOUT_USER = 'about_fashion_user'
 DS_SURVEYS_CODE_IS_MODEL = 'is_model'
 DS_SURVEYS_CODE_IS_NOT_MODEL = 'is_not_model'
 
 # surveys list
 DS_SURVEYS_LIST = [
     { 'survey_code' : DS_SURVEYS_CODE_ABOUT_USER, 'survey_description' : 'Questionario generico su un utente', },
-    { 'survey_code' : 'is_model', 'survey_description' : "Questionario se l'utente è già modella/o", },
-    { 'survey_code' : 'is_not_model', 'survey_description' : "Questionario se l'utente non è ancora modella/o", },
+    { 'survey_code' : DS_SURVEYS_CODE_IS_MODEL, 'survey_description' : "Questionario se l'utente è già modella/o", },
+    { 'survey_code' : DS_SURVEYS_CODE_IS_NOT_MODEL, 'survey_description' : "Questionario se l'utente non è ancora modella/o", },
 ]
 
 # questions list
@@ -32,39 +33,7 @@ DS_SURVEYS_QUESTIONS = [
     },
     {
         'survey_code' : DS_SURVEYS_CODE_ABOUT_USER,
-        'question_code' : 'about_user_100',
-        'question_type' : DS_SURVEYS_QUESTION_TYPE_TEXT,
-        'required' : 0,
-        'order' : 10,
-        'default_hidden' : 0,
-    },
-    {
-        'survey_code' : DS_SURVEYS_CODE_ABOUT_USER,
-        'question_code' : 'about_user_200',
-        'question_type' : DS_SURVEYS_QUESTION_TYPE_TEXT,
-        'required' : 0,
-        'order' : 20,
-        'default_hidden' : 0,
-    },
-    {
-        'survey_code' : DS_SURVEYS_CODE_ABOUT_USER,
-        'question_code' : 'about_user_300',
-        'question_type' : DS_SURVEYS_QUESTION_TYPE_TEXT,
-        'required' : 0,
-        'order' : 30,
-        'default_hidden' : 0,
-    },
-    {
-        'survey_code' : DS_SURVEYS_CODE_ABOUT_USER,
-        'question_code' : 'about_user_400',
-        'question_type' : DS_SURVEYS_QUESTION_TYPE_TEXT,
-        'required' : 0,
-        'order' : 40,
-        'default_hidden' : 0,
-    },
-    {
-        'survey_code' : DS_SURVEYS_CODE_ABOUT_USER,
-        'question_code' : 'about_user_500',
+        'question_code' : 'about_user_050',
         'question_type' : DS_SURVEYS_QUESTION_TYPE_TEXT,
         'required' : 0,
         'order' : 50,
@@ -72,10 +41,50 @@ DS_SURVEYS_QUESTIONS = [
     },
     {
         'survey_code' : DS_SURVEYS_CODE_ABOUT_USER,
+        'question_code' : 'about_user_100',
+        'question_type' : DS_SURVEYS_QUESTION_TYPE_TEXT,
+        'required' : 0,
+        'order' : 100,
+        'default_hidden' : 0,
+    },
+    {
+        'survey_code' : DS_SURVEYS_CODE_ABOUT_USER,
+        'question_code' : 'about_user_200',
+        'question_type' : DS_SURVEYS_QUESTION_TYPE_TEXT,
+        'required' : 0,
+        'order' : 200,
+        'default_hidden' : 0,
+    },
+    {
+        'survey_code' : DS_SURVEYS_CODE_ABOUT_USER,
+        'question_code' : 'about_user_300',
+        'question_type' : DS_SURVEYS_QUESTION_TYPE_TEXT,
+        'required' : 0,
+        'order' : 300,
+        'default_hidden' : 0,
+    },
+    {
+        'survey_code' : DS_SURVEYS_CODE_ABOUT_USER,
+        'question_code' : 'about_user_400',
+        'question_type' : DS_SURVEYS_QUESTION_TYPE_TEXT,
+        'required' : 0,
+        'order' : 400,
+        'default_hidden' : 0,
+    },
+    {
+        'survey_code' : DS_SURVEYS_CODE_ABOUT_USER,
+        'question_code' : 'about_user_500',
+        'question_type' : DS_SURVEYS_QUESTION_TYPE_TEXT,
+        'required' : 0,
+        'order' : 500,
+        'default_hidden' : 0,
+    },
+    {
+        'survey_code' : DS_SURVEYS_CODE_ABOUT_USER,
         'question_code' : 'about_user_600',
         'question_type' : DS_SURVEYS_QUESTION_TYPE_TEXT,
         'required' : 0,
-        'order' : 60,
+        'order' : 600,
         'default_hidden' : 0,
     },
     {
@@ -83,7 +92,7 @@ DS_SURVEYS_QUESTIONS = [
         'question_code' : 'about_user_700',
         'question_type' : DS_SURVEYS_QUESTION_TYPE_BOOLEAN,
         'required' : 0,
-        'order' : 70,
+        'order' : 700,
         'default_hidden' : 0,
 	'case_1_survey_code' : DS_SURVEYS_CODE_IS_MODEL,
 	'case_2_survey_code' : DS_SURVEYS_CODE_IS_NOT_MODEL,
@@ -94,7 +103,7 @@ DS_SURVEYS_QUESTIONS = [
         'question_code' : 'is_model_000',
         'question_type' : DS_SURVEYS_QUESTION_TYPE_TEXT,
         'required' : 0,
-        'order' : 80,
+        'order' : 800,
         'default_hidden' : 1,
     },
     {
@@ -102,7 +111,7 @@ DS_SURVEYS_QUESTIONS = [
         'question_code' : 'is_model_100',
         'question_type' : DS_SURVEYS_QUESTION_TYPE_TEXT,
         'required' : 0,
-        'order' : 90,
+        'order' : 900,
         'default_hidden' : 1,
     },
     {
@@ -110,7 +119,7 @@ DS_SURVEYS_QUESTIONS = [
         'question_code' : 'is_model_200',
         'question_type' : DS_SURVEYS_QUESTION_TYPE_TEXT,
         'required' : 0,
-        'order' : 100,
+        'order' : 1000,
         'default_hidden' : 1,
     },
     # survey is_not_model
@@ -119,7 +128,7 @@ DS_SURVEYS_QUESTIONS = [
         'question_code' : 'is_not_model_000',
         'question_type' : DS_SURVEYS_QUESTION_TYPE_TEXT,
         'required' : 0,
-        'order' : 110,
+        'order' : 1100,
         'default_hidden' : 1,
     },
     {
@@ -127,7 +136,7 @@ DS_SURVEYS_QUESTIONS = [
         'question_code' : 'is_not_model_100',
         'question_type' : DS_SURVEYS_QUESTION_TYPE_TEXT,
         'required' : 0,
-        'order' : 120,
+        'order' : 1200,
         'default_hidden' : 1,
     },
 ]
@@ -136,10 +145,16 @@ DS_SURVEYS_QUESTIONS = [
 DS_SURVEYS_QUESTIONS_LABEL = {
     # survey about_user
     'about_user_000' : {
-        'question_text_woman' : 'Qualcosa su di te?',
-        'question_text_man' : 'Qualcosa su di te?',
-        'question_hint_woman' : 'Descrivi in poche righe dove sei nata, chi sei e le tue passioni',
-        'question_hint_man' : 'Descrivi in poche righe dove sei nato, chi sei e le tue passioni',
+        'question_text_woman' : 'Dicci qualcosa di te',
+        'question_text_man' : 'Dicci qualcosa di te',
+        'question_hint_woman' : 'Descrivi dove sei nata, chi sei e le tue passioni',
+        'question_hint_man' : 'Descrivi dove sei nato, chi sei e le tue passioni',
+    },
+    'about_user_050' : {
+        'question_text_woman' : 'Lavori o ti appassiona il settore della moda?',
+        'question_text_man' : 'Lavori o ti appassiona il settore della moda?',
+        'question_hint_woman' : '',
+        'question_hint_man' : '',
     },
     'about_user_100' : {
         'question_text_woman' : "Qual'è il tuo motto?",
@@ -178,8 +193,8 @@ DS_SURVEYS_QUESTIONS_LABEL = {
         'question_hint_man' : 'Scrivi una causa in cui credi',
     },
     'about_user_700' : {
-        'question_text_woman' : 'Sei già una modella?',
-        'question_text_man' : 'Sei già un modello?',
+        'question_text_woman' : 'Sei una modella?',
+        'question_text_man' : 'Sei un modello?',
         'question_hint_woman' : '',
         'question_hint_man' : '',
     },
@@ -216,3 +231,36 @@ DS_SURVEYS_QUESTIONS_LABEL = {
         'question_hint_man' : "Scrivi qualcosa di convincente per essere contattato",
     },
 }
+
+"""
+Ciao <nome_utente>, parliamo un po' di te!
+D: Dicci dove sei nata e le tue passioni
+D: Descrivici la tua giornata tipo
+D: Il tuo pregio più grande?
+D: Il tuo "peggior" difetto?
+
+D: il tuo marchio preferito?
+if (Hai qualche hobby?) {
+    D: Qual'è il tuo hobby?
+}
+
+D: Mare o montagna?
+D: Estate o inverno?
+
+D: Una massima in cui ti rispecchi?,
+
+if (Lavori nel settore della moda?) {
+    if (Sei una modella?) {
+        D: Come hai iniziato a fare la modella?
+        D: Lo/la stilista per cui vorresti sfilare?
+        D: Cosa vorresti fare dopo la tua carriera di modella?
+        D: Alcuni nomi con cui hai lavorato?
+    } else {
+        D: Con chi ti piacerebbe lavorare?
+        D: 
+    }
+} else {
+    D: Vorresti lavorare nel settore della moda?
+}
+
+"""

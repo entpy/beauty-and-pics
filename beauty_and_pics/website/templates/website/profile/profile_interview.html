@@ -74,7 +74,7 @@
 				<div class="error_container"></div>
 				<div class="form-group">
 					<div class="col-md-8 col-md-offset-4">
-						<button type="submit" class="btn btn-success submitButtonClickAction">Salva</button>
+						<button type="submit" class="btn btn-success submitButtonClickAction">Pubblica intervista</button>
 					</div>
 				</div>
 			</fieldset>
@@ -84,7 +84,6 @@
 {% endblock container4_content %}
 {% block custom_js %}
 {{ block.super }}
-<script src="{% static "website/js/vendor/underscore-min.js" %}"></script>
 <script>
 	$(document).ready(function(){
 		$(document).on("change", ".surveyChangeClickAction", function(){

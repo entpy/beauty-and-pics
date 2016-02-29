@@ -200,11 +200,13 @@ class Answer(models.Model):
     def get_answers_about_survey_list(self, survey_list):
         """Function to retrieve answers about a survey list"""
         return_var = {}
-
-	answers_list =  list(Answer.objects.values('question__question_code', 'answer_text').filter(survey__survey_code__in=survey_list))
+	answers_list =  list(Answer.objects.values('question__question_code', 'question__question_type', 'question__case_1_survey', 'question__case_2_survey', 'answer_text').filter(survey__survey_code__in=survey_list))
 	if answers_list:
 	     for single_answer_info in answers_list:
 		return_var[single_answer_info.get('question__question_code')] = single_answer_info.get('answer_text')
+		return_var[single_answer_info.get('question__question_code')]['question_type'] = single_answer_info.get('question__question_type')
+		return_var[single_answer_info.get('question__question_code')]['case_1_survey'] = single_answer_info.get('question__case_1_survey')
+		return_var[single_answer_info.get('question__question_code')]['case_2_survey'] = single_answer_info.get('question__case_2_survey')
 
 	logger.info("all answers about survey: " + str(return_var))
 

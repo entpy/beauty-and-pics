@@ -394,7 +394,12 @@ def catwalk_index(request, contest_type=None):
 def catwalk_profile(request, user_id):
     # common method class init
     CommonUtils_obj = CommonUtils()
-    account_obj =  Account()
+    account_obj = Account()
+    vote_obj = Vote()
+    book_obj = Book()
+    contest_obj = Contest()
+    favorite_obj = Favorite()
+    answers_obj = Answer()
 
     try:
         # retrieve user info
@@ -404,18 +409,16 @@ def catwalk_profile(request, user_id):
         return HttpResponseRedirect('/index/')
 
     # set current contest_type
-    contest_obj = Contest()
     contest_obj.set_contest_type(request=request, contest_type=account_info["contest_type"])
 
     # retrieve contest user info
     contest_account_info = account_obj.get_contest_account_info(user_id=user_id, contest_type=contest_obj.get_contest_type_from_session(request=request))
 
     # retrieve profile image url
-    book_obj = Book()
     profile_image_url = book_obj.get_profile_image_url(user_id=user_id)
 
-    # check if this catwalker can be voted
-    vote_obj = Vote()
+    # survey answers
+    survey_answers_list = answers_obj.get_answers_about_survey_list(survey_list=['about_user', 'is_model', 'is_not_model'])
 
     contest_is_open = False
     user_already_registered = False
@@ -423,7 +426,6 @@ def catwalk_profile(request, user_id):
     user_already_voted = False
 
     # check if favorite already exists for this account 
-    favorite_obj = Favorite()
     user_already_favorite = favorite_obj.check_if_favorite_exists(user_id=request.user.id, favorite_user_id=user_id)
 
     # controlli annidati
@@ -459,6 +461,7 @@ def catwalk_profile(request, user_id):
         "user_already_registered" : user_already_registered,
         "email_is_verified" : email_is_verified,
         "user_already_voted" : user_already_voted,
+        "survey_answers_list" : survey_answers_list,
     }
 
     return render(request, 'website/catwalk/catwalk_profile.html', context)
@@ -1063,7 +1066,6 @@ def profile_interview(request):
     # if a GET (or any other method) we'll create a blank form
     else:
         # pre-prepopulate post dictionary with current user data
-        # request.POST = autenticated_user_data
 	request.POST = answers_obj.get_answers_about_survey_list(survey_list=['about_user', 'is_model', 'is_not_model'])
         form = SurveyForm()
 
