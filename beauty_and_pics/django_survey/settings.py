@@ -267,4 +267,46 @@ if (Lavori nel settore fotografico e/o della moda?) {
     }
 }
 
+
+
+
+--- V" ---
+Ciao <nome_utente>, parliamo un po' di te!
+D: Dicci dove sei nata e le tue passioni
+D: Descrivici la tua giornata tipo
+D: Il tuo pregio più grande e il tuo "peggior" difetto?
+
+if (Hai qualche hobby?) {
+    D: Qual'è il tuo hobby?
+}
+
+D: Definisci il tuo concetto di "bellezza"?
+
+D: Una massima in cui ti rispecchi?
+
+D: Le tue marche preferite?
+
+if (Sei già una modella affermata?) {
+        D: Come è iniziata la tua avventura nel mondo della moda?
+        D: Lo/la stilista per cui vorresti sfilare?
+        D: Cosa vorresti fare dopo la tua carriera di modella?
+        D: Alcuni nomi con cui hai lavorato?
+        D: Qualche consiglio per chi vorrebbe entrare nel mondo della moda?
+} else {
+        D: Lo/la stilista con cui vorresti lavorare?
+        D: Com'è nata la tua passione per il mondo della moda?
+        D: La modella a cui ti ispiri?
+}
+
+
+
+
+-----v3
+<nome, quando nasce la tua passione per il mondo della moda, e quando la tua prima sfilata?
+Dopo quella prima esperienza, quali i progetti e gli eventi principali a cui hai partecipato sinora?
+Quali obiettivi ti poni per il medio termine?
+Quali i tuoi hobby oltre al mondo della moda?
+E’ difficile conciliare studio e la passione per la moda?
+Per concludere,  e quale è il messaggio che vorresti dare alle ragazze della tua età che si avvicinano al mondo della moda?
+
 """
