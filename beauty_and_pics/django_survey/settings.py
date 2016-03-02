@@ -309,4 +309,137 @@ Quali i tuoi hobby oltre al mondo della moda?
 E’ difficile conciliare studio e la passione per la moda?
 Per concludere,  e quale è il messaggio che vorresti dare alle ragazze della tua età che si avvicinano al mondo della moda?
 
+
+Ciao <nome_utente>, parliamo un po' di te!
+
+D: Seleziona la categoria che più ti rispecchia
+if(sono una modella affermata) {
+
+} else if (sono un'aspirante modella) {
+
+} else if (sono un'appassionata di moda) {
+    Parlaci un po' di te, dove sei nata e quali sono le tue passioni
+    Come è nata la passione per la moda?
+    Cosa ti appassiona più della moda?
+    Il tuo stile preferito durante il giorno?
+    Il tuo stile preferito la sera?
+} else if (sono un'appassionata di fotografia) {
+    Quando e come hai scoperto la fotografia?
+    La tua prima foto?
+    Qual è stato il tuo percorso di crescita e apprendimento dell'arte fotografica?
+    Secondo te fotografare è...?
+    Fotografi per lavoro o per diletto?
+    Qual è il tuo soggetto preferito?
+    Qual è il tuo genere fotografico preferito?
+} else if (sono una make up artist) {
+    Parlaci un po' di te, dove sei nata e quali sono le tue passioni
+    Mi piacerebbe iniziare proprio dal momento in cui è nato il desiderio di diventare una truccatrice
+    Quale percorso formativo hai intrapreso
+    Cosa ti piace o ami del tuo lavoro in particolare?
+    truccatrice/truccatore preferita/o?
+    colore che dona a tutte?
+    colore più difficile?
+    di cosa non puoi fare a meno nel tuo lavoro?
+} else if (sono una hair stylist) {
+    Parlaci un po' di te, dove sei nata e quali sono le tue passioni
+    Cosa significa essere una hair stylist?
+    Quale percorso formativo hai intrapreso
+    Dove nasce la sua ispirazione nel creare nuove acconciature e nuovi stili?
+    A proposito di stile, come definirebbe il suo?
+    Secondo te, quali saranno le tendenze della prossima stagione?
+} else if (sono una stilista) {
+    Come nasce questa tua passione per la moda?
+    Quale percorso formativo hai intrapreso
+    Quali sono i tuoi look preferiti?
+    Quali sono stati gli abbinamenti più difficili?
+    A cosa ti ispiri per le tue creazioni?
+    Raccontaci della tua ultima collezione
+    Secondo te, quali saranno le tendenze della prossima stagione?
+} else if (partecipo solo per divertimento) {
+    Parlaci un po' di te, dove sei nata e quali sono le tue passioni
+    Convinci la gente a darti un voto
+}
+
+----- v5 (forse la finale?)
+
+if (sono una modella/indossatrice/ragazza immagine professionista) {
+    D: Parlaci un po' di te, dove sei nata e quali sono le tue passioni
+    D: Come è iniziata la tua avventura nel mondo della moda?
+    D: Definisci quello che secondo te è la "bellezza"?
+    D: Il tuo pregio più grande e il tuo "peggior" difetto?
+    D: Quali sono i tuoi look preferiti?
+    D: Una massima o un motto in cui ti rispecchi?
+    if (Nutri altre passioni oltre al mondo della moda?) {
+        D: Quali altre passioni nutri oltre al mondo della moda?
+    }
+    D: La tua giornata tipo?
+    if (Hai già partecipato a sfilate sfilate?) {
+        D: A quali sfilate hai partecipato?
+        D: Cos'hai provato durante la tua prima sfilata?
+    } else {
+        if (C'è qualche stilista particolare per cui vorresti sfilare?) {
+            D: per quale stilista vorresti sfilare?
+        }
+    }
+    if (Hai già partecipato a qualche concorso/evento?) {
+        D: A quali concorsi/eventi hai partecipato?
+        if (Hai già vinto qualche titolo?) {
+            D: Quale o quali titoli hai vinto?
+        }
+    } else {
+        if (C'è qualche concorso/evento a cui vorresti partecipare?) {
+            D: A quale concorso/evento vorresti partecipare?
+        }
+    }
+    D: Alcune persone che ritieni importanti con cui hai lavorato?
+    D: E' stata dura arrivare ai tuoi risultati?
+    D: Qualche consiglio per chi vorrebbe entrare nel mondo della moda?
+} else if (sono una modella/indossatrice/ragazza immagine esordiente) {
+    D: Parlaci un po' di te, dove sei nata e quali sono le tue passioni
+    D: Com'è nata la tua passione per il mondo della moda?
+    D: La ragione principale per cui ti piacerebbe lavorare nel mondo della moda?
+    D: Definisci quello che secondo te è la "bellezza"?
+    D: Ti piacerebbe diventare la nuova Miss...
+    if (Nutri altre passioni oltre al mondo della moda?) {
+        D: Quali altre passioni nutri oltre al mondo della moda?
+    }
+    D: La tua giornata tipo?
+    D: Lo/la stilista per cui vorresti sfilare?
+    D: La tua modella ispiratrice?
+    D: Quali sono i tuoi look preferiti?
+    D: Colore preferito
+    D: Convinci la gente a darti un voto
+} else if (sono un'appassionata di fotografia) {
+    Parlaci un po' di te, dove sei nata e quali sono le tue passioni
+    D: La tua giornata tipo?
+    D: Quali sono i tuoi look preferiti?
+    D: Cosa ti appassiona di più della fotografia?
+    D: Definisci quello che secondo te è la "bellezza"?
+    D: Qual è il tuo genere fotografico preferito?
+    if (Hai qualche hobby oltre alla fotografia?) {
+        D: Qual'è il tuo hobby?
+    }
+    D: Convinci la gente a darti un voto
+} else if (sono un'appassionata di moda) {
+    D: Parlaci un po' di te, dove sei nata e quali sono le tue passioni
+    D: Come è nata questa tua passione per il mondo della moda?
+    D: Cosa ti appassiona più nel mondo della moda?
+    if (Nutri altre passioni oltre al mondo della moda?) {
+        D: Quali altre passioni nutri oltre al mondo della moda?
+    }
+    D: Il tuo pregio più grande e il tuo "peggior" difetto?
+    D: Definisci quello che secondo te è la "bellezza"?
+    D: Il tuo stile preferito "giornaliero"?
+    D: Il tuo stile preferito "serale"?
+    D: Convinci la gente a darti un voto
+} else if (partecipo solo per divertimento/altro) {
+    D: Parlaci un po' di te, dove sei nata e quali sono le tue passioni
+    D: Il tuo pregio più grande e il tuo "peggior" difetto?
+    D: Quali sono i tuoi look preferiti?
+    if (Hai qualche hobby?) {
+        D: Qual'è il tuo hobby?
+    }
+    D: Una massima in cui ti rispecchi?
+    D: Convinci la gente a darti un voto
+}
 """
