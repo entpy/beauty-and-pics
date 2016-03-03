@@ -361,6 +361,17 @@ if(sono una modella affermata) {
 }
 
 ----- v5 (forse la finale?)
+question types
+    - select
+    - text
+    - boolean
+    - radio
+
+user_identify
+model_pro
+model_beginner
+fashion_passionate
+just_for_fun
 
 if (sono una modella/indossatrice/ragazza immagine professionista) {
     D: Parlaci un po' di te, dove sei nata e quali sono le tue passioni
@@ -373,7 +384,7 @@ if (sono una modella/indossatrice/ragazza immagine professionista) {
         D: Quali altre passioni nutri oltre al mondo della moda?
     }
     D: La tua giornata tipo?
-    if (Hai già partecipato a sfilate sfilate?) {
+    if (Hai già partecipato a sfilate?) {
         D: A quali sfilate hai partecipato?
         D: Cos'hai provato durante la tua prima sfilata?
     } else {
@@ -442,4 +453,116 @@ if (sono una modella/indossatrice/ragazza immagine professionista) {
     D: Una massima in cui ti rispecchi?
     D: Convinci la gente a darti un voto
 }
+
+question types
+    - select
+    - text
+    - boolean
+    - radio
+
+user_identify
+model_pro
+model_beginner
+photo_passionate
+fashion_passionate
+just_for_fun
 """
+# gruppi di domande
+DS_QUESTIONS_GROUPS = [
+    'user_interview',
+]
+
+# blocchi di domande per ogni gruppo
+DS_QUESTIONS_BLOCK = [
+    'user_interview__user_identify',
+    'user_interview__model_pro',
+    'user_interview__model_beginner',
+    'user_interview__photo_passionate',
+    'user_interview__fashion_passionate',
+    'user_interview__just_for_fun',
+]
+
+# elenco di domande per ogni blocco
+DS_QUESTIONS_AND_SELECTABLE_ANSWERS = [
+    {
+        # D: Seleziona una categoria
+        'question_block' : 'user_interview__user_identify',
+        'question_code' : 'user_interview__user_identify__q1',
+        'question_type' : 'select',
+        'required' : 1,
+        'order' : 0,
+        'default_hidden' : 0,
+        'answers' : [
+            { 
+                # Sono una modella/ragazza immagine/indossatrice professionista
+                'answer_code' : 'user_interview__user_identify__q1__model_pro',
+                'next_question_block' : 'user_interview__model_pro',
+            },
+            { 
+                # Sono una modella/ragazza immagine/indossatrice emergente
+                'answer_code' : 'user_interview__user_identify__q1__model_beginner',
+                'next_question_block' : 'user_interview__model_beginner',
+            },
+            { 
+                # Sono appassionata di foto
+                'answer_code' : 'user_interview__user_identify__q1__photo_passionate',
+                'next_question_block' : 'user_interview__photo_passionate',
+            },
+            { 
+                # Sono appassionata di moda
+                'answer_code' : 'user_interview__user_identify__q1__fashion_passionate',
+                'next_question_block' : 'user_interview__fashion_passionate',
+            },
+            { 
+                # Solo per divertimento/altro
+                'answer_code' : 'user_interview__user_identify__q1__just_for_fun',
+                'next_question_block' : 'user_interview__just_for_fun',
+            },
+        ],
+    },
+    {
+        # D: Parlaci un po' di te, dove sei nata e quali sono le tue passioni
+        'question_block' : 'user_interview__model_pro',
+        'question_code' : 'user_interview__model_pro__q1',
+        'question_type' : 'text',
+        'required' : 0,
+        'order' : 100,
+        'default_hidden' : 1,
+        'answers' : [
+            { 
+                'answer_code' : 'user_interview__user_identify__q1__talk_about_you',
+                'next_question_block' : False,
+            },
+        ],
+    },
+    {
+        # D: Come è iniziata la tua avventura nel mondo della moda?
+        'question_block' : 'user_interview__model_pro',
+        'question_code' : 'user_interview__model_pro__q2',
+        'question_type' : 'text',
+        'required' : 0,
+        'order' : 200,
+        'default_hidden' : 1,
+        'answers' : [
+            { 
+                'answer_code' : 'user_interview__user_identify__q2__how_it_started',
+                'next_question_block' : False,
+            },
+        ],
+    },
+    {
+        # D: Definisci quello che secondo te è la "bellezza"
+        'question_block' : 'user_interview__model_pro',
+        'question_code' : 'user_interview__model_pro__q3',
+        'question_type' : 'text',
+        'required' : 0,
+        'order' : 300,
+        'default_hidden' : 1,
+        'answers' : [
+            { 
+                'answer_code' : 'user_interview__user_identify__q3__definition_of_beauty',
+                'next_question_block' : False,
+            },
+        ],
+    },
+]

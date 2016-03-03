@@ -12,6 +12,7 @@ sys.setdefaultencoding("utf8")
 # Get an instance of a logger
 logger = logging.getLogger(__name__)
 
+"""
 class Survey(models.Model):
     survey_id = models.AutoField(primary_key=True)
     survey_code = models.CharField(max_length=50)
@@ -24,7 +25,7 @@ class Survey(models.Model):
         return str(self.survey_id)
 
     def _manage_surveys(self):
-        """Function to create survey and related questions"""
+        ""Function to create survey and related questions""
         question_obj = Question()
 
         self._create_default_surveys()
@@ -33,7 +34,7 @@ class Survey(models.Model):
         return True
 
     def _create_default_surveys(self):
-        """Function to create default surveys"""
+        ""Function to create default surveys""
         # 3 survey, uno comune, uno se modella, uno se non modella
 
         if DS_SURVEYS_LIST:
@@ -48,7 +49,7 @@ class Survey(models.Model):
         return True
 
     def get_survey_by_code(self, survey_code):
-        """Function to retrieve survey by code"""
+        ""Function to retrieve survey by code""
         return_var = None
         try:
             return_var = Survey.objects.get(survey_code=survey_code)
@@ -76,7 +77,7 @@ class Question(models.Model):
         return str(self.question_id)
 
     def _create_default_questions(self):
-        """Function to create default questions"""
+        ""Function to create default questions""
         question_obj = Question()
         survey_obj = Survey()
 
@@ -101,7 +102,7 @@ class Question(models.Model):
         return True
 
     def get_question_by_code(self, question_code):
-        """Function to retrieve question by code"""
+        ""Function to retrieve question by code""
         return_var = None
         try:
             return_var = Question.objects.get(question_code=question_code)
@@ -111,17 +112,17 @@ class Question(models.Model):
         return return_var
 
     def get_all_questions_about_survey(self, survey_code_list):
-        """Function to retrieve all questions about a survey code list"""
+        ""Function to retrieve all questions about a survey code list""
 
         return list(Question.objects.values('required', 'question_code', 'question_id', 'question_type', 'order', 'default_hidden', 'survey__survey_code', 'survey__survey_id', 'case_1_survey__survey_code', 'case_2_survey__survey_code').filter(survey__survey_code__in=survey_code_list).order_by("order"))
 
     def get_all_questions(self):
-        """Function to retrieve all questions"""
+        ""Function to retrieve all questions""
 
         return list(Question.objects.all().order_by("order"))
 
     def get_label_about_question_code(self, question_code):
-        """Function to retrieve strings a question"""
+        ""Function to retrieve strings a question""
         return_var = {}
 
         if question_code:
@@ -148,7 +149,7 @@ class Answer(models.Model):
         return str(self.id_answer)
 
     def save_answers_list(self, id_user, answers_list, survey_code_list):
-        """Function to save an answers list about user"""
+        ""Function to save an answers list about user""
         question_obj = Question()
         survey_obj = Survey()
         questions_list = question_obj.get_all_questions_about_survey(survey_code_list=survey_code_list)
@@ -166,7 +167,7 @@ class Answer(models.Model):
         return True
 
     def save_answers(self, answer_text, question_id, survey_id, id_user):
-        """Function to save/edit a single question's answers about user"""
+        ""Function to save/edit a single question's answers about user""
         answer_obj = Answer()
 
         try:
@@ -187,7 +188,7 @@ class Answer(models.Model):
         return True
 
     def get_question_survey_answer(self, survey_id, question_id):
-        """Function to retrieve an answer about survey and question"""
+        ""Function to retrieve an answer about survey and question""
         return_var = False
 
         try:
@@ -198,7 +199,7 @@ class Answer(models.Model):
         return return_var
 
     def get_answers_about_survey_list(self, survey_list):
-        """Function to retrieve answers about a survey list"""
+        ""Function to retrieve answers about a survey list""
         return_var = {}
 	answers_list =  list(Answer.objects.values('question__question_code', 'question__question_type', 'question__case_1_survey', 'question__case_2_survey', 'answer_text').filter(survey__survey_code__in=survey_list))
 	if answers_list:
@@ -211,3 +212,79 @@ class Answer(models.Model):
 	logger.info("all answers about survey: " + str(return_var))
 
         return return_var
+"""
+
+class QuestionGroup(models.Model):
+    question_group_id = models.AutoField(primary_key=True)
+    group_code = models.CharField(max_length=100)
+
+    class Meta:
+        app_label = 'django_survey'
+
+    def __unicode__(self):
+        return str(self.question_group_id)
+
+class QuestionBlock(models.Model):
+    question_block_id = models.AutoField(primary_key=True)
+    question_group = models.ForeignKey(QuestionGroup)
+    block_code = models.CharField(max_length=100)
+
+    class Meta:
+        app_label = 'django_survey'
+
+    def __unicode__(self):
+        return str(self.question_block_id)
+
+class Question(models.Model):
+    question_id = models.AutoField(primary_key=True)
+    question_block = models.ForeignKey(QuestionBlock)
+    question_code = models.CharField(max_length=50)
+    question_type = models.CharField(max_length=100)
+    required = models.IntegerField(default=0)
+    order = models.IntegerField(default=0)
+    default_hidden = models.IntegerField(default=0)
+
+    class Meta:
+        app_label = 'django_survey'
+
+    def __unicode__(self):
+        return str(self.question_id)
+
+class SelectableAnswer(models.Model):
+    selectable_answer_id = models.AutoField(primary_key=True)
+    question = models.ForeignKey(Question)
+    next_question_block = models.ForeignKey(QuestionBlock, null=True, blank=True)
+    answer_code = models.CharField(max_length=50)
+
+    class Meta:
+        app_label = 'django_survey'
+
+    def __unicode__(self):
+        return str(self.selectable_answer_id)
+
+class Survey(models.Model):
+    survey_id = models.AutoField(primary_key=True)
+    question_group = models.ForeignKey(QuestionGroup)
+    user = models.ForeignKey(User)
+    survey_code = models.CharField(max_length=50) # interview, user_report, ...
+    creation_date = models.DateTimeField(auto_now_add=True)
+    check_required = models.IntegerField(null=True, blank=True)
+    status = models.IntegerField(null=True, blank=True) # 2 da approvare, 1 approvato, 0 non approvato
+
+    class Meta:
+        app_label = 'django_survey'
+
+    def __unicode__(self):
+        return str(self.survey_id)
+
+class UserAnswer(models.Model):
+    user_answer_id = models.AutoField(primary_key=True)
+    survey = models.ForeignKey(Survey)
+    selectable_answer = models.ForeignKey(SelectableAnswer)
+    text = models.CharField(max_length=500, null=True, blank=True)
+
+    class Meta:
+        app_label = 'django_survey'
+
+    def __unicode__(self):
+        return str(self.user_answer_id)
