@@ -7,7 +7,7 @@ from account_app.models.images import *
 from contest_app.models.contests import *
 # from image_contest_app.models import ImageContestImage, ImageContest #imagecontestapptag
 from notify_system_app.models import Notify
-# from django_survey.models import Survey
+from django_survey.models import Survey
 from beauty_and_pics.consts import project_constants
 import logging
 
@@ -19,7 +19,7 @@ def common_contest_processors(request):
     account_obj =  Account()
     book_obj = Book()
     contest_obj = Contest()
-    # survey_obj = Survey()
+    survey_obj = Survey()
     # ImageContest_obj = ImageContest() #imagecontestapptag
     # ImageContestImage_obj = ImageContestImage() #imagecontestapptag
     Notify_obj = Notify()
@@ -42,8 +42,8 @@ def common_contest_processors(request):
     # last photoboard contest winner
     # photoboard_contest_winner = ImageContestImage_obj.get_closed_contest_info(contest_type=contest_type) #imagecontestapptag
 
-    # manage survey
-    # survey_obj._manage_surveys()
+    # create default questions and survey blocks
+    survey_obj._create_defaults()
 
     # shown user notify popup
     check_user_notify = False

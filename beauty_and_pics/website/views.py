@@ -37,7 +37,7 @@ from image_contest_app.settings import ICA_LIKE_LIMIT
 from website.exceptions import ContestClosedNotExistsError
 from image_contest_app.exceptions import ImageAlreadyVotedError, ImageContestClosedError
 from image_contest_app.models import ImageContest, ImageContestImage, ImageContestVote
-from django_survey.models import Answer
+# from django_survey.models import Answer
 import logging, time, urllib
 
 # Get an instance of a logger

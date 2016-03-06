@@ -216,7 +216,7 @@ class Answer(models.Model):
 
 class QuestionGroup(models.Model):
     question_group_id = models.AutoField(primary_key=True)
-    group_code = models.CharField(max_length=100)
+    group_code = models.CharField(max_length=150)
 
     class Meta:
         app_label = 'django_survey'
@@ -224,10 +224,20 @@ class QuestionGroup(models.Model):
     def __unicode__(self):
         return str(self.question_group_id)
 
+    def get_by_group_code(self, group_code):
+	"""Function to retrieve a group by group_code"""
+        return_var = None
+        try:
+            return_var = QuestionGroup.objects.get(group_code=group_code)
+        except QuestionGroup.DoesNotExist:
+            raise
+
+        return return_var
+
 class QuestionBlock(models.Model):
     question_block_id = models.AutoField(primary_key=True)
     question_group = models.ForeignKey(QuestionGroup)
-    block_code = models.CharField(max_length=100)
+    block_code = models.CharField(max_length=150)
 
     class Meta:
         app_label = 'django_survey'
@@ -235,10 +245,20 @@ class QuestionBlock(models.Model):
     def __unicode__(self):
         return str(self.question_block_id)
 
+    def get_by_block_code(self, block_code):
+	"""Function to retrieve a question block by block_code"""
+        return_var = None
+        try:
+            return_var = QuestionBlock.objects.get(block_code=block_code)
+        except QuestionBlock.DoesNotExist:
+            raise
+
+        return return_var
+
 class Question(models.Model):
     question_id = models.AutoField(primary_key=True)
     question_block = models.ForeignKey(QuestionBlock)
-    question_code = models.CharField(max_length=50)
+    question_code = models.CharField(max_length=150)
     question_type = models.CharField(max_length=100)
     required = models.IntegerField(default=0)
     order = models.IntegerField(default=0)
@@ -254,7 +274,7 @@ class SelectableAnswer(models.Model):
     selectable_answer_id = models.AutoField(primary_key=True)
     question = models.ForeignKey(Question)
     next_question_block = models.ForeignKey(QuestionBlock, null=True, blank=True)
-    answer_code = models.CharField(max_length=50)
+    answer_code = models.CharField(max_length=150)
 
     class Meta:
         app_label = 'django_survey'
@@ -266,7 +286,7 @@ class Survey(models.Model):
     survey_id = models.AutoField(primary_key=True)
     question_group = models.ForeignKey(QuestionGroup)
     user = models.ForeignKey(User)
-    survey_code = models.CharField(max_length=50) # interview, user_report, ...
+    survey_code = models.CharField(max_length=150) # interview, user_report, ...
     creation_date = models.DateTimeField(auto_now_add=True)
     check_required = models.IntegerField(null=True, blank=True)
     status = models.IntegerField(null=True, blank=True) # 2 da approvare, 1 approvato, 0 non approvato
@@ -276,6 +296,48 @@ class Survey(models.Model):
 
     def __unicode__(self):
         return str(self.survey_id)
+
+    def _create_defaults(self):
+	"""Function to create default questions and survey blocks"""
+
+	# 1) create question groups
+	for question_group in DS_QUESTIONS_GROUPS:
+	    QuestionGroup_obj = QuestionGroup()
+	    QuestionGroup_obj.group_code = question_group
+	    QuestionGroup_obj.save()
+	    
+	    # 2) create question block
+	    for question_block in DS_QUESTIONS_BLOCK:
+		QuestionBlock_obj = QuestionBlock()
+		QuestionBlock_obj.question_group = QuestionGroup_obj
+		QuestionBlock_obj.block_code = question_block
+		QuestionBlock_obj.save()
+
+	# 3) create questions
+	for question_info in DS_QUESTIONS_AND_SELECTABLE_ANSWERS:
+	    QuestionBlock_obj = QuestionBlock()
+	    Question_obj = Question()
+	    Question_obj.question_block = QuestionBlock_obj.get_by_block_code(block_code=question_info.get('question_block'))
+	    Question_obj.question_code = question_info.get('question_code')
+	    Question_obj.question_type = question_info.get('question_type')
+	    Question_obj.required = int(question_info.get('required'))
+	    Question_obj.order = int(question_info.get('order'))
+	    Question_obj.default_hidden = int(question_info.get('default_hidden'))
+	    Question_obj.save()
+
+	    # 4) create question's answers
+	    for question_answer in question_info.get('answers'):
+		QuestionBlockNext_obj = QuestionBlock()
+		SelectableAnswer_obj = SelectableAnswer()
+		SelectableAnswer_obj.question = Question_obj
+		try:
+		    SelectableAnswer_obj.next_question_block = QuestionBlockNext_obj.get_by_block_code(block_code=question_answer.get('next_question_block'))
+		except QuestionBlock.DoesNotExist:
+		    pass
+		SelectableAnswer_obj.answer_code = question_answer.get('answer_code')
+		SelectableAnswer_obj.save()
+
+	return True
 
 class UserAnswer(models.Model):
     user_answer_id = models.AutoField(primary_key=True)
