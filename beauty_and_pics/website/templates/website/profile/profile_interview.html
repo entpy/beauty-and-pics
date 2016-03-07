@@ -55,13 +55,13 @@
 			<input type="hidden" name="form_class" value="SurveyForm">
 			<fieldset class="col-md-12">
 				{% for field in form %}
-					<div  class="form-group {{ field.field.widget.attrs.survey_code }} {% if field.field.widget.attrs.default_hidden %}hide{% endif %} {% if field.errors %}has-error{% endif %}">
+					<div class="form-group {{ field.field.widget.attrs.question_block }} {% if field.field.widget.attrs.default_hidden %}hide{% endif %} {% if field.errors %}has-error{% endif %}">
 						<label for="{{ field.id_for_label }}" class="col-md-4 control-label">{{ field.label }} {% if field.field.required %}*{% endif %}</label>
 						<div class="col-md-7">
 							{% if field.field.widget.attrs.question_type == "text" %}
 								<textarea name="{{ field.name }}" class="form-control" id="{{ field.id_for_label }}" placeholder="{{ field.field.widget.attrs.placeholder }}">{% if post|get_item:field.name %}{{ post|get_item:field.name }}{% endif %}</textarea>
 							{% else %}
-								<select data-survey1code="{{ field.field.widget.attrs.case_1_survey_code }}" data-survey2code="{{ field.field.widget.attrs.case_2_survey_code }}" name="{{ field.name }}" class="form-control surveyChangeClickAction" id="{{ field.id_for_label }}">
+								<select name="{{ field.name }}" class="form-control surveyChangeClickAction" id="{{ field.id_for_label }}">
 									{% for key,value in field.field.choices %}
 										<option value="{{ key }}" {% if post|get_item:field.name == key|slugify %}selected="selected"{% endif %}>{{ value }}</option>
 									{% endfor %}
@@ -86,11 +86,11 @@
 {{ block.super }}
 <script>
 	$(document).ready(function(){
-		$(document).on("change", ".surveyChangeClickAction", function(){
+		/*$(document).on("change", ".surveyChangeClickAction", function(){
 			click_on_select($(this));
 
 			return true;
-		});
+		});*/
 
 		$(".submitButtonClickAction").click(function(event){
 			// preventing default click event
@@ -104,10 +104,10 @@
 		});
 
 		// creo i percorsi già inseriti
-		show_survey_roads();
+		// show_survey_roads();
 	});
 
-	function click_on_select(select) {
+	/*function click_on_select(select) {
 		if ($(select).val() == "no") {
 		    $("." + $(select).data("survey1code")).addClass("hide");
 		    $("." + $(select).data("survey2code")).removeClass("hide");
@@ -120,19 +120,19 @@
 		}
 
 		return true;
-	}
+	}*/
 
 	/*
 		0: riferimento a oggetto jQuery
 		1: riferimento a oggetto jQuery
 		console.log(i + ': ' + $p);
 	*/
-	function show_survey_roads() {
+	/*function show_survey_roads() {
 		$('select').each(function(i) {
 			click_on_select($(this));
 		});
 
 		return true;
-	}
+	}*/
 </script>
 {% endblock custom_js %}

@@ -270,6 +270,23 @@ class Question(models.Model):
     def __unicode__(self):
         return str(self.question_id)
 
+    def get_by_question_group_code(self, question_group_code):
+        """"Function to retrieve all questions about question_group_code"""
+        SelectableAnswer_obj = SelectableAnswer()
+        return_var = {}
+
+        # list of all selectable answers about question group's question
+        selectable_answers_list = SelectableAnswer_obj.create_selectable_answer_dictionary(question_group_code=question_group_code)
+        if question_group_code:
+            questions_list = list(Question.objects.values('question_block__block_code', 'question_block__question_group__group_code', 'question_code', 'question_type', 'required', 'order', 'default_hidden').filter(question_block__question_group__group_code=question_group_code).order_by("order"))
+            for question in questions_list:
+                # question info
+                return_var[question.get('question_code')] = question
+                # question answer(s)
+                return_var[question.get('question_code')]['selectable_answers'] = selectable_answers_list.get(question.get('question_code'))
+
+        return return_var
+
 class SelectableAnswer(models.Model):
     selectable_answer_id = models.AutoField(primary_key=True)
     question = models.ForeignKey(Question)
@@ -281,6 +298,24 @@ class SelectableAnswer(models.Model):
 
     def __unicode__(self):
         return str(self.selectable_answer_id)
+
+    def list_by_question_group_code(self, question_group_code):
+        """"Function to retrieve all selectable answers about question_group_code"""
+        return_var = None
+        if question_group_code:
+            return_var = list(SelectableAnswer.objects.values('question__question_code', 'next_question_block__block_code', 'answer_code').filter(question__question_block__question_group__group_code=question_group_code))
+
+        return return_var
+
+    def create_selectable_answer_dictionary(self, question_group_code):
+        """"Function to create a dictionary with selectable answers about question"""
+        return_var = {}
+        if question_group_code:
+            selectable_answers = list(self.list_by_question_group_code(question_group_code=question_group_code))
+            for answer in selectable_answers:
+                return_var[answer.get('question__question_code')].append(answer) 
+
+        return return_var
 
 class Survey(models.Model):
     survey_id = models.AutoField(primary_key=True)
