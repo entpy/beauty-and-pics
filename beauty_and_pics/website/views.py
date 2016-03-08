@@ -1045,7 +1045,7 @@ def profile_get_prize(request):
 @user_passes_test(check_if_is_a_catwalker_user)
 def profile_interview(request):
     """Create interview view"""
-    answers_obj = Answer()
+    # answers_obj = Answer()
     # set current contest_type
     account_obj =  Account()
     autenticated_user_data = account_obj.get_autenticated_user_data(request=request)
@@ -1066,7 +1066,7 @@ def profile_interview(request):
     # if a GET (or any other method) we'll create a blank form
     else:
         # pre-prepopulate post dictionary with current user data
-	request.POST = answers_obj.get_answers_about_survey_list(survey_list=['about_user', 'is_model', 'is_not_model'])
+	# request.POST = answers_obj.get_answers_about_survey_list(survey_list=['about_user', 'is_model', 'is_not_model'])
         form = SurveyForm()
 
     context = {

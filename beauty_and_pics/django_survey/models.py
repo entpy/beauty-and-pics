@@ -281,9 +281,10 @@ class Question(models.Model):
             questions_list = list(Question.objects.values('question_block__block_code', 'question_block__question_group__group_code', 'question_code', 'question_type', 'required', 'order', 'default_hidden').filter(question_block__question_group__group_code=question_group_code).order_by("order"))
             for question in questions_list:
                 # question info
-                return_var[question.get('question_code')] = question
+                logger.info("[get_by_question_group_code] question: " + str(question))
+                return_var[str(question.get('question_code'))] = str(question)
                 # question answer(s)
-                return_var[question.get('question_code')]['selectable_answers'] = selectable_answers_list.get(question.get('question_code'))
+                # return_var[str(question.get('question_code'))]['selectable_answers'] = selectable_answers_list.get(question.get('question_code'))
 
         return return_var
 
@@ -313,7 +314,13 @@ class SelectableAnswer(models.Model):
         if question_group_code:
             selectable_answers = list(self.list_by_question_group_code(question_group_code=question_group_code))
             for answer in selectable_answers:
-                return_var[answer.get('question__question_code')].append(answer) 
+                logger.info("question_code: " + str(answer.get('question__question_code')))
+                logger.info("answer: " + str(answer))
+                if answer.get('question__question_code') in return_var:
+                    templist = return_var[answer.get('question__question_code')]
+                    return_var[answer.get('question__question_code')] = templist
+                else:
+                    return_var[answer.get('question__question_code')] = answer
 
         return return_var
 
@@ -324,6 +331,7 @@ class Survey(models.Model):
     survey_code = models.CharField(max_length=150) # interview, user_report, ...
     creation_date = models.DateTimeField(auto_now_add=True)
     check_required = models.IntegerField(null=True, blank=True)
+    check_message = models.CharField(max_length=500, null=True, blank=True) # message after survey check (e.g not approved because...)
     status = models.IntegerField(null=True, blank=True) # 2 da approvare, 1 approvato, 0 non approvato
 
     class Meta:
@@ -337,10 +345,17 @@ class Survey(models.Model):
 
 	# 1) create question groups
 	for question_group in DS_QUESTIONS_GROUPS:
+            # if question_group already exists skip
 	    QuestionGroup_obj = QuestionGroup()
-	    QuestionGroup_obj.group_code = question_group
-	    QuestionGroup_obj.save()
-	    
+            try:
+                QuestionGroup_obj.get_by_group_code(group_code=question_group)
+            except QuestionGroup.DoesNotExist:
+                QuestionGroup_obj.group_code = question_group
+                QuestionGroup_obj.save()
+            else:
+                # question group already exists, skip to next loop
+                continue
+
 	    # 2) create question block
 	    for question_block in DS_QUESTIONS_BLOCK:
 		QuestionBlock_obj = QuestionBlock()
@@ -348,29 +363,31 @@ class Survey(models.Model):
 		QuestionBlock_obj.block_code = question_block
 		QuestionBlock_obj.save()
 
-	# 3) create questions
-	for question_info in DS_QUESTIONS_AND_SELECTABLE_ANSWERS:
-	    QuestionBlock_obj = QuestionBlock()
-	    Question_obj = Question()
-	    Question_obj.question_block = QuestionBlock_obj.get_by_block_code(block_code=question_info.get('question_block'))
-	    Question_obj.question_code = question_info.get('question_code')
-	    Question_obj.question_type = question_info.get('question_type')
-	    Question_obj.required = int(question_info.get('required'))
-	    Question_obj.order = int(question_info.get('order'))
-	    Question_obj.default_hidden = int(question_info.get('default_hidden'))
-	    Question_obj.save()
+            # 3) create questions
+            for question_info in DS_QUESTIONS_AND_SELECTABLE_ANSWERS:
+                QuestionBlock_obj = QuestionBlock()
+                Question_obj = Question()
+                Question_obj.question_block = QuestionBlock_obj.get_by_block_code(block_code=question_info.get('question_block'))
+                Question_obj.question_code = question_info.get('question_code')
+                Question_obj.question_type = question_info.get('question_type')
+                Question_obj.required = int(question_info.get('required'))
+                Question_obj.order = int(question_info.get('order'))
+                Question_obj.default_hidden = int(question_info.get('default_hidden'))
+                Question_obj.save()
 
-	    # 4) create question's answers
-	    for question_answer in question_info.get('answers'):
-		QuestionBlockNext_obj = QuestionBlock()
-		SelectableAnswer_obj = SelectableAnswer()
-		SelectableAnswer_obj.question = Question_obj
-		try:
-		    SelectableAnswer_obj.next_question_block = QuestionBlockNext_obj.get_by_block_code(block_code=question_answer.get('next_question_block'))
-		except QuestionBlock.DoesNotExist:
-		    pass
-		SelectableAnswer_obj.answer_code = question_answer.get('answer_code')
-		SelectableAnswer_obj.save()
+                # 4) create question's answers
+                for question_answer in question_info.get('answers'):
+                    QuestionBlockNext_obj = QuestionBlock()
+                    SelectableAnswer_obj = SelectableAnswer()
+                    SelectableAnswer_obj.question = Question_obj
+                    try:
+                        SelectableAnswer_obj.next_question_block = QuestionBlockNext_obj.get_by_block_code(block_code=question_answer.get('next_question_block'))
+                    except QuestionBlock.DoesNotExist:
+                        # no next_question_block retrieved
+                        pass
+                    else:
+                        SelectableAnswer_obj.answer_code = question_answer.get('answer_code')
+                        SelectableAnswer_obj.save()
 
 	return True
 

@@ -45,6 +45,7 @@ class SurveyForm(forms.Form, FormCommonUtils):
         questions_list = question_obj.get_by_question_group_code(question_group_code='user_interview')
 
         for question in questions_list:
+            logger.info("[build survey form] question: " + str(question))
             question_label = question.get("question_code") # TODO: variabilizzare label
 	    if question.get("question_type") == "text":
                 # create text input
@@ -54,7 +55,7 @@ class SurveyForm(forms.Form, FormCommonUtils):
                 if question.get('selectable_answers'):
                     answer_choices = (('-', '-'),)
                     for selectable_answer in question.get('selectable_answers'):
-                        answer_choices.append((selectable_answer.get('answer_code'), 'testo ' + strselectable_answer.get('answer_code'))))
+                        answer_choices.append((selectable_answer.get('answer_code'), 'testo ' + str(selectable_answer.get('answer_code'))))
 		self.fields[question.get("question_code")] = forms.ChoiceField(label=question_label, choices=answer_choices, required=question.get("required"), widget=forms.TextInput(attrs={'placeholder': question_label, 'question_block' : question.get("question_block__block_code"), 'default_hidden': question.get("default_hidden"), 'question_type': question.get("question_type")})) 
 
     def clean(self):
