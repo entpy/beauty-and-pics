@@ -55,7 +55,7 @@
 			<input type="hidden" name="form_class" value="SurveyForm">
 			<fieldset class="col-md-12">
 				{% for field in form %}
-					<div class="form-group {{ field.field.widget.attrs.question_block }} {% if field.field.widget.attrs.default_hidden %}hide{% endif %} {% if field.errors %}has-error{% endif %}">
+					<div class="form-group {{ field.field.widget.attrs.question_block }} {% if field.field.widget.attrs.default_hidden %}{% endif %} {% if field.errors %}has-error{% endif %}">
 						<label for="{{ field.id_for_label }}" class="col-md-4 control-label">{{ field.label }} {% if field.field.required %}*{% endif %}</label>
 						<div class="col-md-7">
 							{% if field.field.widget.attrs.question_type == "text" %}

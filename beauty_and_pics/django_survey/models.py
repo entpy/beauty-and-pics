@@ -279,12 +279,16 @@ class Question(models.Model):
         selectable_answers_list = SelectableAnswer_obj.create_selectable_answer_dictionary(question_group_code=question_group_code)
         if question_group_code:
             questions_list = list(Question.objects.values('question_block__block_code', 'question_block__question_group__group_code', 'question_code', 'question_type', 'required', 'order', 'default_hidden').filter(question_block__question_group__group_code=question_group_code).order_by("order"))
+	    # logger.info("[get_by_question_group_code] question_list: " + str(questions_list))
             for question in questions_list:
                 # question info
-                logger.info("[get_by_question_group_code] question: " + str(question))
-                return_var[str(question.get('question_code'))] = str(question)
+                # logger.info("[get_by_question_group_code] question: " + str(question))
+		if return_var.get(question.get('question_code')):
+		    return_var[question.get('question_code')] = return_var.get(question.get('question_code')).extends(question)
+		else:
+		    return_var[question.get('question_code')] = question
                 # question answer(s)
-                # return_var[str(question.get('question_code'))]['selectable_answers'] = selectable_answers_list.get(question.get('question_code'))
+                return_var[question.get('question_code')]['selectable_answers'] = selectable_answers_list.get(question.get('question_code'))
 
         return return_var
 
@@ -305,6 +309,7 @@ class SelectableAnswer(models.Model):
         return_var = None
         if question_group_code:
             return_var = list(SelectableAnswer.objects.values('question__question_code', 'next_question_block__block_code', 'answer_code').filter(question__question_block__question_group__group_code=question_group_code))
+	    # logger.info("list_by_question_group_code: " + str(return_var))
 
         return return_var
 
@@ -312,15 +317,15 @@ class SelectableAnswer(models.Model):
         """"Function to create a dictionary with selectable answers about question"""
         return_var = {}
         if question_group_code:
-            selectable_answers = list(self.list_by_question_group_code(question_group_code=question_group_code))
+            selectable_answers = self.list_by_question_group_code(question_group_code=question_group_code)
             for answer in selectable_answers:
-                logger.info("question_code: " + str(answer.get('question__question_code')))
-                logger.info("answer: " + str(answer))
-                if answer.get('question__question_code') in return_var:
-                    templist = return_var[answer.get('question__question_code')]
-                    return_var[answer.get('question__question_code')] = templist
-                else:
-                    return_var[answer.get('question__question_code')] = answer
+                # logger.info("question_code: " + str(answer.get('question__question_code')))
+                # logger.info("answer: " + str(answer))
+                if not return_var.get(answer.get('question__question_code')):
+                    return_var[answer.get('question__question_code')] = []
+		return_var[answer.get('question__question_code')].append(answer)
+
+	logger.info("[create_selectable_answer_dictionary]: " + str(return_var))
 
         return return_var
 
