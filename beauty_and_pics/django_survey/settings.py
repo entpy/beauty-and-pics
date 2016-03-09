@@ -474,12 +474,12 @@ DS_QUESTIONS_GROUPS = [
 
 # blocchi di domande per ogni gruppo
 DS_QUESTIONS_BLOCK = [
-    'user_interview__user_identify',
-    'user_interview__model_pro',
-    'user_interview__model_beginner',
-    'user_interview__photo_passionate',
-    'user_interview__fashion_passionate',
-    'user_interview__just_for_fun',
+    { 'block_code' : 'user_interview__user_identify', 'order' : 0, },
+    { 'block_code' : 'user_interview__model_pro', 'order' : 100, },
+    { 'block_code' : 'user_interview__model_beginner', 'order' : 200, },
+    { 'block_code' : 'user_interview__photo_passionate', 'order' : 300, },
+    { 'block_code' : 'user_interview__fashion_passionate', 'order' : 400, },
+    { 'block_code' : 'user_interview__just_for_fun', 'order' : 500, },
 ]
 
 # elenco di domande per ogni blocco

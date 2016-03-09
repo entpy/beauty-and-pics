@@ -238,6 +238,7 @@ class QuestionBlock(models.Model):
     question_block_id = models.AutoField(primary_key=True)
     question_group = models.ForeignKey(QuestionGroup)
     block_code = models.CharField(max_length=150)
+    order = models.IntegerField(default=0)
 
     class Meta:
         app_label = 'django_survey'
@@ -272,23 +273,36 @@ class Question(models.Model):
 
     def get_by_question_group_code(self, question_group_code):
         """"Function to retrieve all questions about question_group_code"""
-        SelectableAnswer_obj = SelectableAnswer()
-        return_var = {}
-
-        # list of all selectable answers about question group's question
-        selectable_answers_list = SelectableAnswer_obj.create_selectable_answer_dictionary(question_group_code=question_group_code)
+        return_var = None
         if question_group_code:
-            questions_list = list(Question.objects.values('question_block__block_code', 'question_block__question_group__group_code', 'question_code', 'question_type', 'required', 'order', 'default_hidden').filter(question_block__question_group__group_code=question_group_code).order_by("order"))
+            return_var = list(Question.objects.values('question_block__block_code', 'question_block__question_group__group_code', 'question_code', 'question_type', 'required', 'order', 'default_hidden').filter(question_block__question_group__group_code=question_group_code).order_by('question_block__order', 'order'))
+
+        return return_var
+
+    def get_survey_questions_dictionary(self, question_group_code):
+        """"Function to build survey questions dictionary about question_group_code"""
+        SelectableAnswer_obj = SelectableAnswer()
+        return_var = []
+
+        if question_group_code:
+            # list of all selectable answers about question_group_code
+            selectable_answers_list = SelectableAnswer_obj.create_selectable_answer_dictionary(question_group_code=question_group_code)
+            # list of all questions about question_group_code
+            questions_list = self.get_by_question_group_code(question_group_code=question_group_code)
 	    # logger.info("[get_by_question_group_code] question_list: " + str(questions_list))
             for question in questions_list:
                 # question info
                 # logger.info("[get_by_question_group_code] question: " + str(question))
-		if return_var.get(question.get('question_code')):
-		    return_var[question.get('question_code')] = return_var.get(question.get('question_code')).extends(question)
+                question_dict = {}
+		if question_dict:
+		    question_dict = question_dict.extends(question)
 		else:
-		    return_var[question.get('question_code')] = question
+		    question_dict = question
                 # question answer(s)
-                return_var[question.get('question_code')]['selectable_answers'] = selectable_answers_list.get(question.get('question_code'))
+                question_dict['selectable_answers'] = selectable_answers_list.get(question.get('question_code'))
+                # append dictionary to list
+                return_var.append(question_dict)
+        # logger.info("[get_by_question_group_code] question_list: " + str(return_var))
 
         return return_var
 
@@ -320,12 +334,12 @@ class SelectableAnswer(models.Model):
             selectable_answers = self.list_by_question_group_code(question_group_code=question_group_code)
             for answer in selectable_answers:
                 # logger.info("question_code: " + str(answer.get('question__question_code')))
-                # logger.info("answer: " + str(answer))
+                logger.info("answer: " + str(answer))
                 if not return_var.get(answer.get('question__question_code')):
                     return_var[answer.get('question__question_code')] = []
 		return_var[answer.get('question__question_code')].append(answer)
 
-	logger.info("[create_selectable_answer_dictionary]: " + str(return_var))
+	# logger.info("[create_selectable_answer_dictionary]: " + str(return_var))
 
         return return_var
 
@@ -365,7 +379,8 @@ class Survey(models.Model):
 	    for question_block in DS_QUESTIONS_BLOCK:
 		QuestionBlock_obj = QuestionBlock()
 		QuestionBlock_obj.question_group = QuestionGroup_obj
-		QuestionBlock_obj.block_code = question_block
+		QuestionBlock_obj.block_code = question_block.get('block_code')
+		QuestionBlock_obj.order = question_block.get('order')
 		QuestionBlock_obj.save()
 
             # 3) create questions

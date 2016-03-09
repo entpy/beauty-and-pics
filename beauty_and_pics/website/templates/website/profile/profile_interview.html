@@ -55,15 +55,15 @@
 			<input type="hidden" name="form_class" value="SurveyForm">
 			<fieldset class="col-md-12">
 				{% for field in form %}
-					<div class="form-group {{ field.field.widget.attrs.question_block }} {% if field.field.widget.attrs.default_hidden %}{% endif %} {% if field.errors %}has-error{% endif %}">
+					<div class="form-group {{ field.field.widget.attrs.question_block }} {% if field.field.widget.attrs.default_hidden %}hide{% endif %} {% if field.errors %}has-error{% endif %}">
 						<label for="{{ field.id_for_label }}" class="col-md-4 control-label">{{ field.label }} {% if field.field.required %}*{% endif %}</label>
 						<div class="col-md-7">
 							{% if field.field.widget.attrs.question_type == "text" %}
 								<textarea name="{{ field.name }}" class="form-control" id="{{ field.id_for_label }}" placeholder="{{ field.field.widget.attrs.placeholder }}">{% if post|get_item:field.name %}{{ post|get_item:field.name }}{% endif %}</textarea>
 							{% else %}
-								<select name="{{ field.name }}" class="form-control surveyChangeClickAction" id="{{ field.id_for_label }}">
-									{% for key,value in field.field.choices %}
-										<option value="{{ key }}" {% if post|get_item:field.name == key|slugify %}selected="selected"{% endif %}>{{ value }}</option>
+								<select name="{{ field.name }}" class="form-control choosePathClickAction" id="{{ field.id_for_label }}">
+									{% for choices_info in field.field.choices %}
+										<option value="{{ choices_info|get_item:"answer_code" }}" {% if post|get_item:field.name == choices_info|get_item:"answer_code"|slugify %}selected="selected"{% endif %} data-next-question-block-code="{{ choices_info|get_item:"next_question_block_code" }}">{{ choices_info|get_item:"answer_code" }}</option>
 									{% endfor %}
 								</select>
 							{% endif %}
@@ -86,11 +86,11 @@
 {{ block.super }}
 <script>
 	$(document).ready(function(){
-		/*$(document).on("change", ".surveyChangeClickAction", function(){
-			click_on_select($(this));
+		$(document).on("change", ".choosePathClickAction", function(){
+			show_selected_path($(this));
 
 			return true;
-		});*/
+		});
 
 		$(".submitButtonClickAction").click(function(event){
 			// preventing default click event
@@ -107,20 +107,16 @@
 		// show_survey_roads();
 	});
 
-	/*function click_on_select(select) {
-		if ($(select).val() == "no") {
-		    $("." + $(select).data("survey1code")).addClass("hide");
-		    $("." + $(select).data("survey2code")).removeClass("hide");
-		} else if ($(select).val() == "yes") {
-		    $("." + $(select).data("survey1code")).removeClass("hide");
-		    $("." + $(select).data("survey2code")).addClass("hide");
-		} else {
-		    $("." + $(select).data("survey1code")).addClass("hide");
-		    $("." + $(select).data("survey2code")).addClass("hide");
-		}
+	function show_selected_path(select) {
+		var question_block_code = $(select).data("nextQuestionBlockCode");
+		// TODO: nascondere tutti quelli del gruppo
+		// TODO: mostrare solo quello selezionato
+
+		alert(question_block_code);
+		$('.' + question_block_code).removeClass('hide');
 
 		return true;
-	}*/
+	}
 
 	/*
 		0: riferimento a oggetto jQuery
@@ -129,7 +125,7 @@
 	*/
 	/*function show_survey_roads() {
 		$('select').each(function(i) {
-			click_on_select($(this));
+			show_selected_path($(this));
 		});
 
 		return true;
