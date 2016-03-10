@@ -238,6 +238,7 @@ class QuestionBlock(models.Model):
     question_block_id = models.AutoField(primary_key=True)
     question_group = models.ForeignKey(QuestionGroup)
     block_code = models.CharField(max_length=150)
+    path_code = models.CharField(max_length=150)
     order = models.IntegerField(default=0)
 
     class Meta:
@@ -275,7 +276,7 @@ class Question(models.Model):
         """"Function to retrieve all questions about question_group_code"""
         return_var = None
         if question_group_code:
-            return_var = list(Question.objects.values('question_block__block_code', 'question_block__question_group__group_code', 'question_code', 'question_type', 'required', 'order', 'default_hidden').filter(question_block__question_group__group_code=question_group_code).order_by('question_block__order', 'order'))
+            return_var = list(Question.objects.values('question_block__block_code', 'question_block__path_code', 'question_block__question_group__group_code', 'question_code', 'question_type', 'required', 'order', 'default_hidden').filter(question_block__question_group__group_code=question_group_code).order_by('question_block__order', 'order'))
 
         return return_var
 
@@ -380,6 +381,7 @@ class Survey(models.Model):
 		QuestionBlock_obj = QuestionBlock()
 		QuestionBlock_obj.question_group = QuestionGroup_obj
 		QuestionBlock_obj.block_code = question_block.get('block_code')
+		QuestionBlock_obj.path_code = question_block.get('path_code')
 		QuestionBlock_obj.order = question_block.get('order')
 		QuestionBlock_obj.save()
 

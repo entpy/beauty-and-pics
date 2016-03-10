@@ -49,6 +49,7 @@ class SurveyForm(forms.Form, FormCommonUtils):
             """
             question_info = {
                     'question_block__block_code': u 'user_interview__user_identify',
+                    'question_block__path_code': u 'path001',
                     'selectable_answers': [{
                             'answer_code': u 'user_interview__user_identify__q1__model_pro',
                             'next_question_block__block_code': u 'user_interview__model_pro',
