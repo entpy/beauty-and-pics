@@ -474,12 +474,18 @@ DS_QUESTIONS_GROUPS = [
 
 # blocchi di domande per ogni gruppo
 DS_QUESTIONS_BLOCK = [
-    { 'block_code' : 'user_interview__user_identify', 'path_code' : 'path001', 'order' : 0, },
-    { 'block_code' : 'user_interview__model_pro', 'path_code' : 'path002', 'order' : 100, },
-    { 'block_code' : 'user_interview__model_beginner', 'path_code' : 'path002', 'order' : 200, },
-    { 'block_code' : 'user_interview__photo_passionate', 'path_code' : 'path002', 'order' : 300, },
-    { 'block_code' : 'user_interview__fashion_passionate', 'path_code' : 'path002', 'order' : 400, },
-    { 'block_code' : 'user_interview__just_for_fun', 'path_code' : 'path002', 'order' : 500, },
+    # block_code	= identificativo del blocco di domande
+    # path_code		= comune a tutte le domande di questo livello
+    # child_path_code	= il path_code che avranno i "figli" di questo bivio
+    # order		= ordinamento dei macroblocchi
+    { 'block_code' : 'user_interview__user_identify', 'path_code' : 'path001', 'child_path_code' : 'path002', 'order' : 0, }, # bivio
+	{ 'block_code' : 'user_interview__model_pro', 'path_code' : 'path002', 'child_path_code' : False, 'order' : 100, },
+	{ 'block_code' : 'user_interview__model_pro__hobby', 'path_code' : 'path002', 'child_path_code' : 'path002_002', 'order' : 125, }, # bivio
+	    { 'block_code' : 'user_interview__model_pro__write_hobby', 'path_code' : 'path002_001', 'child_path_code' : False, 'order' : 150, },
+	{ 'block_code' : 'user_interview__model_beginner', 'path_code' : 'path003', 'child_path_code' : False, 'order' : 200, },
+	{ 'block_code' : 'user_interview__photo_passionate', 'path_code' : 'path004', 'child_path_code' : False, 'order' : 300, },
+	{ 'block_code' : 'user_interview__fashion_passionate', 'path_code' : 'path005', 'child_path_code' : False, 'order' : 400, },
+	{ 'block_code' : 'user_interview__just_for_fun', 'path_code' : 'path006', 'child_path_code' : False, 'order' : 500, },
 ]
 
 # elenco di domande per ogni blocco
@@ -607,6 +613,44 @@ DS_QUESTIONS_AND_SELECTABLE_ANSWERS = [
         'answers' : [
             {
                 'answer_code' : 'user_interview__model_pro__q6__answer',
+                'next_question_block' : False,
+            },
+        ],
+    },
+
+    # TODO
+    {
+	# Nutri altre passioni oltre al mondo della moda?
+        'question_block' : 'user_interview__model_pro__hobby',
+        'question_code' : 'user_interview__user_identify__q6_5',
+        'question_type' : 'select',
+        'required' : 0,
+        'order' : 650,
+        'default_hidden' : 1,
+        'answers' : [
+            {
+                # Si
+                'answer_code' : 'user_interview__user_identify__q6_5__yes',
+                'next_question_block' : 'user_interview__model_pro__write_hobby',
+            },
+            {
+                # No
+                'answer_code' : 'user_interview__user_identify__q6_5__no',
+                'next_question_block' : False,
+            },
+        ],
+    },
+    {
+	# Quali altre passioni nutri oltre al mondo della moda?
+        'question_block' : 'user_interview__model_pro__write_hobby',
+        'question_code' : 'user_interview__model_pro__write_hobby__q1',
+        'question_type' : 'text',
+        'required' : 0,
+        'order' : 675,
+        'default_hidden' : 1,
+        'answers' : [
+            {
+                'answer_code' : 'user_interview__model_pro__write_hobby__q1__answer',
                 'next_question_block' : False,
             },
         ],

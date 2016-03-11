@@ -55,7 +55,7 @@
 			<input type="hidden" name="form_class" value="SurveyForm">
 			<fieldset class="col-md-12">
 				{% for field in form %}
-					<div class="form-group {{ field.field.widget.attrs.question_block }} {% if field.field.widget.attrs.default_hidden %}hide{% endif %} {% if field.errors %}has-error{% endif %}">
+					<div class="form-group {{ field.field.widget.attrs.question_block }} {{ field.field.widget.attrs.path_code }} {% if field.field.widget.attrs.default_hidden %}hide{% endif %} {% if field.errors %}has-error{% endif %}">
 						<label for="{{ field.id_for_label }}" class="col-md-4 control-label">{{ field.label }} {% if field.field.required %}*{% endif %}</label>
 						<div class="col-md-7">
 							{% if field.field.widget.attrs.question_type == "text" %}
@@ -63,7 +63,7 @@
 							{% else %}
 								<select name="{{ field.name }}" class="form-control choosePathClickAction" id="{{ field.id_for_label }}">
 									{% for choices_info in field.field.choices %}
-										<option value="{{ choices_info|get_item:"answer_code" }}" {% if post|get_item:field.name == choices_info|get_item:"answer_code"|slugify %}selected="selected"{% endif %} data-next-question-block-code="{{ choices_info|get_item:"next_question_block_code" }}">{{ choices_info|get_item:"answer_code" }}</option>
+										<option value="{{ choices_info|get_item:"answer_code" }}" {% if post|get_item:field.name == choices_info|get_item:"answer_code"|slugify %}selected="selected"{% endif %} data-next-question-block-code="{{ choices_info|get_item:"next_question_block_code" }}" {% if field.field.widget.attrs.child_path_code %}data-child-path-code="{{ field.field.widget.attrs.child_path_code }}"{% endif %}>{{ choices_info|get_item:"answer_code" }}</option>
 									{% endfor %}
 								</select>
 							{% endif %}
@@ -108,12 +108,14 @@
 	});
 
 	function show_selected_path(select) {
-		var question_block_code = $(select).data("nextQuestionBlockCode");
-		// TODO: nascondere tutti quelli del gruppo
-		// TODO: mostrare solo quello selezionato
-
-		alert(question_block_code);
-		$('.' + question_block_code).removeClass('hide');
+		var question_block_code = $(select).find(":selected").data("nextQuestionBlockCode");
+		// hide all question blocks
+		var child_path_code = $(select).find(":selected").data("childPathCode");
+		$('.' + child_path_code).addClass('hide');
+		// show only selected question block
+		if (question_block_code) {
+		    $('.' + question_block_code).removeClass('hide');
+		}
 
 		return true;
 	}
