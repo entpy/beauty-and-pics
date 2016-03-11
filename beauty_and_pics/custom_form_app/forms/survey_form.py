@@ -41,7 +41,8 @@ class SurveyForm(forms.Form, FormCommonUtils):
             """
             question_info = {
                     'question_block__block_code': u 'user_interview__user_identify',
-                    'question_block__path_code': u 'path001',
+                    'question_block__path__path_code': u 'path001',
+                    'path_to_hide': u 'path002',
                     'selectable_answers': [{
                             'answer_code': u 'user_interview__user_identify__q1__model_pro',
                             'next_question_block__block_code': u 'user_interview__model_pro',
@@ -77,7 +78,7 @@ class SurveyForm(forms.Form, FormCommonUtils):
             question_label = question_code # TODO: variabilizzare label
 	    if question_info.get("question_type") == "text":
                 # create text input
-		self.fields[question_code] = forms.CharField(label=question_label, required=question_info.get("required"), widget=forms.TextInput(attrs={'placeholder': question_label, 'question_block' : question_info.get("question_block__block_code"), 'default_hidden': question_info.get("default_hidden"), 'question_type': question_info.get("question_type"), 'path_code': question_info.get("question_block__path_code"), 'child_path_code': question_info.get("question_block__child_path_code")}))
+		self.fields[question_code] = forms.CharField(label=question_label, required=question_info.get("required"), widget=forms.TextInput(attrs={'placeholder': question_label, 'question_block' : question_info.get("question_block__block_code"), 'default_hidden': question_info.get("default_hidden"), 'question_type': question_info.get("question_type"), 'path_code': question_info.get("question_block__path__path_code"), 'path_to_hide': question_info.get("path_to_hide")}))
             elif question_info.get("question_type") == "select":
                 # create select input with select choices
                 if question_info.get('selectable_answers'):
@@ -97,7 +98,7 @@ class SurveyForm(forms.Form, FormCommonUtils):
                                 'next_question_block_code' : selectable_answer.get('next_question_block__block_code'),
                             }
                         )
-		self.fields[question_code] = forms.ChoiceField(label=question_label, choices=answer_choices, required=question_info.get("required"), widget=forms.TextInput(attrs={'placeholder': question_label, 'choices_dict' : '', 'question_block' : question_info.get("question_block__block_code"), 'default_hidden': question_info.get("default_hidden"), 'question_type': question_info.get("question_type"), 'path_code': question_info.get("question_block__path_code"), 'child_path_code': question_info.get("question_block__child_path_code")})) 
+		self.fields[question_code] = forms.ChoiceField(label=question_label, choices=answer_choices, required=question_info.get("required"), widget=forms.TextInput(attrs={'placeholder': question_label, 'choices_dict' : '', 'question_block' : question_info.get("question_block__block_code"), 'default_hidden': question_info.get("default_hidden"), 'question_type': question_info.get("question_type"), 'path_code': question_info.get("question_block__path__path_code"), 'path_to_hide': question_info.get("path_to_hide")})) 
 
     def clean(self):
 	super(SurveyForm, self).clean_form_custom()

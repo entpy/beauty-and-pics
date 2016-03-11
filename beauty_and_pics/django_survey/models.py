@@ -234,12 +234,31 @@ class QuestionGroup(models.Model):
 
         return return_var
 
+class Path(models.Model):
+    path_id = models.AutoField(primary_key=True)
+    path_code = models.CharField(max_length=150)
+
+    class Meta:
+        app_label = 'django_survey'
+
+    def __unicode__(self):
+        return str(self.path_id)
+
+    def get_by_path_code(self, path_code):
+	"""Function to retrieve a path by path_code"""
+        return_var = None
+        try:
+            return_var = Path.objects.get(path_code=path_code)
+        except Path.DoesNotExist:
+            raise
+
+        return return_var
+
 class QuestionBlock(models.Model):
     question_block_id = models.AutoField(primary_key=True)
     question_group = models.ForeignKey(QuestionGroup)
+    path = models.ForeignKey(Path)
     block_code = models.CharField(max_length=150)
-    path_code = models.CharField(max_length=150, null=True, blank=True)
-    child_path_code = models.CharField(max_length=150, null=True, blank=True)
     order = models.IntegerField(default=0)
 
     class Meta:
@@ -261,6 +280,7 @@ class QuestionBlock(models.Model):
 class Question(models.Model):
     question_id = models.AutoField(primary_key=True)
     question_block = models.ForeignKey(QuestionBlock)
+    path_to_hide = models.ForeignKey(Path, null=True, blank=True)
     question_code = models.CharField(max_length=150)
     question_type = models.CharField(max_length=100)
     required = models.IntegerField(default=0)
@@ -277,7 +297,7 @@ class Question(models.Model):
         """"Function to retrieve all questions about question_group_code"""
         return_var = None
         if question_group_code:
-            return_var = list(Question.objects.values('question_block__block_code', 'question_block__path_code', 'question_block__child_path_code', 'question_block__question_group__group_code', 'question_code', 'question_type', 'required', 'order', 'default_hidden').filter(question_block__question_group__group_code=question_group_code).order_by('question_block__order', 'order'))
+            return_var = list(Question.objects.values('question_block__block_code', 'question_block__path__path_code', 'question_block__question_group__group_code', 'path_to_hide', 'question_code', 'question_type', 'required', 'order', 'default_hidden').filter(question_block__question_group__group_code=question_group_code).order_by('question_block__order', 'order'))
 
         return return_var
 
@@ -382,8 +402,19 @@ class Survey(models.Model):
 		QuestionBlock_obj = QuestionBlock()
 		QuestionBlock_obj.question_group = QuestionGroup_obj
 		QuestionBlock_obj.block_code = question_block.get('block_code')
-		QuestionBlock_obj.path_code = question_block.get('path_code')
-		QuestionBlock_obj.child_path_code = question_block.get('child_path_code')
+
+                # 2.5) if defined, create a path
+                if question_block.get('path_code'):
+                    try:
+                        Path_obj = Path()
+                        question_path = None
+                        question_path = Path_obj.get_by_path_code(path_code=question_block.get('path_code'))
+                    except Path.DoesNotExist:
+                        # must be created
+                        Path_obj.path_code = question_block.get('path_code')
+                        Path_obj.save()
+                        question_path = Path_obj
+                    QuestionBlock_obj.path = question_path
 		QuestionBlock_obj.order = question_block.get('order')
 		QuestionBlock_obj.save()
 
@@ -393,6 +424,17 @@ class Survey(models.Model):
                 Question_obj = Question()
                 Question_obj.question_block = QuestionBlock_obj.get_by_block_code(block_code=question_info.get('question_block'))
                 Question_obj.question_code = question_info.get('question_code')
+
+                try:
+                    Path_obj = Path()
+                    path_to_hide = None
+                    path_to_hide = Path_obj.get_by_path_code(path_code=question_info.get('path_to_hide'))
+                except Path.DoesNotExist:
+                    # nessun path da eliminare definito, non faccio nulla
+                    pass
+                else:
+                    Question_obj.path_to_hide = path_to_hide
+
                 Question_obj.question_type = question_info.get('question_type')
                 Question_obj.required = int(question_info.get('required'))
                 Question_obj.order = int(question_info.get('order'))

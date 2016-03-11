@@ -61,9 +61,9 @@
 							{% if field.field.widget.attrs.question_type == "text" %}
 								<textarea name="{{ field.name }}" class="form-control" id="{{ field.id_for_label }}" placeholder="{{ field.field.widget.attrs.placeholder }}">{% if post|get_item:field.name %}{{ post|get_item:field.name }}{% endif %}</textarea>
 							{% else %}
-								<select name="{{ field.name }}" class="form-control choosePathClickAction" id="{{ field.id_for_label }}">
+								<select name="{{ field.name }}" class="form-control choosePathClickAction" id="{{ field.id_for_label }}" {% if field.field.widget.attrs.path_to_hide %}data-path-to-hide="{{ field.field.widget.attrs.path_to_hide }}"{% endif %}>
 									{% for choices_info in field.field.choices %}
-										<option value="{{ choices_info|get_item:"answer_code" }}" {% if post|get_item:field.name == choices_info|get_item:"answer_code"|slugify %}selected="selected"{% endif %} data-next-question-block-code="{{ choices_info|get_item:"next_question_block_code" }}" {% if field.field.widget.attrs.child_path_code %}data-child-path-code="{{ field.field.widget.attrs.child_path_code }}"{% endif %}>{{ choices_info|get_item:"answer_code" }}</option>
+										<option value="{{ choices_info|get_item:"answer_code" }}" {% if post|get_item:field.name == choices_info|get_item:"answer_code"|slugify %}selected="selected"{% endif %} data-next-question-block-code="{{ choices_info|get_item:"next_question_block_code" }}">{{ choices_info|get_item:"answer_code" }}</option>
 									{% endfor %}
 								</select>
 							{% endif %}
@@ -109,9 +109,8 @@
 
 	function show_selected_path(select) {
 		var question_block_code = $(select).find(":selected").data("nextQuestionBlockCode");
-		// hide all question blocks
-		var child_path_code = $(select).find(":selected").data("childPathCode");
-		$('.' + child_path_code).addClass('hide');
+		// hide all child paths
+		$('.' + $(select).data("pathToHide")).addClass('hide');
 		// show only selected question block
 		if (question_block_code) {
 		    $('.' + question_block_code).removeClass('hide');
