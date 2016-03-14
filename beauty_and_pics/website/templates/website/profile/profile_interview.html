@@ -13,6 +13,11 @@
 {{ block.super }}
 <style>
     textarea.form-control { height: 170px; }
+    .form-group-level-0 { background-color: transparent; }
+    .form-group-level-1 { background-color: #ECECEC; }
+    .form-group-level-2 { background-color: #D7D7D7; }
+    .form-group-level-3 { background-color: #C1C1C1; }
+    .form-group-level-4 { background-color: #B1B1B1; }
 </style>
 {% endblock custom_css %}
 
@@ -55,13 +60,13 @@
 			<input type="hidden" name="form_class" value="SurveyForm">
 			<fieldset class="col-md-12">
 				{% for field in form %}
-					<div class="form-group {{ field.field.widget.attrs.question_block }} {{ field.field.widget.attrs.path_code }} {% if field.field.widget.attrs.default_hidden %}hide{% endif %} {% if field.errors %}has-error{% endif %}">
+					<div class="form-group {{ field.field.widget.attrs.question_block }} {% if field.field.widget.attrs.default_hidden %}hide{% endif %} {% if field.errors %}has-error{% endif %} form-group-level-{{ field.field.widget.attrs.block_level }}" data-question-block="{{ field.field.widget.attrs.question_block }}" data-block-level="{{ field.field.widget.attrs.block_level }}" data-block-code-level0="{{ field.field.widget.attrs.block_code_level_0 }}" data-block-code-level1="{{ field.field.widget.attrs.block_code_level_1 }}" data-block-code-level2="{{ field.field.widget.attrs.block_code_level_2 }}" data-block-code-level3="{{ field.field.widget.attrs.block_code_level_3 }}" data-block-code-level4="{{ field.field.widget.attrs.block_code_level_4 }}">
 						<label for="{{ field.id_for_label }}" class="col-md-4 control-label">{{ field.label }} {% if field.field.required %}*{% endif %}</label>
 						<div class="col-md-7">
 							{% if field.field.widget.attrs.question_type == "text" %}
 								<textarea name="{{ field.name }}" class="form-control" id="{{ field.id_for_label }}" placeholder="{{ field.field.widget.attrs.placeholder }}">{% if post|get_item:field.name %}{{ post|get_item:field.name }}{% endif %}</textarea>
-							{% else %}
-								<select name="{{ field.name }}" class="form-control choosePathClickAction" id="{{ field.id_for_label }}" {% if field.field.widget.attrs.path_to_hide %}data-path-to-hide="{{ field.field.widget.attrs.path_to_hide }}"{% endif %}>
+							{% elif field.field.widget.attrs.question_type == "select" %}
+								<select name="{{ field.name }}" class="form-control choosePathClickAction" id="{{ field.id_for_label }}">
 									{% for choices_info in field.field.choices %}
 										<option value="{{ choices_info|get_item:"answer_code" }}" {% if post|get_item:field.name == choices_info|get_item:"answer_code"|slugify %}selected="selected"{% endif %} data-next-question-block-code="{{ choices_info|get_item:"next_question_block_code" }}">{{ choices_info|get_item:"answer_code" }}</option>
 									{% endfor %}
@@ -108,12 +113,24 @@
 	});
 
 	function show_selected_path(select) {
-		var question_block_code = $(select).find(":selected").data("nextQuestionBlockCode");
-		// hide all child paths
-		$('.' + $(select).data("pathToHide")).addClass('hide');
-		// show only selected question block
-		if (question_block_code) {
-		    $('.' + question_block_code).removeClass('hide');
+		// 1)* nascondo tutti i blocchi che hanno come "data-block-code-level(livello_blocco_corrente)" = codice_blocco_corrente
+		// 2)** mostro solo il blocco contenuto in "data-next-question-block-code" dell'oggetto corrente
+		var next_question_block_code = $(select).find(":selected").data("nextQuestionBlockCode");
+		console.log("next_question_block_code: " + next_question_block_code);
+		var level = $(select).parents(".form-group").data("blockLevel");
+		var current_question_block_code = $(select).parents(".form-group").data("questionBlock");
+
+		// 1)*
+		$('.form-group').each(function() {
+			console.log("level(" + level + "): " + $(this).data("blockCodeLevel" + level));
+			if ($(this).data("blockCodeLevel" + level) === current_question_block_code) {
+				$(this).addClass('hide');
+			}
+		});
+
+		// 2)**
+		if (next_question_block_code) {
+			$('.' + next_question_block_code).removeClass('hide');
 		}
 
 		return true;

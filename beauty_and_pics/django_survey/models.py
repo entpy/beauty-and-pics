@@ -239,11 +239,11 @@ class QuestionBlock(models.Model):
     question_group = models.ForeignKey(QuestionGroup)
     block_code = models.CharField(max_length=200)
     block_level = models.IntegerField(default=0)
-    block_code_level_0 = models.ForeignKey(QuestionBlock, related_name='block_code_level_0') # | -
-    block_code_level_1 = models.ForeignKey(QuestionBlock, related_name='block_code_level_1') # |  depth level
-    block_code_level_2 = models.ForeignKey(QuestionBlock, related_name='block_code_level_2') # |
-    block_code_level_3 = models.ForeignKey(QuestionBlock, related_name='block_code_level_3') # |
-    block_code_level_4 = models.ForeignKey(QuestionBlock, related_name='block_code_level_4') # V +
+    block_code_level_0 = models.ForeignKey('self', related_name='block_code_level0', null=True, blank=True) # | -
+    block_code_level_1 = models.ForeignKey('self', related_name='block_code_level1', null=True, blank=True) # |  depth level
+    block_code_level_2 = models.ForeignKey('self', related_name='block_code_level2', null=True, blank=True) # |
+    block_code_level_3 = models.ForeignKey('self', related_name='block_code_level3', null=True, blank=True) # |
+    block_code_level_4 = models.ForeignKey('self', related_name='block_code_level4', null=True, blank=True) # V +
     order = models.IntegerField(default=0)
 
     class Meta:
@@ -296,7 +296,7 @@ class Question(models.Model):
 							'default_hidden'
 						    ).filter(
 							question_block__question_group__group_code=question_group_code
-						    ).order_by('question_block__order', 'order'))
+						    ).order_by('order'))
 
         return return_var
 
@@ -397,18 +397,24 @@ class Survey(models.Model):
                 continue
 
 	    # 2) create question block
+            QuestionBlockLevel_obj = QuestionBlock()
 	    for question_block in DS_QUESTIONS_BLOCK:
 		QuestionBlock_obj = QuestionBlock()
 		QuestionBlock_obj.question_group = QuestionGroup_obj
 		QuestionBlock_obj.block_code = question_block.get('block_code')
-
 		QuestionBlock_obj.block_level = question_block.get('block_level')
-		QuestionBlock_obj.block_code_level_0.block_code = question_block.get('block_code_level_0')
-		QuestionBlock_obj.block_code_level_1.block_code = question_block.get('block_code_level_1')
-		QuestionBlock_obj.block_code_level_2.block_code = question_block.get('block_code_level_2')
-		QuestionBlock_obj.block_code_level_3.block_code = question_block.get('block_code_level_3')
-		QuestionBlock_obj.block_code_level_4.block_code = question_block.get('block_code_level_4')
+                if question_block.get('block_code_level_0'):
+                    QuestionBlock_obj.block_code_level_0 = QuestionBlockLevel_obj.get_by_block_code(block_code=question_block.get('block_code_level_0'))
+                if question_block.get('block_code_level_1'):
+                    QuestionBlock_obj.block_code_level_1 = QuestionBlockLevel_obj.get_by_block_code(block_code=question_block.get('block_code_level_1'))
+                if question_block.get('block_code_level_2'):
+                    QuestionBlock_obj.block_code_level_2 = QuestionBlockLevel_obj.get_by_block_code(block_code=question_block.get('block_code_level_2'))
+                if question_block.get('block_code_level_3'):
+                    QuestionBlock_obj.block_code_level_3 = QuestionBlockLevel_obj.get_by_block_code(block_code=question_block.get('block_code_level_3'))
+                if question_block.get('block_code_level_4'):
+                    QuestionBlock_obj.block_code_level_4 = QuestionBlockLevel_obj.get_by_block_code(block_code=question_block.get('block_code_level_4'))
 		QuestionBlock_obj.order = question_block.get('order')
+		QuestionBlock_obj.save()
 
             # 3) create questions
             for question_info in DS_QUESTIONS_AND_SELECTABLE_ANSWERS:

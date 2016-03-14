@@ -386,7 +386,7 @@ if (sono una modella/indossatrice/ragazza immagine professionista) {
     D: La tua giornata tipo?
     if (Hai già partecipato a sfilate?) {
         D: A quali sfilate hai partecipato?
-        D: Cos'hai provato durante la tua prima sfilata?
+        D: Il ricordo più bello della tua prima sfilata?
     } else {
         if (C'è qualche stilista particolare per cui vorresti sfilare?) {
             D: per quale stilista vorresti sfilare?
@@ -483,13 +483,28 @@ DS_QUESTIONS_BLOCK = [
     # block_code_level_4 = 
     # order = 
     { 'block_code' : 'user_interview__user_identify', 'block_level' : 0, 'block_code_level_0': False, 'block_code_level_1': False, 'block_code_level_2': False, 'block_code_level_3': False, 'block_code_level_4': False, 'order' : 0, }, # bivio
+
     { 'block_code' : 'user_interview__model_pro', 'block_level' : 1, 'block_code_level_0': 'user_interview__user_identify', 'block_code_level_1': False, 'block_code_level_2': False, 'block_code_level_3': False, 'block_code_level_4': False, 'order' : 100, },
-	{ 'block_code' : 'user_interview__model_pro__hobby', 'block_level' : 2, 'block_code_level_0': 'user_interview__user_identify', 'block_code_level_1': 'user_interview__model_pro', 'block_code_level_2': False, 'block_code_level_3': False, 'block_code_level_4': False, 'order' : 125, }, # bivio
-	    { 'block_code' : 'user_interview__model_pro__hobby__write_hobby', 'block_level' : 3, 'block_code_level_0': 'user_interview__user_identify', 'block_code_level_1': 'user_interview__model_pro', 'block_code_level_2': 'user_interview__model_pro__hobby', 'block_code_level_3': False, 'block_code_level_4': False, 'order' : 150, },
+        { 'block_code' : 'user_interview__model_pro__write_hobby', 'block_level' : 2, 'block_code_level_0': 'user_interview__user_identify', 'block_code_level_1': 'user_interview__model_pro', 'block_code_level_2': False, 'block_code_level_3': False, 'block_code_level_4': False, 'order' : 150, },
+        { 'block_code' : 'user_interview__model_pro__fashion_parade', 'block_level' : 2, 'block_code_level_0': 'user_interview__user_identify', 'block_code_level_1': 'user_interview__model_pro', 'block_code_level_2': False, 'block_code_level_3': False, 'block_code_level_4': False, 'order' : 151, },
+            { 'block_code' : 'user_interview__model_pro__exists_stylist_you_would_parade', 'block_level' : 3, 'block_code_level_0': 'user_interview__user_identify', 'block_code_level_1': 'user_interview__model_pro', 'block_code_level_2': 'user_interview__model_pro__fashion_parade', 'block_code_level_3': False, 'block_code_level_4': False, 'order' : 151, },
+                { 'block_code' : 'user_interview__model_pro__exists_stylist_you_would_parade__write_name', 'block_level' : 4, 'block_code_level_0': 'user_interview__user_identify', 'block_code_level_1': 'user_interview__model_pro', 'block_code_level_2': 'user_interview__model_pro__fashion_parade', 'block_code_level_3': 'user_interview__model_pro__exists_stylist_you_would_parade', 'block_code_level_4': False, 'order' : 151, },
+        { 'block_code' : 'user_interview__model_pro__event_take_part', 'block_level' : 2, 'block_code_level_0': 'user_interview__user_identify', 'block_code_level_1': 'user_interview__model_pro', 'block_code_level_2': False, 'block_code_level_3': False, 'block_code_level_4': False, 'order' : 151, },
+            { 'block_code' : 'user_interview__model_pro__event_take_part__winning_title_name', 'block_level' : 3, 'block_code_level_0': 'user_interview__user_identify', 'block_code_level_1': 'user_interview__model_pro', 'block_code_level_2': 'user_interview__model_pro__event_take_part', 'block_code_level_3': False, 'block_code_level_4': False, 'order' : 151, },
+        { 'block_code' : 'user_interview__model_pro__want_to_take_part_to_an_event', 'block_level' : 2, 'block_code_level_0': 'user_interview__user_identify', 'block_code_level_1': 'user_interview__model_pro', 'block_code_level_2': 'user_interview__model_pro__event_take_part', 'block_code_level_3': False, 'block_code_level_4': False, 'order' : 151, },
+            { 'block_code' : 'user_interview__model_pro__event_take_part__like_take_part_to', 'block_level' : 3, 'block_code_level_0': 'user_interview__user_identify', 'block_code_level_1': 'user_interview__model_pro', 'block_code_level_2': 'user_interview__model_pro__want_to_take_part_to_an_event', 'block_code_level_3': 'user_interview__model_pro__want_to_take_part_to_an_event', 'block_code_level_4': False, 'order' : 151, },
+
     { 'block_code' : 'user_interview__model_beginner', 'block_level' : 1, 'block_code_level_0': 'user_interview__user_identify', 'block_code_level_1': False, 'block_code_level_2': False, 'block_code_level_3': False, 'block_code_level_4': False, 'order' : 200, },
+        { 'block_code' : 'user_interview__model_beginner__write_hobby', 'block_level' : 2, 'block_code_level_0': 'user_interview__user_identify', 'block_code_level_1': 'user_interview__model_beginner', 'block_code_level_2': False, 'block_code_level_3': False, 'block_code_level_4': False, 'order' : 150, },
+
     { 'block_code' : 'user_interview__photo_passionate', 'block_level' : 1, 'block_code_level_0': 'user_interview__user_identify', 'block_code_level_1': False, 'block_code_level_2': False, 'block_code_level_3': False, 'block_code_level_4': False, 'order' : 300, },
+        { 'block_code' : 'user_interview__photo_passionate__write_hobby', 'block_level' : 2, 'block_code_level_0': 'user_interview__user_identify', 'block_code_level_1': 'user_interview__photo_passionate', 'block_code_level_2': False, 'block_code_level_3': False, 'block_code_level_4': False, 'order' : 150, },
+
     { 'block_code' : 'user_interview__fashion_passionate', 'block_level' : 1, 'block_code_level_0': 'user_interview__user_identify', 'block_code_level_1': False, 'block_code_level_2': False, 'block_code_level_3': False, 'block_code_level_4': False, 'order' : 400, },
+        { 'block_code' : 'user_interview__fashion_passionate__write_hobby', 'block_level' : 2, 'block_code_level_0': 'user_interview__user_identify', 'block_code_level_1': 'user_interview__fashion_passionate', 'block_code_level_2': False, 'block_code_level_3': False, 'block_code_level_4': False, 'order' : 150, },
+
     { 'block_code' : 'user_interview__just_for_fun', 'block_level' : 1, 'block_code_level_0': 'user_interview__user_identify', 'block_code_level_1': False, 'block_code_level_2': False, 'block_code_level_3': False, 'block_code_level_4': False, 'order' : 500, },
+        { 'block_code' : 'user_interview__just_for_fun__write_hobby', 'block_level' : 2, 'block_code_level_0': 'user_interview__user_identify', 'block_code_level_1': 'user_interview__just_for_fun', 'block_code_level_2': False, 'block_code_level_3': False, 'block_code_level_4': False, 'order' : 150, },
 ]
 
 # elenco di domande per ogni blocco
@@ -621,11 +636,9 @@ DS_QUESTIONS_AND_SELECTABLE_ANSWERS = [
             },
         ],
     },
-
-    # TODO
     {
 	# Nutri altre passioni oltre al mondo della moda?
-        'question_block' : 'user_interview__model_pro__hobby',
+        'question_block' : 'user_interview__model_pro',
         'question_code' : 'user_interview__user_identify__q6_5',
         'question_type' : 'select',
         'required' : 0,
@@ -650,7 +663,7 @@ DS_QUESTIONS_AND_SELECTABLE_ANSWERS = [
         'question_code' : 'user_interview__model_pro__write_hobby__q1',
         'question_type' : 'text',
         'required' : 0,
-        'order' : 675,
+        'order' : 651,
         'default_hidden' : 1,
         'answers' : [
             {
@@ -674,6 +687,210 @@ DS_QUESTIONS_AND_SELECTABLE_ANSWERS = [
             },
         ],
     },
+    # TODO: blocco domande
+    {
+	# Hai già partecipato a sfilate?
+        'question_block' : 'user_interview__model_pro',
+        'question_code' : 'user_interview__model_pro__q7_1',
+        'question_type' : 'select',
+        'required' : 0,
+        'order' : 653,
+        'default_hidden' : 1,
+        'answers' : [
+            {
+                # Si
+                'answer_code' : 'user_interview__model_pro__q7_1__yes',
+                'next_question_block' : 'user_interview__model_pro__fashion_parade',
+            },
+            {
+                # No
+                'answer_code' : 'user_interview__model_pro__q7_1__no',
+                'next_question_block' : 'user_interview__model_pro__exists_stylist_you_would_parade',
+            },
+        ],
+    },
+    {
+	# A quali sfilate hai partecipato?
+        'question_block' : 'user_interview__model_pro__fashion_parade',
+        'question_code' : 'user_interview__model_pro__fashion_parade__q1',
+        'question_type' : 'text',
+        'required' : 0,
+        'order' : 654,
+        'default_hidden' : 1,
+        'answers' : [
+            {
+                'answer_code' : 'user_interview__model_pro__fashion_parade__q1__answer',
+                'next_question_block' : False,
+            },
+        ],
+    },
+    {
+	# Il ricordo più bello della tua prima sfilata?
+        'question_block' : 'user_interview__model_pro__fashion_parade',
+        'question_code' : 'user_interview__model_pro__fashion_parade__q2',
+        'question_type' : 'text',
+        'required' : 0,
+        'order' : 655,
+        'default_hidden' : 1,
+        'answers' : [
+            {
+                'answer_code' : 'user_interview__model_pro__fashion_parade__q2__answer',
+                'next_question_block' : False,
+            },
+        ],
+    },
+    {
+	# C'è qualche stilista particolare per cui vorresti sfilare?
+        'question_block' : 'user_interview__model_pro__exists_stylist_you_would_parade',
+        'question_code' : 'user_interview__model_pro__exists_stylist_you_would_parade__q1',
+        'question_type' : 'select',
+        'required' : 0,
+        'order' : 656,
+        'default_hidden' : 1,
+        'answers' : [
+            {
+                # Si
+                'answer_code' : 'user_interview__model_pro__exists_stylist_you_would_parade__q1__yes',
+                'next_question_block' : 'user_interview__model_pro__exists_stylist_you_would_parade__write_name',
+            },
+            {
+                # No
+                'answer_code' : 'user_interview__model_pro__exists_stylist_you_would_parade__q1__no',
+                'next_question_block' : False,
+            },
+        ],
+    },
+
+    {
+	# A quali concorsi/eventi hai partecipato?
+        'question_block' : 'user_interview__model_pro__exists_stylist_you_would_parade__write_name',
+        'question_code' : 'user_interview__model_pro__exists_stylist_you_would_parade__write_name__q1',
+        'question_type' : 'text',
+        'required' : 0,
+        'order' : 657,
+        'default_hidden' : 1,
+        'answers' : [
+            {
+                'answer_code' : 'user_interview__model_pro__exists_stylist_you_would_parade__write_name__q1__answer',
+                'next_question_block' : False,
+            },
+        ],
+    },
+
+    {
+	# Hai già partecipato a qualche concorso/evento?
+        'question_block' : 'user_interview__model_pro',
+        'question_code' : 'user_interview__model_pro__q7_2',
+        'question_type' : 'select',
+        'required' : 0,
+        'order' : 658,
+        'default_hidden' : 1,
+        'answers' : [
+            {
+                # Si
+                'answer_code' : 'user_interview__model_pro__q7_2__yes',
+                'next_question_block' : 'user_interview__model_pro__event_take_part',
+            },
+            {
+                # No
+                'answer_code' : 'user_interview__model_pro__q7_2__no',
+                'next_question_block' : 'user_interview__model_pro__want_to_take_part_to_an_event',
+            },
+        ],
+    },
+    {
+	# A quali concorsi/eventi hai partecipato?
+        'question_block' : 'user_interview__model_pro__event_take_part',
+        'question_code' : 'user_interview__model_pro__event_take_part__q1',
+        'question_type' : 'text',
+        'required' : 0,
+        'order' : 659,
+        'default_hidden' : 1,
+        'answers' : [
+            {
+                'answer_code' : 'user_interview__model_pro__event_take_part__q1__answer',
+                'next_question_block' : False,
+            },
+        ],
+    },
+    {
+	# Hai già vinto qualche titolo?
+        'question_block' : 'user_interview__model_pro__event_take_part',
+        'question_code' : 'user_interview__model_pro__event_take_part__q2',
+        'question_type' : 'select',
+        'required' : 0,
+        'order' : 660,
+        'default_hidden' : 1,
+        'answers' : [
+            {
+                # Si
+                'answer_code' : 'user_interview__model_pro__event_take_part__q2__yes',
+                'next_question_block' : 'user_interview__model_pro__event_take_part__winning_title_name',
+            },
+            {
+                # No
+                'answer_code' : 'user_interview__model_pro__event_take_part__q2__no',
+                'next_question_block' : False,
+            },
+        ],
+    },
+    {
+	# A quali concorsi/eventi hai partecipato?
+        'question_block' : 'user_interview__model_pro__event_take_part__winning_title_name',
+        'question_code' : 'user_interview__model_pro__event_take_part__winning_title_name__q1',
+        'question_type' : 'text',
+        'required' : 0,
+        'order' : 661,
+        'default_hidden' : 1,
+        'answers' : [
+            {
+                'answer_code' : 'user_interview__model_pro__event_take_part__winning_title_name__q1__answer',
+                'next_question_block' : False,
+            },
+        ],
+    },
+    {
+	# C'è qualche concorso/evento a cui vorresti partecipare?
+        'question_block' : 'user_interview__model_pro__want_to_take_part_to_an_event',
+        'question_code' : 'user_interview__model_pro__want_to_take_part_to_an_event__q1',
+        'question_type' : 'select',
+        'required' : 0,
+        'order' : 662,
+        'default_hidden' : 1,
+        'answers' : [
+            {
+                # Si
+                'answer_code' : 'user_interview__model_pro__want_to_take_part_to_an_event__q1__yes',
+                'next_question_block' : 'user_interview__model_pro__event_take_part__like_take_part_to',
+            },
+            {
+                # No
+                'answer_code' : 'user_interview__model_pro__want_to_take_part_to_an_event__q1__no',
+                'next_question_block' : False,
+            },
+        ],
+    },
+    {
+	# A quale concorso/evento vorresti partecipare?
+        'question_block' : 'user_interview__model_pro__event_take_part__like_take_part_to',
+        'question_code' : 'user_interview__model_pro__event_take_part__like_take_part_to__q1',
+        'question_type' : 'text',
+        'required' : 0,
+        'order' : 663,
+        'default_hidden' : 1,
+        'answers' : [
+            {
+                'answer_code' : 'user_interview__model_pro__event_take_part__like_take_part_to__q1__answer',
+                'next_question_block' : False,
+            },
+        ],
+    },
+
+    # TODO: blocco domande
+
+
+
+
     {
         # D: Alcune persone che ritieni importanti con cui hai lavorato?
         'question_block' : 'user_interview__model_pro',
@@ -810,6 +1027,46 @@ DS_QUESTIONS_AND_SELECTABLE_ANSWERS = [
             },
         ],
     },
+
+
+    {
+	# Nutri altre passioni oltre al mondo della moda?
+        'question_block' : 'user_interview__model_beginner',
+        'question_code' : 'user_interview__model_beginner__q6_5',
+        'question_type' : 'select',
+        'required' : 0,
+        'order' : 650,
+        'default_hidden' : 1,
+        'answers' : [
+            {
+                # Si
+                'answer_code' : 'user_interview__model_beginner__q6_5__yes',
+                'next_question_block' : 'user_interview__model_beginner__write_hobby',
+            },
+            {
+                # No
+                'answer_code' : 'user_interview__model_beginner__q6_5__no',
+                'next_question_block' : False,
+            },
+        ],
+    },
+    {
+	# Quali altre passioni nutri oltre al mondo della moda?
+        'question_block' : 'user_interview__model_beginner__write_hobby',
+        'question_code' : 'user_interview__model_beginner__write_hobby__q1',
+        'question_type' : 'text',
+        'required' : 0,
+        'order' : 651,
+        'default_hidden' : 1,
+        'answers' : [
+            {
+                'answer_code' : 'user_interview__model_beginner__write_hobby__q1__answer',
+                'next_question_block' : False,
+            },
+        ],
+    },
+
+
     {
         # D: Lo/la stilista per cui vorresti sfilare?
         'question_block' : 'user_interview__model_beginner',
@@ -976,6 +1233,42 @@ DS_QUESTIONS_AND_SELECTABLE_ANSWERS = [
             },
         ],
     },
+    {
+	# Nutri altre passioni oltre al mondo della moda?
+        'question_block' : 'user_interview__photo_passionate',
+        'question_code' : 'user_interview__photo_passionate__q6_5',
+        'question_type' : 'select',
+        'required' : 0,
+        'order' : 650,
+        'default_hidden' : 1,
+        'answers' : [
+            {
+                # Si
+                'answer_code' : 'user_interview__photo_passionate__q6_5__yes',
+                'next_question_block' : 'user_interview__photo_passionate__write_hobby',
+            },
+            {
+                # No
+                'answer_code' : 'user_interview__photo_passionate__q6_5__no',
+                'next_question_block' : False,
+            },
+        ],
+    },
+    {
+	# Quali altre passioni nutri oltre al mondo della moda?
+        'question_block' : 'user_interview__photo_passionate__write_hobby',
+        'question_code' : 'user_interview__photo_passionate__write_hobby__q1',
+        'question_type' : 'text',
+        'required' : 0,
+        'order' : 651,
+        'default_hidden' : 1,
+        'answers' : [
+            {
+                'answer_code' : 'user_interview__photo_passionate__write_hobby__q1__answer',
+                'next_question_block' : False,
+            },
+        ],
+    },
     ## question_block: user_interview__fashion_passionate
     {
         # D: Parlaci un po' di te, dove sei nata e quali sono le tue passioni
@@ -1068,6 +1361,42 @@ DS_QUESTIONS_AND_SELECTABLE_ANSWERS = [
         ],
     },
     {
+	# Nutri altre passioni oltre al mondo della moda?
+        'question_block' : 'user_interview__fashion_passionate',
+        'question_code' : 'user_interview__fashion_passionate__q6_5',
+        'question_type' : 'select',
+        'required' : 0,
+        'order' : 650,
+        'default_hidden' : 1,
+        'answers' : [
+            {
+                # Si
+                'answer_code' : 'user_interview__fashion_passionate__q6_5__yes',
+                'next_question_block' : 'user_interview__fashion_passionate__write_hobby',
+            },
+            {
+                # No
+                'answer_code' : 'user_interview__fashion_passionate__q6_5__yes',
+                'next_question_block' : False,
+            },
+        ],
+    },
+    {
+	# Quali altre passioni nutri oltre al mondo della moda?
+        'question_block' : 'user_interview__fashion_passionate__write_hobby',
+        'question_code' : 'user_interview__fashion_passionate__write_hobby__q1',
+        'question_type' : 'text',
+        'required' : 0,
+        'order' : 651,
+        'default_hidden' : 1,
+        'answers' : [
+            {
+                'answer_code' : 'user_interview__fashion_passionate__write_hobby__q1__answer',
+                'next_question_block' : False,
+            },
+        ],
+    },
+    {
         # D: Il tuo stile preferito "serale"?
         'question_block' : 'user_interview__fashion_passionate',
         'question_code' : 'user_interview__fashion_passionate__q7',
@@ -1144,6 +1473,42 @@ DS_QUESTIONS_AND_SELECTABLE_ANSWERS = [
         ],
     },
     {
+	# Hai qualche hobby?
+        'question_block' : 'user_interview__just_for_fun',
+        'question_code' : 'user_interview__just_for_fun__q3_5',
+        'question_type' : 'select',
+        'required' : 0,
+        'order' : 350,
+        'default_hidden' : 1,
+        'answers' : [
+            {
+                # Si
+                'answer_code' : 'user_interview__just_for_fun__q3_5__yes',
+                'next_question_block' : 'user_interview__just_for_fun__write_hobby',
+            },
+            {
+                # No
+                'answer_code' : 'user_interview__just_for_fun__q3_5__yes',
+                'next_question_block' : False,
+            },
+        ],
+    },
+    {
+	# Qual'è il tuo hobby?
+        'question_block' : 'user_interview__just_for_fun__write_hobby',
+        'question_code' : 'user_interview__just_for_fun__write_hobby__q1',
+        'question_type' : 'text',
+        'required' : 0,
+        'order' : 351,
+        'default_hidden' : 1,
+        'answers' : [
+            {
+                'answer_code' : 'user_interview__just_for_fun__write_hobby__q1__answer',
+                'next_question_block' : False,
+            },
+        ],
+    },
+    {
         # D: Una massima in cui ti rispecchi?
         'question_block' : 'user_interview__just_for_fun',
         'question_code' : 'user_interview__just_for_fun__q4',
@@ -1174,3 +1539,66 @@ DS_QUESTIONS_AND_SELECTABLE_ANSWERS = [
         ],
     },
 ]
+
+"""
+# questions
+('user_interview__user_identify__q1'),
+('user_interview__model_pro__q1'),
+('user_interview__model_pro__q2'),
+('user_interview__model_pro__q3'),
+('user_interview__model_pro__q4'),
+('user_interview__model_pro__q5'),
+('user_interview__model_pro__q6'),
+('user_interview__user_identify__q6_5'),
+('user_interview__model_pro__write_hobby__q1'),
+('user_interview__model_pro__q7'),
+('user_interview__model_pro__q8'),
+('user_interview__model_pro__q9'),
+('user_interview__model_pro__q10'),
+('user_interview__model_beginner__q1'),
+('user_interview__model_beginner__q2'),
+('user_interview__model_beginner__q3'),
+('user_interview__model_beginner__q4'),
+('user_interview__model_beginner__q5'),
+('user_interview__model_beginner__q6'),
+('user_interview__model_beginner__q7'),
+('user_interview__model_beginner__q8'),
+('user_interview__model_beginner__q9'),
+('user_interview__model_beginner__q10'),
+('user_interview__model_beginner__q11'),
+('user_interview__photo_passionate__q1'),
+('user_interview__photo_passionate__q2'),
+('user_interview__photo_passionate__q3'),
+('user_interview__photo_passionate__q4'),
+('user_interview__photo_passionate__q5'),
+('user_interview__photo_passionate__q6'),
+('user_interview__fashion_passionate__q1'),
+('user_interview__fashion_passionate__q2'),
+('user_interview__fashion_passionate__q3'),
+('user_interview__fashion_passionate__q4'),
+('user_interview__fashion_passionate__q5'),
+('user_interview__fashion_passionate__q6'),
+('user_interview__fashion_passionate__q7'),
+('user_interview__fashion_passionate__q8'),
+('user_interview__just_for_fun__q1'),
+('user_interview__just_for_fun__q2'),
+('user_interview__just_for_fun__q3'),
+('user_interview__just_for_fun__q4'),
+('user_interview__just_for_fun__q5');
+# answers
+('user_interview__user_identify__q1__model_pro'),
+('user_interview__user_identify__q1__model_beginner'),
+('user_interview__user_identify__q1__photo_passionate'),
+('user_interview__user_identify__q1__fashion_passionate'),
+('user_interview__user_identify__q1__just_for_fun'),
+('user_interview__user_identify__q6_5__yes');
+
+DS__QUESTIONS_ANSWERS_LABEL = {
+    # survey about_user
+    'about_user_000' : {
+        'question_text_woman' : 'Dicci qualcosa di te',
+        'question_text_man' : 'Dicci qualcosa di te',
+        'question_hint_woman' : 'Descrivi dove sei nata, chi sei e le tue passioni',
+        'question_hint_man' : 'Descrivi dove sei nato, chi sei e le tue passioni',
+    },
+"""
