@@ -474,18 +474,22 @@ DS_QUESTIONS_GROUPS = [
 
 # blocchi di domande per ogni gruppo
 DS_QUESTIONS_BLOCK = [
-    # block_code	= identificativo del blocco di domande
-    # path_code		= comune a tutte le domande di questo livello
-    # child_path_code	= il path_code che avranno i "figli" di questo bivio
-    # order		= ordinamento dei macroblocchi
-    { 'block_code' : 'user_interview__user_identify', 'path_code' : 'path001', 'order' : 0, }, # bivio
-    { 'block_code' : 'user_interview__model_pro', 'path_code' : 'path002', 'order' : 100, },
-    # { 'block_code' : 'user_interview__model_pro__hobby', 'parent_block_code' : 'user_interview__model_pro', 'order' : 125, }, # bivio
-    { 'block_code' : 'user_interview__model_pro__write_hobby', 'path_code' : 'path002_001', 'order' : 150, },
-    { 'block_code' : 'user_interview__model_beginner', 'path_code' : 'path002', 'order' : 200, },
-    { 'block_code' : 'user_interview__photo_passionate', 'path_code' : 'path002', 'order' : 300, },
-    { 'block_code' : 'user_interview__fashion_passionate', 'path_code' : 'path002', 'order' : 400, },
-    { 'block_code' : 'user_interview__just_for_fun', 'path_code' : 'path002', 'order' : 500, },
+    # block_code = 
+    # block_level = 
+    # block_code_level_0 = 
+    # block_code_level_1 = 
+    # block_code_level_2 = 
+    # block_code_level_3 = 
+    # block_code_level_4 = 
+    # order = 
+    { 'block_code' : 'user_interview__user_identify', 'block_level' : 0, 'block_code_level_0': False, 'block_code_level_1': False, 'block_code_level_2': False, 'block_code_level_3': False, 'block_code_level_4': False, 'order' : 0, }, # bivio
+    { 'block_code' : 'user_interview__model_pro', 'block_level' : 1, 'block_code_level_0': 'user_interview__user_identify', 'block_code_level_1': False, 'block_code_level_2': False, 'block_code_level_3': False, 'block_code_level_4': False, 'order' : 100, },
+	{ 'block_code' : 'user_interview__model_pro__hobby', 'block_level' : 2, 'block_code_level_0': 'user_interview__user_identify', 'block_code_level_1': 'user_interview__model_pro', 'block_code_level_2': False, 'block_code_level_3': False, 'block_code_level_4': False, 'order' : 125, }, # bivio
+	    { 'block_code' : 'user_interview__model_pro__hobby__write_hobby', 'block_level' : 3, 'block_code_level_0': 'user_interview__user_identify', 'block_code_level_1': 'user_interview__model_pro', 'block_code_level_2': 'user_interview__model_pro__hobby', 'block_code_level_3': False, 'block_code_level_4': False, 'order' : 150, },
+    { 'block_code' : 'user_interview__model_beginner', 'block_level' : 1, 'block_code_level_0': 'user_interview__user_identify', 'block_code_level_1': False, 'block_code_level_2': False, 'block_code_level_3': False, 'block_code_level_4': False, 'order' : 200, },
+    { 'block_code' : 'user_interview__photo_passionate', 'block_level' : 1, 'block_code_level_0': 'user_interview__user_identify', 'block_code_level_1': False, 'block_code_level_2': False, 'block_code_level_3': False, 'block_code_level_4': False, 'order' : 300, },
+    { 'block_code' : 'user_interview__fashion_passionate', 'block_level' : 1, 'block_code_level_0': 'user_interview__user_identify', 'block_code_level_1': False, 'block_code_level_2': False, 'block_code_level_3': False, 'block_code_level_4': False, 'order' : 400, },
+    { 'block_code' : 'user_interview__just_for_fun', 'block_level' : 1, 'block_code_level_0': 'user_interview__user_identify', 'block_code_level_1': False, 'block_code_level_2': False, 'block_code_level_3': False, 'block_code_level_4': False, 'order' : 500, },
 ]
 
 # elenco di domande per ogni blocco
@@ -494,7 +498,6 @@ DS_QUESTIONS_AND_SELECTABLE_ANSWERS = [
         # D: Seleziona una categoria
         'question_block' : 'user_interview__user_identify',
         'question_code' : 'user_interview__user_identify__q1',
-        'path_to_hide' : 'path002',
         'question_type' : 'select',
         'required' : 1,
         'order' : 0,
@@ -624,7 +627,6 @@ DS_QUESTIONS_AND_SELECTABLE_ANSWERS = [
 	# Nutri altre passioni oltre al mondo della moda?
         'question_block' : 'user_interview__model_pro__hobby',
         'question_code' : 'user_interview__user_identify__q6_5',
-        'path_to_hide' : 'path002_001',
         'question_type' : 'select',
         'required' : 0,
         'order' : 650,
