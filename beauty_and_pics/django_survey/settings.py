@@ -641,6 +641,8 @@ DS_QUESTIONS_AND_SELECTABLE_ANSWERS = [
         'question_block' : 'user_interview__model_pro',
         'question_code' : 'user_interview__user_identify__q6_5',
         'question_type' : 'select',
+        'is_path_select' : True,
+        'inner_path_code' : 'path_1_0', # forse così...?
         'required' : 0,
         'order' : 650,
         'default_hidden' : 1,
@@ -649,6 +651,7 @@ DS_QUESTIONS_AND_SELECTABLE_ANSWERS = [
                 # Si
                 'answer_code' : 'user_interview__user_identify__q6_5__yes',
                 'next_question_block' : 'user_interview__model_pro__write_hobby',
+                'inner_path_block_code_to_hide' : 'path_1_0', 
             },
             {
                 # No
