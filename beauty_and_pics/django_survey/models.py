@@ -214,9 +214,10 @@ class Answer(models.Model):
         return return_var
 """
 
-class QuestionGroup(models.Model):
-    question_group_id = models.AutoField(primary_key=True)
-    group_code = models.CharField(max_length=150)
+class Survey(models.Model):
+    survey_id = models.AutoField(primary_key=True)
+    survey_code = models.CharField(max_length=150)
+    validation_required = models.IntegerField(default=0)
 
     class Meta:
         app_label = 'django_survey'
@@ -224,27 +225,21 @@ class QuestionGroup(models.Model):
     def __unicode__(self):
         return str(self.question_group_id)
 
-    def get_by_group_code(self, group_code):
-	"""Function to retrieve a group by group_code"""
+    def get_by_survey_code(self, survey_code):
+	"""Function to retrieve a survey by survey_code"""
         return_var = None
         try:
-            return_var = QuestionGroup.objects.get(group_code=group_code)
-        except QuestionGroup.DoesNotExist:
+            return_var = Survey.objects.get(survey_code=survey_code)
+        except Survey.DoesNotExist:
             raise
 
         return return_var
 
 class QuestionBlock(models.Model):
     question_block_id = models.AutoField(primary_key=True)
-    question_group = models.ForeignKey(QuestionGroup)
+    survey = models.ForeignKey(Survey)
     block_code = models.CharField(max_length=200)
-    block_level = models.IntegerField(default=0)
-    block_code_level_0 = models.ForeignKey('self', related_name='block_code_level0', null=True, blank=True) # | -
-    block_code_level_1 = models.ForeignKey('self', related_name='block_code_level1', null=True, blank=True) # |  depth level
-    block_code_level_2 = models.ForeignKey('self', related_name='block_code_level2', null=True, blank=True) # |
-    block_code_level_3 = models.ForeignKey('self', related_name='block_code_level3', null=True, blank=True) # |
-    block_code_level_4 = models.ForeignKey('self', related_name='block_code_level4', null=True, blank=True) # V +
-    order = models.IntegerField(default=0)
+    block_level = models.IntegerField(default=1)
 
     class Meta:
         app_label = 'django_survey'
@@ -262,10 +257,31 @@ class QuestionBlock(models.Model):
 
         return return_var
 
+    def get_or_create(self, survey_id, block_code, block_level):
+	"""Function to retrieve a question block by block_code"""
+        return_var = None
+        try:
+            return_var = self.get_by_block_code(block_code=block_code)
+        except QuestionBlock.DoesNotExist:
+            # create new question block
+            if survey_id and block_code and block_level:
+                QuestionBlock_obj = QuestionBlock()
+                QuestionBlock_obj.survey_id = survey_id
+                QuestionBlock_obj.block_code = block_code
+                QuestionBlock_obj.block_level = block_level
+                return_var = QuestionBlock_obj.save()
+
+        return return_var
+
 class Question(models.Model):
     question_id = models.AutoField(primary_key=True)
-    question_block = models.ForeignKey(QuestionBlock)
-    question_code = models.CharField(max_length=150)
+    question_block = models.ForeignKey(QuestionBlock),
+    question_code = models.CharField(max_length=200),
+    block_level_1 = models.ForeignKey(QuestionBlock, null=True, blank=True),
+    block_level_2 = models.ForeignKey(QuestionBlock, null=True, blank=True),
+    block_level_3 = models.ForeignKey(QuestionBlock, null=True, blank=True),
+    block_level_4 = models.ForeignKey(QuestionBlock, null=True, blank=True),
+    block_level_5 = models.ForeignKey(QuestionBlock, null=True, blank=True),
     question_type = models.CharField(max_length=100)
     required = models.IntegerField(default=0)
     order = models.IntegerField(default=0)
@@ -277,39 +293,38 @@ class Question(models.Model):
     def __unicode__(self):
         return str(self.question_id)
 
-    def get_by_question_group_code(self, question_group_code):
-        """"Function to retrieve all questions about question_group_code"""
+    def get_by_survey_code(self, survey_code):
+        """"Function to retrieve all questions by survey_code"""
         return_var = None
-        if question_group_code:
-            return_var = list(Question.objects.values('question_block__block_code',
-							'question_block__question_group__group_code',
-							'question_block__block_level',
-							'question_block__block_code_level_0__block_code',
-							'question_block__block_code_level_1__block_code',
-							'question_block__block_code_level_2__block_code',
-							'question_block__block_code_level_3__block_code',
-							'question_block__block_code_level_4__block_code',
-							'question_code',
-							'question_type',
-							'required',
-							'order',
-							'default_hidden'
-						    ).filter(
-							question_block__question_group__group_code=question_group_code
-						    ).order_by('order'))
+        if survey_code:
+            return_var = list(Question.objects.values(
+                'question_block',
+		'question_code',
+		'survey__survey_code',
+		'question_block__block_level',
+		'block_level_1__block_code',
+		'block_level_2__block_code',
+		'block_level_3__block_code',
+		'block_level_4__block_code',
+		'block_level_5__question_block',
+		'question_type',
+		'required',
+		'order',
+		'default_hidden'
+	    ).filter(survey__survey_code=survey_code).order_by('order'))
 
         return return_var
 
-    def get_survey_questions_dictionary(self, question_group_code):
-        """"Function to build survey questions dictionary about question_group_code"""
+    def get_survey_questions_dictionary(self, survey_code):
+        """"Function to build survey questions dictionary about survey_code"""
         SelectableAnswer_obj = SelectableAnswer()
         return_var = []
 
-        if question_group_code:
+        if survey_code:
             # list of all selectable answers about question_group_code
-            selectable_answers_list = SelectableAnswer_obj.create_selectable_answer_dictionary(question_group_code=question_group_code)
+            selectable_answers_list = SelectableAnswer_obj.create_selectable_answer_dictionary(survey_code=survey_code)
             # list of all questions about question_group_code
-            questions_list = self.get_by_question_group_code(question_group_code=question_group_code)
+            questions_list = self.get_by_survey_code(survey_code=survey_code)
 	    # logger.info("[get_by_question_group_code] question_list: " + str(questions_list))
             for question in questions_list:
                 # question info
@@ -330,7 +345,11 @@ class Question(models.Model):
 class SelectableAnswer(models.Model):
     selectable_answer_id = models.AutoField(primary_key=True)
     question = models.ForeignKey(Question)
-    next_question_block = models.ForeignKey(QuestionBlock, null=True, blank=True)
+    next_question_block_1 = models.ForeignKey(QuestionBlock, null=True, blank=True)
+    next_question_block_2 = models.ForeignKey(QuestionBlock, null=True, blank=True)
+    next_question_block_3 = models.ForeignKey(QuestionBlock, null=True, blank=True)
+    next_question_block_4 = models.ForeignKey(QuestionBlock, null=True, blank=True)
+    next_question_block_5 = models.ForeignKey(QuestionBlock, null=True, blank=True)
     answer_code = models.CharField(max_length=150)
 
     class Meta:
@@ -339,20 +358,28 @@ class SelectableAnswer(models.Model):
     def __unicode__(self):
         return str(self.selectable_answer_id)
 
-    def list_by_question_group_code(self, question_group_code):
-        """"Function to retrieve all selectable answers about question_group_code"""
+    def list_by_survey_code(self, survey_code):
+        """"Function to retrieve all selectable answers about survey"""
         return_var = None
-        if question_group_code:
-            return_var = list(SelectableAnswer.objects.values('question__question_code', 'next_question_block__block_code', 'answer_code').filter(question__question_block__question_group__group_code=question_group_code))
-	    # logger.info("list_by_question_group_code: " + str(return_var))
+        if survey_code:
+            return_var = list(SelectableAnswer.objects.values(
+                'question__question_code',
+                'next_question_block_1__question_block',
+                'next_question_block_2__question_block',
+                'next_question_block_3__question_block',
+                'next_question_block_4__question_block',
+                'next_question_block_5__question_block',
+                'answer_code'
+            ).filter(question__survey__survey_code=survey_code))
+	    # logger.info("list_by_survey_code: " + str(return_var))
 
         return return_var
 
-    def create_selectable_answer_dictionary(self, question_group_code):
-        """"Function to create a dictionary with selectable answers about question"""
+    def create_selectable_answer_dictionary(self, survey_code):
+        """"Function to create a dictionary with selectable answers about survey"""
         return_var = {}
-        if question_group_code:
-            selectable_answers = self.list_by_question_group_code(question_group_code=question_group_code)
+        if survey_code:
+            selectable_answers = self.list_by_survey_code(survey_code=survey_code)
             for answer in selectable_answers:
                 # logger.info("question_code: " + str(answer.get('question__question_code')))
                 logger.info("answer: " + str(answer))
@@ -364,11 +391,10 @@ class SelectableAnswer(models.Model):
 
         return return_var
 
-class Survey(models.Model):
-    survey_id = models.AutoField(primary_key=True)
-    question_group = models.ForeignKey(QuestionGroup)
+class UserSurvey(models.Model):
+    user_survey_id = models.AutoField(primary_key=True)
+    survey = models.ForeignKey(Survey)
     user = models.ForeignKey(User)
-    survey_code = models.CharField(max_length=150) # interview, user_report, ...
     creation_date = models.DateTimeField(auto_now_add=True)
     check_required = models.IntegerField(null=True, blank=True)
     check_message = models.CharField(max_length=500, null=True, blank=True) # message after survey check (e.g not approved because...)
@@ -378,69 +404,77 @@ class Survey(models.Model):
         app_label = 'django_survey'
 
     def __unicode__(self):
-        return str(self.survey_id)
+        return str(self.user_survey_id)
 
     def _create_defaults(self):
 	"""Function to create default questions and survey blocks"""
 
-	# 1) create question groups
-	for question_group in DS_QUESTIONS_GROUPS:
-            # if question_group already exists skip
-	    QuestionGroup_obj = QuestionGroup()
+	# 1) create surveys
+	for survey_code in DS_SURVEY:
+            # if surveys already exists, skip
+	    Survey_obj = Survey()
             try:
-                QuestionGroup_obj.get_by_group_code(group_code=question_group)
-            except QuestionGroup.DoesNotExist:
-                QuestionGroup_obj.group_code = question_group
-                QuestionGroup_obj.save()
+                Survey_obj.get_by_survey_code(survey_code=survey_code)
+            except Survey.DoesNotExist:
+                Survey_obj.survey_code = survey_code
+                Survey_obj.save()
             else:
-                # question group already exists, skip to next loop
+                # surveys already exists, skip to next loop
+                # salto anche l'inserimento delle possibili domande
                 continue
 
-	    # 2) create question block
-            QuestionBlockLevel_obj = QuestionBlock()
-	    for question_block in DS_QUESTIONS_BLOCK:
-		QuestionBlock_obj = QuestionBlock()
-		QuestionBlock_obj.question_group = QuestionGroup_obj
-		QuestionBlock_obj.block_code = question_block.get('block_code')
-		QuestionBlock_obj.block_level = question_block.get('block_level')
-                if question_block.get('block_code_level_0'):
-                    QuestionBlock_obj.block_code_level_0 = QuestionBlockLevel_obj.get_by_block_code(block_code=question_block.get('block_code_level_0'))
-                if question_block.get('block_code_level_1'):
-                    QuestionBlock_obj.block_code_level_1 = QuestionBlockLevel_obj.get_by_block_code(block_code=question_block.get('block_code_level_1'))
-                if question_block.get('block_code_level_2'):
-                    QuestionBlock_obj.block_code_level_2 = QuestionBlockLevel_obj.get_by_block_code(block_code=question_block.get('block_code_level_2'))
-                if question_block.get('block_code_level_3'):
-                    QuestionBlock_obj.block_code_level_3 = QuestionBlockLevel_obj.get_by_block_code(block_code=question_block.get('block_code_level_3'))
-                if question_block.get('block_code_level_4'):
-                    QuestionBlock_obj.block_code_level_4 = QuestionBlockLevel_obj.get_by_block_code(block_code=question_block.get('block_code_level_4'))
-		QuestionBlock_obj.order = question_block.get('order')
-		QuestionBlock_obj.save()
-
-            # 3) create questions
-            for question_info in DS_QUESTIONS_AND_SELECTABLE_ANSWERS:
-                QuestionBlock_obj = QuestionBlock()
+            # 2) create question's survey and question_blocks
+            QuestionBlock_obj = QuestionBlock()
+            for question_info in DS_QUESTIONS_AND_SELECTABLE_ANSWERS.get(survey_code):
+                # se non esiste, inserisco il QuestionBlock
                 Question_obj = Question()
-                Question_obj.question_block = QuestionBlock_obj.get_by_block_code(block_code=question_info.get('question_block'))
+                Question_obj.survey = Survey_obj
+                # create or retrieve question_block
+                Question_obj.question_block = QuestionBlock_obj.get_or_create(survey_id=Survey_obj.survey_id, block_code=question_info.get('question_block'), block_level=question_info.get('block_level'))
                 Question_obj.question_code = question_info.get('question_code')
+                Question_obj.block_code_level_1 = QuestionBlock_obj.get_or_create(block_code=question_info.get('block_code_level_1'))
+                Question_obj.block_code_level_2 = QuestionBlock_obj.get_or_create(block_code=question_info.get('block_code_level_2'))
+                Question_obj.block_code_level_3 = QuestionBlock_obj.get_or_create(block_code=question_info.get('block_code_level_3'))
+                Question_obj.block_code_level_4 = QuestionBlock_obj.get_or_create(block_code=question_info.get('block_code_level_4'))
+                Question_obj.block_code_level_5 = QuestionBlock_obj.get_or_create(block_code=question_info.get('block_code_level_5'))
                 Question_obj.question_type = question_info.get('question_type')
                 Question_obj.required = int(question_info.get('required'))
                 Question_obj.order = int(question_info.get('order'))
                 Question_obj.default_hidden = int(question_info.get('default_hidden'))
                 Question_obj.save()
 
-                # 4) create question's answers
+                # 3) create question's answers
+                QuestionBlockNext_obj = QuestionBlock()
                 for question_answer in question_info.get('answers'):
-                    QuestionBlockNext_obj = QuestionBlock()
                     SelectableAnswer_obj = SelectableAnswer()
                     SelectableAnswer_obj.question = Question_obj
                     try:
-                        SelectableAnswer_obj.next_question_block = QuestionBlockNext_obj.get_by_block_code(block_code=question_answer.get('next_question_block'))
+                        SelectableAnswer_obj.next_question_block_1 = QuestionBlockNext_obj.get_by_block_code(block_code=question_answer.get('next_question_block_1'))
                     except QuestionBlock.DoesNotExist:
-                        # no next_question_block retrieved
+                        # no next_question_block_1 retrieved
                         pass
-                    else:
-                        SelectableAnswer_obj.answer_code = question_answer.get('answer_code')
-                        SelectableAnswer_obj.save()
+                    try:
+                        SelectableAnswer_obj.next_question_block_2 = QuestionBlockNext_obj.get_by_block_code(block_code=question_answer.get('next_question_block_2'))
+                    except QuestionBlock.DoesNotExist:
+                        # no next_question_block_1 retrieved
+                        pass
+                    try:
+                        SelectableAnswer_obj.next_question_block_3 = QuestionBlockNext_obj.get_by_block_code(block_code=question_answer.get('next_question_block_3'))
+                    except QuestionBlock.DoesNotExist:
+                        # no next_question_block_1 retrieved
+                        pass
+                    try:
+                        SelectableAnswer_obj.next_question_block_4 = QuestionBlockNext_obj.get_by_block_code(block_code=question_answer.get('next_question_block_4'))
+                    except QuestionBlock.DoesNotExist:
+                        # no next_question_block_1 retrieved
+                        pass
+                    try:
+                        SelectableAnswer_obj.next_question_block_5 = QuestionBlockNext_obj.get_by_block_code(block_code=question_answer.get('next_question_block_5'))
+                    except QuestionBlock.DoesNotExist:
+                        # no next_question_block_1 retrieved
+                        pass
+                    SelectableAnswer_obj.answer_code = question_answer.get('answer_code')
+                    SelectableAnswer_obj.save()
 
 	return True
 

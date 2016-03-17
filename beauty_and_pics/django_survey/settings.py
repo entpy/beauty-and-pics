@@ -390,20 +390,23 @@ if (sono una modella/indossatrice/ragazza immagine professionista) { ### intervi
             D: A quali sfilate hai partecipato? ### interview__block1__block3__block1
             D: Il ricordo più bello della tua prima sfilata? ### interview__block1__block3__block1
         } else {
-            if (C'è qualche stilista particolare per cui vorresti sfilare?) { ### interview__block1__block3__block2
-                D: per quale stilista vorresti sfilare? ### interview__block1__block3__block2__block1
-            }
+            if (C'è qualche stilista particolare per cui vorresti sfilare?) ### interview__block1__block3__block2
+                {
+                    D: per quale stilista vorresti sfilare? ### interview__block1__block3__block2__block1
+                }
         }
     if (Hai già partecipato a qualche concorso/evento?) ### interview__block1__block4
         {
             D: A quali concorsi/eventi hai partecipato? ### interview__block1__block4__block1
-            if (Hai già vinto qualche titolo?) { ### interview__block1__block4__block2
-                D: Quale o quali titoli hai vinto? ### interview__block1__block4__block2__block1
-            }
+            if (Hai già vinto qualche titolo?) ### interview__block1__block4__block2
+                {
+                    D: Quale o quali titoli hai vinto? ### interview__block1__block4__block2__block1
+                }
         } else {
-            if (C'è qualche concorso/evento a cui vorresti partecipare?) { ### interview__block1__block4__block3
-                D: A quale concorso/evento vorresti partecipare? ### interview__block1__block4__block3__block1
-            }
+            if (C'è qualche concorso/evento a cui vorresti partecipare?) ### interview__block1__block4__block3
+                {
+                    D: A quale concorso/evento vorresti partecipare? ### interview__block1__block4__block3__block1
+                }
         }
     D: Alcune persone che ritieni importanti con cui hai lavorato? ### interview__block1__block1
     D: E' stata dura arrivare ai tuoi risultati? ### interview__block1__block1
@@ -471,8 +474,8 @@ fashion_passionate
 just_for_fun
 """
 # gruppi di domande
-DS_QUESTIONS_GROUPS = [
-    'user_interview',
+DS_SURVEY = [
+    'interview',
 ]
 
 """
@@ -513,9 +516,11 @@ DS_QUESTIONS_BLOCK = [
 """
 
 # elenco di domande per ogni blocco
-DS_QUESTIONS_AND_SELECTABLE_ANSWERS = [
+DS_QUESTIONS_AND_SELECTABLE_ANSWERS = {
+    'interview' : [
     {
         # D: Seleziona una categoria
+        'survey' : 'interview',
         'question_block' : 'interview__block1',
         'question_code' : 'interview__block1__q1',
 	'block_level' : 1,
@@ -566,6 +571,7 @@ DS_QUESTIONS_AND_SELECTABLE_ANSWERS = [
     ## question_block: user_interview__model_pro
     {
         # D: Parlaci un po' di te, dove sei nata e quali sono le tue passioni
+        'survey' : 'interview',
         'question_block' : 'interview__block1__block1',
         'question_code' : 'interview__block1__block1__q1',
 	'block_level' : 2,
@@ -592,6 +598,7 @@ DS_QUESTIONS_AND_SELECTABLE_ANSWERS = [
     },
     {
         # D: Come è iniziata la tua avventura nel mondo della moda?
+        'survey' : 'interview',
         'question_block' : 'interview__block1__block1',
         'question_code' : 'interview__block1__block1__q2',
 	'block_level' : 2,
@@ -721,6 +728,7 @@ DS_QUESTIONS_AND_SELECTABLE_ANSWERS = [
     # interview__block1__block2 {{{
     {
 	# Nutri altre passioni oltre al mondo della moda?
+        'survey' : 'interview',
         'question_block' : 'interview__block1__block2',
         'question_code' : 'interview__block1__block2__q7',
 	'block_level' : 2,
@@ -756,6 +764,7 @@ DS_QUESTIONS_AND_SELECTABLE_ANSWERS = [
     },
     {
         # Quali altre passioni nutri oltre al mondo della moda?
+        'survey' : 'interview',
         'question_block' : 'interview__block1__block2__block1',
         'question_code' : 'interview__block1__block2__block1__q1',
         'block_level' : 3,
@@ -801,6 +810,7 @@ DS_QUESTIONS_AND_SELECTABLE_ANSWERS = [
     # interview__block1__block3 {{{
     {
 	# Hai già partecipato a sfilate?
+        'survey' : 'interview',
         'question_block' : 'interview__block1__block3',
         'question_code' : 'interview__block1__block3__q1',
 	'block_level' : 2,
@@ -837,6 +847,7 @@ DS_QUESTIONS_AND_SELECTABLE_ANSWERS = [
         # Si {{{
         {
             # A quali sfilate hai partecipato?
+            'survey' : 'interview',
             'question_block' : 'interview__block1__block3__block1',
             'question_code' : 'interview__block1__block3__block1__q1',
             'block_level' : 3,
@@ -862,6 +873,7 @@ DS_QUESTIONS_AND_SELECTABLE_ANSWERS = [
         },
         {
             # Il ricordo più bello della tua prima sfilata?
+            'survey' : 'interview',
             'question_block' : 'interview__block1__block3__block1',
             'question_code' : 'interview__block1__block3__block1__q2',
             'block_level' : 3,
@@ -889,6 +901,7 @@ DS_QUESTIONS_AND_SELECTABLE_ANSWERS = [
         # No {{{
             {
                 # C'è qualche stilista particolare per cui vorresti sfilare?
+                'survey' : 'interview',
                 'question_block' : 'interview__block1__block3__block2',
                 'question_code' : 'interview__block1__block3__block2__q1',
                 'block_level' : 3,
@@ -925,6 +938,7 @@ DS_QUESTIONS_AND_SELECTABLE_ANSWERS = [
             # Si {{{
                 {
                     # Per quale stilista vorresti sfilare?
+                    'survey' : 'interview',
                     'question_block' : 'interview__block1__block3__block2__block1',
                     'question_code' : 'interview__block1__block3__block2__block1__q1',
                     'block_level' : 4,
@@ -955,6 +969,7 @@ DS_QUESTIONS_AND_SELECTABLE_ANSWERS = [
     # interview__block1__block4 {{{
     {
 	# Hai già partecipato a qualche concorso/evento?
+        'survey' : 'interview',
         'question_block' : 'interview__block1__block4',
         'question_code' : 'interview__block1__block4__q1',
 	'block_level' : 2,
@@ -991,6 +1006,7 @@ DS_QUESTIONS_AND_SELECTABLE_ANSWERS = [
     # Si {{{
         {
             # A quali concorsi/eventi hai partecipato?
+            'survey' : 'interview',
             'question_block' : 'interview__block1__block4__block1',
             'question_code' : 'interview__block1__block4__block1__q1',
             'block_level' : 3,
@@ -1014,80 +1030,140 @@ DS_QUESTIONS_AND_SELECTABLE_ANSWERS = [
                 },
             ],
         },
-        {
-            # XXX Hai già vinto qualche titolo?
-            'question_block' : 'user_interview__model_pro__event_take_part',
-            'question_code' : 'user_interview__model_pro__event_take_part__q2',
-            'question_type' : 'select',
-            'required' : 0,
-            'order' : 660,
-            'default_hidden' : 1,
-            'answers' : [
+        # interview__block1__block4__block2 {{{
+            {
+                # Hai già vinto qualche titolo?
+                'survey' : 'interview',
+                'question_block' : 'interview__block1__block4__block2',
+                'question_code' : 'interview__block1__block4__block2__q1',
+                'block_level' : 3,
+                'block_code_level_1': 'interview__block1',
+                'block_code_level_2': 'interview__block1__block4',
+                'block_code_level_3': False, 
+                'block_code_level_4': False,
+                'block_code_level_5': False,
+                'question_type' : 'select',
+                'required' : 0,
+                'order' : 660,
+                'default_hidden' : 1,
+                'answers' : [
+                    {
+                        # Si
+                        'answer_code' : 'interview__block1__block4__block2__q1__a1',
+                        'next_question_block_1' : 'interview__block1__block4__block2__block1', # Quale o quali titoli hai vinto?
+                        'next_question_block_2' : False,
+                        'next_question_block_3' : False,
+                        'next_question_block_4' : False,
+                        'next_question_block_5' : False,
+                    },
+                    {
+                        # No
+                        'answer_code' : 'interview__block1__block4__block2__q1__a2',
+                        'next_question_block_1' : False,
+                        'next_question_block_2' : False,
+                        'next_question_block_3' : False,
+                        'next_question_block_4' : False,
+                        'next_question_block_5' : False,
+                    },
+                ],
+            },
+            # Si {{{
                 {
-                    # Si
-                    'answer_code' : 'user_interview__model_pro__event_take_part__q2__yes',
-                    'next_question_block' : 'user_interview__model_pro__event_take_part__winning_title_name',
+                    # Quale o quali titoli hai vinto?
+                    'survey' : 'interview',
+                    'question_block' : 'interview__block1__block4__block2__block1',
+                    'question_code' : 'interview__block1__block4__block2__block1__q1',
+                    'block_level' : 4,
+                    'block_code_level_1': 'interview__block1',
+                    'block_code_level_2': 'interview__block1__block4',
+                    'block_code_level_3': 'interview__block1__block4__block2', 
+                    'block_code_level_4': False,
+                    'block_code_level_5': False,
+                    'question_type' : 'text',
+                    'required' : 0,
+                    'order' : 661,
+                    'default_hidden' : 1,
+                    'answers' : [
+                        {
+                            'answer_code' : 'interview__block1__block4__block2__block1__q1__a1',
+                            'next_question_block_1' : False,
+                            'next_question_block_2' : False,
+                            'next_question_block_3' : False,
+                            'next_question_block_4' : False,
+                            'next_question_block_5' : False,
+                        },
+                    ],
                 },
-                {
-                    # No
-                    'answer_code' : 'user_interview__model_pro__event_take_part__q2__no',
-                    'next_question_block' : False,
-                },
-            ],
-        },
-        {
-            # Quale o quali titoli hai vinto?
-            'question_block' : 'user_interview__model_pro__event_take_part__winning_title_name',
-            'question_code' : 'user_interview__model_pro__event_take_part__winning_title_name__q1',
-            'question_type' : 'text',
-            'required' : 0,
-            'order' : 661,
-            'default_hidden' : 1,
-            'answers' : [
-                {
-                    'answer_code' : 'user_interview__model_pro__event_take_part__winning_title_name__q1__answer',
-                    'next_question_block' : False,
-                },
-            ],
-        },
+            # Si }}}
+        # interview__block1__block4__block2 }}}
     # Si }}}
     # No {{{
-        {
-            # C'è qualche concorso/evento a cui vorresti partecipare?
-            'question_block' : 'user_interview__model_pro__want_to_take_part_to_an_event',
-            'question_code' : 'user_interview__model_pro__want_to_take_part_to_an_event__q1',
-            'question_type' : 'select',
-            'required' : 0,
-            'order' : 662,
-            'default_hidden' : 1,
-            'answers' : [
+        # interview__block1__block4__block3 {{{ C'è qualche concorso/evento a cui vorresti partecipare?
+            {
+                # C'è qualche concorso/evento a cui vorresti partecipare?
+                'survey' : 'interview',
+                'question_block' : 'interview__block1__block4__block3',
+                'question_code' : 'interview__block1__block4__block3__q1',
+                'block_level' : 3,
+                'block_code_level_1': 'interview__block1',
+                'block_code_level_2': 'interview__block1__block4',
+                'block_code_level_3': False, 
+                'block_code_level_4': False,
+                'block_code_level_5': False,
+                'question_type' : 'select',
+                'required' : 0,
+                'order' : 662,
+                'default_hidden' : 1,
+                'answers' : [
+                    {
+                        # Si
+                        'answer_code' : 'interview__block1__block4__block3__q1__a1',
+                        'next_question_block_1' : 'interview__block1__block4__block3__block1',
+                        'next_question_block_2' : False,
+                        'next_question_block_3' : False,
+                        'next_question_block_4' : False,
+                        'next_question_block_5' : False,
+                    },
+                    {
+                        # No
+                        'answer_code' : 'interview__block1__block4__block3__q1__a2',
+                        'next_question_block_1' : False,
+                        'next_question_block_2' : False,
+                        'next_question_block_3' : False,
+                        'next_question_block_4' : False,
+                        'next_question_block_5' : False,
+                    },
+                ],
+            },
+            # Si {{{
                 {
-                    # Si
-                    'answer_code' : 'user_interview__model_pro__want_to_take_part_to_an_event__q1__yes',
-                    'next_question_block' : 'user_interview__model_pro__event_take_part__like_take_part_to',
+                    # A quale concorso/evento vorresti partecipare?
+                    'survey' : 'interview',
+                    'question_block' : 'interview__block1__block4__block3__block1',
+                    'question_code' : 'interview__block1__block4__block3__block1__q1',
+                    'block_level' : 4,
+                    'block_code_level_1': 'interview__block1',
+                    'block_code_level_2': 'interview__block1__block4',
+                    'block_code_level_3': 'interview__block1__block4__block3', 
+                    'block_code_level_4': False,
+                    'block_code_level_5': False,
+                    'question_type' : 'text',
+                    'required' : 0,
+                    'order' : 663,
+                    'default_hidden' : 1,
+                    'answers' : [
+                        {
+                            'answer_code' : 'interview__block1__block4__block3__block1__q1__a1',
+                            'next_question_block_1' : False,
+                            'next_question_block_2' : False,
+                            'next_question_block_3' : False,
+                            'next_question_block_4' : False,
+                            'next_question_block_5' : False,
+                        },
+                    ],
                 },
-                {
-                    # No
-                    'answer_code' : 'user_interview__model_pro__want_to_take_part_to_an_event__q1__no',
-                    'next_question_block' : False,
-                },
-            ],
-        },
-        {
-            # A quale concorso/evento vorresti partecipare?
-            'question_block' : 'user_interview__model_pro__event_take_part__like_take_part_to',
-            'question_code' : 'user_interview__model_pro__event_take_part__like_take_part_to__q1',
-            'question_type' : 'text',
-            'required' : 0,
-            'order' : 663,
-            'default_hidden' : 1,
-            'answers' : [
-                {
-                    'answer_code' : 'user_interview__model_pro__event_take_part__like_take_part_to__q1__answer',
-                    'next_question_block' : False,
-                },
-            ],
-        },
+            # Si }}}
+        # interview__block1__block4__block3 }}}
     # No }}}
     # interview__block1__block4 }}}
 
@@ -1740,7 +1816,7 @@ DS_QUESTIONS_AND_SELECTABLE_ANSWERS = [
         ],
     },
     """
-]
+]}
 
 """
 # questions
