@@ -34,47 +34,68 @@ class SurveyForm(forms.Form, FormCommonUtils):
 
         # retrieve a list of questions about a survey
         question_obj = Question()
-        questions_list = question_obj.get_survey_questions_dictionary(question_group_code='user_interview')
+        questions_list = question_obj.get_survey_questions_dictionary(survey_code='interview')
 
-	logger.info("[build survey form] all questions dict: " + str(questions_list))
+	# logger.info("[build survey form] all questions dict: " + str(questions_list))
         for question_info in questions_list:
             """
-            question_info = {
-                    'question_block__block_code': u 'user_interview__user_identify',
-                    'question_block__block_level': 0 L,
-                    'question_block__block_code_level0__block_code': u '',
-                    'question_block__block_code_level1__block_code': u '',
-                    'question_block__block_code_level2__block_code': u '',
-                    'question_block__block_code_level3__block_code': u '',
-                    'question_block__block_code_level4__block_code': u '',
-                    'selectable_answers': [{
-                            'answer_code': u 'user_interview__user_identify__q1__model_pro',
-                            'next_question_block__block_code': u 'user_interview__model_pro',
-                            'question__question_code': u 'user_interview__user_identify__q1'
-                    }, {
-                            'answer_code': u 'user_interview__user_identify__q1__model_beginner',
-                            'next_question_block__block_code': u 'user_interview__model_beginner',
-                            'question__question_code': u 'user_interview__user_identify__q1'
-                    }, {
-                            'answer_code': u 'user_interview__user_identify__q1__photo_passionate',
-                            'next_question_block__block_code': u 'user_interview__photo_passionate',
-                            'question__question_code': u 'user_interview__user_identify__q1'
-                    }, {
-                            'answer_code': u 'user_interview__user_identify__q1__fashion_passionate',
-                            'next_question_block__block_code': u 'user_interview__fashion_passionate',
-                            'question__question_code': u 'user_interview__user_identify__q1'
-                    }, {
-                            'answer_code': u 'user_interview__user_identify__q1__just_for_fun',
-                            'next_question_block__block_code': u 'user_interview__just_for_fun',
-                            'question__question_code': u 'user_interview__user_identify__q1'
-                    }],
-                    'required': 1 L,
-                    'question_code': u 'user_interview__user_identify__q1',
-                    'default_hidden': 0 L,
-                    'question_type': u 'select',
-                    'question_block__question_group__group_code': u 'user_interview',
-                    'order': 0 L
-            }
+            question_info = [
+		{
+			'selectable_answers': [{
+				'answer_code': u 'user_interview__block1__q1__a5',
+				'question__question_code': u 'interview__block1__q1'
+				'next_question_block_1__block_code': u 'interview__block1__block800',
+				'next_question_block_2__block_code': u 'interview__block1__block900',
+				'next_question_block_3__block_code': None,
+				'next_question_block_4__block_code': None,
+				'next_question_block_5__block_code': None,
+			}, {
+				'answer_code': u 'user_interview__block1__q1__a4',
+				'question__question_code': u 'interview__block1__q1'
+				'next_question_block_1__block_code': u 'interview__block1__block600',
+				'next_question_block_2__block_code': u 'interview__block1__block700',
+				'next_question_block_3__block_code': None,
+				'next_question_block_4__block_code': None,
+				'next_question_block_5__block_code': None,
+			}, {
+				'answer_code': u 'user_interview__block1__q1__a3',
+				'question__question_code': u 'interview__block1__q1'
+				'next_question_block_1__block_code': u 'interview__block1__block400',
+				'next_question_block_4__block_code': None,
+				'next_question_block_2__block_code': u 'interview__block1__block500',
+				'next_question_block_3__block_code': None,
+				'next_question_block_5__block_code': None,
+			}, {
+				'answer_code': u 'interview__block1__q1__a2',
+				'question__question_code': u 'interview__block1__q1'
+				'next_question_block_1__block_code': u 'interview__block1__block200',
+				'next_question_block_2__block_code': u 'interview__block1__block300',
+				'next_question_block_3__block_code': None,
+				'next_question_block_4__block_code': None,
+				'next_question_block_5__block_code': None,
+			}, {
+				'answer_code': u 'interview__block1__q1__a1',
+				'question__question_code': u 'interview__block1__q1'
+				'next_question_block_1__block_code': u 'interview__block1__block1',
+				'next_question_block_2__block_code': u 'interview__block1__block2',
+				'next_question_block_3__block_code': u 'interview__block1__block3',
+				'next_question_block_4__block_code': u 'interview__block1__block4',
+				'next_question_block_5__block_code': None,
+			}],
+			'survey__survey_code': u 'interview',
+			'question_block__block_code': u 'interview__block1',
+			'question_code': u 'interview__block1__q1'
+			'block_level_1__block_code': None,
+			'block_level_2__block_code': None,
+			'block_level_3__block_code': None,
+			'block_level_4__block_code': None,
+			'block_level_5__block_code': None,
+			'question_type': u 'select',
+			'question_block__block_level': 1,
+			'default_hidden': 0,
+			'required': 1,
+			'order': 0,
+		},...]
             """
             question_code = question_info.get("question_code")
             # logger.info("[build survey form] question_code: " + str(question_code))
@@ -83,13 +104,13 @@ class SurveyForm(forms.Form, FormCommonUtils):
 
             widget_attrs = {
                 'placeholder': question_label,
-                'question_block' : question_info.get("question_block__block_code"),
-                'block_level' : question_info.get("question_block__block_level"),
-                'block_code_level_0' : question_info.get("question_block__block_code_level_0__block_code"),
-                'block_code_level_1' : question_info.get("question_block__block_code_level_1__block_code"),
-                'block_code_level_2' : question_info.get("question_block__block_code_level_2__block_code"),
-                'block_code_level_3' : question_info.get("question_block__block_code_level_3__block_code"),
-                'block_code_level_4' : question_info.get("question_block__block_code_level_4__block_code"),
+                'current_block_code' : question_info.get("question_block__block_code"),
+                'current_block_level' : question_info.get("question_block__block_level"),
+                'block_level1' : question_info.get("block_level_1__block_code"),
+                'block_level2' : question_info.get("block_level_2__block_code"),
+                'block_level3' : question_info.get("block_level_3__block_code"),
+                'block_level4' : question_info.get("block_level_4__block_code"),
+                'block_level5' : question_info.get("block_level_5__block_code"),
                 'default_hidden': question_info.get("default_hidden"),
                 'question_type': question_info.get("question_type"),
             }
@@ -106,17 +127,25 @@ class SurveyForm(forms.Form, FormCommonUtils):
                     answer_choices = [{
                         'answer_code' : '-',
                         'answer_label' : '-',
-                        'next_question_block_code' : '',
+                        'next_question_block_code1' : '',
+                        'next_question_block_code2' : '',
+                        'next_question_block_code3' : '',
+                        'next_question_block_code4' : '',
+                        'next_question_block_code5' : '',
                     }]
                     for selectable_answer in question_info.get('selectable_answers'):
-			logger.info("[build survey form] selectable_answers: " + str(selectable_answer))
-			logger.info("[build survey form] answer_code: " + str(selectable_answer.get('answer_code')))
+			# logger.info("[build survey form] selectable_answers: " + str(selectable_answer))
+			# logger.info("[build survey form] answer_code: " + str(selectable_answer.get('answer_code')))
                         # answer_choices = answer_choices + ((selectable_answer.get('answer_code'), 'testo ' + str(selectable_answer.get('answer_code')), selectable_answer.get('answer_code')),)
                         answer_choices.append(
                             {
                                 'answer_code' : selectable_answer.get('answer_code'),
                                 'answer_label' : 'testo ' + str(selectable_answer.get('answer_code')),
-                                'next_question_block_code' : selectable_answer.get('next_question_block__block_code'),
+                                'next_question_block_code1' : selectable_answer.get('next_question_block_1__block_code'),
+                                'next_question_block_code2' : selectable_answer.get('next_question_block_2__block_code'),
+                                'next_question_block_code3' : selectable_answer.get('next_question_block_3__block_code'),
+                                'next_question_block_code4' : selectable_answer.get('next_question_block_4__block_code'),
+                                'next_question_block_code5' : selectable_answer.get('next_question_block_5__block_code'),
                             }
                         )
 		self.fields[question_code] = forms.ChoiceField(

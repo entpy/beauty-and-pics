@@ -60,7 +60,7 @@
 			<input type="hidden" name="form_class" value="SurveyForm">
 			<fieldset class="col-md-12">
 				{% for field in form %}
-					<div class="form-group {{ field.field.widget.attrs.question_block }} {% if field.field.widget.attrs.default_hidden %}hide{% endif %} {% if field.errors %}has-error{% endif %} form-group-level-{{ field.field.widget.attrs.block_level }}" data-question-block="{{ field.field.widget.attrs.question_block }}" data-block-level="{{ field.field.widget.attrs.block_level }}" data-block-code-level0="{{ field.field.widget.attrs.block_code_level_0 }}" data-block-code-level1="{{ field.field.widget.attrs.block_code_level_1 }}" data-block-code-level2="{{ field.field.widget.attrs.block_code_level_2 }}" data-block-code-level3="{{ field.field.widget.attrs.block_code_level_3 }}" data-block-code-level4="{{ field.field.widget.attrs.block_code_level_4 }}">
+					<div class="form-group form-group-level-{{ field.field.widget.attrs.current_block_level }} {{ field.field.widget.attrs.current_block_code }} {% if field.field.widget.attrs.default_hidden %}hide{% endif %} {% if field.errors %}has-error{% endif %}" data-current-question-block-code="{{ field.field.widget.attrs.current_block_code }}" data-current-block-level="{{ field.field.widget.attrs.current_block_level }}" data-block-level1="{{ field.field.widget.attrs.block_level1 }}" data-block-level2="{{ field.field.widget.attrs.block_level2 }}" data-block-level3="{{ field.field.widget.attrs.block_level3 }}" data-block-level4="{{ field.field.widget.attrs.block_level4 }}" data-block-level5="{{ field.field.widget.attrs.block_level5 }}">
 						<label for="{{ field.id_for_label }}" class="col-md-4 control-label">{{ field.label }} {% if field.field.required %}*{% endif %}</label>
 						<div class="col-md-7">
 							{% if field.field.widget.attrs.question_type == "text" %}
@@ -68,7 +68,7 @@
 							{% elif field.field.widget.attrs.question_type == "select" %}
 								<select name="{{ field.name }}" class="form-control choosePathClickAction" id="{{ field.id_for_label }}">
 									{% for choices_info in field.field.choices %}
-										<option value="{{ choices_info|get_item:"answer_code" }}" {% if post|get_item:field.name == choices_info|get_item:"answer_code"|slugify %}selected="selected"{% endif %} data-next-question-block-code="{{ choices_info|get_item:"next_question_block_code" }}">{{ choices_info|get_item:"answer_code" }}</option>
+										<option value="{{ choices_info|get_item:"answer_code" }}" {% if post|get_item:field.name == choices_info|get_item:"answer_code"|slugify %}selected="selected"{% endif %} data-next-question-block1="{{ choices_info|get_item:"next_question_block_code1" }}" data-next-question-block2="{{ choices_info|get_item:"next_question_block_code2" }}" data-next-question-block3="{{ choices_info|get_item:"next_question_block_code3" }}" data-next-question-block4="{{ choices_info|get_item:"next_question_block_code4" }}" data-next-question-block5="{{ choices_info|get_item:"next_question_block_code5" }}">{{ choices_info|get_item:"answer_code" }}</option>
 									{% endfor %}
 								</select>
 							{% endif %}
@@ -115,22 +115,42 @@
 	function show_selected_path(select) {
 		// 1)* nascondo tutti i blocchi che hanno come "data-block-code-level(livello_blocco_corrente)" = codice_blocco_corrente
 		// 2)** mostro solo il blocco contenuto in "data-next-question-block-code" dell'oggetto corrente
-		var next_question_block_code = $(select).find(":selected").data("nextQuestionBlockCode");
-		console.log("next_question_block_code: " + next_question_block_code);
-		var level = $(select).parents(".form-group").data("blockLevel");
-		var current_question_block_code = $(select).parents(".form-group").data("questionBlock");
+		var next_question_block_code1 = $(select).find(":selected").data("nextQuestionBlock1");
+		var next_question_block_code2 = $(select).find(":selected").data("nextQuestionBlock2");
+		var next_question_block_code3 = $(select).find(":selected").data("nextQuestionBlock3");
+		var next_question_block_code4 = $(select).find(":selected").data("nextQuestionBlock4");
+		var next_question_block_code5 = $(select).find(":selected").data("nextQuestionBlock5");
+		console.log("next_question_block_code: " + next_question_block_code1);
+		console.log("next_question_block_code: " + next_question_block_code2);
+		console.log("next_question_block_code: " + next_question_block_code3);
+		console.log("next_question_block_code: " + next_question_block_code4);
+		console.log("next_question_block_code: " + next_question_block_code5);
+		var level = $(select).parents(".form-group").data("currentBlockLevel");
+		var current_question_block_code = $(select).parents(".form-group").data("currentQuestionBlockCode");
 
 		// 1)*
 		$('.form-group').each(function() {
-			console.log("level(" + level + "): " + $(this).data("blockCodeLevel" + level));
-			if ($(this).data("blockCodeLevel" + level) === current_question_block_code) {
+			console.log("level(" + level + "): " + $(this).data("blockLevel" + level));
+			if ($(this).data("blockLevel" + level) === current_question_block_code) {
 				$(this).addClass('hide');
 			}
 		});
 
 		// 2)**
-		if (next_question_block_code) {
-			$('.' + next_question_block_code).removeClass('hide');
+		if (next_question_block_code1) {
+			$('.' + next_question_block_code1).removeClass('hide');
+		}
+		if (next_question_block_code2) {
+			$('.' + next_question_block_code2).removeClass('hide');
+		}
+		if (next_question_block_code3) {
+			$('.' + next_question_block_code3).removeClass('hide');
+		}
+		if (next_question_block_code4) {
+			$('.' + next_question_block_code4).removeClass('hide');
+		}
+		if (next_question_block_code5) {
+			$('.' + next_question_block_code5).removeClass('hide');
 		}
 
 		return true;
