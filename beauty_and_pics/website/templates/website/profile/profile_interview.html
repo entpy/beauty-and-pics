@@ -67,8 +67,8 @@
 								<textarea name="{{ field.name }}" class="form-control" id="{{ field.id_for_label }}" placeholder="{{ field.field.widget.attrs.placeholder }}">{% if post|get_item:field.name %}{{ post|get_item:field.name }}{% endif %}</textarea>
 							{% elif field.field.widget.attrs.question_type == "select" %}
 								<select name="{{ field.name }}" class="form-control choosePathClickAction" id="{{ field.id_for_label }}">
-									{% for choices_info in field.field.choices %}
-										<option value="{{ choices_info|get_item:"answer_code" }}" {% if post|get_item:field.name == choices_info|get_item:"answer_code"|slugify %}selected="selected"{% endif %} data-next-question-block1="{{ choices_info|get_item:"next_question_block_code1" }}" data-next-question-block2="{{ choices_info|get_item:"next_question_block_code2" }}" data-next-question-block3="{{ choices_info|get_item:"next_question_block_code3" }}" data-next-question-block4="{{ choices_info|get_item:"next_question_block_code4" }}" data-next-question-block5="{{ choices_info|get_item:"next_question_block_code5" }}">{{ choices_info|get_item:"answer_code" }}</option>
+									{% for choices_info in field.field.widget.attrs.select_choices %}
+										<option value="{{ choices_info|get_item:"answer_code" }}" {% if post|get_item:field.name == choices_info|get_item:"answer_code"|slugify %}selected="selected"{% endif %} data-next-question-block1="{{ choices_info|get_item:"next_question_block_code1" }}" data-next-question-block2="{{ choices_info|get_item:"next_question_block_code2" }}" data-next-question-block3="{{ choices_info|get_item:"next_question_block_code3" }}" data-next-question-block4="{{ choices_info|get_item:"next_question_block_code4" }}" data-next-question-block5="{{ choices_info|get_item:"next_question_block_code5" }}">{{ choices_info|get_item:"answer_label" }}</option>
 									{% endfor %}
 								</select>
 							{% endif %}

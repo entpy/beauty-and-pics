@@ -127,6 +127,17 @@ class Survey(models.Model):
 
 	return True
 
+    def get_element_label(self, element_code, element_type=False):
+	"""Function to retrieve an element label"""
+	return_var = ''
+	element_type = 'question_text_woman'
+	if element_code:
+	    return_var = DS_QUESTIONS_ANSWERS_LABEL.get(element_code)
+	    if return_var:
+		return_var = return_var.get(element_type)
+
+	return return_var
+
 class QuestionBlock(models.Model):
     question_block_id = models.AutoField(primary_key=True)
     block_code = models.CharField(max_length=200)
