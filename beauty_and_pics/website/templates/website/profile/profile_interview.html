@@ -115,6 +115,7 @@
 	function show_selected_path(select) {
 		// 1)* nascondo tutti i blocchi che hanno come "data-block-code-level(livello_blocco_corrente)" = codice_blocco_corrente
 		// 2)** mostro solo il blocco contenuto in "data-next-question-block-code" dell'oggetto corrente
+		// 3) TODO Le select dei blocchi che nascondo vanno resettate come pure le input che nascondo
 		var next_question_block_code1 = $(select).find(":selected").data("nextQuestionBlock1");
 		var next_question_block_code2 = $(select).find(":selected").data("nextQuestionBlock2");
 		var next_question_block_code3 = $(select).find(":selected").data("nextQuestionBlock3");

@@ -1963,13 +1963,13 @@ DS_QUESTIONS_ANSWERS_LABEL = {
     },
 	'interview__block1__q1__a1' : {
 	    'question_text_woman' : "Sono una modella/indossatrice/ragazza immagine professionista",
-	    'question_text_man' : "Sono una modello/indossatrice/ragazzo immagine professionista",
+	    'question_text_man' : "Sono un modello/indossatrice/ragazzo immagine professionista",
 	    'question_hint_woman' : False,
 	    'question_hint_man' : False,
 	},
 	'interview__block1__q1__a2' : {
 	    'question_text_woman' : "Sono una modella/indossatrice/ragazza immagine esordiente",
-	    'question_text_man' : "Sono una modello/indossatrice/ragazzo immagine esordiente",
+	    'question_text_man' : "Sono un modello/indossatrice/ragazzo immagine esordiente",
 	    'question_hint_woman' : False,
 	    'question_hint_man' : False,
 	},

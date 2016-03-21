@@ -130,8 +130,7 @@ class Survey(models.Model):
     def get_element_label(self, element_code, element_type=False):
 	"""Function to retrieve an element label"""
 	return_var = ''
-	element_type = 'question_text_woman'
-	if element_code:
+	if element_code and element_type:
 	    return_var = DS_QUESTIONS_ANSWERS_LABEL.get(element_code)
 	    if return_var:
 		return_var = return_var.get(element_type)
@@ -308,7 +307,7 @@ class UserSurvey(models.Model):
     survey = models.ForeignKey(Survey)
     creation_date = models.DateTimeField(auto_now_add=True)
     check_message = models.CharField(max_length=500, null=True, blank=True) # message after survey check (e.g not approved because...)
-    status = models.IntegerField(null=True, blank=True) # 2 da approvare, 1 approvato, 0 non approvato
+    status = models.IntegerField(default=2, null=True, blank=True) # 2 da approvare, 1 approvato, 0 non approvato
 
     class Meta:
         app_label = 'django_survey'
@@ -316,9 +315,34 @@ class UserSurvey(models.Model):
     def __unicode__(self):
         return str(self.user_survey_id)
 
+    # TODO
+    def delete_user_survey(survey_code, user_id, status):
+        """Function to delete an user survey by survey_code and user_id"""
+        return_var = False
+        try:
+            UserSurvey_obj = UserSurvey.objects.get(survey__survey_code=survey_code, user__id=user_id, status=status)
+            return_var = True
+        except Favorite.DoesNotExist:
+            pass
+        else:
+            favorite_obj.delete()
+            return_var = True
+
+        return True
+
+    # TODO
+    def create_user_survey(survey_code, user_id):
+        """Function to create an user survey by survey_code and user_id"""
+        # get survey by code
+        # get user by id
+        # setto il survey da approvare
+
+        return True
+
 class UserAnswer(models.Model):
     user_answer_id = models.AutoField(primary_key=True)
-    survey = models.ForeignKey(Survey)
+    user_survey = models.ForeignKey(UserSurvey)
+    question = models.ForeignKey(Question)
     selectable_answer = models.ForeignKey(SelectableAnswer)
     text = models.CharField(max_length=500, null=True, blank=True)
 

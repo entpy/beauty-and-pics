@@ -4,7 +4,7 @@ from django import forms
 from datetime import date
 from dateutil.relativedelta import *
 from custom_form_app.forms.base_form_class import *
-# from account_app.models import *
+from account_app.models import Account
 from django_survey.models import *
 from django_survey.settings import *
 from website.exceptions import *
@@ -34,9 +34,17 @@ class SurveyForm(forms.Form, FormCommonUtils):
 
         survey_obj = Survey()
         question_obj = Question()
+        account_obj = Account()
 
         # retrieve a list of questions about a survey
         questions_list = question_obj.get_survey_questions_dictionary(survey_code='interview')
+
+        # identify user gender
+        account_info = account_obj.get_autenticated_user_data(request=self.request_data)
+        if account_info.get('gender') == 'woman':
+            element_type = 'question_text_woman'
+        else:
+            element_type = 'question_text_man'
 
 	# logger.info("[build survey form] all questions dict: " + str(questions_list))
         for question_info in questions_list:
@@ -102,10 +110,10 @@ class SurveyForm(forms.Form, FormCommonUtils):
             question_code = question_info.get("question_code")
             # logger.info("[build survey form] question_code: " + str(question_code))
             # logger.info("[build survey form] question_info: " + str(question_info))
-            question_label = survey_obj.get_element_label(element_code=question_code) # TODO: variabilizzare label
+            question_label = survey_obj.get_element_label(element_code=question_code, element_type=element_type)
 
             widget_attrs = {
-                # 'placeholder': question_label,
+                # 'placeholder': question_label, # placeholder disabled at the moment
                 'current_block_code' : question_info.get("question_block__block_code"),
                 'current_block_level' : question_info.get("question_block__block_level"),
                 'block_level1' : question_info.get("block_level_1__block_code"),
@@ -138,19 +146,18 @@ class SurveyForm(forms.Form, FormCommonUtils):
                         'next_question_block_code5' : '',
                     }]
                     for selectable_answer in question_info.get('selectable_answers'):
-			# logger.info("[build survey form] selectable_answers: " + str(selectable_answer))
-			# logger.info("[build survey form] answer_code: " + str(selectable_answer.get('answer_code')))
-                        # answer_choices = answer_choices + ((selectable_answer.get('answer_code'), 'testo ' + str(selectable_answer.get('answer_code')), selectable_answer.get('answer_code')),)
+                        # per la validazione
                         answer_choices.append(
                             (
                                 selectable_answer.get('answer_code'),
-                                survey_obj.get_element_label(element_code=selectable_answer.get('answer_code')),
+                                survey_obj.get_element_label(element_code=selectable_answer.get('answer_code'), element_type=element_type),
                             ),
                         )
+                        # per la visualizzazione nel template html
                         widget_attrs['select_choices'].append(
                             {
                                 'answer_code' : selectable_answer.get('answer_code'),
-                                'answer_label' : survey_obj.get_element_label(element_code=selectable_answer.get('answer_code')),
+                                'answer_label' : survey_obj.get_element_label(element_code=selectable_answer.get('answer_code'), element_type=element_type),
                                 'next_question_block_code1' : selectable_answer.get('next_question_block_1__block_code'),
                                 'next_question_block_code2' : selectable_answer.get('next_question_block_2__block_code'),
                                 'next_question_block_code3' : selectable_answer.get('next_question_block_3__block_code'),
@@ -169,6 +176,14 @@ class SurveyForm(forms.Form, FormCommonUtils):
         return True
 
     def save_form(self):
+        # TODO
+        """
+        1) Elimino i precedenti survey da approvare per questo account e survey_code
+        2) Creo il survey da approvare per questo account e survey_code
+        3) Salvo le risposte
+        4) Invio mail ad admin per approvazione
+        """
+
         """
         answer_obj = Answer();
         logger.debug("elenco di risposte preparate per il salvataggio: " + str(self.form_validated_data))
