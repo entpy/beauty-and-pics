@@ -16,6 +16,7 @@ from contest_app.models.contests import *
 from contest_app.models.contest_types import *
 from contest_app.models.votes import Vote
 from contest_app.models.hall_of_fame import HallOfFame
+from django_survey.models import UserAnswer
 from beauty_and_pics.common_utils import CommonUtils
 from email_template.email.email_template import *
 # loading forms
@@ -1045,7 +1046,7 @@ def profile_get_prize(request):
 @user_passes_test(check_if_is_a_catwalker_user)
 def profile_interview(request):
     """Create interview view"""
-    # answers_obj = Answer()
+    user_answer_obj = UserAnswer()
     # set current contest_type
     account_obj =  Account()
     autenticated_user_data = account_obj.get_autenticated_user_data(request=request)
@@ -1066,7 +1067,7 @@ def profile_interview(request):
     # if a GET (or any other method) we'll create a blank form
     else:
         # pre-prepopulate post dictionary with current user data
-	# request.POST = answers_obj.get_answers_about_survey_list(survey_list=['about_user', 'is_model', 'is_not_model'])
+        request.POST = user_answer_obj.get_survey_answers_form_by_user_id(survey_code='interview', user_id=request.user.id)
         form = SurveyForm()
 
     context = {
@@ -1075,6 +1076,28 @@ def profile_interview(request):
     }
 
     return render(request, 'website/profile/profile_interview.html', context)
+
+@login_required
+@user_passes_test(check_if_is_a_catwalker_user)
+def profile_interview_publishing(request):
+    """Publish created interview view"""
+    user_answer_obj = UserAnswer()
+    # set current contest_type
+    account_obj =  Account()
+    autenticated_user_data = account_obj.get_autenticated_user_data(request=request)
+    contest_obj = Contest()
+    contest_obj.set_contest_type(request=request, contest_type=autenticated_user_data["contest_type"])
+
+    # TODO: controllo se esiste un survey per questo id_utente e survey_code = inteview:
+    #           - se esiste lo stampo come anteprima
+    #           - altrimenti redirect nella pagina per crearlo
+    # stato pubblicazione, stato verifica, eventuale messaggio post verifica
+
+    context = {
+        "survey_questions" : user_answer_obj.get_survey_answers_by_user_id(survey_code='interview', user_id=request.user.id),
+    }
+
+    return render(request, 'website/profile/profile_interview_publishing.html', context)
 # }}}
 
 # test email {{{

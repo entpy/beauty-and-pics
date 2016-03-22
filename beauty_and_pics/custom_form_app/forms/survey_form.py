@@ -35,11 +35,40 @@ class SurveyForm(forms.Form, FormCommonUtils):
         survey_obj = Survey()
         question_obj = Question()
         account_obj = Account()
+        user_answer_obj = UserAnswer()
 
         # retrieve a list of questions about a survey
         questions_list = question_obj.get_survey_questions_dictionary(survey_code='interview')
 
-        # identify user gender
+        # TODO retrieve list of answer about survey_code and user_id
+        # question_answers_dict = {'question_code' : 'answer_value'}
+        # question_answers_dict = user_answer_obj.get_survey_answers_by_user_id(survey_code='interview', user_id=self.request_data.user.id)
+
+
+
+        # precedenze:
+        """
+        - se ho un survey approvato e non pubblicato, oppure non approvato
+            mostro le risposte precedentemente salvate di questi due casi
+            (ed eventualmente il pulsante spubblica se presente un survey pubblicato)
+        - se ho solo il survey pubblicato o da approvare:
+            mostro i pulsanti: spubblica o annulla_approvazione
+        - se non ho survey precedentemente salvati:
+            mostro un bel form pulito
+        """
+
+        """
+        mostro le risposte precedentemente salvate se:
+            - il survey non è stato approvato
+            - il survey è spubblicato
+        mostro un form vuoto se:
+            - non ho survey precedentemente salvati
+        mostro i pulsanti: spubblica o annulla_approvazione se:
+            - il survey è pubblicato
+            - il survey è in fase di analisi
+        """
+
+        # identify user gender (TODO non funziona)
         account_info = account_obj.get_autenticated_user_data(request=self.request_data)
         if account_info.get('gender') == 'woman':
             element_type = 'question_text_woman'
@@ -48,65 +77,6 @@ class SurveyForm(forms.Form, FormCommonUtils):
 
 	# logger.info("[build survey form] all questions dict: " + str(questions_list))
         for question_info in questions_list:
-            """
-            question_info = [
-		{
-			'selectable_answers': [{
-				'answer_code': u 'user_interview__block1__q1__a5',
-				'question__question_code': u 'interview__block1__q1'
-				'next_question_block_1__block_code': u 'interview__block1__block800',
-				'next_question_block_2__block_code': u 'interview__block1__block900',
-				'next_question_block_3__block_code': None,
-				'next_question_block_4__block_code': None,
-				'next_question_block_5__block_code': None,
-			}, {
-				'answer_code': u 'user_interview__block1__q1__a4',
-				'question__question_code': u 'interview__block1__q1'
-				'next_question_block_1__block_code': u 'interview__block1__block600',
-				'next_question_block_2__block_code': u 'interview__block1__block700',
-				'next_question_block_3__block_code': None,
-				'next_question_block_4__block_code': None,
-				'next_question_block_5__block_code': None,
-			}, {
-				'answer_code': u 'user_interview__block1__q1__a3',
-				'question__question_code': u 'interview__block1__q1'
-				'next_question_block_1__block_code': u 'interview__block1__block400',
-				'next_question_block_4__block_code': None,
-				'next_question_block_2__block_code': u 'interview__block1__block500',
-				'next_question_block_3__block_code': None,
-				'next_question_block_5__block_code': None,
-			}, {
-				'answer_code': u 'interview__block1__q1__a2',
-				'question__question_code': u 'interview__block1__q1'
-				'next_question_block_1__block_code': u 'interview__block1__block200',
-				'next_question_block_2__block_code': u 'interview__block1__block300',
-				'next_question_block_3__block_code': None,
-				'next_question_block_4__block_code': None,
-				'next_question_block_5__block_code': None,
-			}, {
-				'answer_code': u 'interview__block1__q1__a1',
-				'question__question_code': u 'interview__block1__q1'
-				'next_question_block_1__block_code': u 'interview__block1__block1',
-				'next_question_block_2__block_code': u 'interview__block1__block2',
-				'next_question_block_3__block_code': u 'interview__block1__block3',
-				'next_question_block_4__block_code': u 'interview__block1__block4',
-				'next_question_block_5__block_code': None,
-			}],
-			'survey__survey_code': u 'interview',
-			'question_block__block_code': u 'interview__block1',
-			'question_code': u 'interview__block1__q1'
-			'block_level_1__block_code': None,
-			'block_level_2__block_code': None,
-			'block_level_3__block_code': None,
-			'block_level_4__block_code': None,
-			'block_level_5__block_code': None,
-			'question_type': u 'select',
-			'question_block__block_level': 1,
-			'default_hidden': 0,
-			'required': 1,
-			'order': 0,
-		},...]
-            """
             question_code = question_info.get("question_code")
             # logger.info("[build survey form] question_code: " + str(question_code))
             # logger.info("[build survey form] question_info: " + str(question_info))
@@ -135,9 +105,9 @@ class SurveyForm(forms.Form, FormCommonUtils):
             elif question_info.get("question_type") == "select":
                 # create select input with select choices
                 if question_info.get('selectable_answers'):
-                    answer_choices = [('-', '-'),]
+                    answer_choices = [('', '-'),]
                     widget_attrs['select_choices'] = [{
-                        'answer_code' : '-',
+                        'answer_code' : '',
                         'answer_label' : '-',
                         'next_question_block_code1' : '',
                         'next_question_block_code2' : '',
@@ -176,20 +146,22 @@ class SurveyForm(forms.Form, FormCommonUtils):
         return True
 
     def save_form(self):
-        # TODO
-        """
-        1) Elimino i precedenti survey da approvare per questo account e survey_code
-        2) Creo il survey da approvare per questo account e survey_code
-        3) Salvo le risposte
-        4) Invio mail ad admin per approvazione
-        """
+        Question_obj = Question()
+        UserSurvey_obj = UserSurvey()
+        UserAnswer_obj = UserAnswer()
 
-        """
-        answer_obj = Answer();
-        logger.debug("elenco di risposte preparate per il salvataggio: " + str(self.form_validated_data))
-        logger.debug("id_user: " + str(self.request_data.user.id))
-        answer_obj.save_answers_list(id_user=self.request_data.user.id, answers_list=self.form_validated_data, survey_code_list=[DS_SURVEYS_CODE_ABOUT_USER, DS_SURVEYS_CODE_IS_MODEL, DS_SURVEYS_CODE_IS_NOT_MODEL])
-        """
+        # 1) Creo un nuovo survey, o setto come non pubblicato e da approvare
+        #    un survey già esistente
+        user_survey = UserSurvey_obj.init_user_survey(survey_code='interview', user_id=self.request_data.user.id)
+
+        # 2) Salvo le risposte: itero su tutti i question_code del survey code e
+        #                       per ognuno in self.form_validated_data prelevo la risposta
+        questions_code_list = Question_obj.get_code_list_by_survey_code(survey_code='interview')
+        for question_element in questions_code_list:
+            UserAnswer_obj.save_answer(user_survey_obj=user_survey, question_id=question_element.get('question_id'), value=self.form_validated_data.get(question_element.get('question_code')))
+
+        # TODO
+        # 4) Invio mail ad admin per approvazione
 
         return True
 
@@ -198,3 +170,63 @@ class SurveyForm(forms.Form, FormCommonUtils):
         self.save_form()
 
         return True
+
+"""
+question_info = [
+    {
+            'selectable_answers': [{
+                    'answer_code': u 'user_interview__block1__q1__a5',
+                    'question__question_code': u 'interview__block1__q1'
+                    'next_question_block_1__block_code': u 'interview__block1__block800',
+                    'next_question_block_2__block_code': u 'interview__block1__block900',
+                    'next_question_block_3__block_code': None,
+                    'next_question_block_4__block_code': None,
+                    'next_question_block_5__block_code': None,
+            }, {
+                    'answer_code': u 'user_interview__block1__q1__a4',
+                    'question__question_code': u 'interview__block1__q1'
+                    'next_question_block_1__block_code': u 'interview__block1__block600',
+                    'next_question_block_2__block_code': u 'interview__block1__block700',
+                    'next_question_block_3__block_code': None,
+                    'next_question_block_4__block_code': None,
+                    'next_question_block_5__block_code': None,
+            }, {
+                    'answer_code': u 'user_interview__block1__q1__a3',
+                    'question__question_code': u 'interview__block1__q1'
+                    'next_question_block_1__block_code': u 'interview__block1__block400',
+                    'next_question_block_4__block_code': None,
+                    'next_question_block_2__block_code': u 'interview__block1__block500',
+                    'next_question_block_3__block_code': None,
+                    'next_question_block_5__block_code': None,
+            }, {
+                    'answer_code': u 'interview__block1__q1__a2',
+                    'question__question_code': u 'interview__block1__q1'
+                    'next_question_block_1__block_code': u 'interview__block1__block200',
+                    'next_question_block_2__block_code': u 'interview__block1__block300',
+                    'next_question_block_3__block_code': None,
+                    'next_question_block_4__block_code': None,
+                    'next_question_block_5__block_code': None,
+            }, {
+                    'answer_code': u 'interview__block1__q1__a1',
+                    'question__question_code': u 'interview__block1__q1'
+                    'next_question_block_1__block_code': u 'interview__block1__block1',
+                    'next_question_block_2__block_code': u 'interview__block1__block2',
+                    'next_question_block_3__block_code': u 'interview__block1__block3',
+                    'next_question_block_4__block_code': u 'interview__block1__block4',
+                    'next_question_block_5__block_code': None,
+            }],
+            'survey__survey_code': u 'interview',
+            'question_block__block_code': u 'interview__block1',
+            'question_code': u 'interview__block1__q1'
+            'block_level_1__block_code': None,
+            'block_level_2__block_code': None,
+            'block_level_3__block_code': None,
+            'block_level_4__block_code': None,
+            'block_level_5__block_code': None,
+            'question_type': u 'select',
+            'question_block__block_level': 1,
+            'default_hidden': 0,
+            'required': 1,
+            'order': 0,
+    },...]
+"""

@@ -1,0 +1,93 @@
+{% extends "website/inc/base_profile.html" %}
+{% load staticfiles website_extras %}
+
+{% block title %}{{ site_name }} | informazioni principali{% endblock %}
+
+{% block description %}Informazioni principali: in questa pagina è possibile modificare le informazioni principali del tuo utente.{% endblock %}
+
+{# navigation tabs active element #}
+{% block container4_navigation_profile_preferences %}active{% endblock %}
+
+{# Custom page css block #}
+{% block custom_css %}
+{{ block.super }}
+<style>
+    textarea.form-control { height: 170px; }
+    .form-group-level-0 { background-color: transparent; }
+    .form-group-level-1 { background-color: #ECECEC; }
+    .form-group-level-2 { background-color: #D7D7D7; }
+    .form-group-level-3 { background-color: #C1C1C1; }
+    .form-group-level-4 { background-color: #B1B1B1; }
+</style>
+{% endblock custom_css %}
+
+{% block container4_content %}
+<div class="row">
+	<div class="col-md-12">
+		<h3>Pubblica Intervista</h3>
+	</div>
+	<div class="col-md-12">
+		<div class="alert alert-info">
+			<p>Rispondi alle domande e crea la tua intervista personalizzata per incrementare la tua visibilità e dare credibilità alla tua immagine. Una volta che avrai risposto alle domande dell'intervista e cliccato sul pulsante salva, le risposte saranno visibili nel tuo profilo.</p>
+		</div>
+	</div>
+	<div class="col-md-12">
+		{# messages block #}
+		<div class="error_container"></div>
+		{% if form.errors or messages %}
+			<div class="server_msg_container">
+				{% if form.errors %}
+					<div class="alert alert-danger">
+						<h4>Uhm qualcosa non va!</h4>
+						<ul>
+							{% for form_error in form.non_field_errors %}
+								<li>{{ form_error }}</li>
+							{% endfor %}
+						</ul>
+					</div>
+				{% else %}
+					<div class="alert alert-success">
+						<h4>Ottimo!</h4>
+						{% for message in messages %}
+							<div>{{ message }}</div>
+						{% endfor %}
+					</div>
+				{% endif %}
+			</div>
+		{% endif %}
+	</div>
+</div>
+{# print user survey #}
+{% if survey_questions %}
+	<div>
+	{% for single_question in survey_questions %}
+		<div>
+			<span>{{ single_question.label }}</span>
+			<span>{{ single_question.value }}</span>
+		</div>
+	{% endfor %}
+	</div>
+{% endif %}
+{% endblock container4_content %}
+{% block custom_js %}
+{{ block.super }}
+<script>
+	$(document).ready(function(){
+		$(document).on("change", ".choosePathClickAction", function(){
+
+			return true;
+		});
+
+		$(".submitButtonClickAction").click(function(event){
+			// preventing default click event
+			event.preventDefault();
+			// serialize form data
+			ajaxFormValidation.callData["data"] = $(".ajax_form").serialize();
+			// performing ajax call
+			ajaxFormValidation.validateForm();
+
+			return true;
+		});
+	});
+</script>
+{% endblock custom_js %}

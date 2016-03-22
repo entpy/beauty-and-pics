@@ -117,6 +117,17 @@ photo_passionate
 fashion_passionate
 just_for_fun
 """
+
+# pubblicazione
+DS_CONST_NOT_PUBLISHED = 0
+DS_CONST_PUBLISHED = 1
+
+# approvazione
+DS_CONST_MUST_BE_APPROVED = 3
+DS_CONST_PENDING_APPROVAL = 2
+DS_CONST_APPROVED = 1
+DS_CONST_NOT_APPROVED = 0
+
 # gruppi di domande
 DS_SURVEY = [
     {

@@ -222,6 +222,14 @@ class Question(models.Model):
 
         return return_var
 
+    def get_code_list_by_survey_code(self, survey_code):
+        """"Function to retrieve all questions by survey_code"""
+        return_var = None
+        if survey_code:
+            return_var = list(Question.objects.values('question_id', 'question_code').filter(survey__survey_code=survey_code).order_by('order'))
+
+        return return_var
+
     def get_survey_questions_dictionary(self, survey_code):
         """"Function to build survey questions dictionary about survey_code"""
         SelectableAnswer_obj = SelectableAnswer()
@@ -250,6 +258,18 @@ class Question(models.Model):
         # logger.info("[get_by_question_group_code] question_list: " + str(return_var))
 
         return return_var
+
+    """ Per ora non utilizzata
+    def get_by_question_code(self, question_code):
+        ""Function to retrieve a question by question_code""
+        return_var = None
+        try:
+            return_var = Question.objects.get(question_code=question_code)
+        except Question.DoesNotExist:
+            raise
+
+        return return_var
+    """
 
 class SelectableAnswer(models.Model):
     selectable_answer_id = models.AutoField(primary_key=True)
@@ -301,13 +321,26 @@ class SelectableAnswer(models.Model):
 
         return return_var
 
+    """ Per ora non utilizzata
+    def get_by_answer_code(self, answer_code):
+        ""Function to retrieve a selectable answer by answer_code""
+        return_var = None
+        try:
+            return_var = SelectableAnswer.objects.get(answer_code=answer_code)
+        except SelectableAnswer.DoesNotExist:
+            raise
+
+        return return_var
+    """
+
 class UserSurvey(models.Model):
     user_survey_id = models.AutoField(primary_key=True)
     user = models.ForeignKey(User)
     survey = models.ForeignKey(Survey)
     creation_date = models.DateTimeField(auto_now_add=True)
     check_message = models.CharField(max_length=500, null=True, blank=True) # message after survey check (e.g not approved because...)
-    status = models.IntegerField(default=2, null=True, blank=True) # 2 da approvare, 1 approvato, 0 non approvato
+    published = models.IntegerField(default=DS_CONST_NOT_PUBLISHED, null=True, blank=True) # 0 not published, 1 published
+    status = models.IntegerField(default=DS_CONST_MUST_BE_APPROVED, null=True, blank=True) # 3 da approvare, 2 in fase di approvazione, 1 approvato, 0 non approvato
 
     class Meta:
         app_label = 'django_survey'
@@ -315,39 +348,125 @@ class UserSurvey(models.Model):
     def __unicode__(self):
         return str(self.user_survey_id)
 
-    # TODO
-    def delete_user_survey(survey_code, user_id, status):
-        """Function to delete an user survey by survey_code and user_id"""
+    """
+    # TODO: testare se elimina effettivamente
+    def delete_user_survey(self, survey_code, user_id, status):
+        ""Function to delete an user survey by survey_code and user_id""
         return_var = False
         try:
             UserSurvey_obj = UserSurvey.objects.get(survey__survey_code=survey_code, user__id=user_id, status=status)
-            return_var = True
-        except Favorite.DoesNotExist:
+        except UserSurvey.DoesNotExist:
             pass
         else:
-            favorite_obj.delete()
+            UserSurvey_obj.delete()
             return_var = True
 
-        return True
+        return return_var
+    """
 
-    # TODO
-    def create_user_survey(survey_code, user_id):
-        """Function to create an user survey by survey_code and user_id"""
-        # get survey by code
-        # get user by id
-        # setto il survey da approvare
+    def set_survey_as_not_approved(self, survey_code, user_id):
+        """Function to set an existing survey as not published and da approvare"""
+        return_var = False
+        try:
+            UserSurvey_obj = UserSurvey.objects.get(survey__survey_code=survey_code, user__id=user_id)
+        except UserSurvey.DoesNotExist:
+            raise
+        else:
+            UserSurvey_obj.published = DS_CONST_NOT_PUBLISHED
+            UserSurvey_obj.status = DS_CONST_MUST_BE_APPROVED
+            UserSurvey_obj.save()
+            return_var = UserSurvey_obj
 
-        return True
+        return return_var
+
+    def create_new_user_survey(self, survey_code, user_id):
+        """Function to create an user survey (not published and da approvare) by survey_code and user_id"""
+        Survey_obj = Survey()
+        UserSurvey_obj = UserSurvey()
+        UserSurvey_obj.user_id = user_id
+        UserSurvey_obj.survey = Survey_obj.get_by_survey_code(survey_code=survey_code)
+        UserSurvey_obj.published = DS_CONST_NOT_PUBLISHED
+        UserSurvey_obj.status = DS_CONST_MUST_BE_APPROVED
+        UserSurvey_obj.save()
+
+        return UserSurvey_obj
+
+    def init_user_survey(self, survey_code, user_id):
+        """Function to init a new or existing survey"""
+        return_var = False
+        try:
+            return_var = self.set_survey_as_not_approved(survey_code=survey_code, user_id=user_id)
+        except UserSurvey.DoesNotExist:
+            return_var = self.create_new_user_survey(survey_code=survey_code, user_id=user_id)
+
+        return return_var
 
 class UserAnswer(models.Model):
     user_answer_id = models.AutoField(primary_key=True)
     user_survey = models.ForeignKey(UserSurvey)
     question = models.ForeignKey(Question)
-    selectable_answer = models.ForeignKey(SelectableAnswer)
-    text = models.CharField(max_length=500, null=True, blank=True)
+    value = models.CharField(max_length=500, null=True, blank=True)
 
     class Meta:
         app_label = 'django_survey'
 
     def __unicode__(self):
         return str(self.user_answer_id)
+
+    def save_answer(self, user_survey_obj, question_id, value):
+        """Function to save a single question answer"""
+        return_var = False
+
+        if user_survey_obj and question_id and value:
+            UserAnswer_obj = UserAnswer()
+            UserAnswer_obj.question_id = question_id
+            UserAnswer_obj.user_survey = user_survey_obj
+            UserAnswer_obj.value = value
+            UserAnswer_obj.save()
+            return_var = UserAnswer_obj
+
+        return return_var
+
+    # TODO
+    def get_survey_answers_form_by_user_id(self, survey_code, user_id):
+        """
+            Function to retrieve all question codes and related answer values by survey_code and user_id
+            survey_answer_list = {
+                'question_code1' : 'value1',
+                'question_code2' : 'value2',
+                'question_code3' : 'value3',
+                ...
+            }
+        """
+
+        return dict(UserAnswer.objects.values('question__question_code', 'value').filter(user_survey__survey__survey_code=survey_code, user_survey__user__id=user_id).order_by('order'))
+
+    # TODO: filtro anche per value non vuoto
+    def get_survey_answers_by_user_id(self, survey_code, user_id):
+        """
+            Function to retrieve all question_codes, question_labels and related answer_values by survey_code and user_id
+        """
+        return_var = []
+        question_answer_list = list(UserAnswer.objects.values('question__question_code', 'question__question_type', 'value').filter(user_survey__survey__survey_code=survey_code, user_survey__user__id=user_id).order_by('order'))
+
+        # TODO: prendere label key in base a gendere
+        """
+        if account_info.get('gender') == 'woman':
+            element_type = 'question_text_woman'
+        else:
+            element_type = 'question_text_man'
+        """
+        element_type = 'question_text_man'
+
+        if question_answer_list:
+            for single_question_answer in question_answer_list:
+                question_label = DS_QUESTIONS_ANSWERS_LABEL.get(single_question_answer.get('question__question_code'))
+                if single_question_answer.get('question__question_type') == 'select':
+                    # la risposta della select è in DS_QUESTIONS_ANSWERS_LABEL
+                    answer_label = DS_QUESTIONS_ANSWERS_LABEL.get(single_question_answer.get('value'))
+                    return_var.append({'label': question_label.get(element_type), 'value': question_label.get(element_type)})
+                else:
+                    # la risposta della select è direttamente in value di single_question_answer
+                    return_var.append({'label': question_label.get(element_type), 'value': single_question_answer.get('value')})
+
+        return return_var
