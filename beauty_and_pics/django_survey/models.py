@@ -427,7 +427,12 @@ class UserAnswer(models.Model):
 
         return return_var
 
-    # TODO
+    def delete_survey_answers_by_user(self, survey_code, user_id):
+	"""Function to delete all answers about survey_code and user_id"""
+	UserAnswer.objects.filter(user_survey__survey__survey_code=survey_code, user_survey__user__id=user_id).delete()
+
+        return True
+
     def get_survey_answers_form_by_user_id(self, survey_code, user_id):
         """
             Function to retrieve all question codes and related answer values by survey_code and user_id
@@ -438,16 +443,19 @@ class UserAnswer(models.Model):
                 ...
             }
         """
+	return_var = {}
+        question_answer_list = list(UserAnswer.objects.values('question__question_code', 'value').filter(user_survey__survey__survey_code=survey_code, user_survey__user__id=user_id, value__isnull=False).order_by('question__order'))
+	for single_question_answer in question_answer_list:
+	    return_var[single_question_answer.get('question__question_code')] = single_question_answer.get('value')
+	return return_var
 
-        return dict(UserAnswer.objects.values('question__question_code', 'value').filter(user_survey__survey__survey_code=survey_code, user_survey__user__id=user_id).order_by('order'))
-
-    # TODO: filtro anche per value non vuoto
+    # TODO: check
     def get_survey_answers_by_user_id(self, survey_code, user_id):
         """
             Function to retrieve all question_codes, question_labels and related answer_values by survey_code and user_id
         """
         return_var = []
-        question_answer_list = list(UserAnswer.objects.values('question__question_code', 'question__question_type', 'value').filter(user_survey__survey__survey_code=survey_code, user_survey__user__id=user_id).order_by('order'))
+        question_answer_list = list(UserAnswer.objects.values('question__question_code', 'question__question_type', 'value').filter(user_survey__survey__survey_code=survey_code, user_survey__user__id=user_id, value__isnull=False).order_by('question__order'))
 
         # TODO: prendere label key in base a gendere
         """
@@ -464,7 +472,7 @@ class UserAnswer(models.Model):
                 if single_question_answer.get('question__question_type') == 'select':
                     # la risposta della select è in DS_QUESTIONS_ANSWERS_LABEL
                     answer_label = DS_QUESTIONS_ANSWERS_LABEL.get(single_question_answer.get('value'))
-                    return_var.append({'label': question_label.get(element_type), 'value': question_label.get(element_type)})
+                    return_var.append({'label': question_label.get(element_type), 'value': answer_label.get(element_type)})
                 else:
                     # la risposta della select è direttamente in value di single_question_answer
                     return_var.append({'label': question_label.get(element_type), 'value': single_question_answer.get('value')})

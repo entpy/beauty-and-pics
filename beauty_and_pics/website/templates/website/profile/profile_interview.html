@@ -92,7 +92,7 @@
 <script>
 	$(document).ready(function(){
 		$(document).on("change", ".choosePathClickAction", function(){
-			show_selected_path($(this));
+			show_selected_path($(this), true);
 
 			return true;
 		});
@@ -109,52 +109,68 @@
 		});
 
 		// creo i percorsi già inseriti
-		// show_survey_roads();
+		show_survey_roads();
 	});
 
-	function show_selected_path(select) {
+	function show_selected_path(select, clear_hidden_elements_flag) {
 		// 1)* nascondo tutti i blocchi che hanno come "data-block-code-level(livello_blocco_corrente)" = codice_blocco_corrente
 		// 2)** mostro solo il blocco contenuto in "data-next-question-block-code" dell'oggetto corrente
-		// 3) TODO Le select dei blocchi che nascondo vanno resettate come pure le input che nascondo
+		// 3)*** Le select dei blocchi che nascondo vanno resettate come pure le input che nascondo
 		var next_question_block_code1 = $(select).find(":selected").data("nextQuestionBlock1");
 		var next_question_block_code2 = $(select).find(":selected").data("nextQuestionBlock2");
 		var next_question_block_code3 = $(select).find(":selected").data("nextQuestionBlock3");
 		var next_question_block_code4 = $(select).find(":selected").data("nextQuestionBlock4");
 		var next_question_block_code5 = $(select).find(":selected").data("nextQuestionBlock5");
-		console.log("next_question_block_code: " + next_question_block_code1);
+
+		/*console.log("next_question_block_code: " + next_question_block_code1);
 		console.log("next_question_block_code: " + next_question_block_code2);
 		console.log("next_question_block_code: " + next_question_block_code3);
 		console.log("next_question_block_code: " + next_question_block_code4);
-		console.log("next_question_block_code: " + next_question_block_code5);
+		console.log("next_question_block_code: " + next_question_block_code5);*/
 		var level = $(select).parents(".form-group").data("currentBlockLevel");
 		var current_question_block_code = $(select).parents(".form-group").data("currentQuestionBlockCode");
 
 		// 1)*
 		$('.form-group').each(function() {
-			console.log("level(" + level + "): " + $(this).data("blockLevel" + level));
+			// console.log("level(" + level + "): " + $(this).data("blockLevel" + level));
 			if ($(this).data("blockLevel" + level) === current_question_block_code) {
 				$(this).addClass('hide');
+				// $(this).find(":selected").prop('selected', '');
 			}
 		});
 
 		// 2)**
-		if (next_question_block_code1) {
-			$('.' + next_question_block_code1).removeClass('hide');
-		}
-		if (next_question_block_code2) {
-			$('.' + next_question_block_code2).removeClass('hide');
-		}
-		if (next_question_block_code3) {
-			$('.' + next_question_block_code3).removeClass('hide');
-		}
-		if (next_question_block_code4) {
-			$('.' + next_question_block_code4).removeClass('hide');
-		}
-		if (next_question_block_code5) {
-			$('.' + next_question_block_code5).removeClass('hide');
+		show_element(next_question_block_code1);
+		show_element(next_question_block_code2);
+		show_element(next_question_block_code3);
+		show_element(next_question_block_code4);
+		show_element(next_question_block_code5);
+
+		// 3)***
+		if (clear_hidden_elements_flag) {
+		    // questo per evitare che nella show_survey_roads venga eseguito in anticipo resettando il valore di
+		    // elementi potenzialmente visibili. In show_survey_roads viene infatti eseguita solo al termine del
+		    // ciclo, mentre all'evento choosePathClickAction direttamente dopo ogni click
+		    clear_hidden_elements();
 		}
 
 		return true;
+	}
+
+	function show_element(element_class_name) {
+		if (element_class_name) {
+			$('.' + element_class_name).removeClass('hide');
+		}
+
+		return true;
+	}
+
+	function clear_hidden_elements() {
+		$('.form-group:hidden').each(function() {
+			// console.log("level(" + level + "): " + $(this).data("blockLevel" + level));
+			$(this).find('textarea').val('');
+			$(this).find(":selected").prop('selected', '');
+		});
 	}
 
 	/*
@@ -162,12 +178,15 @@
 		1: riferimento a oggetto jQuery
 		console.log(i + ': ' + $p);
 	*/
-	/*function show_survey_roads() {
+	function show_survey_roads() {
 		$('select').each(function(i) {
 			show_selected_path($(this));
 		});
 
+		// clear hidden elements
+		clear_hidden_elements();
+
 		return true;
-	}*/
+	}
 </script>
 {% endblock custom_js %}

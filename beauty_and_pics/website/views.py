@@ -1068,6 +1068,7 @@ def profile_interview(request):
     else:
         # pre-prepopulate post dictionary with current user data
         request.POST = user_answer_obj.get_survey_answers_form_by_user_id(survey_code='interview', user_id=request.user.id)
+	logger.info("saved questions: " + str(request.POST))
         form = SurveyForm()
 
     context = {

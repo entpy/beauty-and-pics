@@ -62,7 +62,7 @@
 	<div>
 	{% for single_question in survey_questions %}
 		<div>
-			<span>{{ single_question.label }}</span>
+			<span><b>{{ single_question.label }}</b></span><br />
 			<span>{{ single_question.value }}</span>
 		</div>
 	{% endfor %}

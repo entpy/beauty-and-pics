@@ -154,7 +154,10 @@ class SurveyForm(forms.Form, FormCommonUtils):
         #    un survey già esistente
         user_survey = UserSurvey_obj.init_user_survey(survey_code='interview', user_id=self.request_data.user.id)
 
-        # 2) Salvo le risposte: itero su tutti i question_code del survey code e
+	# 2) Elimino tutte le precedenti risposte del survey
+	UserAnswer_obj.delete_survey_answers_by_user(survey_code='interview', user_id=self.request_data.user.id)
+
+        # 3) Salvo le risposte: itero su tutti i question_code del survey code e
         #                       per ognuno in self.form_validated_data prelevo la risposta
         questions_code_list = Question_obj.get_code_list_by_survey_code(survey_code='interview')
         for question_element in questions_code_list:
