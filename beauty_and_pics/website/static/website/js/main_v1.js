@@ -863,6 +863,45 @@ var bootstrapModalsObect = {
 
 		return false;
 	},
+
+	/* Function to build and show a generic text modal with close button */
+	showGenericTextModal: function(title, content) {
+		if (title && content) {
+			this.resetBootstrapModal();
+			var messageBlockTemplate = '';
+			messageBlockTemplate += '<div class="row">';
+			messageBlockTemplate += '<div class="col-md-12">';
+			messageBlockTemplate += '<p>' + content + '</p>';
+			messageBlockTemplate += '</div>';
+			messageBlockTemplate += '</div>';
+			$(".bootstrap_modal").find('.modal-title').html(title);
+			$(".bootstrap_modal").find('.modal-footer').html('<button type="button" class="btn btn-default" data-dismiss="modal">Chiudi</button>');
+			$(".bootstrap_modal").find('.modal-body').html(messageBlockTemplate);
+			this.showBootstrapModal();
+		}
+
+		return false;
+	},
+
+	/* Function to build and show a publish survey modal */
+	showPublishSurveyModal: function(content) {
+		if (content) {
+			this.resetBootstrapModal();
+			var messageBlockTemplate = '';
+			messageBlockTemplate += '<div class="row">';
+			messageBlockTemplate += '<div class="col-md-12">';
+			messageBlockTemplate += '<p>' + content + '</p>';
+			messageBlockTemplate += '</div>';
+			messageBlockTemplate += '</div>';
+			messageBlockTemplate += '<div class="row"><div class="col-xs-12 text-center"><button type="button" class="btn btn-success publishSurveyClickAction">Pubblica adesso</button></div></div>';
+			$(".bootstrap_modal").find('.modal-title').html("Pubblica la tua intervista");
+			$(".bootstrap_modal").find('.modal-footer').html('<button type="button" class="btn btn-default" data-dismiss="modal">Chiudi</button>');
+			$(".bootstrap_modal").find('.modal-body').html(messageBlockTemplate);
+			this.showBootstrapModal();
+		}
+
+		return false;
+	},
 	/* custom bootstrap modal functions }}} */
 
 	/* modal image block, with must be a size: eg. '100%' or '129px' or '12em' ecc... */

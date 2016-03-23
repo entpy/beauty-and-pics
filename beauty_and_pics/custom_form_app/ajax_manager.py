@@ -26,6 +26,7 @@ from image_contest_app.settings import ICA_VATE_COOKIE_NAME, ICA_VATE_COOKIE_EXP
 from image_contest_app.exceptions import ImageAlreadyVotedError, ImageContestClosedError
 from upload_image_box.models import cropUploadedImages
 from notify_system_app.models import Notify
+from django_survey.models import UserSurvey, Survey
 from website.exceptions import *
 import logging, json
 
@@ -54,6 +55,7 @@ class ajaxManager():
         self.__valid_action_list += ('remove_image_from_photoboard',)
         self.__valid_action_list += ('add_photoboard_like',)
         self.__valid_action_list += ('resend_confirmation_email',)
+        self.__valid_action_list += ('publish_interview',)
 
         # retrieve action to perform
         self.ajax_action = request.POST.get("ajax_action")
@@ -720,6 +722,53 @@ class ajaxManager():
             "last_name": account_info["last_name"],
             "auth_token": account_info["activation_key"],
         }
+        CustomEmailTemplate(
+            email_name="user_activate_email",
+            email_context=email_context,
+            template_type="user",
+            recipient_list=[account_info["email"],]
+        )
+
+        data = {'success' : True}
+
+        # build JSON response
+        json_data_string = json.dumps(data)
+        self.set_json_response(json_response=json_data_string)
+
+        return True
+
+    def publish_interview(self):
+        """Function to try to approve an user interview, a mail to admin will be sent"""
+        logger.debug("ajax_function: @@publish_interview@@")
+        logger.debug("parametri della chiamata: " + str(self.request.POST))
+
+        """
+            Se già verificata pubblico direttamente
+            altrimenti setto come in fase di analisi e mando una mail ad admin
+        """
+
+        account_obj = Account()
+        user_survey_obj = UserSurvey()
+        user_obj = self.request.user
+        user_id = user_obj.id
+        survey_code = self.request.POST.get("survey_code")
+
+        # TODO: check suervey code exists
+        # TODO: retrieve user_survey id
+        # user_survey_id = 
+
+        # current logged in user info
+        account_info = account_obj.custom_user_id_data(user_id=user_id)
+
+        # resend confirmation email
+        email_context = {
+            "first_name": account_info["first_name"],
+            "last_name": account_info["last_name"],
+            "email": "",
+            "profile_url": "",
+            "user_survey_id": "",
+        }
+
         CustomEmailTemplate(
             email_name="user_activate_email",
             email_context=email_context,

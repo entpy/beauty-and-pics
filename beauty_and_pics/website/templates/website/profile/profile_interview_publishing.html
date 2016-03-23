@@ -18,76 +18,123 @@
     .form-group-level-2 { background-color: #D7D7D7; }
     .form-group-level-3 { background-color: #C1C1C1; }
     .form-group-level-4 { background-color: #B1B1B1; }
+    .verified_label { color: green; }
+    .not_verified_label { color: red; }
 </style>
 {% endblock custom_css %}
 
 {% block container4_content %}
 <div class="row">
 	<div class="col-md-12">
-		<h3>Pubblica Intervista</h3>
+		<h3>Pubblica intervista</h3>
 	</div>
 	<div class="col-md-12">
 		<div class="alert alert-info">
-			<p>Rispondi alle domande e crea la tua intervista personalizzata per incrementare la tua visibilità e dare credibilità alla tua immagine. Una volta che avrai risposto alle domande dell'intervista e cliccato sul pulsante salva, le risposte saranno visibili nel tuo profilo.</p>
+			<p>Ti manca poco per pubblicare la tua intervista, clicca sul pulsante "Pubblica adesso" per mandare in revisione la tua intervista ed ottenere l'approvazione, ad approvazione avvenuta verrà automaticamente pubblicata nella tua pagina profilo.<br /><b>Clicca su "Pubblica adesso" per pubblicare la tua intervista</b></p>
 		</div>
 	</div>
-	<div class="col-md-12">
-		{# messages block #}
-		<div class="error_container"></div>
-		{% if form.errors or messages %}
+	{# check messages block {{{ #}
+	{% if check_message %}
+		<div class="col-md-12">
 			<div class="server_msg_container">
-				{% if form.errors %}
-					<div class="alert alert-danger">
-						<h4>Uhm qualcosa non va!</h4>
-						<ul>
-							{% for form_error in form.non_field_errors %}
-								<li>{{ form_error }}</li>
-							{% endfor %}
-						</ul>
-					</div>
-				{% else %}
-					<div class="alert alert-success">
-						<h4>Ottimo!</h4>
-						{% for message in messages %}
-							<div>{{ message }}</div>
-						{% endfor %}
-					</div>
-				{% endif %}
+				<div class="alert alert-danger">
+					<h4>Intervista non approvata</h4>
+					<span>{{ check_message }}</span>
+				</div>
 			</div>
-		{% endif %}
+		</div>
+	{% endif %}
+	{# check messages block }}} #}
+</div>
+<div class="row">
+	<div class="col-md-6 text-center">
+		<div>Stato pubblicazione</div>
+		<div class="{% if publish_status == published_status %}verified_label{% endif %}">{{ publish_status_label }}</div>
+		<div>
+			<a href="#" class="btn btn-success showPublishNowModalClickAction">Pubblica adesso</a>
+		</div>
+	</div>
+	<div class="col-md-6 text-center">
+		<div>Stato approvazione
+			<a href="#" class="showApprovedLegendClickAction">
+				<img data-toggle="tooltip" data-placement="top" data-original-title="Clicca per vedere la legenda" src="{% static "website/img/question-point.png" %}" alt="Legenda">
+			</a>
+		</div>
+		<div class="{% if approving_status == approved_status %}verified_label{% elif approving_status == not_approved_status %}not_verified_label{% endif %}">{{ approving_status_label }}</div>
 	</div>
 </div>
-{# print user survey #}
+{# user survey preview {{{ #}
 {% if survey_questions %}
-	<div>
-	{% for single_question in survey_questions %}
-		<div>
-			<span><b>{{ single_question.label }}</b></span><br />
-			<span>{{ single_question.value }}</span>
+	<div class="row">
+		<div class="col-md-12">
+			<h3>Anteprima intervista <span class="notify_back_link">[<a href="/profilo/intervista/">Mofifica</a>]</span></h3>
 		</div>
-	{% endfor %}
+		<div class="col-md-12">
+			<div class="alert alert-info">
+				<p>Ecco un'anteprima di come il pubblico vedrà la tua intervista. Clicca su "modifica" per modificare le risposte. Se la tua intervista fosse già stata pubblicata, la modifica implica la spubblicazione e la riapprovazione dell'intervista.</b></p>
+			</div>
+		</div>
+		<div class="col-md-12">
+			{% for single_question in survey_questions %}
+				<div>
+					<span><b>{{ single_question.label }}</b></span><br />
+					<span>{{ single_question.value }}</span>
+				</div>
+			{% endfor %}
+		</div>
 	</div>
 {% endif %}
+{# user survey preview }}} #}
 {% endblock container4_content %}
 {% block custom_js %}
 {{ block.super }}
 <script>
 	$(document).ready(function(){
-		$(document).on("change", ".choosePathClickAction", function(){
+		// TODO testare
+		$(document).on("click", ".showApprovedLegendClickAction", function(){
+			var title = "Legenda";
+			var content = "<div><b>Da approvare</b></div>";
+			content += "<div>L'intervista non è ancora stata inviata per la verifica</div>";
+			content += "<div><b>In fase di approvazione</b></div>";
+			content += "<div>L'intervista è in fase di analisi per essere approvata</div>";
+			content += "<div><b>Non approvato</b></div>";
+			content += "<div>L'intervista non è stata approvata, occorre fare le dovute modifiche secondo quanto specificato</div>";
+			content += "<div><b>Approvato</b></div>";
+			content += "<div>L'intervista è stata approvata e pronta per la pubblicazione</div>";
 
-			return true;
+			// open bootstrap modal
+			bootstrapModalsObect.showGenericTextModal(title, content);
+
+			return false;
 		});
 
-		$(".submitButtonClickAction").click(function(event){
-			// preventing default click event
-			event.preventDefault();
-			// serialize form data
-			ajaxFormValidation.callData["data"] = $(".ajax_form").serialize();
-			// performing ajax call
-			ajaxFormValidation.validateForm();
+		// TODO testare
+		$(document).on("click", ".showPublishNowModalClickAction", function(){
+			if (true) {
+				// testo se survey già approvato
+				var content = 'Clicca sul pulsante "Pubblica adesso" per pubblicare l\'intervista sul tuo profilo';
+			} else {
+				// testo se survey non ancora approvato
+				var content = 'Clicca sul pulsante "Pubblica adesso" per pubblicare l\'intervista sul tuo profilo. Verrà analizzata e pubblicata automaticamente in caso di approvazione.';
+			}
 
-			return true;
+			// open bootstrap modal
+			bootstrapModalsObect.showPublishSurveyModal(content);
+
+			return false;
 		});
+
+		// TODO fare e testare
+		$(document).on("click", ".publishSurveyClickAction", function(){
+			// chiamata ajax per pubblicare/mandare in fase di analisi e 
+			// pubblicare l'intervista
+			alert("ajax call to publish survey");
+
+			return false;
+		});
+
+		// tooltip init
+		$('[data-toggle="tooltip"]').tooltip();
 	});
 </script>
 {% endblock custom_js %}

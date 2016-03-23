@@ -16,7 +16,8 @@ from contest_app.models.contests import *
 from contest_app.models.contest_types import *
 from contest_app.models.votes import Vote
 from contest_app.models.hall_of_fame import HallOfFame
-from django_survey.models import UserAnswer
+from django_survey.models import UserAnswer, UserSurvey
+from django_survey.settings import DS_CONST_PUBLISHED, DS_CONST_APPROVED, DS_CONST_NOT_APPROVED
 from beauty_and_pics.common_utils import CommonUtils
 from email_template.email.email_template import *
 # loading forms
@@ -1082,11 +1083,15 @@ def profile_interview(request):
 @user_passes_test(check_if_is_a_catwalker_user)
 def profile_interview_publishing(request):
     """Publish created interview view"""
+    user_survey_obj = UserSurvey()
     user_answer_obj = UserAnswer()
-    # set current contest_type
     account_obj =  Account()
-    autenticated_user_data = account_obj.get_autenticated_user_data(request=request)
     contest_obj = Contest()
+    survey_code = 'interview'
+
+    # get logged in user data
+    autenticated_user_data = account_obj.get_autenticated_user_data(request=request)
+    # set current contest_type
     contest_obj.set_contest_type(request=request, contest_type=autenticated_user_data["contest_type"])
 
     # TODO: controllo se esiste un survey per questo id_utente e survey_code = inteview:
@@ -1094,8 +1099,31 @@ def profile_interview_publishing(request):
     #           - altrimenti redirect nella pagina per crearlo
     # stato pubblicazione, stato verifica, eventuale messaggio post verifica
 
+    # retrieve survey publishing and approving status
+    publishing_status = user_survey_obj.get_survey_publishing_status(survey_code=survey_code, user_id=request.user.id)
+    approving_status = user_survey_obj.get_survey_approving_status(survey_code=survey_code, user_id=request.user.id)
+
+    # retrieve survey publishing status label and approving status label
+    publishing_status_label = user_survey_obj.get_survey_publishing_label(publishing_status=publishing_status)
+    approving_status_label = user_survey_obj.get_survey_approving_label(approving_status=approving_status)
+
+    # get user survey questions and answers
+    user_questions_answers = user_answer_obj.get_survey_answers_by_user_id(survey_code=survey_code, user_id=request.user.id)
+
+    # TODO: se il survey non è stato approvato prelevo l'eventuale check_message
+    check_message = False
+
     context = {
-        "survey_questions" : user_answer_obj.get_survey_answers_by_user_id(survey_code='interview', user_id=request.user.id),
+        "survey_code" : survey_code,
+        "check_message" : check_message,
+        "survey_questions" : user_questions_answers,
+        "publish_status" : publishing_status,
+        "approving_status" : approving_status,
+        "publish_status_label" : publishing_status_label,
+        "approving_status_label" : approving_status_label,
+        "published_status" : DS_CONST_PUBLISHED,
+        "approved_status" : DS_CONST_APPROVED,
+        "not_approved_status" : DS_CONST_NOT_APPROVED,
     }
 
     return render(request, 'website/profile/profile_interview_publishing.html', context)

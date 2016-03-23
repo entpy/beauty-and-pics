@@ -379,6 +379,62 @@ class UserSurvey(models.Model):
 
         return return_var
 
+    # TODO
+    def get_survey_approving_status(self, survey_code, user_id):
+        """Function to retrieve survey approving status by user_id"""
+        return_var = False
+
+        try:
+            UserSurvey_obj = UserSurvey.objects.get(survey__survey_code=survey_code, user__id=user_id)
+        except UserSurvey.DoesNotExist:
+            raise
+        else:
+            return_var = UserSurvey_obj.status
+
+        return return_var
+
+    # TODO
+    def get_survey_publishing_status(self, survey_code, user_id):
+        """Function to retrieve survey publishing status by user_id"""
+        return_var = False
+
+        try:
+            UserSurvey_obj = UserSurvey.objects.get(survey__survey_code=survey_code, user__id=user_id)
+        except UserSurvey.DoesNotExist:
+            raise
+        else:
+            return_var = UserSurvey_obj.published
+
+        return return_var
+
+    # TODO
+    def get_survey_approving_label(self, approving_status):
+        """Function to retrieve approving status label related with approving_status"""
+        return_var = False
+
+        if approving_status == DS_CONST_MUST_BE_APPROVED:
+            return_var = 'Non ancora approvata'
+        elif approving_status == DS_CONST_PENDING_APPROVAL:
+            return_var = 'Approvazione in corso'
+        elif approving_status == DS_CONST_APPROVED:
+            return_var = 'Approvato'
+        elif approving_status == DS_CONST_NOT_APPROVED:
+            return_var = 'Non approvato'
+
+        return return_var
+
+    # TODO
+    def get_survey_publishing_label(self, publishing_status):
+        """Function to retrieve publishing status label related with approving_status"""
+        return_var = False
+
+        if publishing_status == DS_CONST_NOT_PUBLISHED:
+            return_var = 'Non pubblicato'
+        elif publishing_status == DS_CONST_PUBLISHED:
+            return_var = 'Pubblicato'
+
+        return return_var
+
     def create_new_user_survey(self, survey_code, user_id):
         """Function to create an user survey (not published and da approvare) by survey_code and user_id"""
         Survey_obj = Survey()
