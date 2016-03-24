@@ -27,6 +27,7 @@ from image_contest_app.exceptions import ImageAlreadyVotedError, ImageContestClo
 from upload_image_box.models import cropUploadedImages
 from notify_system_app.models import Notify
 from django_survey.models import UserSurvey, Survey
+from django_survey.settings import DS_CONST_NOT_PUBLISHED, DS_CONST_PUBLISHED, DS_CONST_PENDING_APPROVAL, DS_CONST_APPROVED
 from website.exceptions import *
 import logging, json
 
@@ -738,45 +739,89 @@ class ajaxManager():
         return True
 
     def publish_interview(self):
-        """Function to try to approve an user interview, a mail to admin will be sent"""
+        """Function to publish an user interview"""
         logger.debug("ajax_function: @@publish_interview@@")
         logger.debug("parametri della chiamata: " + str(self.request.POST))
 
         """
-            Se già verificata pubblico direttamente
+            Se già verificata pubblico direttamente, setto come pubblicata
             altrimenti setto come in fase di analisi e mando una mail ad admin
         """
 
         account_obj = Account()
+        survey_obj = Survey()
         user_survey_obj = UserSurvey()
+
+        msg = ""
+        error_flag = False
         user_obj = self.request.user
         user_id = user_obj.id
         survey_code = self.request.POST.get("survey_code")
 
-        # TODO: check suervey code exists
-        # TODO: retrieve user_survey id
-        # user_survey_id = 
+        # check survey code exists
+        if survey_obj.check_survey_code_exists(survey_code=survey_code):
+            try:
+                # retrieve survey about user_id
+                existing_user_survey_obj = user_survey_obj.get_user_survey(survey_code=survey_code, user_id=user_id)
+            except UserSurvey.DoesNotExist:
+                # errore
+                msg = "L'utente " + str(user_id) + " non ha ancora creato un survey."
+                logger.error("publish_interview: " + str(msg) + " | request: " + str(self.request))
+                error_flag = True
+            else:
+                if existing_user_survey_obj.is_survey_approved():
+                    # user survey can be published
+                    existing_user_survey_obj.set_publishing_status(publishing_status=DS_CONST_PUBLISHED)
 
-        # current logged in user info
-        account_info = account_obj.custom_user_id_data(user_id=user_id)
+                    # setto messaggio di pubblicazione (e classe), di approvazione (e classe) e testo del popup
+                    publishing_msg = user_survey_obj.get_survey_publishing_label(publishing_status=DS_CONST_PUBLISHED)
+                    publishing_class = 'verified_label'
+                    approving_msg = user_survey_obj.get_survey_approving_label(approving_status=DS_CONST_APPROVED)
+                    approving_class = 'verified_label'
+                    popup_msg = "L'intervista è stata pubblicata correttamente sul tuo profilo"
+                else:
+                    # must be validated first and sent an email to admin
+                    existing_user_survey_obj.set_approving_status(approving_status=DS_CONST_PENDING_APPROVAL)
 
-        # resend confirmation email
-        email_context = {
-            "first_name": account_info["first_name"],
-            "last_name": account_info["last_name"],
-            "email": "",
-            "profile_url": "",
-            "user_survey_id": "",
-        }
+                    # current logged in user info
+                    account_info = account_obj.custom_user_id_data(user_id=user_id)
 
-        CustomEmailTemplate(
-            email_name="user_activate_email",
-            email_context=email_context,
-            template_type="user",
-            recipient_list=[account_info["email"],]
-        )
+                    # send approve interview email to admin
+                    email_context = {
+                        "user_id": account_info["user_id"],
+                        "first_name": account_info["first_name"],
+                        "last_name": account_info["last_name"],
+                        "email": account_info["email"],
+                        "profile_url": settings.SITE_URL + "/passerella/dettaglio-utente/" + str(account_info["user_id"]) + "/",
+                        "user_survey_id": user_survey_obj.user_survey_id,
+                    }
 
-        data = {'success' : True}
+                    CustomEmailTemplate(
+                        email_name="approve_interview_email",
+                        email_context=email_context,
+                        template_type="user",
+                        email_from=account_info["email"],
+                    )
+
+                    # setto messaggio di pubblicazione (e classe), di approvazione (e classe) e testo del popup
+                    publishing_msg = user_survey_obj.get_survey_publishing_label(publishing_status=DS_CONST_NOT_PUBLISHED)
+                    publishing_class = ''
+                    approving_msg = user_survey_obj.get_survey_approving_label(approving_status=DS_CONST_PENDING_APPROVAL)
+                    approving_class = ''
+                    popup_msg = "L'intervista è in fase di approvazione, verrà pubblicata automaticamente appena sarà approvata"
+
+        if error_flag:
+            data = {'error' : True, 'msg' : msg}
+        else:
+            data = {
+                'success' : True,
+                'msg' : msg,
+                'publishing_msg' : publishing_msg,
+                'publishing_class' : publishing_class,
+                'approving_msg' : approving_msg,
+                'approving_class' : approving_class,
+                'popup_msg' : popup_msg
+            }
 
         # build JSON response
         json_data_string = json.dumps(data)

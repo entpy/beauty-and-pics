@@ -1094,24 +1094,34 @@ def profile_interview_publishing(request):
     # set current contest_type
     contest_obj.set_contest_type(request=request, contest_type=autenticated_user_data["contest_type"])
 
-    # TODO: controllo se esiste un survey per questo id_utente e survey_code = inteview:
-    #           - se esiste lo stampo come anteprima
-    #           - altrimenti redirect nella pagina per crearlo
-    # stato pubblicazione, stato verifica, eventuale messaggio post verifica
+    """
+    Controllo se esiste un survey per questo id_utente e survey_code = inteview:
+    - se esiste lo stampo come anteprima
+    - altrimenti redirect nella pagina per crearlo
+    """
+
+    try:
+        # check if already exists a survey about this user
+        existing_user_survey_obj = user_survey_obj.get_user_survey(survey_code=survey_code, user_id=request.user.id)
+    except UserSurvey.DoesNotExist:
+        # redirect nella pagina per creare l'intervista
+        return HttpResponseRedirect('/profilo/intervista/')
 
     # retrieve survey publishing and approving status
-    publishing_status = user_survey_obj.get_survey_publishing_status(survey_code=survey_code, user_id=request.user.id)
-    approving_status = user_survey_obj.get_survey_approving_status(survey_code=survey_code, user_id=request.user.id)
+    publishing_status = existing_user_survey_obj.published
+    approving_status = existing_user_survey_obj.status
 
     # retrieve survey publishing status label and approving status label
     publishing_status_label = user_survey_obj.get_survey_publishing_label(publishing_status=publishing_status)
     approving_status_label = user_survey_obj.get_survey_approving_label(approving_status=approving_status)
 
-    # get user survey questions and answers
+    # get user survey questions and answers (per mostrare la preview sel survey)
     user_questions_answers = user_answer_obj.get_survey_answers_by_user_id(survey_code=survey_code, user_id=request.user.id)
 
-    # TODO: se il survey non è stato approvato prelevo l'eventuale check_message
+    # se il survey non è stato approvato prelevo l'eventuale check_message
     check_message = False
+    if publishing_status == DS_CONST_NOT_APPROVED:
+        check_message = existing_user_survey_obj.check_message
 
     context = {
         "survey_code" : survey_code,

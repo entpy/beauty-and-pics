@@ -33,6 +33,18 @@ class Survey(models.Model):
 
         return return_var
 
+    def check_survey_code_exists(self, survey_code):
+	"""Function to check if a survey code exists"""
+        return_var = False
+        try:
+            self.get_by_survey_code(survey_code=survey_code)
+            return_var = True
+        except Survey.DoesNotExist:
+            # survey code does not exist
+            pass
+
+        return return_var
+
     def _create_defaults(self):
 	"""Function to create default questions and survey blocks"""
 
@@ -348,22 +360,6 @@ class UserSurvey(models.Model):
     def __unicode__(self):
         return str(self.user_survey_id)
 
-    """
-    # TODO: testare se elimina effettivamente
-    def delete_user_survey(self, survey_code, user_id, status):
-        ""Function to delete an user survey by survey_code and user_id""
-        return_var = False
-        try:
-            UserSurvey_obj = UserSurvey.objects.get(survey__survey_code=survey_code, user__id=user_id, status=status)
-        except UserSurvey.DoesNotExist:
-            pass
-        else:
-            UserSurvey_obj.delete()
-            return_var = True
-
-        return return_var
-    """
-
     def set_survey_as_not_approved(self, survey_code, user_id):
         """Function to set an existing survey as not published and da approvare"""
         return_var = False
@@ -379,35 +375,48 @@ class UserSurvey(models.Model):
 
         return return_var
 
-    # TODO
-    def get_survey_approving_status(self, survey_code, user_id):
-        """Function to retrieve survey approving status by user_id"""
-        return_var = False
-
+    # TODO: testare
+    def get_user_survey(self, survey_code, user_id):
+        """Function to retrieve user survey"""
+        return_var = None
         try:
-            UserSurvey_obj = UserSurvey.objects.get(survey__survey_code=survey_code, user__id=user_id)
+            return_var = UserSurvey.objects.get(survey__survey_code=survey_code, user__id=user_id)
         except UserSurvey.DoesNotExist:
             raise
-        else:
-            return_var = UserSurvey_obj.status
 
         return return_var
 
-    # TODO
-    def get_survey_publishing_status(self, survey_code, user_id):
-        """Function to retrieve survey publishing status by user_id"""
+    # TODO: testare
+    def is_survey_approved(self):
+        """Function to test if a survey object was approved"""
         return_var = False
-
-        try:
-            UserSurvey_obj = UserSurvey.objects.get(survey__survey_code=survey_code, user__id=user_id)
-        except UserSurvey.DoesNotExist:
-            raise
-        else:
-            return_var = UserSurvey_obj.published
+        if self.status == DS_CONST_APPROVED:
+            return_var = True
 
         return return_var
 
-    # TODO
+    # TODO: testare
+    def set_approving_status(self, approving_status):
+        """Function to set approving status to an user survey"""
+        return_var = False
+        if approving_status:
+            self.status = approving_status
+            self.save()
+            return_var = True
+
+        return return_var
+
+    # TODO: testare
+    def set_publishing_status(self, publishing_status):
+        """Function to set publishing status to an user survey"""
+        return_var = False
+        if publishing_status:
+            self.published = publishing_status
+            self.save()
+            return_var = True
+
+        return return_var
+
     def get_survey_approving_label(self, approving_status):
         """Function to retrieve approving status label related with approving_status"""
         return_var = False
@@ -423,7 +432,6 @@ class UserSurvey(models.Model):
 
         return return_var
 
-    # TODO
     def get_survey_publishing_label(self, publishing_status):
         """Function to retrieve publishing status label related with approving_status"""
         return_var = False

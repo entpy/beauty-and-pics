@@ -77,6 +77,10 @@ class CustomEmailTemplate():
 	    'email_from' : settings.NO_REPLY_EMAIL_ADDRESS,
 	    'email_to' : 'user_email',
 	},
+	'approve_interview_email' : {
+	    'email_from' : False,
+	    'email_to' : 'info_email',
+	},
    }
 
     # email template directory
@@ -507,8 +511,8 @@ class CustomEmailTemplate():
         """
 
 	# common email blocks
-	self.email_html_blocks["dear_block"] = "Bella zio,"
-	self.email_html_blocks["main_title_block"] = "qualcuno ha segnalato un utente."
+	self.email_html_blocks["dear_block"] = ""
+	self.email_html_blocks["main_title_block"] = "segnalazione utente"
 	# html text email blocks
 	self.email_html_blocks["html_main_text_block"] = """
             <table style="width: 100%;">
@@ -726,6 +730,68 @@ class CustomEmailTemplate():
         self.email_subject = "Beauty and Pics: conferma il tuo indirizzo email"
 
         return True
+
+    def approve_interview_email(self):
+        """
+        Email to approve user interview
+        Context vars required:
+        ->    ['user_id', 'first_name', 'last_name', 'email', 'profile_url', 'user_survey_id']
+        """
+
+	# common email blocks
+	self.email_html_blocks["dear_block"] = "Admin,"
+	self.email_html_blocks["main_title_block"] = "richiesta di approvazione intervista."
+	# html text email blocks
+	self.email_html_blocks["html_main_text_block"] = """
+            <table style="width: 100%;">
+                <tr>
+                    <td>
+                        <b>Utente che richiede l'approvazione:</b>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        """ + str(self.email_context.get("first_name")) + str(self.email_context.get("last_name")) + "(" + str(self.email_context.get("email")) + ")"+ """
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <b>Identificativo utente:</b>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        """ + str(self.email_context.get("user_id")) + """
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <b>Profilo utente:</b>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <a target="_blank" href='""" + str(self.email_context.get("profile_url")) + """'>""" + str(self.email_context.get("profile_url")) + """</a>
+                    </td>
+                </tr>
+            </table>
+	"""
+	# plain text email blocks
+	self.email_html_blocks["plain_main_text_block"] = """
+            * Utente che richiede l'approvazione *: """ + str(self.email_context.get("first_name")) + str(self.email_context.get("last_name")) + "(" + str(self.email_context.get("email")) + ")"+ """ \n
+            * Identificativo utente *: """ + str(self.email_context.get("user_id")) + """ \n
+            * Profilo utente *: """ + str(self.email_context.get("profile_url")) + """ \n
+        """
+
+        # action blocks
+        activation_url = self.base_url + "/conferma-email/" + str(self.email_context.get("user_survey_id")) + "/"
+	self.email_html_blocks["html_call_to_action_block"] = self.get_call_to_action_template(href=activation_url, label="Verifica intervista")
+	self.email_html_blocks["plain_call_to_action_block"] = "Verifica intervista: " + activation_url
+
+        # email subject
+        self.email_subject = "Beauty & Pics: richiesta di approvazione intervista."
+
+        return True
     """Functions to create email inner block }}}"""
 
     def get_random_tip(self):
@@ -738,7 +804,7 @@ class CustomEmailTemplate():
             "Rendi il tuo profilo interessante: carica molte immagini del book e cambiale spesso",
             "Spargi la voce, suggerisci ai tuoi amici e parenti di votarti",
             "Hai dubbi o domande? No problem, scrivici e noi ti risponderemo appena possibile!",
-            "Hai dei consigli? Scrivici, siamo sempre felici di ricevere nuove proposte!",
+            "Hai dei consigli? Scrivici, saremo sempre felici di ricevere nuove proposte!",
             # adding more priority
             "Condividi spesso la tua pagina profilo sui social networks (Es. Facebook, Twitter, ecc...)",
             "Rendi il tuo profilo interessante: carica molte immagini del book e cambiale spesso",

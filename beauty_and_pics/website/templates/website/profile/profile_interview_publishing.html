@@ -47,20 +47,24 @@
 	{# check messages block }}} #}
 </div>
 <div class="row">
-	<div class="col-md-6 text-center">
-		<div>Stato pubblicazione</div>
-		<div class="{% if publish_status == published_status %}verified_label{% endif %}">{{ publish_status_label }}</div>
-		<div>
-			<a href="#" class="btn btn-success showPublishNowModalClickAction">Pubblica adesso</a>
+	<div class="col-md-6 text-left">
+		<div class="col-md-12 no-gutter">
+			<h4>Stato pubblicazione</h4>
+		</div>
+		<div class="col-md-12 no-gutter">
+			<div class="{% if publish_status == published_status %}verified_label{% endif %} publishStatusAction">{{ publish_status_label }}</div>
+			<div>
+				<a href="#" class="btn btn-success showPublishNowModalClickAction" data-toggle="tooltip" data-placement="top" data-original-title="Clicca per pubblicare adesso la tua intervista">Pubblica adesso</a>
+			</div>
 		</div>
 	</div>
-	<div class="col-md-6 text-center">
-		<div>Stato approvazione
-			<a href="#" class="showApprovedLegendClickAction">
-				<img data-toggle="tooltip" data-placement="top" data-original-title="Clicca per vedere la legenda" src="{% static "website/img/question-point.png" %}" alt="Legenda">
-			</a>
+	<div class="col-md-6 text-right">
+		<div class="col-md-12 no-gutter">
+			<h4><a href="#" class="showApprovedLegendClickAction" data-toggle="tooltip" data-placement="top" data-original-title="Clicca per vedere la legenda">Stato approvazione</a></h4>
 		</div>
-		<div class="{% if approving_status == approved_status %}verified_label{% elif approving_status == not_approved_status %}not_verified_label{% endif %}">{{ approving_status_label }}</div>
+		<div class="col-md-12 no-gutter">
+			<div class="{% if approving_status == approved_status %}verified_label{% elif approving_status == not_approved_status %}not_verified_label{% endif %} approvingStatusAction">{{ approving_status_label }}</div>
+		</div>
 	</div>
 </div>
 {# user survey preview {{{ #}
@@ -71,7 +75,7 @@
 		</div>
 		<div class="col-md-12">
 			<div class="alert alert-info">
-				<p>Ecco un'anteprima di come il pubblico vedrà la tua intervista. Clicca su "modifica" per modificare le risposte. Se la tua intervista fosse già stata pubblicata, la modifica implica la spubblicazione e la riapprovazione dell'intervista.</b></p>
+				<p>Ecco un'anteprima di come il pubblico vedrà la tua intervista. Clicca su "modifica" per modificare le risposte. Se la tua intervista fosse già stata pubblicata, la modifica implica la spubblicazione e la riapprovazione dell'intervista.</p>
 			</div>
 		</div>
 		<div class="col-md-12">
@@ -128,7 +132,7 @@
 		$(document).on("click", ".publishSurveyClickAction", function(){
 			// chiamata ajax per pubblicare/mandare in fase di analisi e 
 			// pubblicare l'intervista
-			alert("ajax call to publish survey");
+			publishUserInterview();
 
 			return false;
 		});
@@ -136,5 +140,53 @@
 		// tooltip init
 		$('[data-toggle="tooltip"]').tooltip();
 	});
+
+	// publish user interview
+	function publishUserInterview() {
+		var publishUserInterviewAjaxAction = customAjaxAction;
+		// set async to false
+		publishUserInterviewAjaxAction.setAsyncFlag(false);
+		// serialize form
+		publishUserInterviewAjaxAction.setAjaxCallParams("survey_code=interview");
+		// setting action name
+		publishUserInterviewAjaxAction.setActionName("publish_interview");
+		// success callback function
+		var successCallback = function(jsonResponse) {
+			// open bootstrap modal
+			bootstrapModalsObect.showGenericTextModal('Pubblicazione intervista', jsonResponse.popup_msg);
+
+			// publishing msg and class
+			if (jsonResponse.publishing_msg) {
+				$('.publishStatusAction').html(jsonResponse.publishing_msg);
+			}
+			if (jsonResponse.publishing_class) {
+				clean_status_container_class($('.publishStatusAction'))
+				$('.publishStatusAction').addClass(jsonResponse.publishing_class);
+			}
+
+			// approving msg and class
+			if (jsonResponse.approving_msg) {
+				$('.approvingStatusAction').html(jsonResponse.approving_msg);
+			}
+			if (jsonResponse.approving_class) {
+				clean_status_container_class($('.approvingStatusAction'))
+				$('.approvingStatusAction').addClass(jsonResponse.approving_class);
+			}
+
+			return true;
+		};
+		publishUserInterviewAjaxAction.setAjaxSuccessCallbackFunction(successCallback);
+		// perform ajax call to add favorite
+		publishUserInterviewAjaxAction.performAjaxAction();
+
+		return true;
+	}
+
+	function clean_status_container_class(element) {
+		$(element).removeClass('verified_label');
+		$(element).removeClass('not_verified_label');
+
+		return true;
+	}
 </script>
 {% endblock custom_js %}
