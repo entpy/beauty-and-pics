@@ -1,0 +1,156 @@
+{% extends "admin/base_site.html" %}
+{% load i18n admin_urls admin_static admin_modify admin_list %}
+
+{% block extrahead %}
+{{ block.super }}
+<script type="text/javascript" src="/static/admin/js/jquery.js"></script>
+<script type="text/javascript" src="/static/admin/js/jquery.init.js"></script>
+<script type="text/javascript" src="{% url 'admin:jsi18n' %}"></script>
+<script type="text/javascript" src="/static/admin/js/core.js"></script>
+{{ adminform.media }}
+{% endblock %}
+{% block extrastyle %}
+{{ block.super }}
+<link rel="stylesheet" type="text/css" href="{% static "admin/css/changelists.css" %}" />
+<link rel="stylesheet" type="text/css" href="{% static "admin/css/forms.css" %}" />
+<style>
+	.promo_image_container img {
+		max-height: 60px;
+		max-width: 70px;
+	}
+	.extra_textarea_element {
+		display: none;
+	}
+	.single_survey_container { margin-bottom: 15px; }
+	.single_survey_container:last-child { margin-bottom: 0px; }
+	.single_survey_container .question_block { font-weight: bold; }
+</style>
+{% endblock %}
+
+{% block coltype %}colM{% endblock %}
+
+{% block bodyclass %}change-list{% endblock %}
+
+{% if not is_popup %}
+{% block breadcrumbs %}
+<div class="breadcrumbs">
+<a href="{% url 'admin:index' %}">{% trans 'Home' %}</a>
+&rsaquo;
+{{ app_name }}
+</div>
+{% endblock %}
+{% endif %}
+
+{% block sidebar %}{% endblock %}
+
+{% block content %}
+<div id="content-main">
+	<form action="" name="verify_survey_form" method="post" >{% block form_top %}{% endblock %}
+		<input type="hidden" name="verify_survey_form_sent" value="1"/>
+		{% csrf_token %}
+		<div>
+			{% if errors %}
+			<p class="errornote">
+				{% if errors|length == 1 %}{% trans "Please correct the error below." %}{% else %}{% trans "Please correct the errors below." %}{% endif %}
+			</p>
+			{{ adminform.form.non_field_errors }}
+			{% endif %}
+
+			{% block field_sets %}
+			<div>
+				{# email notify recipients {{{ #}
+				<fieldset class="module aligned">
+					{# account details {{{ #}
+					<h2>Dettagli utente che richiede approvazione</h2>
+					<div class="form-row field-is_active">
+						<div>
+							<label>Nome</label>
+							<p>{{ user_first_name }} {{ user_last_name }}</p>
+						</div>
+					</div>
+					<div class="form-row field-is_active">
+						<div>
+							<label>Sesso</label>
+							<p>{{ user_gender }}</p>
+						</div>
+					</div>
+					<div class="form-row field-is_active">
+						<div>
+							<label>Email</label>
+							<p>{{ user_email }}</p>
+						</div>
+					</div>
+					<div class="form-row field-is_active">
+						<div>
+							<label>URL profilo</label>
+							<p><a target="_blank" href="{{ profile_url }}">{{ profile_url }}</a></p>
+						</div>
+					</div>
+					{# account details }}} #}
+
+					{# approve or not survey {{{ #}
+					<h2>Approva/Non approvare intervista</h2>
+					<div class="form-row field-is_active">
+						<div class="checkbox-row">
+							<input type="radio" class="approveInterviewSelectorClickAction hideNotApprovedTextareaAction" name="approved" id="approve_interview_radio" value="1" required><label for="approve_interview_radio" class="vCheckboxLabel">Approva intervista</label>
+							<input type="radio" class="approveInterviewSelectorClickAction showNotApprovedTextareaAction" name="approved" id="not_approve_interview_radio" value="0" required><label for="not_approve_interview_radio" class="vCheckboxLabel">NON approvare intervista</label>
+						</div>
+					</div>
+					<div class="extra_textarea_element extraTextareaElementAction">
+						<h3>Motiva perchè l'intervista è stata bocciata</h3>
+						<div class="form-row">
+							<div>
+								<label for="id_not_approved_text" class="required">Motivazione</label>
+								<textarea rows="5" name="not_approved_text" id="id_not_approved_text" cols="40"></textarea>
+							</div>
+						</div>
+					</div>
+					{# approve or not survey }}} #}
+
+					{# survey preview {{{ #}
+					<h2>Anteprima intervista</h2>
+					<div class="form-row field-is_active">
+						{% if user_questions_answers %}
+							{% for single_question in user_questions_answers %}
+								<div class="checkbox-row single_survey_container">
+									<p class="question_block">{{ single_question.label }}</p>
+									<p>{{ single_question.value }}</p>
+								</div>
+							{% endfor %}
+						{% endif %}
+					</div>
+					{# survey preview }}} #}
+				</fieldset>
+				{# email notify recipients {{{ #}
+			</div>
+			{% endblock %}
+		</div>
+
+		<div class="submit-row">
+			<input type="submit" name="_save" class="default submit_form_action" value="Salva">
+		</div>
+	</form>
+</div>
+
+<script>
+	django.jQuery(document).ready(function(){
+		// show hide not approved textarea
+		django.jQuery("body").on("click", ".approveInterviewSelectorClickAction", function(){
+			hide_show_textarea(django.jQuery(this));
+
+			return true;
+		});
+	});
+
+	/** Function to hide or show extra textarea element */
+	function hide_show_textarea(element) {
+		if (django.jQuery(element).hasClass("hideNotApprovedTextareaAction")) {
+			django.jQuery(".extraTextareaElementAction").hide();
+		} else if (django.jQuery(element).hasClass("showNotApprovedTextareaAction")) {
+			django.jQuery(".extraTextareaElementAction").show();
+		}
+
+		return true;
+	}
+</script>
+{% endblock %}

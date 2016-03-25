@@ -17,7 +17,7 @@ from contest_app.models.contest_types import *
 from contest_app.models.votes import Vote
 from contest_app.models.hall_of_fame import HallOfFame
 from django_survey.models import UserAnswer, UserSurvey
-from django_survey.settings import DS_CONST_PUBLISHED, DS_CONST_APPROVED, DS_CONST_NOT_APPROVED
+from django_survey.settings import DS_CONST_NOT_PUBLISHED, DS_CONST_PUBLISHED, DS_CONST_PENDING_APPROVAL, DS_CONST_APPROVED, DS_CONST_NOT_APPROVED
 from beauty_and_pics.common_utils import CommonUtils
 from email_template.email.email_template import *
 # loading forms
@@ -1132,6 +1132,8 @@ def profile_interview_publishing(request):
         "publish_status_label" : publishing_status_label,
         "approving_status_label" : approving_status_label,
         "published_status" : DS_CONST_PUBLISHED,
+        "not_published_status" : DS_CONST_NOT_PUBLISHED,
+        "pending_approval_status" : DS_CONST_PENDING_APPROVAL,
         "approved_status" : DS_CONST_APPROVED,
         "not_approved_status" : DS_CONST_NOT_APPROVED,
     }

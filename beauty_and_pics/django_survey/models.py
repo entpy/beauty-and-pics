@@ -376,6 +376,17 @@ class UserSurvey(models.Model):
         return return_var
 
     # TODO: testare
+    def get_user_survey_by_id(self, user_survey_id):
+        """Function to retrieve user survey by user_survey_id"""
+        return_var = None
+        try:
+            return_var = UserSurvey.objects.get(user_survey_id=user_survey_id)
+        except UserSurvey.DoesNotExist:
+            raise
+
+        return return_var
+
+    # TODO: testare
     def get_user_survey(self, survey_code, user_id):
         """Function to retrieve user survey"""
         return_var = None
@@ -412,6 +423,29 @@ class UserSurvey(models.Model):
         return_var = False
         if publishing_status:
             self.published = publishing_status
+            self.save()
+            return_var = True
+
+        return return_var
+
+    # TODO: testare
+    def mark_as_not_approved(self, check_message):
+        """Function to mark survey as not approved"""
+        return_var = False
+        if publishing_status:
+            self.status = DS_CONST_NOT_APPROVED
+            self.check_message = status
+            self.save()
+            return_var = True
+
+        return return_var
+
+    def mark_as_approved(self):
+        """Function to mark survey as not approved"""
+        return_var = False
+        if publishing_status:
+            self.status = DS_CONST_APPROVED
+            self.check_message = ''
             self.save()
             return_var = True
 

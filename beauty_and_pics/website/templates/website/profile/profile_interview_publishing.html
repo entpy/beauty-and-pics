@@ -30,7 +30,7 @@
 	</div>
 	<div class="col-md-12">
 		<div class="alert alert-info">
-			<p>Ti manca poco per pubblicare la tua intervista, clicca sul pulsante "Pubblica adesso" per mandare in revisione la tua intervista ed ottenere l'approvazione, ad approvazione avvenuta verrà automaticamente pubblicata nella tua pagina profilo.<br /><b>Clicca su "Pubblica adesso" per pubblicare la tua intervista</b></p>
+			<p>Ti manca poco per pubblicare la tua intervista, clicca sul pulsante "Pubblica adesso" per mandare in revisione la tua intervista ed ottenere l'approvazione, ad approvazione avvenuta verrà automaticamente pubblicata nella tua pagina profilo.<br /><b>Clicca sul pulsante "Pubblica adesso" per pubblicare la tua intervista.</b></p>
 		</div>
 	</div>
 	{# check messages block {{{ #}
@@ -52,7 +52,14 @@
 			<h4>Stato pubblicazione</h4>
 		</div>
 		<div class="col-md-12 no-gutter">
-			<div class="{% if publish_status == published_status %}verified_label{% endif %} publishStatusAction">{{ publish_status_label }} - <a href="#" class="showPublishNowModalClickAction" data-toggle="tooltip" data-placement="top" data-original-title="Clicca per pubblicare adesso la tua intervista">Pubblica adesso</a></div>
+			<div class="{% if publish_status == published_status %}verified_label{% endif %} publishStatusAction">
+				{{ publish_status_label }}
+				{% if publish_status == not_published_status and approving_status != pending_approval_status %}
+					&nbsp;-&nbsp;<a href="#" class="btn btn-success showPublishNowModalClickAction" data-toggle="tooltip" data-placement="top" data-original-title="Clicca per pubblicare adesso la tua intervista">Pubblica adesso</a>
+				{% elif publish_status == published_status %}
+					&nbsp;-&nbsp;<a href="#" data-toggle="tooltip" data-placement="top" data-original-title="Clicca per spubblicare la tua intervista">Spubblica</a>
+				{% endif %}
+			</div>
 		</div>
 	</div>
 	<div class="col-md-6 text-xs-center text-md-right">

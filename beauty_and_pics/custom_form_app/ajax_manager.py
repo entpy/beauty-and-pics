@@ -808,7 +808,7 @@ class ajaxManager():
                     publishing_class = ''
                     approving_msg = user_survey_obj.get_survey_approving_label(approving_status=DS_CONST_PENDING_APPROVAL)
                     approving_class = ''
-                    popup_msg = "L'intervista è in fase di approvazione, verrà pubblicata automaticamente appena sarà approvata"
+                    popup_msg = "L'intervista è in fase di approvazione, verrà pubblicata automaticamente appena sarà approvata.<br />Rimani in attesa!"
 
         if error_flag:
             data = {'error' : True, 'msg' : msg}
