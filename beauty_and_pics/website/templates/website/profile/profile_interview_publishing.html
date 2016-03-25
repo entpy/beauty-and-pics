@@ -47,18 +47,15 @@
 	{# check messages block }}} #}
 </div>
 <div class="row">
-	<div class="col-md-6 text-left">
+	<div class="col-md-6 text-xs-center text-md-left">
 		<div class="col-md-12 no-gutter">
 			<h4>Stato pubblicazione</h4>
 		</div>
 		<div class="col-md-12 no-gutter">
-			<div class="{% if publish_status == published_status %}verified_label{% endif %} publishStatusAction">{{ publish_status_label }}</div>
-			<div>
-				<a href="#" class="btn btn-success showPublishNowModalClickAction" data-toggle="tooltip" data-placement="top" data-original-title="Clicca per pubblicare adesso la tua intervista">Pubblica adesso</a>
-			</div>
+			<div class="{% if publish_status == published_status %}verified_label{% endif %} publishStatusAction">{{ publish_status_label }} - <a href="#" class="showPublishNowModalClickAction" data-toggle="tooltip" data-placement="top" data-original-title="Clicca per pubblicare adesso la tua intervista">Pubblica adesso</a></div>
 		</div>
 	</div>
-	<div class="col-md-6 text-right">
+	<div class="col-md-6 text-xs-center text-md-right">
 		<div class="col-md-12 no-gutter">
 			<h4><a href="#" class="showApprovedLegendClickAction" data-toggle="tooltip" data-placement="top" data-original-title="Clicca per vedere la legenda">Stato approvazione</a></h4>
 		</div>
@@ -69,9 +66,9 @@
 </div>
 {# user survey preview {{{ #}
 {% if survey_questions %}
-	<div class="row">
+	<div class="row margin_top_15">
 		<div class="col-md-12">
-			<h3>Anteprima intervista <span class="notify_back_link">[<a href="/profilo/intervista/">Mofifica</a>]</span></h3>
+			<h3>Anteprima intervista <span class="notify_back_link">[<a href="/profilo/intervista/">Modifica intervista</a>]</span></h3>
 		</div>
 		<div class="col-md-12">
 			<div class="alert alert-info">
@@ -80,9 +77,9 @@
 		</div>
 		<div class="col-md-12">
 			{% for single_question in survey_questions %}
-				<div>
-					<span><b>{{ single_question.label }}</b></span><br />
-					<span>{{ single_question.value }}</span>
+				<div class="question_answer_container">
+					<div class="question_container">{{ single_question.label }}</div>
+					<div class="answer_container">{{ single_question.value }}</div>
 				</div>
 			{% endfor %}
 		</div>
@@ -96,15 +93,15 @@
 	$(document).ready(function(){
 		// TODO testare
 		$(document).on("click", ".showApprovedLegendClickAction", function(){
-			var title = "Legenda";
-			var content = "<div><b>Da approvare</b></div>";
-			content += "<div>L'intervista non è ancora stata inviata per la verifica</div>";
-			content += "<div><b>In fase di approvazione</b></div>";
-			content += "<div>L'intervista è in fase di analisi per essere approvata</div>";
-			content += "<div><b>Non approvato</b></div>";
-			content += "<div>L'intervista non è stata approvata, occorre fare le dovute modifiche secondo quanto specificato</div>";
-			content += "<div><b>Approvato</b></div>";
-			content += "<div>L'intervista è stata approvata e pronta per la pubblicazione</div>";
+			var title = 'Legenda';
+			var content = '<div><b>Da approvare</b></div>';
+			content += '<div class="margin_bottom_15">L\'intervista non è ancora stata inviata per la verifica.</div>';
+			content += '<div><b>In fase di approvazione</b></div>';
+			content += '<div class="margin_bottom_15">L\'intervista è in fase di analisi per essere approvata.</div>';
+			content += '<div><b>Non approvato</b></div>';
+			content += '<div class="margin_bottom_15">L\'intervista non è stata approvata, occorre fare le dovute modifiche secondo quanto specificato.</div>';
+			content += '<div><b>Approvato</b></div>';
+			content += '<div>L\'intervista è stata approvata ed è pronta per la pubblicazione.</div>';
 
 			// open bootstrap modal
 			bootstrapModalsObect.showGenericTextModal(title, content);
@@ -114,12 +111,12 @@
 
 		// TODO testare
 		$(document).on("click", ".showPublishNowModalClickAction", function(){
-			if (true) {
+			if ("{{ approving_status }}" == "{{ approved_status }}") {
 				// testo se survey già approvato
-				var content = 'Clicca sul pulsante "Pubblica adesso" per pubblicare l\'intervista sul tuo profilo';
+				var content = 'Clicca sul pulsante "<b>Pubblica adesso</b>" per pubblicare l\'intervista sul tuo profilo';
 			} else {
 				// testo se survey non ancora approvato
-				var content = 'Clicca sul pulsante "Pubblica adesso" per pubblicare l\'intervista sul tuo profilo. Verrà analizzata e pubblicata automaticamente in caso di approvazione.';
+				var content = 'Clicca sul pulsante "<b>Pubblica adesso</b>" per pubblicare l\'intervista sul tuo profilo.<br />Verrà mandata in revisione e, ad approvazione avvenuta, verrà pubblicata automaticamente sul tuo profilo.';
 			}
 
 			// open bootstrap modal

@@ -1063,7 +1063,7 @@ def profile_interview(request):
         # check whether it's valid:
         if form.is_valid() and form.form_actions():
             # redirect to get_prize page
-            return HttpResponseRedirect('/profilo/intervista/')
+            return HttpResponseRedirect('/profilo/pubblicazione-intervista/')
 
     # if a GET (or any other method) we'll create a blank form
     else:

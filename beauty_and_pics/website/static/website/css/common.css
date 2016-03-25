@@ -295,3 +295,8 @@ ul.grid_container li img:hover { opacity: 0.5; }
 .grid_button_1 > .grid_button_image { margin-top: 15px; margin-bottom: 20px; }
 .grid_button_1 > .grid_button_image > img { height: 70px; }
 .grid_button_1 > .grid_button_label { margin-bottom: 15px; }
+
+/* interview style */
+.question_answer_container .question_container { font-weight: bold; margin-bottom: 3px; }
+.question_answer_container .answer_container { margin-bottom: 17px; }
+.question_answer_container:last-child .answer_container { margin-bottom: 0px; }
