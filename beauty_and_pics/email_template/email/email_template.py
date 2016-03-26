@@ -735,7 +735,7 @@ class CustomEmailTemplate():
         """
         Email to approve user interview
         Context vars required:
-        ->    ['user_id', 'first_name', 'last_name', 'email', 'profile_url', 'user_survey_id']
+        ->    ['user_id', 'first_name', 'last_name', 'email', 'profile_url', 'confirm_survey_url']
         """
 
 	# common email blocks
@@ -784,7 +784,7 @@ class CustomEmailTemplate():
         """
 
         # action blocks
-        activation_url = self.base_url + "/conferma-email/" + str(self.email_context.get("user_survey_id")) + "/"
+        activation_url = str(self.email_context.get("confirm_survey_url"))
 	self.email_html_blocks["html_call_to_action_block"] = self.get_call_to_action_template(href=activation_url, label="Verifica intervista")
 	self.email_html_blocks["plain_call_to_action_block"] = "Verifica intervista: " + activation_url
 

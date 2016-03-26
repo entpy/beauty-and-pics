@@ -418,6 +418,17 @@ class UserSurvey(models.Model):
         return return_var
 
     # TODO: testare
+    def set_pending_approving_status(self):
+        """Function to set approving status to pending"""
+        return_var = False
+	self.status = DS_CONST_PENDING_APPROVAL
+	self.check_message = None
+	self.save()
+	return_var = True
+
+        return return_var
+
+    # TODO: testare
     def set_publishing_status(self, publishing_status):
         """Function to set publishing status to an user survey"""
         return_var = False
@@ -432,22 +443,20 @@ class UserSurvey(models.Model):
     def mark_as_not_approved(self, check_message):
         """Function to mark survey as not approved"""
         return_var = False
-        if publishing_status:
-            self.status = DS_CONST_NOT_APPROVED
-            self.check_message = status
-            self.save()
-            return_var = True
+	self.status = DS_CONST_NOT_APPROVED
+	self.check_message = check_message
+	self.save()
+	return_var = True
 
         return return_var
 
     def mark_as_approved(self):
         """Function to mark survey as not approved"""
         return_var = False
-        if publishing_status:
-            self.status = DS_CONST_APPROVED
-            self.check_message = ''
-            self.save()
-            return_var = True
+	self.status = DS_CONST_APPROVED
+	self.check_message = None
+	self.save()
+	return_var = True
 
         return return_var
 

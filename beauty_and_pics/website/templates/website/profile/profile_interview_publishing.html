@@ -19,6 +19,7 @@
     .form-group-level-3 { background-color: #C1C1C1; }
     .form-group-level-4 { background-color: #B1B1B1; }
     .verified_label { color: green; }
+    .in_progress_label { color: orange; }
     .not_verified_label { color: red; }
 </style>
 {% endblock custom_css %}
@@ -35,10 +36,11 @@
 	</div>
 	{# check messages block {{{ #}
 	{% if check_message %}
-		<div class="col-md-12">
+		<div class="col-md-12 interviewErrorMsgAction">
 			<div class="server_msg_container">
 				<div class="alert alert-danger">
 					<h4>Intervista non approvata</h4>
+					<p>Esegui le opportune modifiche, quindi ripubblica l'intervista cliccando sul pulsante "<b>Pubblica adesso</b>":</p>
 					<span>{{ check_message }}</span>
 				</div>
 			</div>
@@ -67,7 +69,7 @@
 			<h4><a href="#" class="showApprovedLegendClickAction" data-toggle="tooltip" data-placement="top" data-original-title="Clicca per vedere la legenda">Stato approvazione</a></h4>
 		</div>
 		<div class="col-md-12 no-gutter">
-			<div class="{% if approving_status == approved_status %}verified_label{% elif approving_status == not_approved_status %}not_verified_label{% endif %} approvingStatusAction">{{ approving_status_label }}</div>
+			<div class="{% if approving_status == approved_status %}verified_label{% elif approving_status == not_approved_status %}not_verified_label{% elif approving_status == pending_approval_status %}in_progress_label{% endif %} approvingStatusAction">{{ approving_status_label }}</div>
 		</div>
 	</div>
 </div>
@@ -103,7 +105,7 @@
 			var title = 'Legenda';
 			var content = '<div><b>Da approvare</b></div>';
 			content += '<div class="margin_bottom_15">L\'intervista non è ancora stata inviata per la verifica.</div>';
-			content += '<div><b>In fase di approvazione</b></div>';
+			content += '<div><b>Approvazione in corso</b></div>';
 			content += '<div class="margin_bottom_15">L\'intervista è in fase di analisi per essere approvata.</div>';
 			content += '<div><b>Non approvato</b></div>';
 			content += '<div class="margin_bottom_15">L\'intervista non è stata approvata, occorre fare le dovute modifiche secondo quanto specificato.</div>';
@@ -164,7 +166,7 @@
 				$('.publishStatusAction').html(jsonResponse.publishing_msg);
 			}
 			if (jsonResponse.publishing_class) {
-				clean_status_container_class($('.publishStatusAction'))
+				cleanStatusContainerClass($('.publishStatusAction'));
 				$('.publishStatusAction').addClass(jsonResponse.publishing_class);
 			}
 
@@ -173,9 +175,12 @@
 				$('.approvingStatusAction').html(jsonResponse.approving_msg);
 			}
 			if (jsonResponse.approving_class) {
-				clean_status_container_class($('.approvingStatusAction'))
+				cleanStatusContainerClass($('.approvingStatusAction'));
 				$('.approvingStatusAction').addClass(jsonResponse.approving_class);
 			}
+
+			// hide msg box
+			hideErrorMsg();
 
 			return true;
 		};
@@ -186,11 +191,19 @@
 		return true;
 	}
 
-	function clean_status_container_class(element) {
+	/** Function to remove verified and not verified classes */
+	function cleanStatusContainerClass(element) {
 		$(element).removeClass('verified_label');
 		$(element).removeClass('not_verified_label');
 
 		return true;
+	}
+
+	/** Function to hide error msg box */
+	function hideErrorMsg() {
+	    $(".interviewErrorMsgAction").hide();
+
+	    return true;
 	}
 </script>
 {% endblock custom_js %}

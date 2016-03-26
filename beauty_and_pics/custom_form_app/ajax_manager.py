@@ -780,8 +780,8 @@ class ajaxManager():
                     approving_class = 'verified_label'
                     popup_msg = "L'intervista è stata pubblicata correttamente sul tuo profilo"
                 else:
-                    # must be validated first and sent an email to admin
-                    existing_user_survey_obj.set_approving_status(approving_status=DS_CONST_PENDING_APPROVAL)
+                    # set approving status
+                    existing_user_survey_obj.set_pending_approving_status()
 
                     # current logged in user info
                     account_info = account_obj.custom_user_id_data(user_id=user_id)
@@ -793,7 +793,7 @@ class ajaxManager():
                         "last_name": account_info["last_name"],
                         "email": account_info["email"],
                         "profile_url": settings.SITE_URL + "/passerella/dettaglio-utente/" + str(account_info["user_id"]) + "/",
-                        "user_survey_id": user_survey_obj.user_survey_id,
+                        "confirm_survey_url": settings.SITE_URL + "/admin/verify-interview/" + str(existing_user_survey_obj.user_survey_id) + "/",
                     }
 
                     CustomEmailTemplate(
@@ -807,7 +807,7 @@ class ajaxManager():
                     publishing_msg = user_survey_obj.get_survey_publishing_label(publishing_status=DS_CONST_NOT_PUBLISHED)
                     publishing_class = ''
                     approving_msg = user_survey_obj.get_survey_approving_label(approving_status=DS_CONST_PENDING_APPROVAL)
-                    approving_class = ''
+                    approving_class = 'in_progress_label'
                     popup_msg = "L'intervista è in fase di approvazione, verrà pubblicata automaticamente appena sarà approvata.<br />Rimani in attesa!"
 
         if error_flag:

@@ -127,13 +127,22 @@
 		</div>
 
 		<div class="submit-row">
-			<input type="submit" name="_save" class="default submit_form_action" value="Salva">
+			<input type="submit" name="_save" class="default submitFormClickAction" value="Salva">
 		</div>
 	</form>
 </div>
 
 <script>
 	django.jQuery(document).ready(function(){
+		// show confirm message on form submit
+		django.jQuery("body").on("click", ".submitFormClickAction", function(){
+			var returnVar = false;
+			if (confirm("Confermi di aver letto bene l'intervista?")) {
+			    var returnVar = true;
+			}
+
+			return returnVar;
+		});
 		// show hide not approved textarea
 		django.jQuery("body").on("click", ".approveInterviewSelectorClickAction", function(){
 			hide_show_textarea(django.jQuery(this));

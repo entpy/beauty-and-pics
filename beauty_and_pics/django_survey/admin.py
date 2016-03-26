@@ -6,7 +6,7 @@ from django.contrib import messages
 from django.http import HttpResponseRedirect
 from django.conf import settings
 from django_survey.models import UserAnswer, UserSurvey
-from django_survey.settings import DS_CONST_PUBLISHED
+from django_survey.settings import DS_CONST_NOT_PUBLISHED, DS_CONST_PUBLISHED
 from account_app.models.accounts import Account
 import sys, logging
 
@@ -51,6 +51,8 @@ def verify_user_survey(request, *args, **kwargs):
         else:
             # ops...survey cannot be validated
             existing_user_survey_obj.mark_as_not_approved(request.POST.get('not_approved_text'))
+            # set survey as NOT published
+            existing_user_survey_obj.set_publishing_status(publishing_status=DS_CONST_NOT_PUBLISHED)
 	    messages.add_message(request, messages.SUCCESS, 'Il survey NON è stato approvato')
 
         # XXX facoltativo: scegliere se mandare o no una mail di notifica all'utente
