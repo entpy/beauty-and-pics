@@ -154,6 +154,7 @@ DS_QUESTIONS_AND_SELECTABLE_ANSWERS = {
         'required' : 1,
         'order' : 0,
         'default_hidden' : 0,
+        'not_to_show' : 1,
         'answers' : [
             {
                 # Sono una modella/ragazza immagine/indossatrice professionista

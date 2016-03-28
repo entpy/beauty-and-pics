@@ -102,6 +102,7 @@ class Survey(models.Model):
                 Question_obj.required = int(question_info.get('required'))
                 Question_obj.order = int(question_info.get('order'))
                 Question_obj.default_hidden = int(question_info.get('default_hidden'))
+                Question_obj.not_to_show = int(question_info.get('not_to_show', 0))
                 Question_obj.save()
 
                 # 4) create question's answers
@@ -205,6 +206,7 @@ class Question(models.Model):
     required = models.IntegerField(default=0)
     order = models.IntegerField(default=0)
     default_hidden = models.IntegerField(default=0)
+    not_to_show = models.IntegerField(default=0)
 
     class Meta:
         app_label = 'django_survey'
@@ -562,7 +564,7 @@ class UserAnswer(models.Model):
             Function to retrieve all question_codes, question_labels and related answer_values by survey_code and user_id
         """
         return_var = []
-        question_answer_list = list(UserAnswer.objects.values('question__question_code', 'question__question_type', 'value').filter(user_survey__survey__survey_code=survey_code, user_survey__user__id=user_id, value__isnull=False).order_by('question__order'))
+        question_answer_list = list(UserAnswer.objects.values('question__question_code', 'question__question_type', 'value').filter(user_survey__survey__survey_code=survey_code, user_survey__user__id=user_id, question__not_to_show=False,value__isnull=False).order_by('question__order'))
 
         # TODO: prendere label key in base a gendere
         """
