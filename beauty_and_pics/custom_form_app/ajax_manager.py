@@ -57,6 +57,7 @@ class ajaxManager():
         self.__valid_action_list += ('add_photoboard_like',)
         self.__valid_action_list += ('resend_confirmation_email',)
         self.__valid_action_list += ('publish_interview',)
+        self.__valid_action_list += ('unpublish_interview',)
 
         # retrieve action to perform
         self.ajax_action = request.POST.get("ajax_action")
@@ -822,6 +823,49 @@ class ajaxManager():
                 'approving_class' : approving_class,
                 'popup_msg' : popup_msg
             }
+
+        # build JSON response
+        json_data_string = json.dumps(data)
+        self.set_json_response(json_response=json_data_string)
+
+        return True
+
+    # TODO: testare
+    def unpublish_interview(self):
+        """Function to unpublish an user interview"""
+        logger.debug("ajax_function: @@unpublish_interview@@")
+        logger.debug("parametri della chiamata: " + str(self.request.POST))
+
+        account_obj = Account()
+        survey_obj = Survey()
+        user_survey_obj = UserSurvey()
+
+        msg = ""
+        error_flag = False
+        user_obj = self.request.user
+        user_id = user_obj.id
+        survey_code = self.request.POST.get("survey_code")
+
+        # check survey code exists
+        if survey_obj.check_survey_code_exists(survey_code=survey_code):
+            try:
+                # retrieve survey about user_id
+                existing_user_survey_obj = user_survey_obj.get_user_survey(survey_code=survey_code, user_id=user_id)
+            except UserSurvey.DoesNotExist:
+                # errore
+                msg = "L'utente " + str(user_id) + " non ha ancora creato un survey."
+                logger.error("unpublish_interview: " + str(msg) + " | request: " + str(self.request))
+                error_flag = True
+            else:
+                # unpublish user interview
+                existing_user_survey_obj.set_publishing_status(publishing_status=DS_CONST_NOT_PUBLISHED)
+                # retrieve unpublish msg
+                unpublishing_msg = user_survey_obj.get_survey_publishing_label(publishing_status=DS_CONST_NOT_PUBLISHED)
+
+        if error_flag:
+            data = {'error' : True, 'msg' : msg}
+        else:
+            data = {'success' : True, 'unpublishing_msg' : unpublishing_msg}
 
         # build JSON response
         json_data_string = json.dumps(data)

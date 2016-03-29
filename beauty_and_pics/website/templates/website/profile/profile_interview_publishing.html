@@ -1,9 +1,9 @@
 {% extends "website/inc/base_profile.html" %}
 {% load staticfiles website_extras %}
 
-{% block title %}{{ site_name }} | informazioni principali{% endblock %}
+{% block title %}{{ site_name }} | pubblica intervista{% endblock %}
 
-{% block description %}Informazioni principali: in questa pagina è possibile modificare le informazioni principali del tuo utente.{% endblock %}
+{% block description %}Pubblica intervista: richiedi l'approvazione per pubblicare l'intervista sulla tua pagina profilo.{% endblock %}
 
 {# navigation tabs active element #}
 {% block container4_navigation_profile_preferences %}active{% endblock %}
@@ -12,12 +12,6 @@
 {% block custom_css %}
 {{ block.super }}
 <style>
-    textarea.form-control { height: 170px; }
-    .form-group-level-0 { background-color: transparent; }
-    .form-group-level-1 { background-color: #ECECEC; }
-    .form-group-level-2 { background-color: #D7D7D7; }
-    .form-group-level-3 { background-color: #C1C1C1; }
-    .form-group-level-4 { background-color: #B1B1B1; }
     .verified_label { color: green; }
     .in_progress_label { color: orange; }
     .not_verified_label { color: red; }
@@ -59,7 +53,7 @@
 				{% if publish_status == not_published_status and approving_status != pending_approval_status %}
 					&nbsp;-&nbsp;<a href="#" class="btn btn-success showPublishNowModalClickAction" data-toggle="tooltip" data-placement="top" data-original-title="Clicca per pubblicare adesso la tua intervista">Pubblica adesso</a>
 				{% elif publish_status == published_status %}
-					&nbsp;-&nbsp;<a href="#" data-toggle="tooltip" data-placement="top" data-original-title="Clicca per spubblicare la tua intervista">Spubblica</a>
+					&nbsp;-&nbsp;<a href="#" class="unpublishSurveyClickAction" data-toggle="tooltip" data-placement="top" data-original-title="Clicca per spubblicare la tua intervista">Spubblica</a>
 				{% endif %}
 			</div>
 		</div>
@@ -100,7 +94,7 @@
 {{ block.super }}
 <script>
 	$(document).ready(function(){
-		// TODO testare
+		/** Function to show legend modal */
 		$(document).on("click", ".showApprovedLegendClickAction", function(){
 			var title = 'Legenda';
 			var content = '<div><b>Da approvare</b></div>';
@@ -118,7 +112,7 @@
 			return false;
 		});
 
-		// TODO testare
+		/** Function to show publish_now modal */
 		$(document).on("click", ".showPublishNowModalClickAction", function(){
 			if ("{{ approving_status }}" == "{{ approved_status }}") {
 				// testo se survey già approvato
@@ -134,11 +128,20 @@
 			return false;
 		});
 
-		// TODO fare e testare
+		/** Function to publish user interview */
 		$(document).on("click", ".publishSurveyClickAction", function(){
-			// chiamata ajax per pubblicare/mandare in fase di analisi e 
-			// pubblicare l'intervista
+			// chiamata ajax per pubblicare/mandare in fase di analisi e pubblicare l'intervista
 			publishUserInterview();
+
+			return false;
+		});
+
+		/** Function to unpublish user interview */
+		$(document).on("click", ".unpublishSurveyClickAction", function(){
+			// chiamata ajax per spubblicare l'intervista
+			if (confirm('Stai per spubblicare la tua intervista, confermi?')) {
+				unpublishUserInterview();
+			}
 
 			return false;
 		});
@@ -147,7 +150,7 @@
 		$('[data-toggle="tooltip"]').tooltip();
 	});
 
-	// publish user interview
+	/** Function to publish user interview */
 	function publishUserInterview() {
 		var publishUserInterviewAjaxAction = customAjaxAction;
 		// set async to false
@@ -187,6 +190,34 @@
 		publishUserInterviewAjaxAction.setAjaxSuccessCallbackFunction(successCallback);
 		// perform ajax call to add favorite
 		publishUserInterviewAjaxAction.performAjaxAction();
+
+		return true;
+	}
+
+	// TODO
+	/** Function to unpublish user interview */
+	function unpublishUserInterview() {
+		var unpublishUserInterviewAjaxAction = customAjaxAction;
+		// set async to false
+		unpublishUserInterviewAjaxAction.setAsyncFlag(false);
+		// serialize form
+		unpublishUserInterviewAjaxAction.setAjaxCallParams("survey_code=interview");
+		// setting action name
+		unpublishUserInterviewAjaxAction.setActionName("unpublish_interview");
+		// success callback function
+		var successCallback = function(jsonResponse) {
+			// open bootstrap modal
+			bootstrapModalsObect.showGenericTextModal('Spubblicazione intervista', "L'intervista è stata spubblicata correttamente.");
+
+			// publishing msg and class
+			$('.publishStatusAction').html(jsonResponse.unpublishing_msg);
+			cleanStatusContainerClass($('.publishStatusAction'));
+
+			return true;
+		};
+		unpublishUserInterviewAjaxAction.setAjaxSuccessCallbackFunction(successCallback);
+		// perform ajax call to add favorite
+		unpublishUserInterviewAjaxAction.performAjaxAction();
 
 		return true;
 	}

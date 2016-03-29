@@ -4,7 +4,6 @@ from django import forms
 from datetime import date
 from dateutil.relativedelta import *
 from custom_form_app.forms.base_form_class import *
-from account_app.models import Account
 from django_survey.models import *
 from django_survey.settings import *
 from website.exceptions import *
@@ -25,6 +24,12 @@ class SurveyForm(forms.Form, FormCommonUtils):
     )
 
     def __init__(self, *args, **kwargs):
+        # prelevo le variabili aggiuntive che poi andrò a rimuovere
+        # ATTENZIONE: i seguenti parametri non possono essere utilizzati come
+        # name dell input
+        gender = kwargs.pop("gender", None) # fix per far funzionare la init di default del form
+        survey_code = kwargs.pop("survey_code", None) # fix per far funzionare la init di default del form
+
         # parent forms.Form init
         super(SurveyForm, self).__init__(*args, **kwargs)
         FormCommonUtils.__init__(self)
@@ -34,46 +39,16 @@ class SurveyForm(forms.Form, FormCommonUtils):
 
         survey_obj = Survey()
         question_obj = Question()
-        account_obj = Account()
         user_answer_obj = UserAnswer()
 
         # retrieve a list of questions about a survey
-        questions_list = question_obj.get_survey_questions_dictionary(survey_code='interview')
+        questions_list = question_obj.get_survey_questions_dictionary(survey_code=survey_code)
 
-        # TODO retrieve list of answer about survey_code and user_id
-        # question_answers_dict = {'question_code' : 'answer_value'}
-        # question_answers_dict = user_answer_obj.get_survey_answers_by_user_id(survey_code='interview', user_id=self.request_data.user.id)
-
-
-
-        # precedenze:
-        """
-        - se ho un survey approvato e non pubblicato, oppure non approvato
-            mostro le risposte precedentemente salvate di questi due casi
-            (ed eventualmente il pulsante spubblica se presente un survey pubblicato)
-        - se ho solo il survey pubblicato o da approvare:
-            mostro i pulsanti: spubblica o annulla_approvazione
-        - se non ho survey precedentemente salvati:
-            mostro un bel form pulito
-        """
-
-        """
-        mostro le risposte precedentemente salvate se:
-            - il survey non è stato approvato
-            - il survey è spubblicato
-        mostro un form vuoto se:
-            - non ho survey precedentemente salvati
-        mostro i pulsanti: spubblica o annulla_approvazione se:
-            - il survey è pubblicato
-            - il survey è in fase di analisi
-        """
-
-        # identify user gender (TODO non funziona)
-        account_info = account_obj.get_autenticated_user_data(request=self.request_data)
-        if account_info.get('gender') == 'woman':
-            element_type = 'question_text_woman'
-        else:
+        # identify user gender (TODO: check)
+        if gender == 'man':
             element_type = 'question_text_man'
+        else:
+            element_type = 'question_text_woman'
 
 	# logger.info("[build survey form] all questions dict: " + str(questions_list))
         for question_info in questions_list:
@@ -145,32 +120,29 @@ class SurveyForm(forms.Form, FormCommonUtils):
 	super(SurveyForm, self).clean_form_custom()
         return True
 
-    def save_form(self):
+    def save_form(self, survey_code):
         Question_obj = Question()
         UserSurvey_obj = UserSurvey()
         UserAnswer_obj = UserAnswer()
 
         # 1) Creo un nuovo survey, o setto come non pubblicato e da approvare
         #    un survey già esistente
-        user_survey = UserSurvey_obj.init_user_survey(survey_code='interview', user_id=self.request_data.user.id)
+        user_survey = UserSurvey_obj.init_user_survey(survey_code=survey_code, user_id=self.request_data.user.id)
 
 	# 2) Elimino tutte le precedenti risposte del survey
-	UserAnswer_obj.delete_survey_answers_by_user(survey_code='interview', user_id=self.request_data.user.id)
+	UserAnswer_obj.delete_survey_answers_by_user(survey_code=survey_code, user_id=self.request_data.user.id)
 
         # 3) Salvo le risposte: itero su tutti i question_code del survey code e
-        #                       per ognuno in self.form_validated_data prelevo la risposta
-        questions_code_list = Question_obj.get_code_list_by_survey_code(survey_code='interview')
+        #    per ognuno in self.form_validated_data prelevo la risposta
+        questions_code_list = Question_obj.get_code_list_by_survey_code(survey_code=survey_code)
         for question_element in questions_code_list:
             UserAnswer_obj.save_answer(user_survey_obj=user_survey, question_id=question_element.get('question_id'), value=self.form_validated_data.get(question_element.get('question_code')))
 
-        # TODO
-        # 4) Invio mail ad admin per approvazione
-
         return True
 
-    def form_actions(self):
-        """Function to create new user and logging into website"""
-        self.save_form()
+    def form_actions(self, survey_code):
+        """Function to save user survey"""
+        self.save_form(survey_code=survey_code)
 
         return True
 

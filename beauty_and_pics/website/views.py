@@ -1043,10 +1043,12 @@ def profile_get_prize(request):
 
     return render(request, 'website/profile/profile_get_prize.html', context)
 
+#TODO: check dei parametri addizionali passati nei form
 @login_required
 @user_passes_test(check_if_is_a_catwalker_user)
 def profile_interview(request):
     """Create interview view"""
+    survey_code = 'interview'
     user_answer_obj = UserAnswer()
     # set current contest_type
     account_obj =  Account()
@@ -1057,20 +1059,20 @@ def profile_interview(request):
     # if this is a POST request we need to process the form data
     if request.method == 'POST':
         # create a form instance and populate it with data from the request:
-        form = SurveyForm(request.POST)
+        form = SurveyForm(request.POST, gender=autenticated_user_data.get('gender'), survey_code=survey_code)
         form.set_current_request(request=request)
 
         # check whether it's valid:
-        if form.is_valid() and form.form_actions():
+        if form.is_valid() and form.form_actions(survey_code=survey_code):
             # redirect to get_prize page
             return HttpResponseRedirect('/profilo/pubblicazione-intervista/')
 
     # if a GET (or any other method) we'll create a blank form
     else:
         # pre-prepopulate post dictionary with current user data
-        request.POST = user_answer_obj.get_survey_answers_form_by_user_id(survey_code='interview', user_id=request.user.id)
+        request.POST = user_answer_obj.get_survey_answers_form_by_user_id(survey_code=survey_code, user_id=request.user.id)
 	logger.info("saved questions: " + str(request.POST))
-        form = SurveyForm()
+        form = SurveyForm(gender=autenticated_user_data.get('gender'), survey_code=survey_code)
 
     context = {
         "post" : request.POST,

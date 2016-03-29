@@ -273,18 +273,6 @@ class Question(models.Model):
 
         return return_var
 
-    """ Per ora non utilizzata
-    def get_by_question_code(self, question_code):
-        ""Function to retrieve a question by question_code""
-        return_var = None
-        try:
-            return_var = Question.objects.get(question_code=question_code)
-        except Question.DoesNotExist:
-            raise
-
-        return return_var
-    """
-
 class SelectableAnswer(models.Model):
     selectable_answer_id = models.AutoField(primary_key=True)
     question = models.ForeignKey(Question)
@@ -334,18 +322,6 @@ class SelectableAnswer(models.Model):
 	# logger.info("[create_selectable_answer_dictionary]: " + str(return_var))
 
         return return_var
-
-    """ Per ora non utilizzata
-    def get_by_answer_code(self, answer_code):
-        ""Function to retrieve a selectable answer by answer_code""
-        return_var = None
-        try:
-            return_var = SelectableAnswer.objects.get(answer_code=answer_code)
-        except SelectableAnswer.DoesNotExist:
-            raise
-
-        return return_var
-    """
 
 class UserSurvey(models.Model):
     user_survey_id = models.AutoField(primary_key=True)
@@ -420,17 +396,6 @@ class UserSurvey(models.Model):
         return return_var
 
     # TODO: testare
-    def set_pending_approving_status(self):
-        """Function to set approving status to pending"""
-        return_var = False
-	self.status = DS_CONST_PENDING_APPROVAL
-	self.check_message = None
-	self.save()
-	return_var = True
-
-        return return_var
-
-    # TODO: testare
     def set_publishing_status(self, publishing_status):
         """Function to set publishing status to an user survey"""
         return_var = False
@@ -442,11 +407,11 @@ class UserSurvey(models.Model):
         return return_var
 
     # TODO: testare
-    def mark_as_not_approved(self, check_message):
-        """Function to mark survey as not approved"""
+    def set_pending_approving_status(self):
+        """Function to set approving status to pending"""
         return_var = False
-	self.status = DS_CONST_NOT_APPROVED
-	self.check_message = check_message
+	self.status = DS_CONST_PENDING_APPROVAL
+	self.check_message = None
 	self.save()
 	return_var = True
 
@@ -457,6 +422,17 @@ class UserSurvey(models.Model):
         return_var = False
 	self.status = DS_CONST_APPROVED
 	self.check_message = None
+	self.save()
+	return_var = True
+
+        return return_var
+
+    # TODO: testare
+    def mark_as_not_approved(self, check_message):
+        """Function to mark survey as not approved"""
+        return_var = False
+	self.status = DS_CONST_NOT_APPROVED
+	self.check_message = check_message
 	self.save()
 	return_var = True
 
