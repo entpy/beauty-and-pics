@@ -23,12 +23,17 @@ class SurveyForm(forms.Form, FormCommonUtils):
         'check_all_fields_valid',
     )
 
+    # parametri inizializzati dall'esterno
+    survey_code = None
+    gender = None
+
     def __init__(self, *args, **kwargs):
-        # prelevo le variabili aggiuntive che poi andrò a rimuovere
-        # ATTENZIONE: i seguenti parametri non possono essere utilizzati come
-        # name dell input
-        gender = kwargs.pop("gender", None) # fix per far funzionare la init di default del form
-        survey_code = kwargs.pop("survey_code", None) # fix per far funzionare la init di default del form
+        # prelevo le variabili aggiuntive che poi andrò a rimuovere tramite
+        # pop (per far funzionare la init di default del form)
+        # NB: anche nell'html del form ci sono due campi hidden per
+        # permettere la validazione via AJAX del suddetto form
+        self.survey_code = kwargs.pop("extra_param1", None)
+        self.gender = kwargs.pop("extra_param2", None)
 
         # parent forms.Form init
         super(SurveyForm, self).__init__(*args, **kwargs)
@@ -42,10 +47,10 @@ class SurveyForm(forms.Form, FormCommonUtils):
         user_answer_obj = UserAnswer()
 
         # retrieve a list of questions about a survey
-        questions_list = question_obj.get_survey_questions_dictionary(survey_code=survey_code)
+        questions_list = question_obj.get_survey_questions_dictionary(survey_code=self.survey_code)
 
-        # identify user gender (TODO: check)
-        if gender == 'man':
+        # identify user gender
+        if self.gender == 'man':
             element_type = 'question_text_man'
         else:
             element_type = 'question_text_woman'
@@ -120,29 +125,29 @@ class SurveyForm(forms.Form, FormCommonUtils):
 	super(SurveyForm, self).clean_form_custom()
         return True
 
-    def save_form(self, survey_code):
+    def save_form(self):
         Question_obj = Question()
         UserSurvey_obj = UserSurvey()
         UserAnswer_obj = UserAnswer()
 
         # 1) Creo un nuovo survey, o setto come non pubblicato e da approvare
         #    un survey già esistente
-        user_survey = UserSurvey_obj.init_user_survey(survey_code=survey_code, user_id=self.request_data.user.id)
+        user_survey = UserSurvey_obj.init_user_survey(survey_code=self.survey_code, user_id=self.request_data.user.id)
 
 	# 2) Elimino tutte le precedenti risposte del survey
-	UserAnswer_obj.delete_survey_answers_by_user(survey_code=survey_code, user_id=self.request_data.user.id)
+	UserAnswer_obj.delete_survey_answers_by_user(survey_code=self.survey_code, user_id=self.request_data.user.id)
 
         # 3) Salvo le risposte: itero su tutti i question_code del survey code e
         #    per ognuno in self.form_validated_data prelevo la risposta
-        questions_code_list = Question_obj.get_code_list_by_survey_code(survey_code=survey_code)
+        questions_code_list = Question_obj.get_code_list_by_survey_code(survey_code=self.survey_code)
         for question_element in questions_code_list:
             UserAnswer_obj.save_answer(user_survey_obj=user_survey, question_id=question_element.get('question_id'), value=self.form_validated_data.get(question_element.get('question_code')))
 
         return True
 
-    def form_actions(self, survey_code):
+    def form_actions(self):
         """Function to save user survey"""
-        self.save_form(survey_code=survey_code)
+        self.save_form()
 
         return True
 

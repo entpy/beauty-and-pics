@@ -18,16 +18,13 @@ sys.setdefaultencoding("utf8")
 logger = logging.getLogger(__name__)
 
 class SurveyAdmin(admin.ModelAdmin):
-    """
-    class Media:
-        js = ('notify_system_app/js/test.js',)
-    """
+    pass
 
-# TODO: check che funzioni
 # admin custom view {{{
 # require AdminPlus -> https://github.com/jsocol/django-adminplus
+# TODO: check che funzioni
 def verify_user_survey(request, *args, **kwargs):
-    """View to approve or not approve a user survey"""
+    """View to approve or disapprove a user survey (admin side)"""
 
     user_survey_obj = UserSurvey()
     user_answer_obj = UserAnswer()
@@ -46,14 +43,14 @@ def verify_user_survey(request, *args, **kwargs):
             existing_user_survey_obj.mark_as_approved()
             # publish survey on user profile
             existing_user_survey_obj.set_publishing_status(publishing_status=DS_CONST_PUBLISHED)
-	    # set message
-	    messages.add_message(request, messages.SUCCESS, 'Il survey è stato approvato e pubblicato correttamente')
+            # set message
+            messages.add_message(request, messages.SUCCESS, 'Il survey è stato approvato e pubblicato correttamente')
         else:
             # ops...survey cannot be validated
             existing_user_survey_obj.mark_as_not_approved(request.POST.get('not_approved_text'))
             # set survey as NOT published
             existing_user_survey_obj.set_publishing_status(publishing_status=DS_CONST_NOT_PUBLISHED)
-	    messages.add_message(request, messages.SUCCESS, 'Il survey NON è stato approvato')
+            messages.add_message(request, messages.SUCCESS, 'Il survey NON è stato approvato')
 
         # XXX facoltativo: scegliere se mandare o no una mail di notifica all'utente
 
@@ -65,15 +62,15 @@ def verify_user_survey(request, *args, **kwargs):
     # account info
     account_info = account_obj.custom_user_id_data(user_id=user_id)
     # get user survey questions and answers (per mostrare la preview sel survey)
-    user_questions_answers = user_answer_obj.get_survey_answers_by_user_id(survey_code=existing_user_survey_obj.survey.survey_code, user_id=user_id)
+    user_questions_answers = user_answer_obj.get_survey_answers_by_user_id(survey_code=existing_user_survey_obj.survey.survey_code, user_id=user_id, gender=account_info.get("gender"))
 
     context = {
             'title': 'Approvazione intervista',
             'app_name': 'django_survey',
-            'user_first_name' : account_info["first_name"],
-            'user_last_name' : account_info["last_name"],
-            'user_email' : account_info["email"],
-            'user_gender' : account_info["gender"],
+            'user_first_name' : account_info.get("first_name"),
+            'user_last_name' : account_info.get("last_name"),
+            'user_email' : account_info.get("email"),
+            'user_gender' : account_info.get("gender"),
             "profile_url": settings.SITE_URL + "/passerella/dettaglio-utente/" + str(user_id) + "/",
             'adminform': False,
             'user_questions_answers': user_questions_answers,

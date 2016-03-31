@@ -140,7 +140,7 @@ DS_SURVEY = [
 DS_QUESTIONS_AND_SELECTABLE_ANSWERS = {
     'interview' : [
     {
-        # D: Seleziona una categoria
+        # D: Parlaci un po' di te, dove sei nata e quali sono le tue passioni
         'question_block' : 'interview__block1',
         'question_code' : 'interview__block1__q1',
 	'block_level' : 1,
@@ -150,15 +150,42 @@ DS_QUESTIONS_AND_SELECTABLE_ANSWERS = {
 	'block_code_level_3': False, 
 	'block_code_level_4': False,
 	'block_code_level_5': False,
-        'question_type' : 'select',
+        'question_type' : 'text',
         'required' : 1,
         'order' : 0,
+        'default_hidden' : 0,
+        'answers' : [
+            {
+                'answer_code' : 'interview__block1__q1__a1',
+                'next_question_block_1' : False,
+                'next_question_block_2' : False,
+                'next_question_block_3' : False,
+                'next_question_block_4' : False,
+                'next_question_block_5' : False,
+		'order' : 0,
+            },
+        ],
+    },
+    {
+        # D: Seleziona una categoria
+        'question_block' : 'interview__block1',
+        'question_code' : 'interview__block1__q2',
+	'block_level' : 1,
+	# massimo 5 livelli di profondità
+	'block_code_level_1': False,
+	'block_code_level_2': False,
+	'block_code_level_3': False, 
+	'block_code_level_4': False,
+	'block_code_level_5': False,
+        'question_type' : 'select',
+        'required' : 1,
+        'order' : 100,
         'default_hidden' : 0,
         'not_to_show' : 1,
         'answers' : [
             {
                 # Sono una modella/ragazza immagine/indossatrice professionista
-                'answer_code' : 'interview__block1__q1__a1',
+                'answer_code' : 'interview__block1__q2__a1',
                 'next_question_block_1' : 'interview__block1__block1', # children flat block questions
                 'next_question_block_2' : 'interview__block1__block2', # Nutri altre passioni oltre al mondo della moda?
                 'next_question_block_3' : 'interview__block1__block3', # Hai già partecipato a sfilate?
@@ -168,7 +195,7 @@ DS_QUESTIONS_AND_SELECTABLE_ANSWERS = {
             },
             {
                 # Sono una modella/ragazza immagine/indossatrice emergente
-                'answer_code' : 'interview__block1__q1__a2',
+                'answer_code' : 'interview__block1__q2__a2',
                 'next_question_block_1' : 'interview__block1__block200', # children flat block questions
                 'next_question_block_2' : 'interview__block1__block300', # Nutri altre passioni oltre al mondo della moda?
                 'next_question_block_3' : False,
@@ -178,7 +205,7 @@ DS_QUESTIONS_AND_SELECTABLE_ANSWERS = {
             },
             {
                 # Sono appassionata di foto
-                'answer_code' : 'interview__block1__q1__a3',
+                'answer_code' : 'interview__block1__q2__a3',
                 'next_question_block_1' : 'interview__block1__block400', # children flat block questions
                 'next_question_block_2' : 'interview__block1__block500', # Nutri altre passioni oltre al mondo della moda?
                 'next_question_block_3' : False,
@@ -188,7 +215,7 @@ DS_QUESTIONS_AND_SELECTABLE_ANSWERS = {
             },
             {
                 # Sono appassionata di moda
-                'answer_code' : 'interview__block1__q1__a4',
+                'answer_code' : 'interview__block1__q2__a4',
                 'next_question_block_1' : 'interview__block1__block600', # children flat block questions
                 'next_question_block_2' : 'interview__block1__block700', # Nutri altre passioni oltre al mondo della moda?
                 'next_question_block_3' : False,
@@ -198,7 +225,7 @@ DS_QUESTIONS_AND_SELECTABLE_ANSWERS = {
             },
             {
                 # Solo per divertimento/altro
-                'answer_code' : 'interview__block1__q1__a5',
+                'answer_code' : 'interview__block1__q2__a5',
                 'next_question_block_1' : 'interview__block1__block800', # children flat block questions
                 'next_question_block_2' : 'interview__block1__block900', # Hai qualche hobby?
                 'next_question_block_3' : False,
@@ -209,33 +236,6 @@ DS_QUESTIONS_AND_SELECTABLE_ANSWERS = {
         ],
     },
     ## question_block: user_interview_model_pro
-    {
-        # D: Parlaci un po' di te, dove sei nata e quali sono le tue passioni
-        'question_block' : 'interview__block1__block1',
-        'question_code' : 'interview__block1__block1__q1',
-	'block_level' : 2,
-	# massimo 5 livelli di profondità
-	'block_code_level_1': 'interview__block1',
-	'block_code_level_2': False,
-	'block_code_level_3': False, 
-	'block_code_level_4': False,
-	'block_code_level_5': False,
-        'question_type' : 'text',
-        'required' : 0,
-        'order' : 100,
-        'default_hidden' : 1,
-        'answers' : [
-            {
-                'answer_code' : 'interview__block1__block1__q1__a1',
-                'next_question_block_1' : False,
-                'next_question_block_2' : False,
-                'next_question_block_3' : False,
-                'next_question_block_4' : False,
-                'next_question_block_5' : False,
-		'order' : 0,
-            },
-        ],
-    },
     {
         # D: Come è iniziata la tua avventura nel mondo della moda?
         'question_block' : 'interview__block1__block1',
@@ -913,32 +913,6 @@ DS_QUESTIONS_AND_SELECTABLE_ANSWERS = {
     },
     ## question_block: user_interview__model_beginner
     {
-        # D: Parlaci un po' di te, dove sei nata e quali sono le tue passioni
-        'question_block' : 'interview__block1__block200',
-        'question_code' : 'interview__block1__block200__q1',
-	'block_level' : 2,
-	'block_code_level_1': 'interview__block1',
-	'block_code_level_2': False,
-	'block_code_level_3': False, 
-	'block_code_level_4': False,
-	'block_code_level_5': False,
-        'question_type' : 'text',
-        'required' : 0,
-        'order' : 100,
-        'default_hidden' : 1,
-        'answers' : [
-            {
-                'answer_code' : 'interview__block1__block200__q1__a1',
-                'next_question_block_1' : False,
-                'next_question_block_2' : False,
-                'next_question_block_3' : False,
-                'next_question_block_4' : False,
-                'next_question_block_5' : False,
-		'order' : 0,
-            },
-        ],
-    },
-    {
         # D: Com'è nata la tua passione per il mondo della moda?
         'question_block' : 'interview__block1__block200',
         'question_code' : 'interview__block1__block200__q2',
@@ -1267,32 +1241,6 @@ DS_QUESTIONS_AND_SELECTABLE_ANSWERS = {
     },
     ## question_block: user_interview__photo_passionate
     {
-        # D: Parlaci un po' di te, dove sei nata e quali sono le tue passioni
-        'question_block' : 'interview__block1__block400',
-        'question_code' : 'interview__block1__block400__q1',
-	'block_level' : 2,
-	'block_code_level_1': 'interview__block1',
-	'block_code_level_2': False,
-	'block_code_level_3': False, 
-	'block_code_level_4': False,
-	'block_code_level_5': False,
-        'question_type' : 'text',
-        'required' : 0,
-        'order' : 100,
-        'default_hidden' : 1,
-        'answers' : [
-            {
-                'answer_code' : 'interview__block1__block400__q1__a1',
-                'next_question_block_1' : False,
-                'next_question_block_2' : False,
-                'next_question_block_3' : False,
-                'next_question_block_4' : False,
-                'next_question_block_5' : False,
-		'order' : 0,
-            },
-        ],
-    },
-    {
         # D: La tua giornata tipo?
         'question_block' : 'interview__block1__block400',
         'question_code' : 'interview__block1__block400__q2',
@@ -1490,32 +1438,6 @@ DS_QUESTIONS_AND_SELECTABLE_ANSWERS = {
 	# Si }}}
     # interview__block1__block500 }}}
     ## question_block: user_interview__fashion_passionate
-    {
-        # D: Parlaci un po' di te, dove sei nata e quali sono le tue passioni
-        'question_block' : 'interview__block1__block600',
-        'question_code' : 'interview__block1__block600__q1',
-	'block_level' : 2,
-	'block_code_level_1': 'interview__block1',
-	'block_code_level_2': False,
-	'block_code_level_3': False, 
-	'block_code_level_4': False,
-	'block_code_level_5': False,
-        'question_type' : 'text',
-        'required' : 0,
-        'order' : 100,
-        'default_hidden' : 1,
-        'answers' : [
-            {
-                'answer_code' : 'interview__block1__block600__q1__a1',
-		'next_question_block_1' : False,
-		'next_question_block_2' : False,
-		'next_question_block_3' : False,
-		'next_question_block_4' : False,
-		'next_question_block_5' : False,
-		'order' : 0,
-            },
-        ],
-    },
     {
         # D: Come è nata questa tua passione per il mondo della moda?
         'question_block' : 'interview__block1__block600',
@@ -1767,32 +1689,6 @@ DS_QUESTIONS_AND_SELECTABLE_ANSWERS = {
     },
     ## question_block: user_interview__just_for_fun
     {
-        # D: Parlaci un po' di te, dove sei nata e quali sono le tue passioni
-        'question_block' : 'interview__block1__block800',
-        'question_code' : 'interview__block1__block800__q1',
-	'block_level' : 2,
-	'block_code_level_1': 'interview__block1',
-	'block_code_level_2': False,
-	'block_code_level_3': False, 
-	'block_code_level_4': False,
-	'block_code_level_5': False,
-        'question_type' : 'text',
-        'required' : 0,
-        'order' : 100,
-        'default_hidden' : 1,
-        'answers' : [
-            {
-                'answer_code' : 'interview__block1__block800__q1__a1',
-		'next_question_block_1' : False,
-		'next_question_block_2' : False,
-		'next_question_block_3' : False,
-		'next_question_block_4' : False,
-		'next_question_block_5' : False,
-		'order' : 0,
-            },
-        ],
-    },
-    {
         # D: Il tuo pregio più grande e il tuo "peggior" difetto?
         'question_block' : 'interview__block1__block800',
         'question_code' : 'interview__block1__block800__q2',
@@ -1968,47 +1864,47 @@ DS_QUESTIONS_AND_SELECTABLE_ANSWERS = {
 DS_QUESTIONS_ANSWERS_LABEL = {
     # user_interview__model_pro
     'interview__block1__q1' : {
-        'question_text_woman' : "Seleziona la tua categoria",
-        'question_text_man' : "Seleziona la tua categoria",
-        'question_hint_woman' : False,
-        'question_hint_man' : False,
-    },
-	'interview__block1__q1__a1' : {
-	    'question_text_woman' : "Sono una modella/indossatrice/ragazza immagine professionista",
-	    'question_text_man' : "Sono un modello/indossatrice/ragazzo immagine professionista",
-	    'question_hint_woman' : False,
-	    'question_hint_man' : False,
-	},
-	'interview__block1__q1__a2' : {
-	    'question_text_woman' : "Sono una modella/indossatrice/ragazza immagine esordiente",
-	    'question_text_man' : "Sono un modello/indossatrice/ragazzo immagine esordiente",
-	    'question_hint_woman' : False,
-	    'question_hint_man' : False,
-	},
-	'interview__block1__q1__a3' : {
-	    'question_text_woman' : "Sono un'appassionata di fotografia",
-	    'question_text_man' : "Sono un appassionato di fotografia",
-	    'question_hint_woman' : False,
-	    'question_hint_man' : False,
-	},
-	'interview__block1__q1__a4' : {
-	    'question_text_woman' : "Sono un'appassionata di moda",
-	    'question_text_man' : "Sono un appassionato di moda",
-	    'question_hint_woman' : False,
-	    'question_hint_man' : False,
-	},
-	'interview__block1__q1__a5' : {
-	    'question_text_woman' : "Partecipo solo per divertimento/Altro",
-	    'question_text_man' : "Partecipo solo per divertimento/Altro",
-	    'question_hint_woman' : False,
-	    'question_hint_man' : False,
-	},
-    'interview__block1__block1__q1' : {
 	'question_text_woman' : "Parlaci un po' di te, dove sei nata e quali sono le tue passioni",
 	'question_text_man' : "Parlaci un po' di te, dove sei nato e quali sono le tue passioni",
 	'question_hint_woman' : False,
 	'question_hint_man' : False,
     },
+    'interview__block1__q2' : {
+        'question_text_woman' : "Seleziona la tua categoria",
+        'question_text_man' : "Seleziona la tua categoria",
+        'question_hint_woman' : False,
+        'question_hint_man' : False,
+    },
+	'interview__block1__q2__a1' : {
+	    'question_text_woman' : "Sono una modella/indossatrice/ragazza immagine professionista",
+	    'question_text_man' : "Sono un modello/indossatrice/ragazzo immagine professionista",
+	    'question_hint_woman' : False,
+	    'question_hint_man' : False,
+	},
+	'interview__block1__q2__a2' : {
+	    'question_text_woman' : "Sono una modella/indossatrice/ragazza immagine esordiente",
+	    'question_text_man' : "Sono un modello/indossatrice/ragazzo immagine esordiente",
+	    'question_hint_woman' : False,
+	    'question_hint_man' : False,
+	},
+	'interview__block1__q2__a3' : {
+	    'question_text_woman' : "Sono un'appassionata di fotografia",
+	    'question_text_man' : "Sono un appassionato di fotografia",
+	    'question_hint_woman' : False,
+	    'question_hint_man' : False,
+	},
+	'interview__block1__q2__a4' : {
+	    'question_text_woman' : "Sono un'appassionata di moda",
+	    'question_text_man' : "Sono un appassionato di moda",
+	    'question_hint_woman' : False,
+	    'question_hint_man' : False,
+	},
+	'interview__block1__q2__a5' : {
+	    'question_text_woman' : "Partecipo solo per divertimento/Altro",
+	    'question_text_man' : "Partecipo solo per divertimento/Altro",
+	    'question_hint_woman' : False,
+	    'question_hint_man' : False,
+	},
     'interview__block1__block1__q2' : {
 	'question_text_woman' : "Come è iniziata la tua avventura nel mondo della moda?",
 	'question_text_man' : "Come è iniziata la tua avventura nel mondo della moda?",
@@ -2214,12 +2110,6 @@ DS_QUESTIONS_ANSWERS_LABEL = {
 	'question_hint_man' : False,
     },
     # user_interview__model_beginner
-    'interview__block1__block200__q1' : {
-	'question_text_woman' : "Parlaci un po' di te, dove sei nata e quali sono le tue passioni",
-	'question_text_man' : "Parlaci un po' di te, dove sei nato e quali sono le tue passioni",
-	'question_hint_woman' : False,
-	'question_hint_man' : False,
-    },
     'interview__block1__block200__q2' : {
 	'question_text_woman' : "Com'è nata la tua passione per il mondo della moda?",
 	'question_text_man' : "Com'è nata la tua passione per il mondo della moda?",
@@ -2305,12 +2195,6 @@ DS_QUESTIONS_ANSWERS_LABEL = {
 	'question_hint_man' : False,
     },
     # user_interview__photo_passionate
-    'interview__block1__block400__q1' : {
-	'question_text_woman' : "Parlaci un po' di te, dove sei nata e quali sono le tue passioni",
-	'question_text_man' : "Parlaci un po' di te, dove sei nato e quali sono le tue passioni",
-	'question_hint_woman' : False,
-	'question_hint_man' : False,
-    },
     'interview__block1__block400__q2' : {
 	'question_text_woman' : "La tua giornata tipo?",
 	'question_text_man' : "La tua giornata tipo?",
@@ -2366,12 +2250,6 @@ DS_QUESTIONS_ANSWERS_LABEL = {
 	'question_hint_man' : False,
     },
     # user_interview__fashion_passionate
-    'interview__block1__block600__q1' : {
-	'question_text_woman' : "Parlaci un po' di te, dove sei nata e quali sono le tue passioni",
-	'question_text_man' : "Parlaci un po' di te, dove sei nato e quali sono le tue passioni",
-	'question_hint_woman' : False,
-	'question_hint_man' : False,
-    },
     'interview__block1__block600__q2' : {
 	'question_text_woman' : "Come è nata questa tua passione per il mondo della moda?",
 	'question_text_man' : "Come è nata questa tua passione per il mondo della moda?",
@@ -2439,12 +2317,6 @@ DS_QUESTIONS_ANSWERS_LABEL = {
 	'question_hint_man' : False,
     },
     # user_interview__just_for_fun
-    'interview__block1__block800__q1' : {
-	'question_text_woman' : "Parlaci un po' di te, dove sei nata e quali sono le tue passioni",
-	'question_text_man' : "Parlaci un po' di te, dove sei nato e quali sono le tue passioni",
-	'question_hint_woman' : False,
-	'question_hint_man' : False,
-    },
     'interview__block1__block800__q2' : {
 	'question_text_woman' : 'Il tuo pregio più grande e il tuo "peggior" difetto?',
 	'question_text_man' : 'Il tuo pregio più grande e il tuo "peggior" difetto?',
@@ -2494,7 +2366,6 @@ DS_QUESTIONS_ANSWERS_LABEL = {
 	'question_hint_man' : False,
     },
 }
-
 
 """
     'question_code' : {

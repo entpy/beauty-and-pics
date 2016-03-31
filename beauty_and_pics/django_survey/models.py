@@ -535,21 +535,18 @@ class UserAnswer(models.Model):
 	return return_var
 
     # TODO: check
-    def get_survey_answers_by_user_id(self, survey_code, user_id):
+    def get_survey_answers_by_user_id(self, survey_code, user_id, gender=None):
         """
             Function to retrieve all question_codes, question_labels and related answer_values by survey_code and user_id
         """
         return_var = []
         question_answer_list = list(UserAnswer.objects.values('question__question_code', 'question__question_type', 'value').filter(user_survey__survey__survey_code=survey_code, user_survey__user__id=user_id, question__not_to_show=False,value__isnull=False).order_by('question__order'))
 
-        # TODO: prendere label key in base a gendere
-        """
-        if account_info.get('gender') == 'woman':
-            element_type = 'question_text_woman'
-        else:
+        # TODO (check): prelevo label in base al gender
+        if gender == 'man':
             element_type = 'question_text_man'
-        """
-        element_type = 'question_text_man'
+        else:
+            element_type = 'question_text_woman'
 
         if question_answer_list:
             for single_question_answer in question_answer_list:

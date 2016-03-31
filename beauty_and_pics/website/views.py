@@ -401,7 +401,7 @@ def catwalk_profile(request, user_id):
     book_obj = Book()
     contest_obj = Contest()
     favorite_obj = Favorite()
-    answers_obj = Answer()
+    user_answer_obj = UserAnswer()
 
     try:
         # retrieve user info
@@ -419,8 +419,8 @@ def catwalk_profile(request, user_id):
     # retrieve profile image url
     profile_image_url = book_obj.get_profile_image_url(user_id=user_id)
 
-    # survey answers
-    survey_answers_list = answers_obj.get_answers_about_survey_list(survey_list=['about_user', 'is_model', 'is_not_model'])
+    # get user survey questions and answers (per mostrare l'intervista)
+    interview_questions_answers = user_answer_obj.get_survey_answers_by_user_id(survey_code='interview', user_id=user_id, gender=account_info.get("gender"))
 
     contest_is_open = False
     user_already_registered = False
@@ -463,7 +463,7 @@ def catwalk_profile(request, user_id):
         "user_already_registered" : user_already_registered,
         "email_is_verified" : email_is_verified,
         "user_already_voted" : user_already_voted,
-        "survey_answers_list" : survey_answers_list,
+        "interview_questions_answers" : interview_questions_answers,
     }
 
     return render(request, 'website/catwalk/catwalk_profile.html', context)
@@ -1036,7 +1036,7 @@ def profile_get_prize(request):
     prize_was_already_redeemed = account_obj.get_if_prize_was_already_redeemed(prize_status=autenticated_user_data["prize_status"])
 
     context = {
-        "post" : request.POST,
+        "post": request.POST,
         "form": form,
         "prize_was_already_redeemed": prize_was_already_redeemed,
     }
@@ -1059,11 +1059,11 @@ def profile_interview(request):
     # if this is a POST request we need to process the form data
     if request.method == 'POST':
         # create a form instance and populate it with data from the request:
-        form = SurveyForm(request.POST, gender=autenticated_user_data.get('gender'), survey_code=survey_code)
+        form = SurveyForm(request.POST, extra_param1=survey_code, extra_param2=autenticated_user_data.get('gender'))
         form.set_current_request(request=request)
 
         # check whether it's valid:
-        if form.is_valid() and form.form_actions(survey_code=survey_code):
+        if form.is_valid() and form.form_actions():
             # redirect to get_prize page
             return HttpResponseRedirect('/profilo/pubblicazione-intervista/')
 
@@ -1072,11 +1072,13 @@ def profile_interview(request):
         # pre-prepopulate post dictionary with current user data
         request.POST = user_answer_obj.get_survey_answers_form_by_user_id(survey_code=survey_code, user_id=request.user.id)
 	logger.info("saved questions: " + str(request.POST))
-        form = SurveyForm(gender=autenticated_user_data.get('gender'), survey_code=survey_code)
+        form = SurveyForm(extra_param1=survey_code, extra_param2=autenticated_user_data.get('gender'))
 
     context = {
         "post" : request.POST,
-        'form': form,
+        "form": form,
+        "extra_param1": survey_code,
+        "extra_param2": autenticated_user_data.get('gender'),
     }
 
     return render(request, 'website/profile/profile_interview.html', context)
@@ -1117,8 +1119,8 @@ def profile_interview_publishing(request):
     publishing_status_label = user_survey_obj.get_survey_publishing_label(publishing_status=publishing_status)
     approving_status_label = user_survey_obj.get_survey_approving_label(approving_status=approving_status)
 
-    # get user survey questions and answers (per mostrare la preview sel survey)
-    user_questions_answers = user_answer_obj.get_survey_answers_by_user_id(survey_code=survey_code, user_id=request.user.id)
+    # get user survey questions and answers (per mostrare la preview del survey)
+    user_questions_answers = user_answer_obj.get_survey_answers_by_user_id(survey_code=survey_code, user_id=request.user.id, gender=autenticated_user_data.get("gender"))
 
     # se il survey non è stato approvato prelevo l'eventuale check_message
     check_message = False

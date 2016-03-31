@@ -167,7 +167,16 @@ class ajaxManager():
         FormCommonUtils_obj = FormCommonUtils()
         if FormCommonUtils_obj.check_if_form_class_is_valid(form_class=form_class):
             # create a form instance and populate it with data from the request:
-            code = compile("form = " + form_class + "(self.request.POST)", '<string>', 'exec')
+            if self.request.POST.get('extra_param1', None):
+                if self.request.POST.get('extra_param2', None):
+                    # init con 2 parametri aggiuntivi
+                    code = compile("form = " + form_class + "(self.request.POST, extra_param1=self.request.POST.get('extra_param1'), extra_param2=self.request.POST.get('extra_param2'))", '<string>', 'exec')
+                else:
+                    # init con 1 parametro aggiuntivo
+                    code = compile("form = " + form_class + "(self.request.POST, extra_param1=self.request.POST.get('extra_param1'))", '<string>', 'exec')
+            else:
+                # init senza parametri aggiuntivi
+                code = compile("form = " + form_class + "(self.request.POST)", '<string>', 'exec')
             exec(code)
             # setting request data attribute
             form.set_current_request(request=self.request)
