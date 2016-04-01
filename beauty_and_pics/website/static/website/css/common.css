@@ -188,7 +188,7 @@ textarea { resize: none; }
 
 /* catwalk user details page */
 .background_container1 { background-color: #E0E0E0; padding: 20px; }
-.generic_container8 { background-color: #e0e0e0; display: inline-block; padding: 20px; width: 100%; }
+.generic_container8 { background-color: #e0e0e0; display: inline-block; float: left; padding: 20px; width: 100%; }
 .user_stats_container { text-align: center; }
 .user_stats_container .user_stats_block { display: inline-block; }
 .user_stats_container .user_stats_block .position { font-size: 55px; }
@@ -222,6 +222,20 @@ ul.grid_container li img:hover { opacity: 0.5; }
 /* image grids }}} */
 
 /* profile section {{{ */
+/*navigation*/
+.user_profile_navigation {
+    background: white none repeat scroll 0 0;
+    box-shadow: 0 7px 12px -10px gray;
+    display: inline-block;
+    margin-left: -50px;
+    width: inherit;
+    text-align: center;
+}
+.user_profile_navigation .user_profile_navigation_wrapper { display: table; margin: 0 auto; }
+.user_profile_navigation .user_profile_navigation_wrapper .menu-item-container { display: table-cell; padding: 0px 20px; cursor: pointer; width: 50%; }
+.user_profile_navigation .user_profile_navigation_wrapper .menu-item-container div { border-bottom: 3px solid transparent; border-top: 3px solid transparent; color: gray; display: inline-block; padding: 20px 0px; }
+.user_profile_navigation .user_profile_navigation_wrapper .menu-item-container:hover div, .user_profile_navigation .user_profile_navigation_wrapper .menu-item-container.active div { border-bottom: 3px solid #18bc9c; color: #18bc9c; font-weight: bold; }
+
 .upload_profile_image_button, .upload_book_image_button { display: none; } /* hide widget upload buttons */
 
 .favorites_question_point_container img { margin-left: 5px; vertical-align: text-bottom; }
