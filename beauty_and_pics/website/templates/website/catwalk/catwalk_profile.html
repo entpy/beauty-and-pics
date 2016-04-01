@@ -126,12 +126,53 @@
 		</div>
 	</div>
 </div>
+{# profile navigation bar #}
 <div class="user_profile_navigation">
 	<div class="user_profile_navigation_wrapper">
-		<div class="menu-item-container active"><div>Book fotografico</div></div>
-		<div class="menu-item-container"><div>Intervista</div></div>
+		<div class="active menu-item-container selectViewAction" data-navigation-item="photobook_page"><div>Book fotografico</div></div>
+		<div class="menu-item-container selectViewAction" data-navigation-item="interview_page"><div>Intervista</div></div>
 	</div>
 </div>
+<div class="row">
+	<div class="col-md-12 navigation-view-container">
+		{# photobook view {{{ #}
+		<div class="hide view-photobook_page navigationViewAction">
+			<div class="col-sm-12 no-gutter">
+				<h4>Book fotografico</h4>
+			</div>
+			<div class="col-sm-12 no-gutter">
+				{# image grid block {{{ #}
+				<div class="col-sm-12 no-gutter image_grid_container"></div>
+				<div class="text-center">
+					<a class="btn btn-success loadMoreElementsAction" href="#">Mostra altre foto</a>
+				</div>
+				{# image grid block }}} #}
+			</div>
+		</div>
+		{# photobook view }}} #}
+		{# interview view {{{ #}
+		<div class="hide view-interview_page navigationViewAction">
+			<div class="col-sm-12 no-gutter">
+				<h4>Intervista</h4>
+			</div>
+			<div class="col-sm-12 no-gutter">
+				{% if interview_questions_answers %}
+					{% for single_question in interview_questions_answers %}
+						<div class="question_answer_container">
+							<div class="question_container">{{ single_question.label }}</div>
+							<div class="answer_container">{{ single_question.value }}</div>
+						</div>
+					{% endfor %}
+				{% else %}
+					{{ user_info.first_name }} non ha ancora rilasciato interviste...prova a passare in un secondo momento!
+				{% endif %}
+			</div>
+		</div>
+		{# interview view }}} #}
+	</div>
+</div>
+{# profile navigation pages {{{ #}
+{% comment %}
 <div class="generic_container user_details_container">
 	<div class="generic_container user_details_left">
 		<div class="row">
@@ -188,6 +229,8 @@
 		</div>
 	</div>
 </div>
+{% endcomment %}
+{# profile navigation pages }}} #}
 
 {# hidden form #}
 <form class="hide" method="post" action="">
@@ -250,15 +293,6 @@
 			return true;
 		});
 
-		/* Function to show send confirmation email modal */
-		/*$("body").on("click",".confirmationModalClickAction", function(){
-			// close previously opened bootstrap modal
-			$('.bootstrap_modal').modal('hide');
-			setTimeout("bootstrapModalsObect.showSendValidationEmail();", 1000);
-
-			return true;
-		});*/
-
 		/* Function to load more photo */
 		$("body").on("click",".loadMoreElementsAction", function(){
 			elementsListObject.setElementsListType("photobook");
@@ -304,6 +338,14 @@
 			return false;
 		});
 
+		/* Function to show selected view */
+		$("body").on("click",".selectViewAction", function(){
+			var menuManager = manageNavigationView;
+			menuManager.manageElementClick($(this));
+
+			return false;
+		});
+
 		// default click to load a bunch of images
 		$(".loadMoreElementsAction").click();
 	});
@@ -336,5 +378,52 @@
 
 		return true;
 	}
+
+	// object to manage navigation views
+	var manageNavigationView = {
+		navigationItemsCommonClass: 'selectViewAction',
+		navigationViewsCommonClass: 'navigationViewAction',
+		activeNavigationItemClass: 'active',
+		disableViewClass: 'hide',
+		viewToShowPrefix: 'view-',
+
+		/* Function to manage navigation element click */
+		manageElementClick : function(clickedElement) {
+			this.showSelectNavigationItem(clickedElement);
+			this.showSelectedNavigationView($(clickedElement).data('navigationItem'));
+
+			return false;
+		},
+
+		/* Function to remove 'active' class from all nagivation elements */
+		hideNavigationItems : function() {
+			$('.' + this.navigationItemsCommonClass).removeClass(this.activeNavigationItemClass);
+
+			return false;
+		},
+
+		/* Function to add 'active' class to clicked element and show related view */
+		showSelectNavigationItem : function(clickedElement) {
+			this.hideNavigationItems();
+			$(clickedElement).addClass(this.activeNavigationItemClass);
+
+			return false;
+		},
+
+		/* Function to hide all navigation views */
+		hideNavigationView : function() {
+			$('.' + this.navigationViewsCommonClass).addClass(this.disableViewClass);
+
+			return false;
+		},
+
+		/* Function to show selected navigation view */
+		showSelectedNavigationView : function(viewName) {
+			this.hideNavigationView();
+			$('.' + this.viewToShowPrefix + viewName).removeClass(this.disableViewClass);
+
+			return false;
+		},
+	};
 </script>
 {% endblock custom_js %}
