@@ -15,7 +15,6 @@ logger = logging.getLogger(__name__)
 class Survey(models.Model):
     survey_id = models.AutoField(primary_key=True)
     survey_code = models.CharField(max_length=150)
-    validation_required = models.IntegerField(default=0, null=True, blank=True)
 
     class Meta:
         app_label = 'django_survey'
@@ -57,7 +56,6 @@ class Survey(models.Model):
                 Survey_obj.get_by_survey_code(survey_code=survey.get('survey_code'))
             except Survey.DoesNotExist:
                 Survey_obj.survey_code = survey.get('survey_code')
-                Survey_obj.validation_required = survey.get('validation_required')
                 Survey_obj.save()
             else:
                 # surveys already exists, skip to next loop
@@ -490,7 +488,7 @@ class UserAnswer(models.Model):
     user_answer_id = models.AutoField(primary_key=True)
     user_survey = models.ForeignKey(UserSurvey)
     question = models.ForeignKey(Question)
-    value = models.CharField(max_length=500, null=True, blank=True)
+    value = models.TextField(null=True, blank=True)
 
     class Meta:
         app_label = 'django_survey'
@@ -535,12 +533,15 @@ class UserAnswer(models.Model):
 	return return_var
 
     # TODO: check
-    def get_survey_answers_by_user_id(self, survey_code, user_id, gender=None):
+    def get_survey_answers_by_user_id(self, survey_code, user_id, gender=None, only_if_published=False):
         """
             Function to retrieve all question_codes, question_labels and related answer_values by survey_code and user_id
         """
         return_var = []
-        question_answer_list = list(UserAnswer.objects.values('question__question_code', 'question__question_type', 'value').filter(user_survey__survey__survey_code=survey_code, user_survey__user__id=user_id, question__not_to_show=False,value__isnull=False).order_by('question__order'))
+	if only_if_published:
+	    question_answer_list = list(UserAnswer.objects.values('question__question_code', 'question__question_type', 'value').filter(user_survey__survey__survey_code=survey_code, user_survey__user__id=user_id, user_survey__published=DS_CONST_PUBLISHED, question__not_to_show=False, value__isnull=False).order_by('question__order'))
+	else:
+	    question_answer_list = list(UserAnswer.objects.values('question__question_code', 'question__question_type', 'value').filter(user_survey__survey__survey_code=survey_code, user_survey__user__id=user_id, question__not_to_show=False,value__isnull=False).order_by('question__order'))
 
         # TODO (check): prelevo label in base al gender
         if gender == 'man':

@@ -190,21 +190,23 @@
 					<div class="generic_container generic_container3">
 						{# left block (with catwalk) #}
 						<div class="generic_container generic_container4">
-							{% block breadcrumbs %}
-								{% clear_breadcrumbs %}
-							{% endblock %}
+							<div class="generic_container4-padding">
+								{% block breadcrumbs %}
+									{% clear_breadcrumbs %}
+								{% endblock %}
 
-							{% render_breadcrumbs "website/inc/breadcrumbs/breadcrumbs_template.html" %}
-							{% block container4_title_block %}
-							<div class="row">
-								<div class="col-sm-12">
-									<h3>{% block container4_title %}Page title{% endblock %}</h3>
+								{% render_breadcrumbs "website/inc/breadcrumbs/breadcrumbs_template.html" %}
+								{% block container4_title_block %}
+								<div class="row">
+									<div class="col-sm-12">
+										<h3>{% block container4_title %}Page title{% endblock %}</h3>
+									</div>
 								</div>
+								{% endblock container4_title_block %}
+								{# navigation tabs #}
+								{% block container4_navigation %}{% endblock %}
+								{% block container4_content %}{% endblock %}
 							</div>
-							{% endblock container4_title_block %}
-							{# navigation tabs #}
-							{% block container4_navigation %}{% endblock %}
-							{% block container4_content %}{% endblock %}
 						</div>
 						<div class="generic_container generic_container5">
 							{# block "contest expiring in 1 day 3 hours 12 min" #}

@@ -152,7 +152,7 @@ textarea { resize: none; }
 .man-hall-of-fame-winner a.btn:active { background-color: #fff; border-color: #2c3e50; color: #2c3e50; }
 
 /* www containers */
-.styled_container1 { border-radius: 4px; -moz-border-radius: 4px; background-color: #E0E0E0; display: inline-block; padding: 20px; width: 100%; }
+.styled_container1 { background-color: #E0E0E0; padding: 20px; }
 .generic_container { display: inline-block; text-align: left; }
 
 /* backend containers */
@@ -223,14 +223,7 @@ ul.grid_container li img:hover { opacity: 0.5; }
 
 /* profile section {{{ */
 /*navigation*/
-.user_profile_navigation {
-    background: white none repeat scroll 0 0;
-    box-shadow: 0 7px 12px -10px gray;
-    display: inline-block;
-    margin-left: -50px;
-    width: inherit;
-    text-align: center;
-}
+.user_profile_navigation { background-color: white; box-shadow: 0 7px 12px -10px gray; display: inline-block; text-align: center; width: 100%; }
 .user_profile_navigation .user_profile_navigation_wrapper { display: table; margin: 0 auto; }
 .user_profile_navigation .user_profile_navigation_wrapper .menu-item-container { display: table-cell; padding: 0px 20px; cursor: pointer; width: 50%; }
 .user_profile_navigation .user_profile_navigation_wrapper .menu-item-container div { border-bottom: 3px solid transparent; border-top: 3px solid transparent; color: gray; display: inline-block; padding: 20px 0px; }
@@ -284,10 +277,8 @@ ul.grid_container li img:hover { opacity: 0.5; }
 
 .thumb { padding-left: 0!important; padding-right: 0!important; }
 .thumb img { width: 100%; }
-.thumbnail { background-color: transparent; border-radius: 0px; display: block; margin: 0 3px 6px; padding: 0; }
+.thumbnail { background-color: transparent; border-radius: 0px; border: 0px solid; display: block; margin: 0 3px 6px; padding: 0; }
 .thumbnail:hover { background-color: #18bc9c; opacity: 0.8; }
-.image_grid_container { padding-left: 11px; padding-right: 11px; }
-/*.book_thumbnail { background-color: white; border-radius: 0px; display: block; margin: 0 3px 6px; padding: 0; height: 200px; overflow: hidden; width: auto; }*/
 .book_thumbnail { height: 250px!important; width: 100%!important; }
 .book_thumbnail:hover { background-color: #18bc9c; opacity: 0.8; }
 

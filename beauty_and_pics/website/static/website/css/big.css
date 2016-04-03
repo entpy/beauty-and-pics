@@ -52,7 +52,9 @@
 .generic_container3 { margin-bottom: 30px; }
 .generic_container4 { border-top: 3px solid #212e3c; margin-right: 20px; width: 900px; }
 .generic_container5 { width: 280px; }
-.generic_container4, .generic_container7 { min-height: 20px; padding: 10px 50px 50px; }
+/*.generic_container4, .generic_container7 { min-height: 20px; padding: 10px 50px 50px; }*/ /* rimosso padding per il menu in pagina profilo */
+.generic_container7 { min-height: 20px; padding: 10px 50px 50px; }
+.generic_container4-padding { display: inline-block; padding: 10px 50px 50px; width: 100%; }
 /*.generic_container6 { min-height: 310px; }*/
 .generic_container8 > div { float: left; }
 .generic_container8 > .left { width: 36%; }
@@ -84,6 +86,9 @@ ul.grid_container_three li { width: 30.84% }
 /* image grids }}} */
 
 /* profile section {{{ */
+/* navigation */
+.user_profile_navigation { margin-top: -50px; }
+
 .favorites_question_point_container img { margin-left: 5px; vertical-align: text-bottom; }
 .manage_buttons_container { display: table; }
 .manage_buttons_container > div { display: table-cell; float: none; vertical-align: middle; }

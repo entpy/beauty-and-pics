@@ -43,7 +43,7 @@
 
 			<fieldset class="col-md-12">
 				<div class="form-group">
-					<label class="col-md-12 text-left">Ciao nome_utente, iniziamo l'intervista...</label>
+					<label class="col-md-12 text-left">Ciao {{ user_first_name }}, iniziamo l'intervista...</label>
 				</div>
 				{% for field in form %}
 					<div class="form-group form-group-level-{{ field.field.widget.attrs.current_block_level }} {{ field.field.widget.attrs.current_block_code }} {% if field.field.widget.attrs.default_hidden %}hide{% endif %} {% if field.errors %}has-error{% endif %}" data-current-question-block-code="{{ field.field.widget.attrs.current_block_code }}" data-current-block-level="{{ field.field.widget.attrs.current_block_level }}" data-block-level1="{{ field.field.widget.attrs.block_level1 }}" data-block-level2="{{ field.field.widget.attrs.block_level2 }}" data-block-level3="{{ field.field.widget.attrs.block_level3 }}" data-block-level4="{{ field.field.widget.attrs.block_level4 }}" data-block-level5="{{ field.field.widget.attrs.block_level5 }}">

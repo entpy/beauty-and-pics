@@ -73,12 +73,10 @@
 
 .generic_container8 .left { margin-bottom: 15px; text-align: center; }
 .user_action_link_container { margin-top: 15px; }
-.generic_container8, .vote_user_container { display: block; margin: 0 auto; width: 95%; }
 .generic_container4, .generic_container6, .generic_container7, .generic_container9 { display: block; padding: 15px; width: 100%; }
 /*.generic_container9, .generic_container6 { max-width: 340px; }*/
 .generic_container3 > .generic_container { float: none; }
 .generic_container6 > .title { margin-top: 10px; }
-.styled_container1 { display: block; margin: 0 auto; width: 95%; }
 .user_top_info_container { margin-left: 15px; width: auto; }
 .catwalk_user_main_image { max-width: 250px; width: 100%; }
 .container_row_s40 { margin-bottom: 40px; }

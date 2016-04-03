@@ -420,7 +420,7 @@ def catwalk_profile(request, user_id):
     profile_image_url = book_obj.get_profile_image_url(user_id=user_id)
 
     # get user survey questions and answers (per mostrare l'intervista)
-    interview_questions_answers = user_answer_obj.get_survey_answers_by_user_id(survey_code='interview', user_id=user_id, gender=account_info.get("gender"))
+    interview_questions_answers = user_answer_obj.get_survey_answers_by_user_id(survey_code='interview', user_id=user_id, gender=account_info.get("gender"), only_if_published=True)
 
     contest_is_open = False
     user_already_registered = False
@@ -1075,6 +1075,7 @@ def profile_interview(request):
         form = SurveyForm(extra_param1=survey_code, extra_param2=autenticated_user_data.get('gender'))
 
     context = {
+	"user_first_name": autenticated_user_data["first_name"],
         "post" : request.POST,
         "form": form,
         "extra_param1": survey_code,

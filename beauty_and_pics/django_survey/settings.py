@@ -132,7 +132,6 @@ DS_CONST_NOT_APPROVED = 0
 DS_SURVEY = [
     {
 	'survey_code' : 'interview',
-	'validation_required' : True,
     }
 ]
 

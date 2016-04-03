@@ -27,99 +27,100 @@
 {% block photoboard_list_banner %}{% endblock %}
 
 {% block container4_content %}
-{# Facebook SDK {{{ #}
-<script>
-(function(d, s, id){ var js, fjs = d.getElementsByTagName(s)[0]; if (d.getElementById(id)) {return;} js = d.createElement(s); js.id = id; js.src = "//connect.facebook.net/en_US/sdk.js"; fjs.parentNode.insertBefore(js, fjs); }(document, 'script', 'facebook-jssdk'));
-</script>
-{# Facebook SDK }}} #}
-<div class="user_top_info_container">
-	<div class="user_top_info_block">
-		<span class="user_info_label">Età: </span>
-		<span class="user_info_value">{{ user_info.age }} anni</span>
-	</div>
-	<div class="user_top_info_space">&nbsp;</div>
-	<div class="user_top_info_block">
-		<span class="user_info_label">Sesso: </span>
-		<span class="user_info_value">{% if user_info.gender = "man" %}uomo{% elif user_info.gender = "woman" %}donna{% endif %}</span>
-	</div>
-	<!--
-	<div class="user_top_info_space">&nbsp;</div>
-	<div class="user_top_info_block">
-		<span class="user_info_label">Città: </span>
-		<span class="user_info_value">Torino (TO)</span>
-	</div>
-	-->
-</div>
-<div class="generic_container8">
-	<div class="left">
-		<div class="top">
-			<img alt="Immagine del profilo" class="catwalk_user_main_image" src="{{ profile_image_url }}">
+	{# Facebook SDK {{{ #}
+	<script>
+	(function(d, s, id){ var js, fjs = d.getElementsByTagName(s)[0]; if (d.getElementById(id)) {return;} js = d.createElement(s); js.id = id; js.src = "//connect.facebook.net/en_US/sdk.js"; fjs.parentNode.insertBefore(js, fjs); }(document, 'script', 'facebook-jssdk'));
+	</script>
+	{# Facebook SDK }}} #}
+	<div class="user_top_info_container">
+		<div class="user_top_info_block">
+			<span class="user_info_label">Età: </span>
+			<span class="user_info_value">{{ user_info.age }} anni</span>
 		</div>
-		<div class="bottom user_action_link_container">
-			<span>
-				<a class="user_action_link addToFavoritesClickAction" href="#">
-					<img alt="Aggiungi ai preferiti" src="{% static "website/img/catwalk/aggiungi-a-preferiti.png" %}">
-				</a>
-			</span>
-			<span class="image_action_button_space">
-				<a class="user_action_link" href="/passerella/segnalazione-utente/{{user_info.user_id}}/">
-					<img alt="Segnala utente" src="{% static "website/img/catwalk/segnala-utente.png" %}">
-				</a>
-			</span>
-			<span>
-				<a class="user_action_link shareOnFacebookClickAction" href="#">
-					<img alt="Condividi su Facebook" src="{% static "website/img/catwalk/facebook-share.png" %}">
-				</a>
-			</span>
+		<div class="user_top_info_space">&nbsp;</div>
+		<div class="user_top_info_block">
+			<span class="user_info_label">Sesso: </span>
+			<span class="user_info_value">{% if user_info.gender = "man" %}uomo{% elif user_info.gender = "woman" %}donna{% endif %}</span>
 		</div>
+		<!--
+		<div class="user_top_info_space">&nbsp;</div>
+		<div class="user_top_info_block">
+			<span class="user_info_label">Città: </span>
+			<span class="user_info_value">Torino (TO)</span>
+		</div>
+		-->
 	</div>
-	<div class="right">
-		<div class="top user_stats_container container_row1">
-			{% if not user_info.can_be_shown %}
-				<div class="user_stats_block">
-					<span>Fuori concorso</span>
-				</div>
-				<div class="user_stats_space"></div>
-			{% elif user_contest_info.ranking %}
-				<div class="user_stats_block">
-					<span class="position">{{ user_contest_info.ranking }}°</span>
-					<span>Posizione</span>
-				</div>
-				<div class="user_stats_space"></div>
-			{% endif %}
-			<div class="user_stats_block">
-				<span class="points">{{ user_contest_info.total_points }}</span>
-				<span>Punti</span>
+	<div class="generic_container8">
+		<div class="left">
+			<div class="top">
+				<img alt="Immagine del profilo" class="catwalk_user_main_image" src="{{ profile_image_url }}">
+			</div>
+			<div class="bottom user_action_link_container">
+				<span>
+					<a class="user_action_link addToFavoritesClickAction" href="#">
+						<img alt="Aggiungi ai preferiti" src="{% static "website/img/catwalk/aggiungi-a-preferiti.png" %}">
+					</a>
+				</span>
+				<span class="image_action_button_space">
+					<a class="user_action_link" href="/passerella/segnalazione-utente/{{user_info.user_id}}/">
+						<img alt="Segnala utente" src="{% static "website/img/catwalk/segnala-utente.png" %}">
+					</a>
+				</span>
+				<span>
+					<a class="user_action_link shareOnFacebookClickAction" href="#">
+						<img alt="Condividi su Facebook" src="{% static "website/img/catwalk/facebook-share.png" %}">
+					</a>
+				</span>
 			</div>
 		</div>
-		<div class="bottom">
-			<div class="stats_bar_container">
-				<!-- stats block -->
-				<div class="stats_bar_label">Sorriso: {{ user_contest_info.smile.total_points|default:"0" }} punti</div>
-				<div class="stats_bar">
-					<div class="progress">
-						<div class="progress-bar progress-bar-warning" role="progressbar" aria-valuenow="{{ user_contest_info.smile.metric_rate_percentage }}" aria-valuemin="0" aria-valuemax="100" style="width: {{ user_contest_info.smile.metric_rate_percentage }}%"></div>
+		<div class="right">
+			<div class="top user_stats_container container_row1">
+				{% if not user_info.can_be_shown %}
+					<div class="user_stats_block">
+						<span>Fuori concorso</span>
 					</div>
-				</div>
-				<!-- stats block -->
-				<div class="stats_bar_label">Sguardo: {{ user_contest_info.look.total_points|default:"0" }} punti</div>
-				<div class="stats_bar">
-					<div class="progress">
-						<div class="progress-bar progress-bar-warning" role="progressbar" aria-valuenow="{{ user_contest_info.look.metric_rate_percentage }}" aria-valuemin="0" aria-valuemax="100" style="width: {{ user_contest_info.look.metric_rate_percentage }}%"></div>
+					<div class="user_stats_space"></div>
+				{% elif user_contest_info.ranking %}
+					<div class="user_stats_block">
+						<span class="position">{{ user_contest_info.ranking }}°</span>
+						<span>Posizione</span>
 					</div>
+					<div class="user_stats_space"></div>
+				{% endif %}
+				<div class="user_stats_block">
+					<span class="points">{{ user_contest_info.total_points }}</span>
+					<span>Punti</span>
 				</div>
-				<!-- stats block -->
-				<div class="stats_bar_label">Globale: {{ user_contest_info.global.total_points|default:"0" }} punti</div>
-				<div class="stats_bar">
-					<div class="progress">
-						<div class="progress-bar progress-bar-warning" role="progressbar" aria-valuenow="{{ user_contest_info.global.metric_rate_percentage }}" aria-valuemin="0" aria-valuemax="100" style="width: {{ user_contest_info.global.metric_rate_percentage }}%"></div>
+			</div>
+			<div class="bottom">
+				<div class="stats_bar_container">
+					<!-- stats block -->
+					<div class="stats_bar_label">Sorriso: {{ user_contest_info.smile.total_points|default:"0" }} punti</div>
+					<div class="stats_bar">
+						<div class="progress">
+							<div class="progress-bar progress-bar-warning" role="progressbar" aria-valuenow="{{ user_contest_info.smile.metric_rate_percentage }}" aria-valuemin="0" aria-valuemax="100" style="width: {{ user_contest_info.smile.metric_rate_percentage }}%"></div>
+						</div>
 					</div>
-				</div>
-				<!-- stats block -->
-				<div class="stats_bar_label">Stile: {{ user_contest_info.style.total_points|default:"0" }} punti</div>
-				<div class="stats_bar">
-					<div class="progress">
-						<div class="progress-bar progress-bar-warning" role="progressbar" aria-valuenow="{{ user_contest_info.style.metric_rate_percentage }}" aria-valuemin="0" aria-valuemax="100" style="width: {{ user_contest_info.style.metric_rate_percentage }}%"></div>
+					<!-- stats block -->
+					<div class="stats_bar_label">Sguardo: {{ user_contest_info.look.total_points|default:"0" }} punti</div>
+					<div class="stats_bar">
+						<div class="progress">
+							<div class="progress-bar progress-bar-warning" role="progressbar" aria-valuenow="{{ user_contest_info.look.metric_rate_percentage }}" aria-valuemin="0" aria-valuemax="100" style="width: {{ user_contest_info.look.metric_rate_percentage }}%"></div>
+						</div>
+					</div>
+					<!-- stats block -->
+					<div class="stats_bar_label">Globale: {{ user_contest_info.global.total_points|default:"0" }} punti</div>
+					<div class="stats_bar">
+						<div class="progress">
+							<div class="progress-bar progress-bar-warning" role="progressbar" aria-valuenow="{{ user_contest_info.global.metric_rate_percentage }}" aria-valuemin="0" aria-valuemax="100" style="width: {{ user_contest_info.global.metric_rate_percentage }}%"></div>
+						</div>
+					</div>
+					<!-- stats block -->
+					<div class="stats_bar_label">Stile: {{ user_contest_info.style.total_points|default:"0" }} punti</div>
+					<div class="stats_bar">
+						<div class="progress">
+							<div class="progress-bar progress-bar-warning" role="progressbar" aria-valuenow="{{ user_contest_info.style.metric_rate_percentage }}" aria-valuemin="0" aria-valuemax="100" style="width: {{ user_contest_info.style.metric_rate_percentage }}%"></div>
+						</div>
 					</div>
 				</div>
 			</div>
@@ -133,108 +134,79 @@
 		<div class="menu-item-container selectViewAction" data-navigation-item="interview_page"><div>Intervista</div></div>
 	</div>
 </div>
-<div class="row">
-	<div class="col-md-12 navigation-view-container">
-		{# photobook view {{{ #}
-		<div class="hide view-photobook_page navigationViewAction">
-			<div class="col-sm-12 no-gutter">
-				<h4>Book fotografico</h4>
-			</div>
-			<div class="col-sm-12 no-gutter">
-				{# image grid block {{{ #}
-				<div class="col-sm-12 no-gutter image_grid_container"></div>
-				<div class="text-center">
-					<a class="btn btn-success loadMoreElementsAction" href="#">Mostra altre foto</a>
-				</div>
-				{# image grid block }}} #}
-			</div>
-		</div>
-		{# photobook view }}} #}
-		{# interview view {{{ #}
-		<div class="hide view-interview_page navigationViewAction">
-			<div class="col-sm-12 no-gutter">
-				<h4>Intervista</h4>
-			</div>
-			<div class="col-sm-12 no-gutter">
-				{% if interview_questions_answers %}
-					{% for single_question in interview_questions_answers %}
-						<div class="question_answer_container">
-							<div class="question_container">{{ single_question.label }}</div>
-							<div class="answer_container">{{ single_question.value }}</div>
+<div class="generic_container4-padding"> {# per poter estendere la barra del menù sopra lungo tutta la larghezza della pagina #}
+	<div class="row">
+		<div class="col-md-12 navigation-view-container">
+			{# photobook view {{{ #}
+			<div class="view-photobook_page navigationViewAction">
+				<div class="col-md-4 no-gutter">
+					<div class="col-sm-12 no-gutter">
+						<h4>Vota</h4>
+					</div>
+					{# success vote message block #}
+					<div class="col-sm-12 no-gutter msgContainerAction successVoteMessageAction {% if not user_already_voted %}hide{% endif %}">
+						<div class="alert alert-warning">
+							<span class="msgTextAction">Potrai votare nuovamente questo partecipante quando saranno passati 7 giorni dalla tua votazione.</span>
 						</div>
-					{% endfor %}
-				{% else %}
-					{{ user_info.first_name }} non ha ancora rilasciato interviste...prova a passare in un secondo momento!
-				{% endif %}
-			</div>
-		</div>
-		{# interview view }}} #}
-	</div>
-</div>
-{# profile navigation pages {{{ #}
-{% comment %}
-<div class="generic_container user_details_container">
-	<div class="generic_container user_details_left">
-		<div class="row">
-			<div class="col-sm-12">
-				<h3>Vota</h3>
-			</div>
-		</div>
-		{# success vote message block #}
-		<div class="msgContainerAction successVoteMessageAction {% if not user_already_voted %}hide{% endif %}">
-			<div class="row">
-				<div class="col-md-12">
-					<div class="alert alert-warning">
-						<span class="msgTextAction">Potrai votare nuovamente questo partecipante quando saranno passati 7 giorni dalla tua votazione.</span>
+					</div>
+					{# default info message block #}
+					<div class="col-sm-12 no-gutter msgContainerAction voteInfoMessageAction {% if user_already_voted %}hide{% endif %}">
+						<div class="alert alert-info">
+							<span class="msgTextAction">Dai il tuo voto a {{ user_info.first_name }} premendo il pulsante sotto.</span>
+						</div>
+					</div>
+					{% if not user_already_voted %}
+						{# vote buttom block #}
+						<div class="col-sm-12 no-gutter voteFormContainerAction generic_container_content">
+							<div class="background_container1 vote_user_container">
+								<div class="vote_user_button_container text-center">
+									<a href="#" class="btn btn-success showVoteModalClickAction">Vota adesso</a>
+								</div>
+							</div>
+						</div>
+					{% endif %}
+				</div>
+				<div class="col-md-8 no-gutter">
+					<div class="col-md-offset-1 col-md-11 no-gutter">
+						<div class="col-sm-12 no-gutter">
+							<h4>Book fotografico</h4>
+						</div>
+						<div>
+							{# image grid block {{{ #}
+							<div class="image_grid_container"></div>
+							<div class="text-center">
+								<a class="btn btn-success loadMoreElementsAction" href="#">Mostra altre foto</a>
+							</div>
+							{# image grid block }}} #}
+						</div>
 					</div>
 				</div>
 			</div>
-		</div>
-		{# default info message block #}
-		<div class="msgContainerAction voteInfoMessageAction {% if user_already_voted %}hide{% endif %}">
-			<div class="row">
-				<div class="col-md-12">
-					<div class="alert alert-info">
-						<span class="msgTextAction">Dai il tuo voto a {{ user_info.first_name }} premendo il pulsante sotto.</span>
-					</div>
+			{# photobook view }}} #}
+			{# interview view {{{ #}
+			<div class="hide view-interview_page navigationViewAction">
+				<div class="col-sm-12 no-gutter">
+					<h4>Intervista</h4>
+				</div>
+				<div class="col-sm-12 no-gutter">
+					{% if interview_questions_answers %}
+						{% for single_question in interview_questions_answers %}
+							<div class="question_answer_container">
+								<div class="question_container">{{ single_question.label }}</div>
+								<div class="answer_container">{{ single_question.value }}</div>
+							</div>
+						{% endfor %}
+					{% else %}
+						{{ user_info.first_name }} non ha ancora rilasciato interviste...prova a passare in un secondo momento!
+					{% endif %}
 				</div>
 			</div>
-		</div>
-		{% if not user_already_voted %}
-			{# vote buttom block #}
-			<div class="voteFormContainerAction generic_container_content">
-				<div class="background_container1 vote_user_container">
-					<div class="vote_user_button_container text-center">
-						<a href="#" class="btn btn-success showVoteModalClickAction">Vota adesso</a>
-					</div>
-				</div>
-			</div>
-		{% endif %}
-	</div>
-	<div class="generic_container user_details_right">
-		<div class="row">
-			<div class="col-sm-12">
-				<h3>Book fotografico</h3>
-			</div>
-		</div>
-		<div class="generic_container_content">
-			{# image grid block {{{ #}
-			<div class="row">
-				<div class="col-sm-12 image_grid_container"></div>
-			</div>
-			<div class="text-center">
-				<a class="btn btn-success loadMoreElementsAction" href="#">Mostra altre foto</a>
-			</div>
-			{# image grid block }}} #}
+			{# interview view }}} #}
 		</div>
 	</div>
-</div>
-{% endcomment %}
-{# profile navigation pages }}} #}
-
-{# hidden form #}
-<form class="hide" method="post" action="">
-</form>
+	{# hidden form #}
+	<form class="hide" method="post" action="">
+	</form>
 {% endblock container4_content %}
 
 {% block custom_js %}
