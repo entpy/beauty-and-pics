@@ -50,7 +50,6 @@
 		<div class="col-md-12 no-gutter">
 			<div class="{% if publish_status == published_status %}verified_label{% endif %} publishStatusAction">
 				{{ publish_status_label }}
-				<span class="publishContainerAction"></span>
 				{# with javascript appens 'publish' action or 'unpublish' action #}
 			</div>
 		</div>
@@ -250,7 +249,7 @@
 	/** Function to show publish button */
 	function addPublishAction() {
 		var actionHtml = '&nbsp;-&nbsp;<a href="#" class="btn btn-success showPublishNowModalClickAction" data-toggle="tooltip" data-placement="top" data-original-title="Clicca per pubblicare adesso la tua intervista">Pubblica adesso</a>';
-		$(".publishContainerAction").html(actionHtml);
+		$(".publishStatusAction").append(actionHtml);
 
 		return false;
 	}
@@ -258,7 +257,7 @@
 	/** Function to show unpublish button */
 	function addUnpublishAction() {
 		var actionHtml = '&nbsp;-&nbsp;<a href="#" class="unpublishSurveyClickAction" data-toggle="tooltip" data-placement="top" data-original-title="Clicca per spubblicare la tua intervista">Spubblica</a>';
-		$(".publishContainerAction").html(actionHtml);
+		$(".publishStatusAction").append(actionHtml);
 
 		return false;
 	}
