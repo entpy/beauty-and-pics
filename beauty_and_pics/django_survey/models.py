@@ -386,10 +386,9 @@ class UserSurvey(models.Model):
     def set_approving_status(self, approving_status):
         """Function to set approving status to an user survey"""
         return_var = False
-        if approving_status:
-            self.status = approving_status
-            self.save()
-            return_var = True
+        self.status = approving_status
+        self.save()
+        return_var = True
 
         return return_var
 
@@ -397,10 +396,9 @@ class UserSurvey(models.Model):
     def set_publishing_status(self, publishing_status):
         """Function to set publishing status to an user survey"""
         return_var = False
-        if publishing_status:
-            self.published = publishing_status
-            self.save()
-            return_var = True
+        self.published = publishing_status
+        self.save()
+        return_var = True
 
         return return_var
 

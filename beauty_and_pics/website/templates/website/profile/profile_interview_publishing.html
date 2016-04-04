@@ -50,17 +50,14 @@
 		<div class="col-md-12 no-gutter">
 			<div class="{% if publish_status == published_status %}verified_label{% endif %} publishStatusAction">
 				{{ publish_status_label }}
-				{% if publish_status == not_published_status and approving_status != pending_approval_status %}
-					&nbsp;-&nbsp;<a href="#" class="btn btn-success showPublishNowModalClickAction" data-toggle="tooltip" data-placement="top" data-original-title="Clicca per pubblicare adesso la tua intervista">Pubblica adesso</a>
-				{% elif publish_status == published_status %}
-					&nbsp;-&nbsp;<a href="#" class="unpublishSurveyClickAction" data-toggle="tooltip" data-placement="top" data-original-title="Clicca per spubblicare la tua intervista">Spubblica</a>
-				{% endif %}
+				<span class="publishContainerAction"></span>
+				{# with javascript appens 'publish' action or 'unpublish' action #}
 			</div>
 		</div>
 	</div>
 	<div class="col-md-6 text-xs-center text-md-right">
 		<div class="col-md-12 no-gutter">
-			<h4><a href="#" class="showApprovedLegendClickAction" data-toggle="tooltip" data-placement="top" data-original-title="Clicca per vedere la legenda">Stato approvazione</a></h4>
+			<h4><a href="#" class="showApprovedLegendClickAction" data-toggle="tooltip" data-placement="top" data-original-title="Clicca per visionare la legenda">Stato approvazione</a></h4>
 		</div>
 		<div class="col-md-12 no-gutter">
 			<div class="{% if approving_status == approved_status %}verified_label{% elif approving_status == not_approved_status %}not_verified_label{% elif approving_status == pending_approval_status %}in_progress_label{% endif %} approvingStatusAction">{{ approving_status_label }}</div>
@@ -75,7 +72,7 @@
 		</div>
 		<div class="col-md-12">
 			<div class="alert alert-info">
-				<p>Ecco un'anteprima di come il pubblico vedrà la tua intervista. Clicca su "modifica" per modificare le risposte. Se la tua intervista fosse già stata pubblicata, la modifica implicherebbe la spubblicazione dell'intervista dalla tua pagina profilo.</p>
+				<p>Ecco un'anteprima di come il pubblico vedrà la tua intervista. Clicca su "modifica" per modificare le risposte.</p>
 			</div>
 		</div>
 		<div class="col-md-12">
@@ -98,7 +95,7 @@
 		$(document).on("click", ".showApprovedLegendClickAction", function(){
 			var title = 'Legenda';
 			var content = '<div><b>Da approvare</b></div>';
-			content += '<div class="margin_bottom_15">L\'intervista non è ancora stata inviata per la verifica.</div>';
+			content += '<div class="margin_bottom_15">L\'intervista non è stata ancora inviata per ottenere l\'approvazione.</div>';
 			content += '<div><b>Approvazione in corso</b></div>';
 			content += '<div class="margin_bottom_15">L\'intervista è in fase di analisi per essere approvata.</div>';
 			content += '<div><b>Non approvato</b></div>';
@@ -119,7 +116,7 @@
 				var content = 'Clicca sul pulsante "<b>Pubblica adesso</b>" per pubblicare l\'intervista sul tuo profilo';
 			} else {
 				// testo se survey non ancora approvato
-				var content = 'Clicca sul pulsante "<b>Pubblica adesso</b>" per pubblicare l\'intervista sul tuo profilo.<br />Verrà mandata in revisione e, ad approvazione avvenuta, verrà pubblicata automaticamente sul tuo profilo.';
+				var content = 'Clicca sul pulsante "<b>Pubblica adesso</b>" per pubblicare l\'intervista sul tuo profilo.<br />Verrà mandata in revisione e, ad approvazione ottenuta, verrà pubblicata automaticamente sul tuo profilo.';
 			}
 
 			// open bootstrap modal
@@ -146,6 +143,14 @@
 			return false;
 		});
 
+		{% if publish_status == not_published_status and approving_status != pending_approval_status %}
+			// show publish action
+			addPublishAction();
+		{% elif publish_status == published_status %}
+			// show unpublish action
+			addUnpublishAction();
+		{% endif %}
+
 		// tooltip init
 		$('[data-toggle="tooltip"]').tooltip();
 	});
@@ -171,6 +176,8 @@
 			if (jsonResponse.publishing_class) {
 				cleanStatusContainerClass($('.publishStatusAction'));
 				$('.publishStatusAction').addClass(jsonResponse.publishing_class);
+				// add unpublish action
+				addUnpublishAction();
 			}
 
 			// approving msg and class
@@ -207,11 +214,14 @@
 		// success callback function
 		var successCallback = function(jsonResponse) {
 			// open bootstrap modal
-			bootstrapModalsObect.showGenericTextModal('Spubblicazione intervista', "L'intervista è stata spubblicata correttamente.");
+			bootstrapModalsObect.showGenericTextModal('Spubblicazione intervista', "L'intervista è stata spubblicata correttamente dal tuo profilo.");
 
 			// publishing msg and class
 			$('.publishStatusAction').html(jsonResponse.unpublishing_msg);
 			cleanStatusContainerClass($('.publishStatusAction'));
+
+			// add publish action
+			addPublishAction();
 
 			return true;
 		};
@@ -235,6 +245,22 @@
 	    $(".interviewErrorMsgAction").hide();
 
 	    return true;
+	}
+
+	/** Function to show publish button */
+	function addPublishAction() {
+		var actionHtml = '&nbsp;-&nbsp;<a href="#" class="btn btn-success showPublishNowModalClickAction" data-toggle="tooltip" data-placement="top" data-original-title="Clicca per pubblicare adesso la tua intervista">Pubblica adesso</a>';
+		$(".publishContainerAction").html(actionHtml);
+
+		return false;
+	}
+
+	/** Function to show unpublish button */
+	function addUnpublishAction() {
+		var actionHtml = '&nbsp;-&nbsp;<a href="#" class="unpublishSurveyClickAction" data-toggle="tooltip" data-placement="top" data-original-title="Clicca per spubblicare la tua intervista">Spubblica</a>';
+		$(".publishContainerAction").html(actionHtml);
+
+		return false;
 	}
 </script>
 {% endblock custom_js %}

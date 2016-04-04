@@ -1048,12 +1048,16 @@ def profile_get_prize(request):
 @user_passes_test(check_if_is_a_catwalker_user)
 def profile_interview(request):
     """Create interview view"""
-    survey_code = 'interview'
+    user_survey_obj = UserSurvey()
     user_answer_obj = UserAnswer()
-    # set current contest_type
     account_obj =  Account()
-    autenticated_user_data = account_obj.get_autenticated_user_data(request=request)
     contest_obj = Contest()
+    survey_code = 'interview'
+    exists_published_survey = False
+
+    # get logged in user data
+    autenticated_user_data = account_obj.get_autenticated_user_data(request=request)
+    # set current contest_type
     contest_obj.set_contest_type(request=request, contest_type=autenticated_user_data["contest_type"])
 
     # if this is a POST request we need to process the form data
@@ -1074,8 +1078,18 @@ def profile_interview(request):
 	logger.info("saved questions: " + str(request.POST))
         form = SurveyForm(extra_param1=survey_code, extra_param2=autenticated_user_data.get('gender'))
 
+    try:
+        # check if already exists a survey about this user
+        existing_user_survey_obj = user_survey_obj.get_user_survey(survey_code=survey_code, user_id=request.user.id)
+        # controllo se esiste già un survey pubblicato
+        if existing_user_survey_obj.published == DS_CONST_PUBLISHED:
+            exists_published_survey = True
+    except UserSurvey.DoesNotExist:
+        pass
+
     context = {
 	"user_first_name": autenticated_user_data["first_name"],
+        "exists_published_survey": exists_published_survey,
         "post" : request.POST,
         "form": form,
         "extra_param1": survey_code,
