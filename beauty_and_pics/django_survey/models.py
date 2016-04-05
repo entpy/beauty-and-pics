@@ -439,13 +439,13 @@ class UserSurvey(models.Model):
         return_var = False
 
         if approving_status == DS_CONST_MUST_BE_APPROVED:
-            return_var = 'Non ancora approvata'
+            return_var = 'Da approvare'
         elif approving_status == DS_CONST_PENDING_APPROVAL:
             return_var = 'Approvazione in corso'
         elif approving_status == DS_CONST_APPROVED:
-            return_var = 'Approvato'
+            return_var = 'Approvata'
         elif approving_status == DS_CONST_NOT_APPROVED:
-            return_var = 'Non approvato'
+            return_var = 'Non approvata'
 
         return return_var
 
@@ -454,9 +454,9 @@ class UserSurvey(models.Model):
         return_var = False
 
         if publishing_status == DS_CONST_NOT_PUBLISHED:
-            return_var = 'Non pubblicato'
+            return_var = 'Non pubblicata'
         elif publishing_status == DS_CONST_PUBLISHED:
-            return_var = 'Pubblicato'
+            return_var = 'Pubblicata'
 
         return return_var
 

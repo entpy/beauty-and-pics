@@ -1,9 +1,9 @@
 {% extends "website/inc/base_profile.html" %}
 {% load staticfiles website_extras %}
 
-{% block title %}{{ site_name }} | pubblica intervista{% endblock %}
+{% block title %}{{ site_name }} | pubblica la tua intervista{% endblock %}
 
-{% block description %}Pubblica intervista: richiedi l'approvazione per pubblicare l'intervista sulla tua pagina profilo.{% endblock %}
+{% block description %}Pubblica la tua intervista: richiedi l'approvazione per pubblicare l'intervista sulla tua pagina profilo.{% endblock %}
 
 {# navigation tabs active element #}
 {% block container4_navigation_profile_preferences %}active{% endblock %}
@@ -21,7 +21,7 @@
 {% block container4_content %}
 <div class="row">
 	<div class="col-md-12">
-		<h3>Pubblica intervista</h3>
+		<h3>Pubblica la tua intervista</h3>
 	</div>
 	<div class="col-md-12">
 		<div class="alert alert-info">
@@ -34,7 +34,7 @@
 			<div class="server_msg_container">
 				<div class="alert alert-danger">
 					<h4>Intervista non approvata</h4>
-					<p>Esegui le opportune modifiche, quindi ripubblica l'intervista cliccando sul pulsante "<b>Pubblica adesso</b>":</p>
+					<p>Esegui le opportune modifiche, quindi ripubblica l'intervista cliccando sul pulsante "<b>Pubblica adesso</b>":</p><br />
 					<span>{{ check_message }}</span>
 				</div>
 			</div>
@@ -56,7 +56,7 @@
 	</div>
 	<div class="col-md-6 text-xs-center text-md-right">
 		<div class="col-md-12 no-gutter">
-			<h4><a href="#" class="showApprovedLegendClickAction" data-toggle="tooltip" data-placement="top" data-original-title="Clicca per visionare la legenda">Stato approvazione</a></h4>
+			<h4><a href="#" class="showApprovedLegendClickAction" data-toggle="tooltip" data-placement="top" data-original-title="Clicca per aprire la legenda">Stato approvazione</a></h4>
 		</div>
 		<div class="col-md-12 no-gutter">
 			<div class="{% if approving_status == approved_status %}verified_label{% elif approving_status == not_approved_status %}not_verified_label{% elif approving_status == pending_approval_status %}in_progress_label{% endif %} approvingStatusAction">{{ approving_status_label }}</div>
@@ -97,9 +97,9 @@
 			content += '<div class="margin_bottom_15">L\'intervista non è stata ancora inviata per ottenere l\'approvazione.</div>';
 			content += '<div><b>Approvazione in corso</b></div>';
 			content += '<div class="margin_bottom_15">L\'intervista è in fase di analisi per essere approvata.</div>';
-			content += '<div><b>Non approvato</b></div>';
+			content += '<div><b>Non approvata</b></div>';
 			content += '<div class="margin_bottom_15">L\'intervista non è stata approvata, occorre fare le dovute modifiche secondo quanto specificato.</div>';
-			content += '<div><b>Approvato</b></div>';
+			content += '<div><b>Approvata</b></div>';
 			content += '<div>L\'intervista è stata approvata ed è pronta per la pubblicazione.</div>';
 
 			// open bootstrap modal

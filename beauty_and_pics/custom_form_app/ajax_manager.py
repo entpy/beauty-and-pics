@@ -839,7 +839,6 @@ class ajaxManager():
 
         return True
 
-    # TODO: testare
     def unpublish_interview(self):
         """Function to unpublish an user interview"""
         logger.debug("ajax_function: @@unpublish_interview@@")
