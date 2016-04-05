@@ -65,6 +65,7 @@ def verify_user_survey(request, *args, **kwargs):
     user_questions_answers = user_answer_obj.get_survey_answers_by_user_id(survey_code=existing_user_survey_obj.survey.survey_code, user_id=user_id, gender=account_info.get("gender"))
     # retrieve survey publishing status label and approving status label
     publishing_status_label = user_survey_obj.get_survey_publishing_label(publishing_status=existing_user_survey_obj.published)
+    approving_status_label = user_survey_obj.get_survey_approving_label(approving_status=existing_user_survey_obj.status)
 
     context = {
             'title': 'Approvazione intervista',
@@ -78,6 +79,7 @@ def verify_user_survey(request, *args, **kwargs):
             'user_questions_answers': user_questions_answers,
             'user_survey_id': kwargs['user_survey_id'] or '',
 	    'publishing_status_label': publishing_status_label,
+	    'approving_status_label': approving_status_label,
     }
 
     return render(request, 'admin/verify-interview.html', context)
