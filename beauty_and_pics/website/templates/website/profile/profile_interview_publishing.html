@@ -25,7 +25,7 @@
 	</div>
 	<div class="col-md-12">
 		<div class="alert alert-info">
-			<p>Ti manca poco per pubblicare la tua intervista, clicca sul pulsante "Pubblica adesso" per mandare in revisione la tua intervista ed ottenere l'approvazione, ad approvazione avvenuta verrà automaticamente pubblicata nella tua pagina profilo.<br /><b>Clicca sul pulsante "Pubblica adesso" per pubblicare la tua intervista.</b></p>
+			<p>Ti manca poco per pubblicare la tua intervista, clicca sul pulsante "Pubblica adesso" per mandare in revisione la tua intervista ed ottenere l'approvazione, ad approvazione ottenuta verrà automaticamente pubblicata nella tua pagina profilo.<br /><b>Clicca sul pulsante "Pubblica adesso" per pubblicare la tua intervista.</b></p>
 		</div>
 	</div>
 	{# check messages block {{{ #}
@@ -43,7 +43,7 @@
 	{# check messages block }}} #}
 </div>
 <div class="row">
-	<div class="col-md-6 text-xs-center text-md-left">
+	<div class="col-md-6 text-xs-center text-md-left margin_bottom_20">
 		<div class="col-md-12 no-gutter">
 			<h4>Stato pubblicazione</h4>
 		</div>
@@ -112,7 +112,7 @@
 		$(document).on("click", ".showPublishNowModalClickAction", function(){
 			if ("{{ approving_status }}" == "{{ approved_status }}") {
 				// testo se survey già approvato
-				var content = 'Clicca sul pulsante "<b>Pubblica adesso</b>" per pubblicare l\'intervista sul tuo profilo';
+				var content = 'Clicca sul pulsante "<b>Pubblica adesso</b>" per pubblicare l\'intervista sul tuo profilo.';
 			} else {
 				// testo se survey non ancora approvato
 				var content = 'Clicca sul pulsante "<b>Pubblica adesso</b>" per pubblicare l\'intervista sul tuo profilo.<br />Verrà mandata in revisione e, ad approvazione ottenuta, verrà pubblicata automaticamente sul tuo profilo.';

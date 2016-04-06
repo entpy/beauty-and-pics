@@ -351,7 +351,6 @@ class UserSurvey(models.Model):
 
         return return_var
 
-    # TODO: testare
     def get_user_survey_by_id(self, user_survey_id):
         """Function to retrieve user survey by user_survey_id"""
         return_var = None
@@ -362,7 +361,6 @@ class UserSurvey(models.Model):
 
         return return_var
 
-    # TODO: testare
     def get_user_survey(self, survey_code, user_id):
         """Function to retrieve user survey"""
         return_var = None
@@ -373,7 +371,6 @@ class UserSurvey(models.Model):
 
         return return_var
 
-    # TODO: testare
     def is_survey_approved(self):
         """Function to test if a survey object was approved"""
         return_var = False
@@ -382,7 +379,6 @@ class UserSurvey(models.Model):
 
         return return_var
 
-    # TODO: testare
     def set_approving_status(self, approving_status):
         """Function to set approving status to an user survey"""
         return_var = False
@@ -392,7 +388,6 @@ class UserSurvey(models.Model):
 
         return return_var
 
-    # TODO: testare
     def set_publishing_status(self, publishing_status):
         """Function to set publishing status to an user survey"""
         return_var = False
@@ -402,7 +397,6 @@ class UserSurvey(models.Model):
 
         return return_var
 
-    # TODO: testare
     def set_pending_approving_status(self):
         """Function to set approving status to pending"""
         return_var = False
@@ -423,7 +417,6 @@ class UserSurvey(models.Model):
 
         return return_var
 
-    # TODO: testare
     def mark_as_not_approved(self, check_message):
         """Function to mark survey as not approved"""
         return_var = False
@@ -530,7 +523,6 @@ class UserAnswer(models.Model):
 	    return_var[single_question_answer.get('question__question_code')] = single_question_answer.get('value')
 	return return_var
 
-    # TODO: check
     def get_survey_answers_by_user_id(self, survey_code, user_id, gender=None, only_if_published=False):
         """
             Function to retrieve all question_codes, question_labels and related answer_values by survey_code and user_id
@@ -541,7 +533,6 @@ class UserAnswer(models.Model):
 	else:
 	    question_answer_list = list(UserAnswer.objects.values('question__question_code', 'question__question_type', 'value').filter(user_survey__survey__survey_code=survey_code, user_survey__user__id=user_id, question__not_to_show=False,value__isnull=False).order_by('question__order'))
 
-        # TODO (check): prelevo label in base al gender
         if gender == 'man':
             element_type = 'question_text_man'
         else:

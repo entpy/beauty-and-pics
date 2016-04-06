@@ -788,7 +788,7 @@ class ajaxManager():
                     publishing_class = 'verified_label'
                     approving_msg = user_survey_obj.get_survey_approving_label(approving_status=DS_CONST_APPROVED)
                     approving_class = 'verified_label'
-                    popup_msg = "L'intervista è stata pubblicata correttamente sul tuo profilo"
+                    popup_msg = "L'intervista è stata pubblicata correttamente sul tuo profilo."
                 else:
                     # set approving status
                     existing_user_survey_obj.set_pending_approving_status()
@@ -818,7 +818,7 @@ class ajaxManager():
                     publishing_class = ''
                     approving_msg = user_survey_obj.get_survey_approving_label(approving_status=DS_CONST_PENDING_APPROVAL)
                     approving_class = 'in_progress_label'
-                    popup_msg = "L'intervista è in fase di approvazione, verrà pubblicata automaticamente non appena sarà approvata.<br />Rimani in attesa!"
+                    popup_msg = "Grazie per la partecipazione, l'intervista è in fase di approvazione, verrà pubblicata automaticamente non appena sarà approvata.<br />Rimani in attesa!"
 
         if error_flag:
             data = {'error' : True, 'msg' : msg}

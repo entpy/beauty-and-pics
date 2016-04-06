@@ -22,7 +22,6 @@ class SurveyAdmin(admin.ModelAdmin):
 
 # admin custom view {{{
 # require AdminPlus -> https://github.com/jsocol/django-adminplus
-# TODO: check che funzioni
 def verify_user_survey(request, *args, **kwargs):
     """View to approve or disapprove a user survey (admin side)"""
 

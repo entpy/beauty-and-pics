@@ -1043,7 +1043,6 @@ def profile_get_prize(request):
 
     return render(request, 'website/profile/profile_get_prize.html', context)
 
-#TODO: check dei parametri addizionali passati nei form
 @login_required
 @user_passes_test(check_if_is_a_catwalker_user)
 def profile_interview(request):
