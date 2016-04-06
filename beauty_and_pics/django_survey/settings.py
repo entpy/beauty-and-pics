@@ -2256,8 +2256,8 @@ DS_QUESTIONS_ANSWERS_LABEL = {
 	'question_hint_man' : False,
     },
     'interview__block1__block600__q3' : {
-	'question_text_woman' : "Cosa ti appassiona nel mondo della moda?",
-	'question_text_man' : "Cosa ti appassiona nel mondo della moda?",
+	'question_text_woman' : "Cosa ti appassiona del mondo della moda?",
+	'question_text_man' : "Cosa ti appassiona del mondo della moda?",
 	'question_hint_woman' : False,
 	'question_hint_man' : False,
     },
