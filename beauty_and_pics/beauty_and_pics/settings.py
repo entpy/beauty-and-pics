@@ -23,8 +23,6 @@ SECRET_KEY = '!4gs-mrlkct9)_j(afw-i1)gjoj21kp_y^zhf3-9+9tatkge4k' # SECRET_KEY o
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-TEMPLATE_DEBUG = True
-
 ALLOWED_HOSTS = []
 
 # Application definition
@@ -80,18 +78,27 @@ ROOT_URLCONF = 'beauty_and_pics.urls'
 
 WSGI_APPLICATION = 'beauty_and_pics.wsgi.application'
 
-# TODO: invece di ridefinire tutto appendere all'esitente il nuovo context
-TEMPLATE_CONTEXT_PROCESSORS = (
-    "django.contrib.auth.context_processors.auth",
-    "django.core.context_processors.debug",
-    "django.core.context_processors.i18n",
-    "django.core.context_processors.media",
-    "django.core.context_processors.static",
-    "django.core.context_processors.tz",
-    "django.contrib.messages.context_processors.messages",
-    "django.core.context_processors.request", # questo avrei voluto evitarlo, ma serve per l'app 'django_bootstrap_breadcrumbs'
-    "beauty_and_pics.contest_processors.common_contest_processors" # <= il nuovo context
-)
+TEMPLATES = [
+    {
+        'BACKEND': 'django.template.backends.django.DjangoTemplates',
+        'DIRS': [],
+        'APP_DIRS': True,
+        'OPTIONS': {
+            'context_processors': [
+                # 'django.middleware.security.SecurityMiddleware', XXX: per farlo funzionare occorre fare ulteriori modifiche
+                'django.contrib.auth.context_processors.auth',
+                'django.template.context_processors.debug',
+                'django.template.context_processors.i18n',
+                'django.template.context_processors.media',
+                'django.template.context_processors.static',
+                'django.template.context_processors.tz',
+                'django.contrib.messages.context_processors.messages',
+                'django.template.context_processors.request', # questo avrei voluto evitarlo, ma serve per l'app 'django_bootstrap_breadcrumbs'
+                'beauty_and_pics.contest_processors.common_contest_processors' # <= il nuovo context
+            ],
+        },
+    },
+]
 
 # message framework custom tags {{{
 POPUP_SUCCESS = 100

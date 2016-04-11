@@ -98,3 +98,28 @@ Scrivere qualcosa sui social
 Finire il restyling grafico del www (solo grafica)
 Fix del loader delle immagini (apro upload immagine profilo, poi chiudo e riapro upload immagine book mi viene dato un messaggio rosso)
 Realizzare il restyling del www
+
+Passaggio a Django 1.8.12
+-------------------------
+$ pip install -U pip
+- dalle impostazioni locali commentare 'TEMPLATE_DEBUG', visto che ora il valore viene preso direttamente dalla variabile DEBUG
+$ pip install Django==1.8.12
+$ python -Wall manage.py test
+$ pip install django-cron==0.4.6
+$ python manage.py collectstatic
+$ python manage.py makemigrations
+$ python manage.py migrate
+$ python manage.py syncdb
+
+Passaggio a Django 1.9.5 (non ancora funzionante)
+-------------------------
+$ pip install -U pip
+- dalle impostazioni locali
+	- aggiunto 'django.middleware.security.SecurityMiddleware'
+	- django.db.backends.postgresql_psycopg2 => django.db.backends.postgresql
+X check Paginator.page_range nella creazione di una nuova notifica nell'admin
+- i namespace degli urls sono stati portati ell'interno degli urls delle app
+$ pip install -U Django
+$ python manage.py collectstatic
+$ python manage.py makemigrations
+$ python manage.py migrate
