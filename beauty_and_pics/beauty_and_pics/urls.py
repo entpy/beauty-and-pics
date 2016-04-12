@@ -74,6 +74,9 @@ urlpatterns = patterns('',
     # ajax view
     url(r'^ajax/', include('custom_form_app.urls', namespace="custom_form_app")),
 
+    # postman
+    url(r'^messages/', include('postman.urls', namespace='postman', app_name='postman')),
+
     # upload image
     url(r'^upload_image/', include('upload_image_box.urls', namespace="upload_image_box")),
     # upload image example
