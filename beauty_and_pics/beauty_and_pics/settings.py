@@ -48,7 +48,7 @@ INSTALLED_APPS = (
     # 'image_contest_app', # abilitare quando le votazioni saranno inespugnabili :( #imagecontestapptag
     'django_bootstrap_breadcrumbs',
     'django_survey',
-    'postman',
+    # 'postman',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -95,7 +95,7 @@ TEMPLATES = [
                 'django.template.context_processors.tz',
                 'django.contrib.messages.context_processors.messages',
                 'django.template.context_processors.request', # questo avrei voluto evitarlo, ma serve per l'app 'django_bootstrap_breadcrumbs'
-                'beauty_and_pics.contest_processors.common_contest_processors' # <= il nuovo context
+                'beauty_and_pics.contest_processors.common_contest_processors', # <= il nuovo context
             ],
         },
     },

@@ -102,14 +102,29 @@ Realizzare il restyling del www
 Passaggio a Django 1.8.12
 -------------------------
 $ pip install -U pip
-- dalle impostazioni locali commentare 'TEMPLATE_DEBUG', visto che ora il valore viene preso direttamente dalla variabile DEBUG
+- dalle impostazioni locali eliminare 'TEMPLATE_DEBUG', visto che ora il valore viene preso direttamente dalla variabile DEBUG
 $ pip install Django==1.8.12
-$ python -Wall manage.py test
 $ pip install django-cron==0.4.6
 $ python manage.py collectstatic
 $ python manage.py makemigrations
 $ python manage.py migrate
 $ python manage.py syncdb
+
+# fix delle app senza script per la migrazione (per ogni app)
+# http://stackoverflow.com/questions/29888046/django-1-8-create-initial-migrations-for-existing-schema
+mkdir migrations
+cd migrations
+touch __init__.py
+python manage.py migrate --fake
+python manage.py makemigrations django_survey
+python manage.py migrate --fake-initial
+
+# test che sia tutto ok
+$ python -Wall manage.py test
+
+# disinstallazione di south
+pip uninstall South
+
 
 Passaggio a Django 1.9.5 (non ancora funzionante)
 -------------------------

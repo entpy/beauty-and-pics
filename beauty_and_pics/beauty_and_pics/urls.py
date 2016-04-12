@@ -1,4 +1,4 @@
-from django.conf.urls import patterns, include, url
+from django.conf.urls import include, url
 from django.contrib import admin
 from adminplus.sites import AdminSitePlus
 from django.conf import settings
@@ -12,7 +12,7 @@ admin.autodiscover()
 handler404 = 'website.views.custom404_view'
 handler500 = 'website.views.custom500_view'
 
-urlpatterns = patterns('',
+urlpatterns = [
     # www 
     url(r'^$', 'website.views.www_index', name='www_index'),
     url(r'^index/$', 'website.views.www_index', name='www_index'),
@@ -74,9 +74,6 @@ urlpatterns = patterns('',
     # ajax view
     url(r'^ajax/', include('custom_form_app.urls', namespace="custom_form_app")),
 
-    # postman
-    url(r'^messages/', include('postman.urls', namespace='postman', app_name='postman')),
-
     # upload image
     url(r'^upload_image/', include('upload_image_box.urls', namespace="upload_image_box")),
     # upload image example
@@ -87,4 +84,4 @@ urlpatterns = patterns('',
     url(r'^l/evento-tendenze-moda/$', 'website.views.landing_landing2', name='landing_landing2'),
     url(r'^l/beauty-and-pics/$', 'website.views.beauty_and_pics', name='beauty_and_pics'),
 
-) + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT) + static(settings.MEDIA_URL_TMP, document_root=settings.MEDIA_ROOT)
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT) + static(settings.MEDIA_URL_TMP, document_root=settings.MEDIA_ROOT)
