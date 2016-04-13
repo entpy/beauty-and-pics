@@ -366,3 +366,29 @@ class User_Notify(models.Model):
 
     def __unicode__(self):
         return str(self.user_notify_id)
+
+"""
+# le notifiche seguenti sono on top rispetto a quelle sopra
+# e vengono visualizzate nella barra di navigazione (icona notifiche)
+# e in una pagina con il riepilogo delle notifiche
+
+# oggetto per aggiungere una notifica nella barra delle notifiche
+class NotifyBar(models.Model):
+    notify_id = models.AutoField(primary_key=True)
+    notify_bar_type = models.ForeignKey(NotifyBarType)
+    text = models.CharField(max_length=500)
+    url = models.CharField(max_length=150, null=True, blank=True)
+    creation_date = models.DateTimeField(auto_now_add=True)
+
+# tipologia di notifiche nella barra delle notifiche
+class NotifyBarType(models.Model):
+    notify_bar_type_id = models.AutoField(primary_key=True)
+    type = models.CharField(max_length=200)
+
+# notifiche "visualizzate" (cioè cliccate o marcate come lette) dall'utente
+class UserNotifyBar(models.Model):
+    user_notify_bar_id = models.AutoField(primary_key=True)
+    user = models.ForeignKey(User)
+    notify_bar = models.ForeignKey(NotifyBar)
+    read_date = models.DateTimeField(auto_now_add=True)
+"""
