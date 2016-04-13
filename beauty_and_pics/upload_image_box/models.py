@@ -126,22 +126,26 @@ class cropUploadedImages(models.Model):
         Function to write an image into cloud storage
         (Es. Amazon S3 or Aruba Object Cloud Storage)
         """
-	import boto
-	import boto.s3.connection
-	from boto.s3.bucket import Bucket
+	import boto3
+	# from boto.s3.connection import S3Connection
+	# from boto.s3.bucket import Bucket
         if image_obj and image_path and image_name:
 	    # create boto connection
-	    conn = boto.connect_s3(calling_format = boto.s3.connection.OrdinaryCallingFormat(),)
+	    # conn = boto.connect_s3(calling_format = boto.s3.connection.OrdinaryCallingFormat(),)
+	    s3 = boto3.resource('s3')
 	    # logger.info("bucket list: " + str(boto_bucket)) # connection test
 	    # set bucket
-	    boto_bucket = Bucket(connection=conn, name=self.get_bucket_name())
+	    boto_bucket = s3.Bucket(self.get_bucket_name())
 	    # prepare new file
+	    """
 	    key = boto_bucket.new_key(image_path)
 	    # retrieve image type
 	    image_type = self.get_image_type(image_name=image_name)
 	    key.set_metadata("Content-Type", image_type["mimetype"])
             # write image inside bucket (with show permission)
 	    key.set_contents_from_string(self.prepare_image_to_cloud(image=image_obj, image_name=image_name), policy='public-read')
+	    """
+	    boto_bucket.put_object(Key=image_name, Body=self.prepare_image_to_cloud(image=image_obj, image_name=image_name))
 	    # logger.info("image tostring: " + str(self.prepare_image_to_cloud(image=image_obj, image_name=image_name)))
 
         return image_obj
