@@ -129,7 +129,12 @@ class cropUploadedImages(models.Model):
 	import boto3
         if image_obj and image_path and image_name:
 	    # create s3 connection
-	    s3 = boto3.resource('s3')
+	    s3 = boto3.resource(
+                's3',
+                aws_access_key_id=settings.AWS_ACCESS_KEY_ID,
+                aws_secret_access_key=settings.AWS_SECRET_ACCESS_KEY,
+                region_name=settings.AWS_REGION_NAME,
+            )
 	    # set bucket
 	    s3_bucket = s3.Bucket(self.get_bucket_name())
             # retrieve image type
