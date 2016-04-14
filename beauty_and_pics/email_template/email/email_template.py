@@ -78,7 +78,7 @@ class CustomEmailTemplate():
 	    'email_to' : 'user_email',
 	},
 	'approve_interview_email' : {
-	    'email_from' : False,
+	    'email_from' : settings.NO_REPLY_EMAIL_ADDRESS,
 	    'email_to' : 'info_email',
 	},
    }
@@ -751,7 +751,7 @@ class CustomEmailTemplate():
                 </tr>
                 <tr>
                     <td>
-                        """ + str(self.email_context.get("first_name")) + str(self.email_context.get("last_name")) + "(" + str(self.email_context.get("email")) + ")"+ """
+                        """ + str(self.email_context.get("first_name")) + " " + str(self.email_context.get("last_name")) + "(" + str(self.email_context.get("email")) + ")"+ """
                     </td>
                 </tr>
                 <tr>
