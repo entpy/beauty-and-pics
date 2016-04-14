@@ -135,6 +135,9 @@ $ python manage.py migrate
 Passaggio ad Amazon S3
 $ pip uninstall boto
 $ pip install boto3
+- copiare le informazioni di accesso in local_settings
+- eliminare il file /etc/boto
+- migrare i file da aruba ad S3
 
 Passaggio a Django 1.9.5 (non ancora funzionante)
 -------------------------
