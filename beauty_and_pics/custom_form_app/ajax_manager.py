@@ -810,7 +810,6 @@ class ajaxManager():
                         email_name="approve_interview_email",
                         email_context=email_context,
                         template_type="user",
-                        email_from=account_info["email"],
                     )
 
                     # setto messaggio di pubblicazione (e classe), di approvazione (e classe) e testo del popup
