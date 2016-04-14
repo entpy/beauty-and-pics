@@ -123,32 +123,46 @@ class cropUploadedImages(models.Model):
 
     def write_image_into_cloud(self, image_obj, image_path, image_name):
         """
-        Function to write an image into cloud storage
+        Function to write an object (image) into cloud storage
         (Es. Amazon S3 or Aruba Object Cloud Storage)
         """
 	import boto3
-	# from boto.s3.connection import S3Connection
-	# from boto.s3.bucket import Bucket
         if image_obj and image_path and image_name:
-	    # create boto connection
-	    # conn = boto.connect_s3(calling_format = boto.s3.connection.OrdinaryCallingFormat(),)
+	    # create s3 connection
 	    s3 = boto3.resource('s3')
-	    # logger.info("bucket list: " + str(boto_bucket)) # connection test
 	    # set bucket
-	    boto_bucket = s3.Bucket(self.get_bucket_name())
-	    # prepare new file
-	    """
-	    key = boto_bucket.new_key(image_path)
-	    # retrieve image type
-	    image_type = self.get_image_type(image_name=image_name)
-	    key.set_metadata("Content-Type", image_type["mimetype"])
-            # write image inside bucket (with show permission)
-	    key.set_contents_from_string(self.prepare_image_to_cloud(image=image_obj, image_name=image_name), policy='public-read')
-	    """
-	    boto_bucket.put_object(Key=image_name, Body=self.prepare_image_to_cloud(image=image_obj, image_name=image_name))
-	    # logger.info("image tostring: " + str(self.prepare_image_to_cloud(image=image_obj, image_name=image_name)))
+	    s3_bucket = s3.Bucket(self.get_bucket_name())
+            # retrieve image type
+            image_type = self.get_image_type(image_name=image_name)
+            # upload object (image) to S3 => http://boto3.readthedocs.org/en/latest/reference/services/s3.html?highlight=metadata#S3.Client.put_object
+            s3_bucket.put_object(
+                Key=image_path, # to build the "folder" structure like "office/3/123456789.jpg"
+                Body=self.prepare_image_to_cloud(image=image_obj, image_name=image_name),
+                ACL = 'public-read',
+                ContentType=image_type["mimetype"],
+            )
 
         return image_obj
+
+    def check_if_bucket_exists(self, s3_resource, bucket_name):
+        """
+        Function to check if a bucket exists on S3
+        https://boto3.readthedocs.org/en/latest/guide/migrations3.html 'Accessing a Bucket'
+        Non utilizzata perchè rallenta troppo la chiamata
+        """
+        import botocore
+        return_var = True
+        try:
+            s3_resource.meta.client.head_bucket(Bucket=bucket_name)
+        except botocore.exceptions.ClientError as e:
+            # If a client error is thrown, then check that it was a 404 error.
+            # If it was a 404 error, then the bucket does not exist.
+            error_code = int(e.response['Error']['Code'])
+            if error_code == 404:
+                logger.error("ATTENZIONE: il bucket '" + str(bucket_name) + "' NON esiste su S3.")
+                return_var = False
+
+        return return_var
 
     def convert_image_to_jpeg(self, image, image_name):
         """Function to convert an image to jpeg"""
