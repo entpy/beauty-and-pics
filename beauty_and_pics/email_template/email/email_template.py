@@ -5,6 +5,7 @@ from django.core.mail import mail_admins
 from django.template.loader import render_to_string
 from django.template import Context, Template
 from django.conf import settings
+from beauty_and_pics.consts import project_constants
 from itertools import chain
 import calendar, logging, json, sys, re, random
 
@@ -35,26 +36,29 @@ class CustomEmailTemplate():
     # email template name
     template_name = None
 
+    # no-reply from email
+    no_reply_from_email = str(project_constants.SITE_NAME) + ' <' + str(settings.NO_REPLY_EMAIL_ADDRESS) + '>'
+
     # available email name
     available_email_name = {
 	'recover_password_email' : {
-	    'email_from' : settings.NO_REPLY_EMAIL_ADDRESS,
+	    'email_from' : no_reply_from_email,
 	    'email_to' : 'user_email',
 	},
 	'welcome_email' : {
-	    'email_from' : settings.NO_REPLY_EMAIL_ADDRESS,
+	    'email_from' : no_reply_from_email,
 	    'email_to' : 'user_email',
 	},
 	'contest_closed' : {
-	    'email_from' : settings.NO_REPLY_EMAIL_ADDRESS,
+	    'email_from' : no_reply_from_email,
 	    'email_to' : 'user_email',
 	},
 	'contest_opened' : {
-	    'email_from' : settings.NO_REPLY_EMAIL_ADDRESS,
+	    'email_from' : no_reply_from_email,
 	    'email_to' : 'user_email',
 	},
 	'contest_report' : {
-	    'email_from' : settings.NO_REPLY_EMAIL_ADDRESS,
+	    'email_from' : no_reply_from_email,
 	    'email_to' : 'user_email',
 	},
 	'help_request_email' : {
@@ -66,7 +70,7 @@ class CustomEmailTemplate():
 	    'email_to' : 'info_email',
 	},
 	'custom_notify_email' : {
-	    'email_from' : settings.NO_REPLY_EMAIL_ADDRESS,
+	    'email_from' : no_reply_from_email,
 	    'email_to' : 'user_email',
 	},
 	'get_prize_email' : {
@@ -74,11 +78,11 @@ class CustomEmailTemplate():
 	    'email_to' : 'info_email',
 	},
 	'user_activate_email' : {
-	    'email_from' : settings.NO_REPLY_EMAIL_ADDRESS,
+	    'email_from' : no_reply_from_email,
 	    'email_to' : 'user_email',
 	},
 	'approve_interview_email' : {
-	    'email_from' : settings.NO_REPLY_EMAIL_ADDRESS,
+	    'email_from' : no_reply_from_email,
 	    'email_to' : 'info_email',
 	},
    }
