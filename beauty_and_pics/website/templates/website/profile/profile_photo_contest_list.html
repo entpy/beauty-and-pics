@@ -3,7 +3,7 @@
 
 {% block title %}{{ site_name }} | concorsi a tema{% endblock %}
 
-{% block description %}Concorsi a tema: da questa pagina puoi predenre parte ad un concorso a tema, partecipa a tutti quelli che preferisci.{% endblock %}
+{% block description %}Concorsi a tema: da questa pagina puoi prendere parte ad un concorso a tema, partecipa a tutti quelli che preferisci.{% endblock %}
 
 {# navigation tabs active element #}
 {% block container4_navigation_profile_preferences %}active{% endblock %}
@@ -51,6 +51,14 @@
 			var photocontestLikeLimit = $(this).data("photocontestLikeLimit");
 			// open bootstrap modal
 			bootstrapModalsObect.showPhotocontestInfoModal(photocontestCode, photocontestName, photocontestDescription, photocontestLikeLimit);
+
+			return false;
+		});
+
+		// enter into the photocontest
+		$(document).on("click",".photocontestEnterClickAction", function(){
+			var photocontestCode = $(this).data("photocontestCode");
+			location.href = "/profilo/concorsi-a-tema/" + photocontestCode + "/";
 
 			return false;
 		});

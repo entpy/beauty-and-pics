@@ -915,7 +915,7 @@ var bootstrapModalsObect = {
 			messageBlockTemplate += '<div class="col-md-8"><div>' + photocontestDescription + '</div><div>"Mi piace" richiesti: <b>' + photocontestLikeLimit + '</b></div></div>';
 			messageBlockTemplate += '</div>';
 			$(".bootstrap_modal").find('.modal-title').html(photocontestName);
-			$(".bootstrap_modal").find('.modal-footer').html('<button type="button" class="btn btn-default" data-dismiss="modal">Annulla</button><button type="button" class="btn btn-success" data-dismiss="modal">Partecipa</button>');
+			$(".bootstrap_modal").find('.modal-footer').html('<button type="button" class="btn btn-default" data-dismiss="modal">Annulla</button><button type="button" class="btn btn-success photocontestEnterClickAction" data-photocontest-code="' + photocontestCode + '" data-dismiss="modal">Partecipa</button>');
 			$(".bootstrap_modal").find('.modal-body').html(messageBlockTemplate);
 			this.showBootstrapModal();
 		}

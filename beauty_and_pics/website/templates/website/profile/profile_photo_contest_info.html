@@ -1,0 +1,30 @@
+{% extends "website/inc/base_profile.html" %}
+{% load staticfiles %}
+
+{% block title %}{{ site_name }} | informazioni concorso a tema{% endblock %}
+
+{% block description %}Informazioni concorso a tema: da questa pagina puoi visualizzare le informazioni rispetto al concorso a tema selezionato.{% endblock %}
+
+{# navigation tabs active element #}
+{% block container4_navigation_profile_preferences %}active{% endblock %}
+
+{% block container4_content %}
+<div class="row">
+	<div class="col-md-12">
+		<h3>Visualizza informazioni</h3>
+	</div>
+	<div class="col-md-12">
+		<div class="alert alert-info">
+			<p>Visualizza le informazioni riguardo al concorso a tema.</p>
+		</div>
+	</div>
+</div>
+{% endblock container4_content %}
+
+{% block custom_js %}
+{{ block.super }}
+<script>
+	$(document).ready(function(){
+	});
+</script>
+{% endblock custom_js %}

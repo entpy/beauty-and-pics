@@ -23,4 +23,11 @@ DPC_PHOTO_CONTEST_INFO = {
         'rules' : ['Valide solo foto di selfie'],
         'like_limit' : 25,
     },
+    # TODO
+    'selfie' : {
+        'name' : "Giochi d'ombre",
+        'description' : "Quale sarà il selfie più apprezzato? Scoprilo con questo concorso dedicato ai selfie.",
+        'rules' : ['Valide solo foto di selfie'],
+        'like_limit' : 25,
+    },
 }
