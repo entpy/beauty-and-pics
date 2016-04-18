@@ -64,6 +64,8 @@ urlpatterns = [
     url(r'^profilo/pubblicazione-intervista/$', 'website.views.profile_interview_publishing', name='profile_interview_publishing'),
     #imagecontestapptag
     # url(r'^profilo/foto-bacheca/(?:(?P<image_add_success>\d+)/)?$', 'website.views.profile_photoboard', name='profile_photoboard'),
+    # django_photo_contest
+    url(r'^profilo/concorsi-a-tema/$', 'website.views.profile_photo_contest_list', name='profile_photo_contest_list'),
 
     # email test
     url(r'^email-test/(?P<email_name>\w+)/(?P<email_mode>\w+)/$', 'website.views.email_test', name='email_test'),

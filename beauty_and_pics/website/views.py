@@ -1157,6 +1157,27 @@ def profile_interview_publishing(request):
     }
 
     return render(request, 'website/profile/profile_interview_publishing.html', context)
+
+@login_required
+@user_passes_test(check_if_is_a_catwalker_user)
+def profile_photo_contest_list(request):
+    """View to show all photo contest"""
+    from django_photo_contest.models import PhotoContest
+
+    account_obj =  Account()
+    contest_obj = Contest()
+    photo_contest_obj = PhotoContest()
+
+    # get logged in user data
+    autenticated_user_data = account_obj.get_autenticated_user_data(request=request)
+    # set current contest_type
+    contest_obj.set_contest_type(request=request, contest_type=autenticated_user_data["contest_type"])
+
+    context = {
+        "photo_contest_list" : photo_contest_obj.get_photocontest_fullinfo_list(contest_type_code=autenticated_user_data["contest_type"]),
+    }
+
+    return render(request, 'website/profile/profile_photo_contest_list.html', context)
 # }}}
 
 # test email {{{

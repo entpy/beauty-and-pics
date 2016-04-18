@@ -902,6 +902,26 @@ var bootstrapModalsObect = {
 
 		return false;
 	},
+
+	/* Function to build and show photocontest info modal bootstrap modal */
+	showPhotocontestInfoModal(photocontestCode, photocontestName, photocontestDescription, photocontestLikeLimit) {
+		if (photocontestCode && photocontestName && photocontestDescription && photocontestLikeLimit) {
+			this.resetBootstrapModal();
+			var messageBlockTemplate = '';
+			messageBlockTemplate += '<div class="row">';
+			messageBlockTemplate += '<div class="col-md-4">';
+			messageBlockTemplate += '<img alt="' + photocontestCode + '" src="/static/website/img/preferences_account_info.png">';
+			messageBlockTemplate += '</div>';
+			messageBlockTemplate += '<div class="col-md-8"><div>' + photocontestDescription + '</div><div>"Mi piace" richiesti: <b>' + photocontestLikeLimit + '</b></div></div>';
+			messageBlockTemplate += '</div>';
+			$(".bootstrap_modal").find('.modal-title').html(photocontestName);
+			$(".bootstrap_modal").find('.modal-footer').html('<button type="button" class="btn btn-default" data-dismiss="modal">Annulla</button><button type="button" class="btn btn-success" data-dismiss="modal">Partecipa</button>');
+			$(".bootstrap_modal").find('.modal-body').html(messageBlockTemplate);
+			this.showBootstrapModal();
+		}
+
+		return false;
+	},
 	/* custom bootstrap modal functions }}} */
 
 	/* modal image block, with must be a size: eg. '100%' or '129px' or '12em' ecc... */
