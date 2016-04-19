@@ -24,6 +24,7 @@ class PhotoContest(models.Model):
 
     class Meta:
         app_label = 'django_photo_contest'
+        unique_together = ('code', 'contest_type')
 
     def __unicode__(self):
         return str(self.photo_contest_id) + " " + str(self.contest_type.code) + " " + str(self.code)
@@ -106,6 +107,16 @@ class PhotoContest(models.Model):
 
         return True
 
+    def get_by_code_contest_type(self, code, contest_type_code):
+        """Function to retrieve a photocontest obj by code and contest type"""
+        return_var = None
+        try:
+            return_var = PhotoContest.objects.get(code=code, contest_type__code=contest_type_code)
+        except PhotoContest.DoesNotExist:
+            raise
+
+        return return_var
+
 class PhotoContestPictures(models.Model):
     photo_contest_pictures_id = models.AutoField(primary_key=True)
     user = models.ForeignKey(User) # related user
@@ -117,9 +128,24 @@ class PhotoContestPictures(models.Model):
 
     class Meta:
         app_label = 'django_photo_contest'
+        unique_together = ('user', 'photo_contest')
 
     def __unicode__(self):
         return str(self.photo_contest_pictures_id) + " " + str(self.user.id) + " " + str(self.photo_contest.code)
+
+    def exists_user_photocontest(self, user_id, photocontest_code):
+        """Function to check if exists user photocontest picture"""
+        return PhotoContestPictures.objects.filter(user__id=user_id, photo_contest__code=photocontest_code).exists()
+
+    def insert_photo_into_contest(self, user_id, photo_contest_id, image_id):
+        """Function to insert a photo into a photocontest"""
+        photo_contest_pictures_obj = PhotoContestPictures()
+        photo_contest_pictures_obj.user_id = user_id
+        photo_contest_pictures_obj.photo_contest_id = photo_contest_id
+        photo_contest_pictures_obj.image_id = image_id
+        photo_contest_pictures_obj.save()
+
+        return True
 
 class PhotoContestVote(models.Model):
     """

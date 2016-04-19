@@ -52,12 +52,13 @@ class ajaxManager():
         self.__valid_action_list += ('add_favorite',)
         self.__valid_action_list += ('get_user_info',)
         self.__valid_action_list += ('count_unread_notify',)
-        self.__valid_action_list += ('add_image_to_photoboard',)
+        # self.__valid_action_list += ('add_image_to_photoboard',)
         self.__valid_action_list += ('remove_image_from_photoboard',)
         self.__valid_action_list += ('add_photoboard_like',)
         self.__valid_action_list += ('resend_confirmation_email',)
         self.__valid_action_list += ('publish_interview',)
         self.__valid_action_list += ('unpublish_interview',)
+        self.__valid_action_list += ('add_image_to_photocontest',)
 
         # retrieve action to perform
         self.ajax_action = request.POST.get("ajax_action")
@@ -586,8 +587,9 @@ class ajaxManager():
 
         return True
 
+    """
     def add_image_to_photoboard(self):
-        """Function to add a photo to photoboard"""
+        ""unction to add a photo to photoboard""
         from image_contest_app.exceptions import AddImageContestImageFieldMissignError, AddImageContestIntegrityError
 
         logger.debug("ajax_function: @@add_image_to_photoboard@@")
@@ -634,6 +636,7 @@ class ajaxManager():
         self.set_json_response(json_response=json_data_string)
 
         return True
+    """
 
     def remove_image_from_photoboard(self):
         """Function to remove a photo from photoboard"""
@@ -871,6 +874,55 @@ class ajaxManager():
 
         if success_flag:
             data = {'success' : True, 'unpublishing_msg' : unpublishing_msg}
+        else:
+            data = {'error' : True, 'msg' : msg}
+
+        # build JSON response
+        json_data_string = json.dumps(data)
+        self.set_json_response(json_response=json_data_string)
+
+        return True
+
+    def add_image_to_photocontest(self):
+        """Function to add a photo to a photocontest"""
+        logger.debug("ajax_function: @@add_image_to_photocontest@@")
+        logger.debug("parametri della chiamata: " + str(self.request.POST))
+
+        from django_photo_contest.models import PhotoContest, PhotoContestPictures
+        account_obj = Account()
+        photo_contest_obj = PhotoContest()
+        photo_contest_pictures_obj = PhotoContestPictures()
+
+        msg = ""
+        success_flag = False
+        user_obj = self.request.user
+        user_id = user_obj.id
+        book_image_id = self.request.POST.get("book_image_id")
+        photocontest_code = self.request.POST.get("photocontest_code")
+
+        # retrieve user info
+        account_info = account_obj.custom_user_id_data(user_id=user_id)
+
+        # controllo se l'utente è già presente oppure no all'interno del photocontest
+        if not photo_contest_pictures_obj.exists_user_photocontest(user_id=user_id, photocontest_code=photocontest_code):
+            try:
+                # try to retrieve photocontest obj
+                selected_photocontest_obj = photo_contest_obj.get_by_code_contest_type(code=photocontest_code, contest_type_code=account_info["contest_type_code"])
+            except PhotoContest.DoesNotExist:
+                # nothing photocontest found
+                msg = "Nessun photocontest trovato con codice: " + str(photocontest_code) + " e contest_type_code: " + str(account_info["contest_type_code"])
+                logger.error("add_image_to_photocontest: " + str(msg) + " | request: " + str(self.request))
+                pass
+            else:
+                # insert photo into photocontest
+                photo_contest_pictures_obj.insert_photo_into_contest(user_id=user_id, photo_contest_id=selected_photocontest_obj.photo_contest_id, image_id=book_image_id)
+                success_flag = True
+        else:
+            msg = "User id: " + str(user_id) + " già presente all'interno del photocontest: " + str(photocontest_code)
+            logger.error("add_image_to_photocontest: " + str(msg) + " | request: " + str(self.request))
+
+        if success_flag:
+            data = {'success' : True}
         else:
             data = {'error' : True, 'msg' : msg}
 

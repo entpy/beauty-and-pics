@@ -51,17 +51,30 @@
 
 		// open add image to photoboard bootstrap modal
 		$(document).on("click",".zoom-image", function(){
+			var photocontestName = "{{ photocontest_name }}";
+			var imageId = "";
+			var imageUrl = "";
+			if ($(this).attr("data-image-id")) {
+				imageId = $(this).data("imageId");
+			}
+			if ($(this).attr("data-fullimage-url")) {
+				imageUrl = $(this).data("fullimageUrl");
+			}
+			// open bootstrap modal
+			bootstrapModalsObect.showAddImageToPhotocontest(imageUrl, imageId, photocontestName);
+
+			return false;
+		});
+
+		// adding selected image to photoboard click action
+		$(document).on("click",".addImageToPhotocontestClickAction", function(){
+			var photocontestCode = "{{ photocontest_code }}";
 			var imageId = "";
 			if ($(this).attr("data-image-id")) {
 				imageId = $(this).data("imageId");
 			}
 
-			var imageUrl = "";
-			if ($(this).attr("data-fullimage-url")) {
-				imageUrl = $(this).data("fullimageUrl");
-			}
-			// open bootstrap modal
-			bootstrapModalsObect.showAddImageToPhotoboard(imageUrl, imageId);
+			addImageToPhotocontest(imageId, photocontestCode);
 
 			return false;
 		});
@@ -69,5 +82,28 @@
 		// default click on load more elements button
 		$(".loadMoreElementsAction").click();
 	});
+
+	// adding selected image to current photocontest
+	function addImageToPhotocontest(imageId, photocontestCode) {
+		if (imageId) {
+			var addImageToPhotoboardCustomAjaxAction = customAjaxAction;
+			// set async to false
+			addImageToPhotoboardCustomAjaxAction.setAsyncFlag(false);
+			// serialize form
+			addImageToPhotoboardCustomAjaxAction.setAjaxCallParams("book_image_id=" + imageId + "&photocontest_code=" + photocontestCode + "&");
+			// setting action name
+			addImageToPhotoboardCustomAjaxAction.setActionName("add_image_to_photocontest");
+			// success callback function
+			var successCallback = function(jsonResponse) {
+				// redirect with success message
+				location.href = "/profilo/concorsi-a-tema/" + photocontestCode + "/";
+			};
+			addImageToPhotoboardCustomAjaxAction.setAjaxSuccessCallbackFunction(successCallback);
+			// perform ajax call to add favorite
+			addImageToPhotoboardCustomAjaxAction.performAjaxAction();
+		}
+
+		return true;
+	}
 </script>
 {% endblock custom_js %}

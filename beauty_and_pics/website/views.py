@@ -1183,11 +1183,14 @@ def profile_photo_contest_list(request):
 @user_passes_test(check_if_is_a_catwalker_user)
 def profile_photo_contest_info(request, photocontest_code):
     """View to show info about photocontest"""
-    from django_photo_contest.models import PhotoContest
+    from django_photo_contest.models import PhotoContest, PhotoContestPictures
 
     account_obj =  Account()
     contest_obj = Contest()
     photo_contest_obj = PhotoContest()
+    photo_contest_pictures_obj = PhotoContestPictures()
+    user_obj = request.user
+    user_id = user_obj.id
 
     # get logged in user data
     autenticated_user_data = account_obj.get_autenticated_user_data(request=request)
@@ -1198,7 +1201,9 @@ def profile_photo_contest_info(request, photocontest_code):
     #	- se SI redirect direttamente nella pagina di info
     #	- se NO mando alla pagina di selezione immagine per il photocontest
 
-    return HttpResponseRedirect('/profilo/concorsi-a-tema/' + photocontest_code + '/seleziona-foto/')
+    # se l'utente non è ancora presente nel photocontest lo mando a selezionare una foto da inserire
+    if not photo_contest_pictures_obj.exists_user_photocontest(user_id=user_id, photocontest_code=photocontest_code):
+        return HttpResponseRedirect('/profilo/concorsi-a-tema/' + photocontest_code + '/seleziona-foto/')
 
     context = {
         "photo_contest_list" : photo_contest_obj.get_photocontest_fullinfo_list(contest_type_code=autenticated_user_data["contest_type"]),
@@ -1226,6 +1231,7 @@ def profile_photo_contest_select(request, photocontest_code):
     context = {
 	"exists_user_images" : True,
 	"user_id" : user_id,
+	"photocontest_code" : photocontest_code,
 	"photocontest_name" : "<photocontest_name>",
 	"photocontest_description" : "<photocontest_description>",
 	"photocontest_rules" : "<photocontest_rules>",
