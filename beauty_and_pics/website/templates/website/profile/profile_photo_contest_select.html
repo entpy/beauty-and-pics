@@ -6,16 +6,24 @@
 {% block description %}Seleziona immagine: seleziona un'immagine dal tuo book da inserire nel concorso.{% endblock %}
 
 {# navigation tabs active element #}
-{% block container4_navigation_profile_preferences %}active{% endblock %}
+{% block container4_navigation_profile_photocontest %}active{% endblock %}
 
 {% block container4_content %}
 <div class="row">
 	<div class="col-md-12">
-		<h3>Seleziona un'immagine per il concorso "{{ photocontest_name }}"</h3>
+		<h3>Seleziona immagine per il concorso "{{ photocontest_name }}"</h3>
 	</div>
 	<div class="col-md-12">
 		<div class="alert alert-info">
-			<p>{{ photocontest_description }}<br />Seleziona un'immagine dal tuo book da inserire nel concorso che rispetti i seguenti vincoli:<br /><b>{{ photocontest_rules }}</b></p>
+			<p>
+				{{ photocontest_description }}<br />Seleziona un'immagine dal tuo book da inserire nel concorso che rispetti i seguenti vincoli:<br />
+				{% if photocontest_rules %}
+					{% for rules in photocontest_rules %}
+						- <b>{{ rules }}</b><br />
+					{% endfor %}
+				{% endif %}
+				<br />Le immagini che non rispetteranno i vincoli forniti, verranno rimosse dal concorso a tema (ovviamente SOLO dal concorso a tema e non anche dal book!).
+			</p>
 		</div>
 	</div>
 </div>

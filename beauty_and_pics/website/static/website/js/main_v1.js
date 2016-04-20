@@ -882,13 +882,13 @@ var bootstrapModalsObect = {
 	},
 
 	/* Function to build and show photocontest info modal bootstrap modal */
-	showPhotocontestInfoModal(photocontestCode, photocontestName, photocontestDescription, photocontestLikeLimit) {
+	showPhotocontestInfoModal(photocontestCode, photocontestName, photocontestDescription, photocontestLikeLimit, photocontestImageUrl) {
 		if (photocontestCode && photocontestName && photocontestDescription && photocontestLikeLimit) {
 			this.resetBootstrapModal();
 			var messageBlockTemplate = '';
 			messageBlockTemplate += '<div class="row">';
 			messageBlockTemplate += '<div class="col-md-4">';
-			messageBlockTemplate += '<img alt="' + photocontestCode + '" src="/static/website/img/preferences_account_info.png">';
+			messageBlockTemplate += '<img alt="' + photocontestName + '" src="' + photocontestImageUrl + '">';
 			messageBlockTemplate += '</div>';
 			messageBlockTemplate += '<div class="col-md-8"><div>' + photocontestDescription + '</div><div>"Mi piace" richiesti: <b>' + photocontestLikeLimit + '</b></div></div>';
 			messageBlockTemplate += '</div>';
@@ -909,7 +909,7 @@ var bootstrapModalsObect = {
 			messageBlockTemplate += '<div class="row">';
 			messageBlockTemplate += '<div class="col-md-12">';
 			messageBlockTemplate += '<p>';
-			messageBlockTemplate += 'Stai per inserire la seguente immagine nel concorso a tema "' + photocontestName + '".<br />Confermi la selezione?'
+			messageBlockTemplate += 'Stai per inserire la seguente immagine nel concorso a tema "' + photocontestName + '".<br />(Sarà comunque possibile rimuoverla e caricarne un\'altra in un qualsiasi momento).<br />Confermi la selezione?'
 			messageBlockTemplate += '</p>';
 			messageBlockTemplate += '</div>';
 			messageBlockTemplate += '</div>';

@@ -904,7 +904,7 @@ class ajaxManager():
         account_info = account_obj.custom_user_id_data(user_id=user_id)
 
         # controllo se l'utente è già presente oppure no all'interno del photocontest
-        if not photo_contest_pictures_obj.exists_user_photocontest(user_id=user_id, photocontest_code=photocontest_code):
+        if not photo_contest_pictures_obj.exists_user_photocontest_picture(user_id=user_id, photocontest_code=photocontest_code):
             try:
                 # try to retrieve photocontest obj
                 selected_photocontest_obj = photo_contest_obj.get_by_code_contest_type(code=photocontest_code, contest_type_code=account_info["contest_type_code"])

@@ -60,6 +60,23 @@ class PhotoContest(models.Model):
 
         return return_var
 
+    def get_photocontest_fullinfo(self, code, contest_type_code):
+        """Function to retrieve photo contest with all related info"""
+        return_var = {}
+        try:
+            photocontest_obj = self.get_by_code_contest_type(code=code, contest_type_code=contest_type_code)
+        except PhotoContest.DoesNotExist:
+            raise
+
+        photocontest_info = DPC_PHOTO_CONTEST_INFO.get(photocontest_obj.code)
+        return_var["code"] = photocontest_obj.code
+        return_var["like_limit"] = photocontest_obj.like_limit
+        return_var["name"] = photocontest_info.get("name")
+        return_var["description"] = photocontest_info.get("description")
+        return_var["rules"] = photocontest_info.get("rules")
+
+        return return_var
+
     def _create_defaults(self):
         """Function to create defaults photo contests"""
         woman_photo_contest_list = self.get_codes_by_contest_type(contest_type_code=project_constants.WOMAN_CONTEST)
@@ -133,9 +150,18 @@ class PhotoContestPictures(models.Model):
     def __unicode__(self):
         return str(self.photo_contest_pictures_id) + " " + str(self.user.id) + " " + str(self.photo_contest.code)
 
-    def exists_user_photocontest(self, user_id, photocontest_code):
+    def exists_user_photocontest_picture(self, user_id, photocontest_code):
         """Function to check if exists user photocontest picture"""
         return PhotoContestPictures.objects.filter(user__id=user_id, photo_contest__code=photocontest_code).exists()
+
+    def get_user_photocontest_picture(self, user_id, photocontest_code):
+        """Function to retrieve an user photocontest pictures instance"""
+        try:
+            return_var = PhotoContestPictures.objects.get(user__id=user_id, photo_contest__code=photocontest_code)
+        except PhotoContestPictures.DoesNotExist:
+            raise
+
+        return return_var
 
     def insert_photo_into_contest(self, user_id, photo_contest_id, image_id):
         """Function to insert a photo into a photocontest"""

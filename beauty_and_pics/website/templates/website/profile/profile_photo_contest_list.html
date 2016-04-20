@@ -1,12 +1,12 @@
 {% extends "website/inc/base_profile.html" %}
-{% load staticfiles %}
+{% load staticfiles website_extras %}
 
 {% block title %}{{ site_name }} | concorsi a tema{% endblock %}
 
 {% block description %}Concorsi a tema: da questa pagina puoi prendere parte ad un concorso a tema, partecipa a tutti quelli che preferisci.{% endblock %}
 
 {# navigation tabs active element #}
-{% block container4_navigation_profile_preferences %}active{% endblock %}
+{% block container4_navigation_profile_photocontest %}active{% endblock %}
 
 {% block container4_content %}
 <div class="row">
@@ -24,9 +24,9 @@
 	<div class="row">
 	{% for photo_contest in photo_contest_list %}
 		<div class="col-xs-12 col-sm-6 col-md-4 col-lg-3">
-			<a href="#" class="thumbnail grid_button_1 showPhotocontestInfoClickAction" data-photocontest-code="{{ photo_contest.code }}" data-photocontest-name="{{ photo_contest.name }}" data-photocontest-like-limit="{{ photo_contest.like_limit }}" data-photocontest-description="{{ photo_contest.description }}" data-toggle="tooltip" data-placement="top" data-original-title="Clicca per maggiori informazioni sul concorso '{{ photo_contest.name }}'">
-				<span class="grid_button_image">
-					<img src="{% static "website/img/preferences_account_info.png" %}" alt="dati personali">
+			<a href="#" class="thumbnail grid_button_1 showPhotocontestInfoClickAction" data-photocontest-code="{{ photo_contest.code }}" data-photocontest-name="{{ photo_contest.name }}" data-photocontest-like-limit="{{ photo_contest.like_limit }}" data-photocontest-description="{{ photo_contest.description }}" data-photocontest-imageurl="{% static "website/img/photocontest/"|str_cat:photo_contest.code|str_cat:".png" %}" data-toggle="tooltip" data-placement="top" data-original-title="Clicca per avere maggiori informazioni sul concorso '{{ photo_contest.name }}'">
+				<span class="grid_button_image grid_button_image_h_90">
+					<img src="{% static "website/img/photocontest/"|str_cat:photo_contest.code|str_cat:".png" %}" alt="{{ photo_contest.name }}">
 				</span>
 				<span class="grid_button_label">{{ photo_contest.name }}</span>
 			</a>
@@ -49,8 +49,10 @@
 			var photocontestName = $(this).data("photocontestName");
 			var photocontestDescription = $(this).data("photocontestDescription");
 			var photocontestLikeLimit = $(this).data("photocontestLikeLimit");
+			var photocontestImageUrl = $(this).data("photocontestImageurl");
+
 			// open bootstrap modal
-			bootstrapModalsObect.showPhotocontestInfoModal(photocontestCode, photocontestName, photocontestDescription, photocontestLikeLimit);
+			bootstrapModalsObect.showPhotocontestInfoModal(photocontestCode, photocontestName, photocontestDescription, photocontestLikeLimit, photocontestImageUrl);
 
 			return false;
 		});

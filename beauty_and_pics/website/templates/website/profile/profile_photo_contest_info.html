@@ -1,12 +1,12 @@
 {% extends "website/inc/base_profile.html" %}
 {% load staticfiles l10n %}
 
-{% block title %}{{ site_name }} | informazioni concorso a tema{% endblock %}
+{% block title %}{{ site_name }} | concorso a tema '{{ photocontest_name }}'{% endblock %}
 
-{% block description %}Informazioni concorso a tema: da questa pagina puoi visualizzare le informazioni rispetto al concorso a tema selezionato.{% endblock %}
+{% block description %}Informazioni concorso a tema: da questa pagina puoi visualizzare informazioni e statistiche del concorso a tema '{{ photocontest_name }}'.{% endblock %}
 
 {# navigation tabs active element #}
-{% block container4_navigation_profile_preferences %}active{% endblock %}
+{% block container4_navigation_profile_photocontest %}active{% endblock %}
 
 {% block container4_content %}
 {# Facebook & Twitter SDK {{{ #}
@@ -16,18 +16,18 @@
 {# photo stats block {{{ #}
 <div class="row">
 	<div class="col-sm-12">
-		<h3>Bacheca fotografica</h3>
+		<h3>Concorso a tema '{{ photocontest_name }}'</h3>
 	</div>
 	<div class="col-sm-12">
 		<div class="alert alert-info">
-			<p>Qui sono presenti le informazioni della foto inserita nella bacheca. Per dare il tuo primo mi piace alla foto clicca sul pulsante <b>Visualizza nella bacheca</b> qui sotto.</p>
+			<p>Qui sono presenti le informazioni della foto inserita nel concorso a tema. Per dare il tuo primo mi piace alla foto clicca sul pulsante <b>Visualizza nella bacheca</b> qui sotto.</p>
 		</div>
 	</div>
 </div>
 <div class="background_container1 generic_container8">
 	<div class="left">
 		<div class="top">
-			<img alt="Imagine profilo" class="catwalk_user_main_image" src="{{ user_image_contest_info.user_image_contest_url }}">
+			<img alt="Imagine profilo" class="catwalk_user_main_image" src="{{ photocontest_image_url }}">
 		</div>
 		<div class="bottom user_action_link_container">
 			<a href="#" class="removeImageFromPhotoboardAction">Rimuovi dalla bacheca</a>
@@ -36,25 +36,25 @@
 	<div class="right">
 		<div class="top user_stats_container">
 			<div class="container_row1 user_stats_block">
-				<span><span class="position">{{ user_image_contest_info.user_image_contest_like }}</span> su {{ user_image_contest_info.like_limit }} mi piace ottenuti</span>
+				<span><span class="position">{{ photocontest_image_likes }}</span> su {{ photocontest_like_limit }} mi piace ottenuti</span>
 			</div>
 			<!-- stats block -->
 			<div class="container_row1 text-left">
 				<div class="stats_bar_label">Livello di apprezzamento</div>
 				<div class="stats_bar">
 					<div class="progress">
-						<div class="progress-bar progress-bar-warning" role="progressbar" aria-valuenow="{{ user_image_contest_info.user_image_contest_like_perc | unlocalize }}" aria-valuemin="0" aria-valuemax="{{ user_image_contest_info.like_limit }}" style="width: {{ user_image_contest_info.user_image_contest_like_perc | unlocalize }}%"></div>
+						<div class="progress-bar progress-bar-warning" role="progressbar" aria-valuenow="{{ photocontest_image_like_perc | unlocalize }}" aria-valuemin="0" aria-valuemax="{{ photocontest_like_limit }}" style="width: {{ photocontest_image_like_perc | unlocalize }}%"></div>
 					</div>
 				</div>
 			</div>
 			<div class="container_row1">
 				<div class="user_stats_block">
-					<span class="points">{{ user_image_contest_info.user_image_contest_visits }}</span>
+					<span class="points">{{ photocontest_image_visits }}</span>
 					<span>Visite ricevute</span>
 				</div>
 				<div class="user_stats_space"></div>
 				<div class="user_stats_block">
-					<span class="points">{{ user_image_contest_info.user_image_contest_like_remaining }}</span>
+					<span class="points">{{ photocontest_image_like_remaining }}</span>
 					<span>Mi piace mancanti</span>
 				</div>
 			</div>
@@ -72,7 +72,7 @@
 	</div>
 	<div class="col-md-12">
 		<div class="alert alert-info">
-			<p>Avere molta visibilità è fondamentale per raggiungere i {{ user_image_contest_info.like_limit }} mi piace, ottienili prima di tutti condividendo la tua foto sui social network.<br /><b>Per condividerla ora, clicca sui pulsanti sotto.</b></p>
+			<p>Avere molta visibilità è fondamentale per raggiungere i {{ photocontest_like_limit }} mi piace, ottienili prima di tutti condividendo la tua foto sui social network.<br /><b>Per condividerla ora, clicca sui pulsanti sotto.</b></p>
 		</div>
 	</div>
 </div>
@@ -105,7 +105,7 @@
 	</div>
 	<div class="col-md-12">
 		<div class="profile_share_url_container">
-			<strong class="profilePageUrlAction">{{ photoboard_image_url }}</strong>
+			<strong class="profilePageUrlAction">{{ vote_image_url }}</strong>
 		</div>
 	</div>
 </div>

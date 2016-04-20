@@ -1202,11 +1202,35 @@ def profile_photo_contest_info(request, photocontest_code):
     #	- se NO mando alla pagina di selezione immagine per il photocontest
 
     # se l'utente non è ancora presente nel photocontest lo mando a selezionare una foto da inserire
-    if not photo_contest_pictures_obj.exists_user_photocontest(user_id=user_id, photocontest_code=photocontest_code):
+    if not photo_contest_pictures_obj.exists_user_photocontest_picture(user_id=user_id, photocontest_code=photocontest_code):
         return HttpResponseRedirect('/profilo/concorsi-a-tema/' + photocontest_code + '/seleziona-foto/')
 
+    # prelevo le informazioni sul photocontest corrente
+    user_photocontest_info = photo_contest_obj.get_photocontest_fullinfo(code=photocontest_code, contest_type_code=autenticated_user_data["contest_type"])
+
+    # prelevo le informazioni sulla foto inserita nel photocontest
+    user_photocontest_picture = photo_contest_pictures_obj.get_user_photocontest_picture(user_id=user_id, photocontest_code=photocontest_code)
+
+    # calcolo i like rimanenti
+    photocontest_image_like_remaining = int(user_photocontest_info.get("like_limit")) - int(user_photocontest_picture.like)
+
+    # calcolo la percentuale di like rimanente
+    photocontest_image_like_perc = 0
+    if user_photocontest_picture.like:
+        photocontest_image_like_perc = 100 / (int(user_photocontest_info.get("like_limit")) / (int(user_photocontest_picture.like) * 1.0))
+
     context = {
-        "photo_contest_list" : photo_contest_obj.get_photocontest_fullinfo_list(contest_type_code=autenticated_user_data["contest_type"]),
+	"photocontest_code" : photocontest_code,
+	"photocontest_like_limit" : user_photocontest_info.get("like_limit"),
+	"photocontest_name" : user_photocontest_info.get("name"),
+	"photocontest_description" : user_photocontest_info.get("description"),
+	"photocontest_rules" : user_photocontest_info.get("rules"),
+        "photocontest_image_url" : user_photocontest_picture.image.image.url,
+        "photocontest_image_likes" : user_photocontest_picture.like,
+        "photocontest_image_visits" : user_photocontest_picture.visits,
+        "photocontest_image_like_remaining" : photocontest_image_like_remaining,
+        "photocontest_image_like_perc" : photocontest_image_like_perc,
+        "vote_image_url" : "<ANCORA DA DEFINIRE>",
     }
 
     return render(request, 'website/profile/profile_photo_contest_info.html', context)
@@ -1215,27 +1239,35 @@ def profile_photo_contest_info(request, photocontest_code):
 @user_passes_test(check_if_is_a_catwalker_user)
 def profile_photo_contest_select(request, photocontest_code):
     """View to select a photocontest image"""
-    from django_photo_contest.models import PhotoContest
+    from django_photo_contest.models import PhotoContest, PhotoContestPictures
 
     user_obj = request.user
     user_id = user_obj.id
     account_obj =  Account()
     contest_obj = Contest()
     photo_contest_obj = PhotoContest()
+    photo_contest_pictures_obj = PhotoContestPictures()
 
     # get logged in user data
     autenticated_user_data = account_obj.get_autenticated_user_data(request=request)
     # set current contest_type
     contest_obj.set_contest_type(request=request, contest_type=autenticated_user_data["contest_type"])
 
+    # se l'utente fosse già presente nel photocontest, lo mando direttamente nella pagina di info
+    if photo_contest_pictures_obj.exists_user_photocontest_picture(user_id=user_id, photocontest_code=photocontest_code):
+        return HttpResponseRedirect('/profilo/concorsi-a-tema/' + photocontest_code)
+
+    # prelevo le informazioni sul photocontest corrente
+    user_photocontest_info = photo_contest_obj.get_photocontest_fullinfo(code=photocontest_code, contest_type_code=autenticated_user_data["contest_type"])
+
     context = {
 	"exists_user_images" : True,
 	"user_id" : user_id,
 	"photocontest_code" : photocontest_code,
-	"photocontest_name" : "<photocontest_name>",
-	"photocontest_description" : "<photocontest_description>",
-	"photocontest_rules" : "<photocontest_rules>",
-        "photo_contest_list" : photo_contest_obj.get_photocontest_fullinfo_list(contest_type_code=autenticated_user_data["contest_type"]),
+	"photocontest_like_limit" : user_photocontest_info.get("like_limit"),
+	"photocontest_name" : user_photocontest_info.get("name"),
+	"photocontest_description" : user_photocontest_info.get("description"),
+	"photocontest_rules" : user_photocontest_info.get("rules"),
     }
 
     return render(request, 'website/profile/profile_photo_contest_select.html', context)
