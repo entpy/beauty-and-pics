@@ -5,9 +5,7 @@
 
 {% block description %}La passerella: qui puoi trovare l'elenco di tutti i modelli e le modelle, vota quelli che preferisci.{% endblock description %}
 
-{% block breadcrumbs %}
-	{{ block.super }}
-{% endblock %}
+{% block breadcrumbs %}{% endblock %}
 
 {# hide go to catwalk banner #}
 {% block catwalk_banner %}{% endblock catwalk_banner %}
@@ -30,18 +28,22 @@
 {% include "website/inc/include_blocks/page_tip.html" with title="La passerella" text="Ciao, questa è la passerella, qui puoi trovare tutti i partecipanti di "|str_cat:site_name|str_cat:". Vota i tuoi preferiti!" only %}
 {% endblock %}
 
-{% block container4_content %}
-<div class="row">
-	<div class="col-sm-12">
-		<ul class="nav nav-pills">
-			<li class="active setFilterAction" data-list-type="catwalker" data-filter-name="latest_registered" data-toggle="tooltip" data-placement="top" data-original-title="Lista di tutti i partecipanti ordinata dal più recente"><a href="#">Le new entry</a></li>
-			<li class="setFilterAction" data-list-type="last_upload" data-toggle="tooltip" data-placement="top" data-original-title="Le ultime immagini caricate nei book fotografici"><a href="#">Ultimi caricamenti</a></li>
-			<li class="setFilterAction" data-list-type="catwalker" data-filter-name="classification"><a href="#">La classifica</a></li>
-			<li class="setFilterAction" data-list-type="catwalker" data-filter-name="most_beautiful_smile"><a href="#">Il sorriso più bello</a></li>
-			<li class="setFilterAction" data-list-type="catwalker" data-filter-name="look_more_beautiful"><a href="#">Lo sguardo più bello</a></li>
-		</ul>
+{# main navigation active element #}
+{% block navigation_element1_active %}active{% endblock %}
+
+{% block bottom_navigation_bar %}
+<div class="navigation_bar2">
+	<div class="navigation_wrapper">
+		<div class="active setFilterAction menu-item-container" data-list-type="catwalker" data-filter-name="latest_registered" data-toggle="tooltip" data-placement="top" data-original-title="Lista di tutti i partecipanti ordinata dal più recente">Le new entry</div>
+		<div class="setFilterAction menu-item-container" data-list-type="last_upload" data-toggle="tooltip" data-placement="top" data-original-title="Le ultime immagini caricate nei book fotografici">Ultimi caricamenti</div>
+		<div class="setFilterAction menu-item-container" data-list-type="catwalker" data-filter-name="classification">La classifica</div>
+		<div class="setFilterAction menu-item-container" data-list-type="catwalker" data-filter-name="most_beautiful_smile">Il sorriso più bello</div>
+		<div class="setFilterAction menu-item-container" data-list-type="catwalker" data-filter-name="look_more_beautiful">Lo sguardo più bello</div>
 	</div>
 </div>
+{% endblock bottom_navigation_bar %}
+
+{% block container4_content %}
 {# image grid block {{{ #}
 <div class="row">
 	<div class="col-sm-12 margin_top_15 image_grid_container"></div>

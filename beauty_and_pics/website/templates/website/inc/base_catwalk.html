@@ -24,6 +24,12 @@
 {# Custom page script block #}
 {% block custom_page_script %}{% endblock %}
 
+{# navigation bar #}
+{% block navigation_bar_content %}
+	<a href="/passerella/"><div class="{% block navigation_element1_active %}{% endblock %} menu-item-container"><div>Passerella</div></div></a>
+	<a href="/concorsi-a-tema/"><div class="{% block navigation_element2_active %}{% endblock %} menu-item-container"><div>Concorsi a tema</div></div></a>
+{% endblock %}
+
 {# container title #}
 {% block container4_title_block %}{% endblock %}
 

@@ -19,12 +19,14 @@
 {% endblock og_metatags %}
 
 {% block breadcrumbs %}
-	{{ block.super }}
 	{% breadcrumb user_info.first_name|str_cat:" "|str_cat:user_info.last_name catwalk_profile %}
 {% endblock %}
 
 {# hide photoboard list banner #}
 {% block photoboard_list_banner %}{% endblock %}
+
+{# main navigation active element #}
+{% block navigation_element1_active %}active{% endblock %}
 
 {% block container4_content %}
 	{# Facebook SDK {{{ #}
@@ -128,8 +130,8 @@
 	</div>
 </div>
 {# profile navigation bar #}
-<div class="user_profile_navigation">
-	<div class="user_profile_navigation_wrapper">
+<div class="navigation_bar user_profile_navigation">
+	<div class="navigation_wrapper">
 		<div class="active menu-item-container selectViewAction" data-navigation-item="photobook_page"><div>Book fotografico</div></div>
 		<div class="menu-item-container selectViewAction" data-navigation-item="interview_page"><div>Intervista</div></div>
 	</div>

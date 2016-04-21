@@ -6839,6 +6839,7 @@ a.list-group-item-danger.active:focus {
 .nav-pills > li > a { border-radius: 0px; }
 .tooltip-inner { border-radius: 0px; }
 
+.btn { border-radius: 0px; }
 .btn-transparent { background-color: transparent; border-color: #fff; border-style: solid; color: #fff; }
 .btn-transparent:hover { background-color: #fff; color: #2c3e50; }
 
@@ -6857,7 +6858,7 @@ a.list-group-item-danger.active:focus {
 .nav-pills > li + li { margin: 0px; }
 .table a.alert-link { color: transparent; text-decoration: none; }
 hr { border-color: #dcdcdc; }
-.breadcrumb { background-color: transparent; font-size: 19px; margin-bottom: 10px; margin-top: 20px; padding: 0; }
+.breadcrumb { background-color: transparent; font-size: 19px; margin-bottom: 10px; padding: 0; }
 .breadcrumb > li + li::before { content: none; }
 .breadcrumb > li span.separator { color: #cccccc; }
 .breadcrumb > li span.active_label { color: #2c3e50; font-size: 26px; }

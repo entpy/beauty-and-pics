@@ -2,6 +2,11 @@
 	<div class="title">
 		<h4>{{ title }}</h4>
 	</div>
+	{% if  image_src and image_alt %}
+	<div class="tip_image">
+		<img src="{{ image_src }}" alt="{{ image_alt }}">
+	</div>
+	{% endif %}
 	<div class="tip_readable_text">
 		{{ text }}
 	</div>

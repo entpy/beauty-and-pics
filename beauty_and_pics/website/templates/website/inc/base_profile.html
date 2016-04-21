@@ -10,6 +10,8 @@
 {# page description #}
 {% block description %}{% endblock %}
 
+{% block www_block %}{% endblock %}
+
 {# hide photoboard list banner #}
 {% block photoboard_list_banner %}{% endblock %}
 {# hide photoboard winner banner #}
@@ -20,29 +22,20 @@
 {# Custom page script block #}
 {% block custom_page_script %}{% endblock %}
 
+{# navigation bar #}
+{% block navigation_bar_content %}
+	<a href="/profilo/"><div class="{% block container4_navigation_profile_index %}{% endblock %} menu-item-container"><div>Album fotografico</div></div></a>
+	<a href="/profilo/concorsi-a-tema/"><div class="{% block container4_navigation_profile_photocontest %}{% endblock %} menu-item-container"><div>Concorsi a tema</div></div></a>
+	<a href="/profilo/preferiti/"><div class="{% block container4_navigation_profile_favorites %}{% endblock %} menu-item-container"><div>Preferiti</div></div></a>
+	<a href="/profilo/pannello-di-controllo/"><div class="{% block container4_navigation_profile_preferences %}{% endblock %} menu-item-container"><div>Pannello di controllo</div></div></a>
+	<a href="/profilo/notifiche/"><div class="{% block container4_navigation_profile_notify %}{% endblock %} menu-item-container"><div>Notifiche</div></div></a>
+{% endblock %}
+
 {# container title block, the page inside profile doesn't use a title #}
 {% block container4_title_block %}{% endblock %}
 
 {% block breadcrumbs %}
     {{ block.super }}
-{% endblock %}
-
-{% block www_block %}{% endblock %}
-{# navigation block #}
-{% block container4_navigation %}
-	<div class="row">
-		<div class="col-sm-12">
-			<ul class="nav nav-pills">
-			<li class="{% block container4_navigation_profile_index %}{% endblock %}"><a href="/profilo/">Album fotografico</a></li>
-			{# TODO: scommentare quanto segue per riabilitare il photoboard #}
-			{# <li class="{% block container4_navigation_profile_bacheca %}{% endblock %}"><a href="/profilo/foto-bacheca">Bacheca</a></li> #}
-			<li class="{% block container4_navigation_profile_photocontest %}{% endblock %}"><a href="/profilo/concorsi-a-tema/">Concorsi a tema</a></li>
-			<li class="{% block container4_navigation_profile_favorites %}{% endblock %}"><a href="/profilo/preferiti/">Preferiti</a></li>
-			<li class="{% block container4_navigation_profile_preferences %}{% endblock %}"><a href="/profilo/pannello-di-controllo/">Pannello di controllo</a></li>
-			<li class="{% block container4_navigation_profile_notify %}{% endblock %}"><a href="/profilo/notifiche/">Notifiche</a></li>
-			</ul>
-		</div>
-	</div>
 {% endblock %}
 
 {# page tip block (blocco a destra con titolo e descrizione) #}

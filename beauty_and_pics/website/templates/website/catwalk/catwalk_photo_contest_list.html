@@ -1,0 +1,55 @@
+{% extends "website/inc/base_catwalk.html" %}
+{% load staticfiles static website_extras %}
+
+{% block title %}{{ site_name }} | concorsi a tema{% endblock title %}
+
+{% block description %}Concorsi a tema: scopri tutti i concorsi a tema e vota i partecipanti che preferisci.{% endblock description %}
+
+{% block breadcrumbs %}{% endblock %}
+
+{# hide go to catwalk banner #}
+{% block catwalk_banner %}{% endblock catwalk_banner %}
+
+{# page tip block (blocco a destra con titolo e descrizione) #}
+{% block page_tip %}
+{% include "website/inc/include_blocks/page_tip.html" with title="Concorsi a tema" text="Ciao, questa è la passerella, qui puoi trovare tutti i partecipanti di "|str_cat:site_name|str_cat:". Vota i tuoi preferiti!" only %}
+{% endblock %}
+
+{# main navigation active element #}
+{% block navigation_element2_active %}active{% endblock %}
+
+{% block container4_content %}
+{# photo contest list block {{{ #}
+{% if photo_contest_list %}
+	<div class="row">
+	{% for photo_contest in photo_contest_list %}
+		<div class="col-xs-12 col-sm-6 col-md-4 col-lg-3">
+			<a href="#" class="thumbnail grid_button_1 photocontestEnterClickAction" data-photocontest-code="{{ photo_contest.code }}" data-toggle="tooltip" data-placement="top" data-original-title="{{ photo_contest.description }}">
+				<span class="grid_button_image grid_button_image_h_90">
+					<img src="{% static "website/img/photocontest/"|str_cat:photo_contest.code|str_cat:".png" %}" alt="{{ photo_contest.name }}">
+				</span>
+				<span class="grid_button_label">{{ photo_contest.name }}</span>
+			</a>
+		</div>
+	{% endfor %}
+	</div>
+{% endif %}
+{# }}} #}
+{% endblock container4_content %}
+
+{% block custom_js %}
+{{ block.super }}
+<script>
+	$(document).ready(function(){
+		$('[data-toggle="tooltip"]').tooltip();
+
+		// enter into the photocontest
+		$(document).on("click",".photocontestEnterClickAction", function(){
+			var photocontestCode = $(this).data("photocontestCode");
+			location.href = "/concorsi-a-tema/" + photocontestCode + "/";
+
+			return false;
+		});
+	});
+</script>
+{% endblock custom_js %}

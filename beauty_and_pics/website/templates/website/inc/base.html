@@ -190,11 +190,18 @@
 					<div class="generic_container generic_container3">
 						{# left block (with catwalk) #}
 						<div class="generic_container generic_container4">
+							{# navigation bar #}
+							{% block navigation_bar %}
+								<div class="navigation_bar">
+									<div class="navigation_wrapper">
+										{% block navigation_bar_content %}{% endblock %}
+									</div>
+								</div>
+							{% endblock %}
+							{% block bottom_navigation_bar %}{% endblock%}
+							{# main container with padding #}
 							<div class="generic_container4-padding">
-								{% block breadcrumbs %}
-									{% clear_breadcrumbs %}
-								{% endblock %}
-
+								{% block breadcrumbs %}{% clear_breadcrumbs %}{% endblock %}
 								{% render_breadcrumbs "website/inc/breadcrumbs/breadcrumbs_template.html" %}
 								{% block container4_title_block %}
 								<div class="row">
@@ -203,8 +210,6 @@
 									</div>
 								</div>
 								{% endblock container4_title_block %}
-								{# navigation tabs #}
-								{% block container4_navigation %}{% endblock %}
 								{% block container4_content %}{% endblock %}
 							</div>
 						</div>

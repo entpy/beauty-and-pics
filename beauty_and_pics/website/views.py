@@ -535,6 +535,53 @@ def catwalk_report_user(request, user_id):
     return render(request, 'website/catwalk/catwalk_report_user.html', context)
 
 @ensure_csrf_cookie
+def catwalk_photo_contest_list(request):
+    """View to show of all photocontest"""
+    from django_photo_contest.models import PhotoContest
+
+    contest_obj = Contest()
+    photo_contest_obj = PhotoContest()
+
+    # common function to set contest type
+    contest_obj.common_view_set_contest_type(request=request)
+
+    # retrieve contest_type
+    contest_type_code = contest_obj.get_contest_type_from_session(request=request)
+
+    context = {
+        "photo_contest_list" : photo_contest_obj.get_photocontest_fullinfo_list(contest_type_code=contest_type_code),
+    }
+
+    return render(request, 'website/catwalk/catwalk_photo_contest_list.html', context)
+
+def catwalk_photo_contest_pics(request, photocontest_code):
+    """View to show all images about a photocontest"""
+    from django_photo_contest.models import PhotoContest, PhotoContestPictures
+
+    contest_obj = Contest()
+    photo_contest_obj = PhotoContest()
+
+    # common function to set contest type
+    contest_obj.common_view_set_contest_type(request=request)
+
+    # retrieve contest_type
+    contest_type_code = contest_obj.get_contest_type_from_session(request=request)
+
+    # prelevo le informazioni sul photocontest corrente
+    user_photocontest_info = photo_contest_obj.get_photocontest_fullinfo(code=photocontest_code, contest_type_code=contest_type_code)
+
+    context = {
+	"photocontest_code" : photocontest_code,
+	"photocontest_like_limit" : user_photocontest_info.get("like_limit"),
+        "photocontest_name" : user_photocontest_info.get("name"),
+	"photocontest_description" : user_photocontest_info.get("description"),
+	"photocontest_rules" : user_photocontest_info.get("rules"),
+    }
+
+    return render(request, 'website/catwalk/catwalk_photo_contest_pics.html', context)
+
+"""
+@ensure_csrf_cookie
 def catwalk_photoboard_list(request):
     # view to show photoboard list about this contest_type
     CommonUtils_obj = CommonUtils()
@@ -621,6 +668,7 @@ def catwalk_photoboard_details(request, user_id):
     }
 
     return render(request, 'website/catwalk/catwalk_photoboard_details.html', context)
+"""
 # }}}
 
 # private profile {{{
@@ -930,10 +978,11 @@ def profile_gain_points(request):
 
     return render(request, 'website/profile/profile_gain_points.html', context)
 
+"""
 @login_required
 @user_passes_test(check_if_is_a_catwalker_user)
 def profile_photoboard(request, image_add_success):
-    """View to show photoboard page"""
+    ""View to show photoboard page""
 
     user_obj = request.user
     user_id = user_obj.id
@@ -1000,6 +1049,7 @@ def profile_photoboard(request, image_add_success):
         render_page = 'website/profile/profile_photoboard_list.html'
 
     return render(request, render_page, context)
+"""
 
 @login_required
 @user_passes_test(check_if_is_a_catwalker_user)
