@@ -40,6 +40,7 @@ urlpatterns = [
     # catwalk
     url(r'^concorsi-a-tema/$', 'website.views.catwalk_photo_contest_list', name='catwalk_photo_contest_list'), # elenco di tutti i photocontest
     url(r'^concorsi-a-tema/(?P<photocontest_code>[a-z-]+)/$', 'website.views.catwalk_photo_contest_pics', name='catwalk_photo_contest_pics'), # elenco di immagini per un determinato photocontest
+    url(r'^concorsi-a-tema/(?P<photocontest_code>[a-z-]+)/(?P<user_id>\d+)/$', 'website.views.catwalk_photo_contest_pics_info', name='catwalk_photo_contest_pics_info'), # dettaglio immagine di un certo photocontest
     url(r'^passerella/dettaglio-utente/(?P<user_id>\d+)/$', 'website.views.catwalk_profile', name='catwalk_profile'),
     url(r'^passerella/richiesta-aiuto/$', 'website.views.catwalk_help', name='catwalk_help'),
     url(r'^passerella/segnalazione-utente/(?P<user_id>\d+)/$', 'website.views.catwalk_report_user', name='catwalk_report_user'),

@@ -173,6 +173,33 @@ class PhotoContestPictures(models.Model):
 
         return True
 
+    def get_photocontest_images(self, photo_contest_code, contest_type_code, filters_list=None):
+        """
+        Function to build a list of photocontest images
+        i.e. -> current_contest = woman_contest
+        select images where image_contest.contest.type = contest_type and status=0
+        """
+        return_var = PhotoContestPictures.objects.values('user__id', 'image__thumbnail_image__image').filter(photo_contest__code=photo_contest_code, photo_contest__contest_type__code=contest_type_code)
+	return_var = return_var.order_by('insert_date')
+
+        # apply limits
+        if filters_list.get("start_limit") and filters_list.get("show_limit"):
+            return_var = return_var[filters_list["start_limit"]:filters_list["show_limit"]]
+
+	# perf query
+        return_var = list(return_var)
+
+        return return_var
+
+    def photocontest_images_exist(self, photo_contest_code, contest_type_code):
+        """Function to check if exist pics into photocontest"""
+        return_var = False
+
+        if PhotoContestPictures.objects.filter(photo_contest__code=photo_contest_code, photo_contest__contest_type__code=contest_type_code).exists():
+            return_var = True
+
+        return return_var
+
 class PhotoContestVote(models.Model):
     """
     Per sapere se un utente può essere votato o no

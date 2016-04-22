@@ -901,7 +901,7 @@ var bootstrapModalsObect = {
 		return false;
 	},
 
-	/* Function to build and show add image to photoboard bootstrap modal */
+	/* Function to build and show add image to photocontest bootstrap modal */
 	showAddImageToPhotocontest: function(imageUrl, imageId, photocontestName) {
 		if (imageUrl && imageId) {
 			this.resetBootstrapModal();
@@ -1275,11 +1275,11 @@ var voteUserObject = {
 	}
 };
 
-/* Object to retrieve a filtered list of elements (user, photo book, favorites, notify, photoboard) */
+/* Object to retrieve a filtered list of elements (user, photo book, favorites, notify, photocontest) */
 var elementsListObject = {
 	__elementsListFilters : {
 		"user_id" : null, // required in "favorites" and "book" elementsListType
-		"elements_list_type" : null, // catwalker, favorite, photobook, notify, photoboard
+		"elements_list_type" : null, // catwalker, favorite, photobook, notify, photocontest
 		"start_limit" : 0, // element retrieving start limit
 		"show_limit" : 1, // element retrieving stop limit
 		"elements_per_call" : 1, // number of element retrieved per call
@@ -1443,9 +1443,9 @@ var elementsListObject = {
 				} else if (jsonResponse.elements_list_type == "notify") {
 					// build and write table blocks into html
 					elementsListObject.writeTableHtmlBlock(elementsListObject.manageTableElementsList(jsonResponse.elements_list));
-				} else if (jsonResponse.elements_list_type == "photoboard") {
+				} else if (jsonResponse.elements_list_type == "photocontest") {
 					// build and write block into html
-					elementsListObject.writeHtmlBlock(elementsListObject.managePhotoboardList(jsonResponse.elements_list));
+					elementsListObject.writeHtmlBlock(elementsListObject.managePhotocontestList(jsonResponse.elements_list));
 				}
 				
 				// set blocks number limit
@@ -1542,11 +1542,12 @@ var elementsListObject = {
 		return $(items);
 	},
 
-	managePhotoboardList : function(elementsList) {
+	managePhotocontestList : function(elementsList) {
 	/* Function to retrieve an html blocks list, this must be appended to html page */
 		var items = "";
 		$.each(elementsList, function(index, singleElement) {
-			blockUrl = "/passerella/bacheca/" + singleElement.user_id;
+			photocontestCode = singleElement.photo_contest_code
+			blockUrl = "/concorsi-a-tema/" + photocontestCode + "/" + singleElement.user_id;
 			blockThumbnailImageUrl = singleElement.thumbnail_image_url;
 			items += elementsListObject.getSingleHtmlBlock(blockUrl, blockThumbnailImageUrl);
 		});

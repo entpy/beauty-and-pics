@@ -1,11 +1,13 @@
 {% extends "website/inc/base_catwalk.html" %}
-{% load staticfiles static website_extras %}
+{% load staticfiles static django_bootstrap_breadcrumbs website_extras %}
 
 {% block title %}{{ site_name }} | concorso a tema '{{ photocontest_name }}'{% endblock title %}
 
 {% block description %}concorso a tema '{{ photocontest_name }}': {{ photocontest_description }}{% endblock description %}
 
-{% block breadcrumbs %}{% endblock %}
+{% block breadcrumbs %}
+	{% breadcrumb photocontest_name catwalk_photo_contest_pics %}
+{% endblock %}
 
 {# hide go to catwalk banner #}
 {% block catwalk_banner %}{% endblock catwalk_banner %}
@@ -20,6 +22,16 @@
 {% block navigation_element2_active %}active{% endblock %}
 
 {% block container4_content %}
+{# non sono ancora presenti immagini nel photocontest #}
+{% if not photocontest_images_exist %}
+<div class="row">
+	<div class="col-sm-12">
+		<div class="alert alert-info">
+			<p>Non sono ancora presenti foto in questo concorso...prova a ritornare più tardi!</p>
+		</div>
+	</div>
+</div>
+{% endif %}
 {# image grid block {{{ #}
 <div class="row">
 	<div class="col-sm-12 margin_top_15 image_grid_container"></div>
@@ -36,8 +48,8 @@
 	elementsListObject.setElementsPerCall(20);
 	$(document).ready(function(){
 		$(".loadMoreElementsAction").click(function(){
-			elementsListObject.setElementsListType($(".setFilterAction.active").data("listType"));
-			elementsListObject.addFilter("filter_name", $(".setFilterAction.active").data("filterName"));
+			elementsListObject.setElementsListType("photocontest");
+			elementsListObject.addFilter("photo_contest_code", "{{ photocontest_code }}");
 			elementsListObject.getElementsList();
 
 			return false;

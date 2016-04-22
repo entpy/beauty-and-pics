@@ -560,6 +560,8 @@ def catwalk_photo_contest_pics(request, photocontest_code):
 
     contest_obj = Contest()
     photo_contest_obj = PhotoContest()
+    photo_contest_pictures_obj = PhotoContestPictures()
+    photocontest_images_exist = False
 
     # common function to set contest type
     contest_obj.common_view_set_contest_type(request=request)
@@ -570,15 +572,77 @@ def catwalk_photo_contest_pics(request, photocontest_code):
     # prelevo le informazioni sul photocontest corrente
     user_photocontest_info = photo_contest_obj.get_photocontest_fullinfo(code=photocontest_code, contest_type_code=contest_type_code)
 
+    # controllo se il photocontest selezionato contiene immagini
+    if photo_contest_pictures_obj.photocontest_images_exist(photo_contest_code=photocontest_code, contest_type_code=contest_type_code):
+        photocontest_images_exist = True
+
     context = {
 	"photocontest_code" : photocontest_code,
 	"photocontest_like_limit" : user_photocontest_info.get("like_limit"),
         "photocontest_name" : user_photocontest_info.get("name"),
 	"photocontest_description" : user_photocontest_info.get("description"),
 	"photocontest_rules" : user_photocontest_info.get("rules"),
+	"photocontest_images_exist" : photocontest_images_exist,
     }
 
     return render(request, 'website/catwalk/catwalk_photo_contest_pics.html', context)
+
+# TODO
+def catwalk_photo_contest_pics_info(request, photocontest_code, user_id):
+    """View to show a single image about a photocontest"""
+    from django_photo_contest.models import PhotoContest, PhotoContestPictures
+
+    contest_obj = Contest()
+    account_obj =  Account()
+    photo_contest_obj = PhotoContest()
+    photo_contest_pictures_obj = PhotoContestPictures()
+    photocontest_images_exist = False
+
+    # common function to set contest type
+    contest_obj.common_view_set_contest_type(request=request)
+
+    # retrieve contest_type
+    contest_type_code = contest_obj.get_contest_type_from_session(request=request)
+
+    # TODO controllo che esista una foto per questo utente in questo photocontest
+
+    try:
+        # retrieve user info
+        account_info = account_obj.custom_user_id_data(user_id=user_id)
+    except User.DoesNotExist:
+        # user_id doesn't exists, TODO: redirect
+        pass
+
+    # prelevo le informazioni sul photocontest corrente
+    user_photocontest_info = photo_contest_obj.get_photocontest_fullinfo(code=photocontest_code, contest_type_code=contest_type_code)
+
+    # prelevo le informazioni sulla foto inserita nel photocontest
+    user_photocontest_picture = photo_contest_pictures_obj.get_user_photocontest_picture(user_id=user_id, photocontest_code=photocontest_code)
+
+    # calcolo i like rimanenti
+    photocontest_image_like_remaining = int(user_photocontest_info.get("like_limit")) - int(user_photocontest_picture.like)
+
+    # calcolo la percentuale di like rimanente
+    photocontest_image_like_perc = 0
+    if user_photocontest_picture.like:
+        photocontest_image_like_perc = 100 / (int(user_photocontest_info.get("like_limit")) / (int(user_photocontest_picture.like) * 1.0))
+
+    context = {
+        "user_can_vote" : True, # TODO: implements
+        "user_info" : account_info,
+	"photocontest_code" : photocontest_code,
+	"photocontest_like_limit" : user_photocontest_info.get("like_limit"),
+	"photocontest_name" : user_photocontest_info.get("name"),
+	"photocontest_description" : user_photocontest_info.get("description"),
+	"photocontest_rules" : user_photocontest_info.get("rules"),
+        "photocontest_image_url" : user_photocontest_picture.image.image.url,
+        "photocontest_image_likes" : user_photocontest_picture.like,
+        "photocontest_image_visits" : user_photocontest_picture.visits,
+        "photocontest_image_like_remaining" : photocontest_image_like_remaining,
+        "photocontest_image_like_perc" : photocontest_image_like_perc,
+    }
+
+    return render(request, 'website/catwalk/catwalk_photo_contest_pics_info.html', context)
 
 """
 @ensure_csrf_cookie
