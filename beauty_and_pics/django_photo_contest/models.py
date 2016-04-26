@@ -21,6 +21,7 @@ class PhotoContest(models.Model):
     code = models.CharField(max_length=200)
     contest_type = models.ForeignKey(Contest_Type) # "woman_contest" or "man_contest"
     like_limit = models.IntegerField() # image max like
+    order = models.IntegerField() # element order
 
     class Meta:
         app_label = 'django_photo_contest'
@@ -39,7 +40,7 @@ class PhotoContest(models.Model):
     def get_photocontest_list_by_contest_type(self, contest_type_code):
         return_var = None
         if contest_type_code:
-            return_var = list(PhotoContest.objects.filter(contest_type__code=contest_type_code))
+            return_var = list(PhotoContest.objects.filter(contest_type__code=contest_type_code).order_by('order'))
 
         return return_var
 
@@ -112,6 +113,7 @@ class PhotoContest(models.Model):
             # limite di like del contest
             photo_contest_info = DPC_PHOTO_CONTEST_INFO.get(code)
             photo_contest_obj.like_limit = photo_contest_info.get("like_limit")
+            photo_contest_obj.order = photo_contest_info.get("order")
             photo_contest_obj.save()
             return_var = True
 

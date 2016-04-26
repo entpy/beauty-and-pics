@@ -1344,7 +1344,7 @@ def profile_photo_contest_info(request, photocontest_code):
         "photocontest_image_visits" : user_photocontest_picture.visits,
         "photocontest_image_like_remaining" : photocontest_image_like_remaining,
         "photocontest_image_like_perc" : photocontest_image_like_perc,
-        "vote_image_url" : "<ANCORA DA DEFINIRE>",
+        "vote_image_url" : "/concorsi-a-tema/" + str(photocontest_code) + "/" + str(user_id) + "/",
     }
 
     return render(request, 'website/profile/profile_photo_contest_info.html', context)

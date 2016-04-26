@@ -59,7 +59,7 @@
 				</div>
 			</div>
 			<div class="container_row1">
-				<a href="{{ photoboard_image_url }}" class="btn btn-success">Visualizza nella bacheca</a>
+				<a href="{{ vote_image_url }}" class="btn btn-success">Visualizza pagina pubblica</a>
 			</div>
 		</div>
 	</div>
@@ -86,7 +86,7 @@
 		</a>
 	</div>
 	<div class="col-xs-12 col-sm-6 col-md-4 col-lg-3">
-		<a href="https://twitter.com/intent/tweet?url={{ photoboard_image_url|urlencode }}&text={{ "Votatemi:"|urlencode }}" class="thumbnail grid_button_1" data-toggle="tooltip" data-placement="top" data-original-title="Condividi la foto su Twitter">
+		<a href="https://twitter.com/intent/tweet?url={{ vote_image_url|urlencode }}&text={{ "Votatemi:"|urlencode }}" class="thumbnail grid_button_1" data-toggle="tooltip" data-placement="top" data-original-title="Condividi la foto su Twitter">
 			<span class="grid_button_image">
 				<img src="{% static "website/img/profile_tw_share.png" %}" alt="Condividi su Twitter">
 			</span>

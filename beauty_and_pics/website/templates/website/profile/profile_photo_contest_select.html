@@ -16,13 +16,13 @@
 	<div class="col-md-12">
 		<div class="alert alert-info">
 			<p>
-				{{ photocontest_description }}<br />Seleziona un'immagine dal tuo book da inserire nel concorso che rispetti i seguenti vincoli:<br />
+				{{ photocontest_description }}<br />Seleziona un'immagine dal tuo book da inserire nel concorso, assicurandoti che rispetti i seguenti vincoli:<br />
 				{% if photocontest_rules %}
 					{% for rules in photocontest_rules %}
 						- <b>{{ rules }}</b><br />
 					{% endfor %}
 				{% endif %}
-				<br />Le immagini che non rispetteranno i vincoli forniti, verranno rimosse dal concorso a tema (ovviamente SOLO dal concorso a tema e non anche dal book!).
+				<br />Le immagini che non rispetteranno i vincoli forniti, verranno rimosse senza preavviso dal concorso a tema (ovviamente SOLO dal concorso a tema, nel book e nel tuo profilo continueranno ad esistere!).
 			</p>
 		</div>
 	</div>
