@@ -979,14 +979,14 @@ class ajaxManager():
 
         return True
 
-    # TODO
+    # TODO: migliorarne assolutamente la struttura
     def add_photocontest_image_like(self):
         """Function to add photocontest image like"""
         logger.debug("ajax_function: @@add_photocontest_image_like@@")
         logger.debug("parametri della chiamata: " + str(self.request.POST))
 
         from django_photo_contest.models import PhotoContest, PhotoContestPictures, PhotoContestVote
-        import django_photo_contest.settings
+        import django_photo_contest.settings, django_photo_contest.exceptions
         account_obj = Account()
         photo_contest_obj = PhotoContest()
         photo_contest_pictures_obj = PhotoContestPictures()
@@ -1000,44 +1000,37 @@ class ajaxManager():
         photocontest_user_id = self.request.POST.get("photocontest_user_id")
 
 	# controllo che l'utente votante abbia verificato la mail
-        if not Account_obj.has_permission(user_obj=user_obj, permission_codename='user_verified'):
+        if not account_obj.has_permission(user_obj=user_obj, permission_codename='user_verified'):
 	    logger.error("add_photocontest_image_like error, utente non verificato")
             msg = "Non è possibile assegnare il like se non viene verificato l'account."
         else:
-            try:
-                # TODO: check
-                # check if like can be assigned
-                photo_contest_vote_obj.check_if_user_can_add_like(from_user_id=user_id, to_user_id=photocontest_user_id, photocontest_code=photocontest_code, request=self.request)
-            except LikeAlreadyAssigned:
-                logger.error("add_photocontest_image_like error, like già assegnato | error code: " + str(LikeAlreadyAssigned.get_error_code))
-                msg = "Non puoi assegnare il like più volte allo stesso utente nell'arco di 7 giorni."
-            else:
-                try:
-                    # TODO
-                    # try to add a photocontest image like
-                    photo_contest_pictures_obj.add_photocontest_image_like(user_id=user_id, photocontest_code=photocontest_code)
-                except PhotoContestPictures.DoesNotExist:
-                    logger.error("foto non più esistente nella votazione di: " + str(to_user_id) + " da parte di: " + str(from_user_id) + " con photocontest_code: " + str(photocontest_code))
-                    msg = "Errore inaspettato nella votazione, foto non più esistente, per favore riprova più tardi."
-                else:
-                    # TODO: controllo se per caso l'utente fosse diventato vincitore
-                    success_flag = True
+	    # TODO: check
+	    # check if like can be assigned
+	    if not photo_contest_vote_obj.check_if_user_can_add_like(from_user_id=user_id, to_user_id=photocontest_user_id, photocontest_code=photocontest_code, request=self.request):
+		logger.error("add_photocontest_image_like error, like già assegnato | error code: " + str(django_photo_contest.exceptions.LikeAlreadyAssigned.get_error_code))
+		msg = "Non puoi assegnare il like più volte allo stesso utente nell'arco di 7 giorni."
+	    else:
+		try:
+		    # TODO
+		    # try to add a photocontest image like
+		    photo_contest_pictures_obj.add_photocontest_image_like(user_id=user_id, photocontest_code=photocontest_code)
+		except PhotoContestPictures.DoesNotExist:
+		    logger.error("foto non più esistente nella votazione di: " + str(to_user_id) + " da parte di: " + str(from_user_id) + " con photocontest_code: " + str(photocontest_code))
+		    msg = "Errore inaspettato nella votazione, foto non più esistente, per favore riprova più tardi."
+		else:
+		    try:
+			# prelevo i dati dell'account da votare per creare la votazione
+			account_info = account_obj.custom_user_id_data(user_id=photocontest_user_id)
+		    except User.DoesNotExist:
+			# ERRORE: user_id doesn't exist
+			logger.error("utente da votare non più esistente vote_user_id: " + str(to_user_id) + " da parte di: " + str(from_user_id) + " con photocontest_code: " + str(photocontest_code))
+			msg = "Errore inaspettato nella votazione, utente non più esistente."
+		    else:
+			# creo la votazione
+			photo_contest_vote_obj.create_votation(from_user_id=user_id, to_user_id=photocontest_user_id, photocontest_code=photocontest_code, request=self.request, contest_type_code=account_info.get("contest_type"))
 
-
-
-        """
-        try:
-            # try to delete photocontest image
-            photo_contest_pictures_obj.delete_user_photocontest_image(user_id=user_id, photocontest_code=photocontest_code)
-        except PhotoContestPictures.DoesNotExist:
-            # no image found on this photocontest
-            msg = "Nessun immagine trovata nel photocontest con codice: " + str(photocontest_code)
-            logger.error("remove_photocontest_image: " + str(msg) + " | request: " + str(self.request))
-            pass
-        else:
-            # photocontest image successfully deleted
-            success_flag = True
-        """
+			# TODO: controllo se per caso l'utente fosse diventato vincitore
+			success_flag = True
 
         if success_flag:
             data = {'success' : True}

@@ -1,7 +1,9 @@
 # -*- coding: utf-8 -*-
 
 from django.db import models
+from datetime import datetime
 from django.contrib.auth.models import User
+from beauty_and_pics.common_utils import CommonUtils
 from contest_app.models.contest_types import Contest_Type
 from upload_image_box.models import cropUploadedImages 
 from .settings import *
@@ -306,6 +308,26 @@ class PhotoContestVote(models.Model):
 
         return return_var
 
+    def create_votation(self, from_user_id, to_user_id, photocontest_code, request, contest_type_code):
+	"""Function to add a new votation"""
+	photo_contest_obj = PhotoContest()
+	photocontest_vote_obj = PhotoContestVote()
+        common_utils_obj = CommonUtils()
+
+	try:
+	    user_photo_contest_obj = photo_contest_obj.get_by_code_contest_type(code=photocontest_code, contest_type_code=contest_type_code)
+        except PhotoContest.DoesNotExist:
+            raise
+
+	# il photocontest esiste, procedo con l'inserimento della votazione
+	photocontest_vote_obj.photo_contest = user_photo_contest_obj
+	photocontest_vote_obj.from_user_id = from_user_id
+	photocontest_vote_obj.to_user_id = to_user_id
+	photocontest_vote_obj.ip_address = common_utils_obj.get_ip_address(request=request)
+ 	photocontest_vote_obj.save()
+
+	return True
+
     # TODO
     def delete_photocontest_vote(self, photocontest_code, contest_type_code):
         """Function to delete all votes about a photocontest"""
@@ -356,7 +378,7 @@ class PhotoContestWinner(models.Model):
         photocontest_pictures_obj = PhotoContestPictures()
 
         try:
-            user_photocontest_pictures_obj = photocontest_pictures_obj.get_user_photocontest_picture(user_id=user_id, photocontest_code=photocontest_code):
+            user_photocontest_pictures_obj = photocontest_pictures_obj.get_user_photocontest_picture(user_id=user_id, photocontest_code=photocontest_code)
         except PhotoContestPictures.DoesNotExist:
             raise
         else:
