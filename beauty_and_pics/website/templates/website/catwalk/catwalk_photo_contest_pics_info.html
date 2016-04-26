@@ -8,7 +8,7 @@
 {# Open Graph metatags #}
 {% block og_metatags %}
 <meta property="og:locale" content="it_IT" />
-<meta property="og:url" content="{{ absolute_uri }}" />
+<meta property="og:url" content="{{ photocontest_image_url }}" />
 <meta property="og:type" content="profile" />
 <meta property="og:title" content="{{ user_info.first_name }} {{ user_info.last_name }}" />
 <meta property="og:site_name" content="Beauty and Pics"/>
@@ -85,9 +85,9 @@
 				<span><b class="imageContestLikeRemainingAction">{{ photocontest_image_like_remaining }}</b> "mi piace" mancanti</span>
 			</div>
 			{% if user_can_vote %}
-			<div class="container_row user_stats_block text-center addLikeButtonContainerAction">
-				<a class="btn btn-success addPhotoLikeClickAction" href="#">Mi piace</a>
-			</div>
+				<div class="container_row user_stats_block text-center addLikeButtonContainerAction">
+					<a class="btn btn-success addPhotoLikeClickAction" href="#">Mi piace</a>
+				</div>
 			{% endif %}
 		</div>
 	</div>
@@ -102,7 +102,7 @@
 		$("body").on("click",".shareOnFacebookClickAction", function(){
 
 			// create facebook share dialog
-			FB.ui({ method: 'share', href: '{{ absolute_uri }}' }, function(response){});
+			FB.ui({ method: 'share', href: '{{ photocontest_image_url }}' }, function(response){});
 
 			return false;
 		});
@@ -110,21 +110,23 @@
 		// add photo like
 		$("body").on("click",".addPhotoLikeClickAction", function(){
 			if (confirm('Confermi il "mi piace"?')) {
-				addPhotoboardLike('{{ user_image_contest_id }}', '{{ user_info.user_id }}');
+				var photocontestCode = "{{ photocontest_code }}";
+				var photocontestUserId = "{{ user_info.user_id }}";
+				addPhotoboardLike(photocontestCode, photocontestUserId);
 			}
 
 			return false;
 		});
 	});
 
-	/* Function to vote a photo */
-	function addPhotoboardLike(imageContestImageId, userId) {
-		if (imageContestImageId && userId) {
-			var photoboardLikeCustomAjaxAction = customAjaxAction;
+	/* Function to add a photocontest photo like */
+	function addPhotoboardLike(photocontestCode, photocontestUserId) {
+		if (photocontestCode && photocontestUserId) {
+			var photocontestLikeCustomAjaxAction = customAjaxAction;
 			// serialize form
-			photoboardLikeCustomAjaxAction.setAjaxCallParams("image_contest_image_id=" + imageContestImageId + "&user_id=" + userId + "&");
+			photocontestLikeCustomAjaxAction.setAjaxCallParams("photocontest_code=" + photocontestCode + "&photocontest_user_id=" + photocontestUserId + "&");
 			// setting action name
-			photoboardLikeCustomAjaxAction.setActionName("add_photoboard_like");
+			photocontestLikeCustomAjaxAction.setActionName("add_photoboard_like");
 			// success callback function
 			var successCallback = function(jsonResponse) {
 				// hide "like" button
@@ -138,14 +140,15 @@
 					bootstrapModalsObect.showMessageModal('Hai dato il tuo "<b>mi piace</b>" per {{ user_info.first_name }}.<br />Visita anche il suo <a href="/passerella/dettaglio-utente/{{ user_info.user_id }}/">profilo completo</a> e guarda tutte le sue foto.', 'Ottima scelta!');
 				}
 			};
-			photoboardLikeCustomAjaxAction.setAjaxSuccessCallbackFunction(successCallback);
+			photocontestLikeCustomAjaxAction.setAjaxSuccessCallbackFunction(successCallback);
 			// perform ajax call to add like
-			photoboardLikeCustomAjaxAction.performAjaxAction();
+			photocontestLikeCustomAjaxAction.performAjaxAction();
 		}
 
 		return true;
 	}
 
+	// TODO
 	/** decrease/increase like/remaining like */
 	function manageLikeNumberAfterCall() {
 		// decrease/increase like/remaining like
