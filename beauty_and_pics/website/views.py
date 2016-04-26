@@ -604,20 +604,27 @@ def catwalk_photo_contest_pics_info(request, photocontest_code, user_id):
     # retrieve contest_type
     contest_type_code = contest_obj.get_contest_type_from_session(request=request)
 
-    # TODO controllo che esista una foto per questo utente in questo photocontest
-
     try:
         # retrieve user info
         account_info = account_obj.custom_user_id_data(user_id=user_id)
     except User.DoesNotExist:
-        # user_id doesn't exists, TODO: redirect
-        pass
+        # ERROR: user id doesn't exist
+        return HttpResponseRedirect('/index/')
 
-    # prelevo le informazioni sul photocontest corrente
-    user_photocontest_info = photo_contest_obj.get_photocontest_fullinfo(code=photocontest_code, contest_type_code=contest_type_code)
+    try:
+        # prelevo le informazioni sul photocontest corrente
+        user_photocontest_info = photo_contest_obj.get_photocontest_fullinfo(code=photocontest_code, contest_type_code=contest_type_code)
+    except PhotoContest.DoesNotExist:
+        # ERROR: photocontest doesn't exist
+        return HttpResponseRedirect('/passerella/dettaglio-utente/' + str(user_id))
 
-    # prelevo le informazioni sulla foto inserita nel photocontest
-    user_photocontest_picture = photo_contest_pictures_obj.get_user_photocontest_picture(user_id=user_id, photocontest_code=photocontest_code)
+    try:
+        # prelevo le informazioni sulla foto inserita nel photocontest
+        user_photocontest_picture = photo_contest_pictures_obj.get_user_photocontest_picture(user_id=user_id, photocontest_code=photocontest_code)
+    except PhotoContestPictures.DoesNotExist:
+        # ERROR: user photocontest image doesn't exist
+	messages.add_message(request, settings.POPUP_ALERT, 'Ci spiace, la foto non è più presente per la votazione.')
+        return HttpResponseRedirect('/passerella/dettaglio-utente/' + str(user_id))
 
     # calcolo i like rimanenti
     photocontest_image_like_remaining = int(user_photocontest_info.get("like_limit")) - int(user_photocontest_picture.like)
@@ -626,6 +633,8 @@ def catwalk_photo_contest_pics_info(request, photocontest_code, user_id):
     photocontest_image_like_perc = 0
     if user_photocontest_picture.like:
         photocontest_image_like_perc = 100 / (int(user_photocontest_info.get("like_limit")) / (int(user_photocontest_picture.like) * 1.0))
+
+    # TODO: check if user can vote
 
     context = {
         "user_can_vote" : True, # TODO: implements
@@ -1344,7 +1353,6 @@ def profile_photo_contest_info(request, photocontest_code):
         "photocontest_image_visits" : user_photocontest_picture.visits,
         "photocontest_image_like_remaining" : photocontest_image_like_remaining,
         "photocontest_image_like_perc" : photocontest_image_like_perc,
-        "vote_image_url" : "<ANCORA DA DEFINIRE>",
     }
 
     return render(request, 'website/profile/profile_photo_contest_info.html', context)

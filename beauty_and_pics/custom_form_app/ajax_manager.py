@@ -59,6 +59,8 @@ class ajaxManager():
         self.__valid_action_list += ('publish_interview',)
         self.__valid_action_list += ('unpublish_interview',)
         self.__valid_action_list += ('add_image_to_photocontest',)
+        self.__valid_action_list += ('remove_photocontest_image',)
+        self.__valid_action_list += ('add_photocontest_image_like',)
 
         # retrieve action to perform
         self.ajax_action = request.POST.get("ajax_action")
@@ -642,8 +644,9 @@ class ajaxManager():
         return True
     """
 
+    """
     def remove_image_from_photoboard(self):
-        """Function to remove a photo from photoboard"""
+        ""Function to remove a photo from photoboard""
         # from image_contest_app.models import ImageContest, ImageContestImage
 
         logger.debug("ajax_function: @@remove_image_from_photoboard@@")
@@ -667,6 +670,7 @@ class ajaxManager():
         self.set_json_response(json_response=json_data_string)
 
         return True
+    """
 
     def add_photoboard_like(self):
         """Function to add a photoboard like"""
@@ -924,6 +928,116 @@ class ajaxManager():
         else:
             msg = "User id: " + str(user_id) + " già presente all'interno del photocontest: " + str(photocontest_code)
             logger.error("add_image_to_photocontest: " + str(msg) + " | request: " + str(self.request))
+
+        if success_flag:
+            data = {'success' : True}
+        else:
+            data = {'error' : True, 'msg' : msg}
+
+        # build JSON response
+        json_data_string = json.dumps(data)
+        self.set_json_response(json_response=json_data_string)
+
+        return True
+
+    def remove_photocontest_image(self):
+        """Function to remove a photocontest image"""
+        logger.debug("ajax_function: @@remove_photocontest_image@@")
+        logger.debug("parametri della chiamata: " + str(self.request.POST))
+
+        from django_photo_contest.models import PhotoContest, PhotoContestPictures
+        account_obj = Account()
+        photo_contest_obj = PhotoContest()
+        photo_contest_pictures_obj = PhotoContestPictures()
+
+        msg = ""
+        success_flag = False
+        user_obj = self.request.user
+        user_id = user_obj.id
+        photocontest_code = self.request.POST.get("photocontest_code")
+
+        try:
+            # try to delete photocontest image
+            photo_contest_pictures_obj.delete_user_photocontest_image(user_id=user_id, photocontest_code=photocontest_code)
+        except PhotoContestPictures.DoesNotExist:
+            # no image found on this photocontest
+            msg = "Nessun immagine trovata nel photocontest con codice: " + str(photocontest_code)
+            logger.error("remove_photocontest_image: " + str(msg) + " | request: " + str(self.request))
+            pass
+        else:
+            # photocontest image successfully deleted
+            success_flag = True
+
+        if success_flag:
+            data = {'success' : True}
+        else:
+            data = {'error' : True, 'msg' : msg}
+
+        # build JSON response
+        json_data_string = json.dumps(data)
+        self.set_json_response(json_response=json_data_string)
+
+        return True
+
+    # TODO
+    def add_photocontest_image_like(self):
+        """Function to add photocontest image like"""
+        logger.debug("ajax_function: @@add_photocontest_image_like@@")
+        logger.debug("parametri della chiamata: " + str(self.request.POST))
+
+        from django_photo_contest.models import PhotoContest, PhotoContestPictures, PhotoContestVote
+        import django_photo_contest.settings
+        account_obj = Account()
+        photo_contest_obj = PhotoContest()
+        photo_contest_pictures_obj = PhotoContestPictures()
+        photo_contest_vote_obj = PhotoContestVote()
+
+        msg = ""
+        success_flag = False
+        user_obj = self.request.user
+        user_id = user_obj.id
+        photocontest_code = self.request.POST.get("photocontest_code")
+        photocontest_user_id = self.request.POST.get("photocontest_user_id")
+
+	# controllo che l'utente votante abbia verificato la mail
+        if not Account_obj.has_permission(user_obj=user_obj, permission_codename='user_verified'):
+	    logger.error("add_photocontest_image_like error, utente non verificato")
+            msg = "Non è possibile assegnare il like se non viene verificato l'account."
+        else:
+            try:
+                # TODO: check
+                # check if like can be assigned
+                photo_contest_vote_obj.check_if_user_can_add_like(from_user_id=user_id, to_user_id=photocontest_user_id, photocontest_code=photocontest_code, request=self.request)
+            except LikeAlreadyAssigned:
+                logger.error("add_photocontest_image_like error, like già assegnato | error code: " + str(LikeAlreadyAssigned.get_error_code))
+                msg = "Non puoi assegnare il like più volte allo stesso utente nell'arco di 7 giorni."
+            else:
+                try:
+                    # TODO
+                    # try to add a photocontest image like
+                    photo_contest_pictures_obj.add_photocontest_image_like(user_id=user_id, photocontest_code=photocontest_code)
+                except PhotoContestPictures.DoesNotExist:
+                    logger.error("foto non più esistente nella votazione di: " + str(to_user_id) + " da parte di: " + str(from_user_id) + " con photocontest_code: " + str(photocontest_code))
+                    msg = "Errore inaspettato nella votazione, foto non più esistente, per favore riprova più tardi."
+                else:
+                    # TODO: controllo se per caso l'utente fosse diventato vincitore
+                    success_flag = True
+
+
+
+        """
+        try:
+            # try to delete photocontest image
+            photo_contest_pictures_obj.delete_user_photocontest_image(user_id=user_id, photocontest_code=photocontest_code)
+        except PhotoContestPictures.DoesNotExist:
+            # no image found on this photocontest
+            msg = "Nessun immagine trovata nel photocontest con codice: " + str(photocontest_code)
+            logger.error("remove_photocontest_image: " + str(msg) + " | request: " + str(self.request))
+            pass
+        else:
+            # photocontest image successfully deleted
+            success_flag = True
+        """
 
         if success_flag:
             data = {'success' : True}

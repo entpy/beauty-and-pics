@@ -163,6 +163,22 @@ class PhotoContestPictures(models.Model):
 
         return return_var
 
+    # TODO
+    def add_photocontest_image_like(self, user_id, photocontest_code):
+        """Function to add a photocontest image like"""
+
+        try:
+            # try to retrieve photocontest image
+            photo_contest_picture_obj = self.get_user_photocontest_picture(user_id=user_id, photocontest_code=photocontest_code)
+        except PhotoContestPictures.DoesNotExist:
+            raise
+
+        # add image like
+        photo_contest_picture_obj.like = photo_contest_picture_obj.like + 1
+        photo_contest_picture_obj.save()
+
+        return True
+
     def insert_photo_into_contest(self, user_id, photo_contest_id, image_id):
         """Function to insert a photo into a photocontest"""
         photo_contest_pictures_obj = PhotoContestPictures()
@@ -200,11 +216,58 @@ class PhotoContestPictures(models.Model):
 
         return return_var
 
+    # TODO: testare eliminazione immagine
+    def delete_user_photocontest_image(self, user_id, photocontest_code):
+        """Function to delete a user photocontest image"""
+        try:
+            user_photocontest_picture_obj = self.get_user_photocontest_picture(user_id=user_id, photocontest_code=photocontest_code)
+        except PhotoContestPictures.DoesNotExist:
+            raise
+
+        user_photocontest_picture_obj.delete()
+
+        return True
+
+    # TODO
+    def clear_image_stats(self, photocontest_code, contest_type_code):
+        """Function to clear image like and visits"""
+        PhotoContestPictures.objects.filter(photo_contest__code=photocontest_code, photo_contest__contest_type__code=contest_type_code)
+
+        return True
+
+    # TODO
+    def is_photocontest_winner(self, user_id, photocontest_code, contest_type_code):
+        """Function to check if a photocontest image is winning"""
+        return_var = False
+
+        try:
+            # prelevo le informazioni sul photocontest corrente
+            user_photocontest_obj = photo_contest_obj.get_photocontest_fullinfo(code=photocontest_code, contest_type_code=contest_type_code)
+        except PhotoContest.DoesNotExist:
+            # ERROR: photocontest doesn't exist
+            logger.error("is_photocontest_winner, il photocontest non è stato trovato: photocontest_code=" + str(photocontest_code) + " contest_type_code=" + str(contest_type_code))
+            pass
+        else:
+            try:
+                # retrieve photocontest image
+                user_photocontest_picture_obj = self.get_user_photocontest_picture(user_id=user_id, photocontest_code=photocontest_code)
+            except PhotoContestPictures.DoesNotExist:
+                # ERROR: photocontest image doesn't exist
+                logger.error("is_photocontest_winner, immagine non trovata: user_id=" + str(user_id) + " photocontest_code=" + str(photocontest_code))
+                pass
+            else:
+                if user_photocontest_picture_obj.like >= user_photocontest_obj.like_limit:
+                    ### this is the photocontest winner image ###
+                    return_var = True
+
+        return return_var
+
 class PhotoContestVote(models.Model):
     """
     Per sapere se un utente può essere votato o no
     """
     photo_contest_vote_id = models.AutoField(primary_key=True)
+    photo_contest = models.ForeignKey(PhotoContest) # related photo contest
     from_user = models.ForeignKey(User, related_name='photocontest_vote_from_user')
     to_user = models.ForeignKey(User, related_name='photocontest_vote_to_user')
     ip_address = models.CharField(max_length=50)
@@ -216,9 +279,41 @@ class PhotoContestVote(models.Model):
     def __unicode__(self):
         return str(self.photo_contest_vote_id)
 
+    def check_if_user_can_add_like(self, from_user_id, to_user_id, photocontest_code, request):
+        """
+        Function to check if a user can add like:
+         - 1) controllo data ultima votazione
+        """
+        return_var = False
+
+        try:
+            photocontest_vote_obj = PhotoContestVote.objects.get(from_user__id=from_user_id, to_user__id=to_user_id, photo_contest__code=photocontest_code)
+            # 2) controllo data ultimo like
+            # like già dato se vote date is < SECONDS_BETWEEN_VOTATION
+            datediff = datetime.now() - photocontest_vote_obj.date
+            logger.debug("datetime.now: " + str(datetime.now()))
+            logger.debug("like date: " + str(photocontest_vote_obj.date))
+            logger.debug("seconds: " + str(datediff.total_seconds()))
+            if datediff.total_seconds() >= SECONDS_BETWEEN_VOTATION:
+                # user can revote this catwalker, remove user row from db table
+                photocontest_vote_obj.delete()
+                return_var = True
+        except PhotoContestVote.DoesNotExist:
+            # l'utente non ha mai votato, votazione abilitata
+            return_var = True
+
+        return return_var
+
+    # TODO
+    def delete_photocontest_vote(self, photocontest_code, contest_type_code):
+        """Function to delete all votes about a photocontest"""
+        PhotoContestVote.objects.filter(photo_contest__code=photocontest_code, photo_contest__contest_type__code=contest_type_code).delete()
+
+        return True
+
 class PhotoContestWinner(models.Model):
     """
-    I vincitori dei vari photo contest verranno salvati qui, ogni utente
+    I vincitori dei vari photocontest verranno salvati qui, ogni utente
     quindi potrebbe avere più righe per lo stesso photo contest
     """
     photo_contest_winner_id = models.AutoField(primary_key=True)
@@ -233,6 +328,44 @@ class PhotoContestWinner(models.Model):
 
     def __unicode__(self):
         return str(self.photo_contest_winner_id) + " " + str(self.user.id) + " " + str(self.photo_contest.code)
+
+    def manage_photocontest_winner(self, user_id, photocontest_code, contest_type_code):
+        """Function to manage a photocontest winner"""
+        photo_contest_vote_obj = PhotoContestVote()
+        photo_contest_pictures_obj = PhotoContestPictures()
+
+        # TODO: questi tre metodi sono da spostatare
+        # inserisco in PhotoContestWinner
+        try:
+            self.add_contest_winner(user_id=user_id, photocontest_code=photocontest_code)
+        except PhotoContestPictures.DoesNotExist:
+            raise
+
+        # elimino tutti i voti per il contest_type_code e il photocontest_code
+        photo_contest_vote_obj.delete_photocontest_vote(photocontest_code=photocontest_code, contest_type_code=contest_type_code)
+
+        # azzero tutte le visite e i voti dell'immagine
+        photo_contest_pictures_obj.clear_image_stats(photocontest_code=photocontest_code, contest_type_code=contest_type_code)
+
+        return True
+
+    def add_contest_winner(self, user_id, photocontest_code):
+        """Function to add a new photocontest winner"""
+        photocontest_pictures_obj = PhotoContestPictures()
+
+        try:
+            user_photocontest_pictures_obj = photocontest_pictures_obj.get_user_photocontest_picture(user_id=user_id, photocontest_code=photocontest_code):
+        except PhotoContestPictures.DoesNotExist:
+            raise
+        else:
+            photo_contest_winner_obj = PhotoContestWinner()
+            photo_contest_winner_obj.user.id = user_id
+            photo_contest_winner_obj.photo_contest.code = photocontest_code
+            photo_contest_winner_obj.image_url = user_photocontest_pictures_obj.image.image
+            photo_contest_winner_obj.thumbnail_image_url = user_photocontest_pictures_obj.image.thumbnail_image.image
+            photo_contest_winner_obj.save()
+
+        return True
 
 """
 Per partecipare ai sottoconcorsi occorre:

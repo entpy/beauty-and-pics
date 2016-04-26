@@ -30,7 +30,7 @@
 			<img alt="Imagine profilo" class="catwalk_user_main_image" src="{{ photocontest_image_url }}">
 		</div>
 		<div class="bottom user_action_link_container">
-			<a href="#" class="removeImageFromPhotoboardAction">Rimuovi dalla bacheca</a>
+			<a href="#" class="removePhotocontestImageClickAction">Rimuovi dal concorso</a>
 		</div>
 	</div>
 	<div class="right">
@@ -59,7 +59,7 @@
 				</div>
 			</div>
 			<div class="container_row1">
-				<a href="{{ photoboard_image_url }}" class="btn btn-success">Visualizza nella bacheca</a>
+				<a href="{{ photocontest_image_url }}" class="btn btn-success">Visualizza nella bacheca</a>
 			</div>
 		</div>
 	</div>
@@ -86,7 +86,7 @@
 		</a>
 	</div>
 	<div class="col-xs-12 col-sm-6 col-md-4 col-lg-3">
-		<a href="https://twitter.com/intent/tweet?url={{ photoboard_image_url|urlencode }}&text={{ "Votatemi:"|urlencode }}" class="thumbnail grid_button_1" data-toggle="tooltip" data-placement="top" data-original-title="Condividi la foto su Twitter">
+		<a href="https://twitter.com/intent/tweet?url={{ photocontest_image_url|urlencode }}&text={{ "Votatemi:"|urlencode }}" class="thumbnail grid_button_1" data-toggle="tooltip" data-placement="top" data-original-title="Condividi la foto su Twitter">
 			<span class="grid_button_image">
 				<img src="{% static "website/img/profile_tw_share.png" %}" alt="Condividi su Twitter">
 			</span>
@@ -105,7 +105,7 @@
 	</div>
 	<div class="col-md-12">
 		<div class="profile_share_url_container">
-			<strong class="profilePageUrlAction">{{ vote_image_url }}</strong>
+			<strong class="profilePageUrlAction">{{ photocontest_image_url }}</strong>
 		</div>
 	</div>
 </div>
@@ -116,6 +116,58 @@
 {{ block.super }}
 <script>
 	$(document).ready(function(){
+		// remove current image from photocontest click action
+		$(document).on("click",".removePhotocontestImageClickAction", function(){
+			var photocontestCode = "{{ photocontest_code }}";
+			if (confirm("Stai per rimuovere l'immagine dal concorso, perderai tutti i \"mi piace\" ricevuti, confermi?")) {
+				removePhotocontestImage(photocontestCode);
+			}
+
+			return false;
+		});
+		// share on Facebook action
+		$("body").on("click",".shareViaFacebookClickAction", function(){
+
+			// create Facebook share dialog
+			// reference -> https://developers.facebook.com/docs/javascript/reference/FB.ui
+			FB.ui({
+				method: 'share',
+				href: '{{ photocontest_image_url }}' },
+				// callback
+				function(response) {
+					if (response && !response.error_message) {
+						// posting completed
+					} else {
+						// error while posting
+					}
+				}
+			);
+
+			return false;
+		});
 	});
+
+	// remove photoboard user image
+	function removePhotocontestImage(photocontestCode) {
+		if (photocontestCode) {
+			var removePhotocontestImageCustomAjaxAction = customAjaxAction;
+			// set async to false
+			removePhotocontestImageCustomAjaxAction.setAsyncFlag(false);
+			// serialize form
+			removePhotocontestImageCustomAjaxAction.setAjaxCallParams("photocontest_code=" + photocontestCode + "&");
+			// setting action name
+			removePhotocontestImageCustomAjaxAction.setActionName("remove_photocontest_image");
+			// success callback function
+			var successCallback = function(jsonResponse) {
+				// redirect to book images list
+				location.href = "/concorsi-a-tema/";
+			};
+			removePhotocontestImageCustomAjaxAction.setAjaxSuccessCallbackFunction(successCallback);
+			// perform ajax call to remove image
+			removePhotocontestImageCustomAjaxAction.performAjaxAction();
+		}
+
+		return true;
+	}
 </script>
 {% endblock custom_js %}

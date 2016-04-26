@@ -4,6 +4,8 @@
 Settings for 'django_photo_contest' app
 """
 
+SECONDS_BETWEEN_VOTATION = 604800 # 604800 seconds = 7 days
+
 # photo contest list
 DPC_PHOTO_CONTEST_LIST = [
     'bianco-e-nero',
