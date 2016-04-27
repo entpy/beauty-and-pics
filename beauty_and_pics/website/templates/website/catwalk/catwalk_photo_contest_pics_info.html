@@ -69,22 +69,42 @@
 					<p>Dai un "<b>mi piace</b>" per {{ user_info.first_name }}: se riuscirà a raggiungere i <b>{{ photocontest_like_limit }}</b> mi piace prima di tutti avrà un posto in evidenza nella passerella.</p>
 				</div>
 			</div>
-			<div class="userVotedMsgBlockAction {% if user_can_vote %}hide{% endif %}">
+			{% if not user_already_registered %}
 				<div class="row">
 					<div class="col-md-12">
 						<div class="alert alert-warning">
-							<span class="msgTextAction">Hai già dato il tuo "mi piace" per {{ user_info.first_name }}.</span>
+							<span class="msgTextAction">Per dare il "mi piace" alla foto di {{ user_info.first_name }} devi prima registrarti.</span>
 						</div>
 					</div>
 				</div>
-			</div>
+			{% elif not email_is_verified %}
+				<div class="row">
+					<div class="col-md-12">
+						<div class="alert alert-warning">
+							<span class="msgTextAction">Per dare il "mi piace" alla foto di {{ user_info.first_name }} devi prima confermare la tua email.</span>
+						</div>
+					</div>
+				</div>
+			{% endif %}
+
+			{% if user_already_registered and email_is_verified %}
+				<div class="userVotedMsgBlockAction {% if votation_is_valid %}hide{% endif %}">
+					<div class="row">
+						<div class="col-md-12">
+							<div class="alert alert-warning">
+								<span class="msgTextAction">Hai già dato il tuo "mi piace" per {{ user_info.first_name }}.</span>
+							</div>
+						</div>
+					</div>
+				</div>
+			{% endif %}
 			<div class="container_row container_row_bottom16-xl container_row_s40 user_stats_block">
 				<span>Piace a <span class="position imageContestLikeAction">{{ photocontest_image_likes }}</span> persone</span>
 			</div>
 			<div class="container_row container_row_common10">
 				<span><b class="imageContestLikeRemainingAction">{{ photocontest_image_like_remaining }}</b> "mi piace" mancanti</span>
 			</div>
-			{% if user_can_vote %}
+			{% if user_already_registered and email_is_verified and votation_is_valid %}
 				<div class="container_row user_stats_block text-center addLikeButtonContainerAction">
 					<a class="btn btn-success addPhotoLikeClickAction" href="#">Mi piace</a>
 				</div>
@@ -112,7 +132,7 @@
 			if (confirm('Confermi il "mi piace"?')) {
 				var photocontestCode = "{{ photocontest_code }}";
 				var photocontestUserId = "{{ user_info.user_id }}";
-				addPhotoboardLike(photocontestCode, photocontestUserId);
+				addPhotocontestImageLike(photocontestCode, photocontestUserId);
 			}
 
 			return false;
@@ -120,7 +140,7 @@
 	});
 
 	/* Function to add a photocontest photo like */
-	function addPhotoboardLike(photocontestCode, photocontestUserId) {
+	function addPhotocontestImageLike(photocontestCode, photocontestUserId) {
 		if (photocontestCode && photocontestUserId) {
 			var photocontestLikeCustomAjaxAction = customAjaxAction;
 			// serialize form
@@ -132,12 +152,8 @@
 				// hide "like" button
 				$(".addLikeButtonContainerAction").hide();
 				if (jsonResponse.success == true) {
-					// decrease/increase like/remaining like
-					manageLikeNumberAfterCall();
-					// show user voted msg block
-					$(".userVotedMsgBlockAction").removeClass("hide");
-					// open success bootstrap modal
-					bootstrapModalsObect.showMessageModal('Hai dato il tuo "<b>mi piace</b>" per {{ user_info.first_name }}.<br />Visita anche il suo <a href="/passerella/dettaglio-utente/{{ user_info.user_id }}/">profilo completo</a> e guarda tutte le sue foto.', 'Ottima scelta!');
+					// manage success votation callback
+					votationSuccessCallback();
 				}
 			};
 			photocontestLikeCustomAjaxAction.setAjaxSuccessCallbackFunction(successCallback);
@@ -148,16 +164,24 @@
 		return true;
 	}
 
-	// TODO
 	/** decrease/increase like/remaining like */
-	function manageLikeNumberAfterCall() {
+	function votationSuccessCallback() {
+		// show user voted msg block
+		$(".userVotedMsgBlockAction").removeClass("hide");
+
 		// decrease/increase like/remaining like
 		var image_contest_like = parseInt($(".imageContestLikeAction").html());
 		var image_contest_like_remaining = parseInt($(".imageContestLikeRemainingAction").html());
 		$(".imageContestLikeAction").html(image_contest_like + 1);
+
 		// decremento i "like" rimanenti solo se sono maggiori di 0
 		if (image_contest_like_remaining > 0) {
 			$(".imageContestLikeRemainingAction").html(image_contest_like_remaining - 1);
+			// open success bootstrap modal
+			bootstrapModalsObect.showMessageModal('Grazie per aver dato tuo "<b>mi piace</b>" a {{ user_info.first_name }}.<br />Visita anche il suo <a href="/passerella/dettaglio-utente/{{ user_info.user_id }}/">profilo completo</a> e guarda tutte le sue foto.', 'Votazione completata');
+		} else if (image_contest_like_remaining == 0) {
+			// complimenti hai fatto vincere la foto
+			bootstrapModalsObect.showMessageModal('Complimenti, grazie al tuo mi "<b>mi piace</b>" la foto di {{ user_info.first_name }} ha vinto il concorso a tema \'{{ photocontest_name }}\'.<br />Visita anche il suo <a href="/passerella/dettaglio-utente/{{ user_info.user_id }}/">profilo completo</a> e guarda tutte le sue foto.', 'Voto decisivo');
 		}
 
 		return true;

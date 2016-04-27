@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from django.db import models
+from django.db.models import F
 from datetime import datetime
 from django.contrib.auth.models import User
 from beauty_and_pics.common_utils import CommonUtils
@@ -183,6 +184,27 @@ class PhotoContestPictures(models.Model):
 
         return True
 
+    # TODO
+    def add_photocontest_image_visit(self, photo_contest_pictures_id):
+        """Function to add a photocontest image visit"""
+        PhotoContestPictures.objects.filter(photo_contest_pictures_id=photo_contest_pictures_id).update(visits=F('visits') + 1)
+
+        return True
+
+    def calculate_remaining_like(self, photocontest_likes, photocontest_image_likes):
+        """Function to calculate remaining like"""
+        return int(photocontest_likes) - int(photocontest_image_likes)
+
+    # TODO
+    def calculate_like_perc(self, photocontest_likes, photocontest_image_likes):
+        """Function to calculate remaining like"""
+        return_var = 0
+
+        if photocontest_image_likes:
+            return_var = 100 / (int(photocontest_likes) / (int(photocontest_image_likes) * 1.0))
+
+        return return_var
+
     def insert_photo_into_contest(self, user_id, photo_contest_id, image_id):
         """Function to insert a photo into a photocontest"""
         photo_contest_pictures_obj = PhotoContestPictures()
@@ -235,13 +257,14 @@ class PhotoContestPictures(models.Model):
     # TODO
     def clear_image_stats(self, photocontest_code, contest_type_code):
         """Function to clear image like and visits"""
-        PhotoContestPictures.objects.filter(photo_contest__code=photocontest_code, photo_contest__contest_type__code=contest_type_code)
+        PhotoContestPictures.objects.filter(photo_contest__code=photocontest_code, photo_contest__contest_type__code=contest_type_code).update(like=0, visits=0)
 
         return True
 
     # TODO
     def is_photocontest_winner(self, user_id, photocontest_code, contest_type_code):
         """Function to check if a photocontest image is winning"""
+        photo_contest_obj = PhotoContest()
         return_var = False
 
         try:
@@ -260,7 +283,7 @@ class PhotoContestPictures(models.Model):
                 logger.error("is_photocontest_winner, immagine non trovata: user_id=" + str(user_id) + " photocontest_code=" + str(photocontest_code))
                 pass
             else:
-                if user_photocontest_picture_obj.like >= user_photocontest_obj.like_limit:
+                if user_photocontest_picture_obj.like >= user_photocontest_obj.get("like_limit"):
                     ### this is the photocontest winner image ###
                     return_var = True
 
@@ -358,9 +381,8 @@ class PhotoContestWinner(models.Model):
         photo_contest_vote_obj = PhotoContestVote()
         photo_contest_pictures_obj = PhotoContestPictures()
 
-        # TODO: questi tre metodi sono da spostatare
-        # inserisco in PhotoContestWinner
         try:
+            # inserisco il vincitore in PhotoContestWinner
             self.add_contest_winner(user_id=user_id, photocontest_code=photocontest_code)
         except PhotoContestPictures.DoesNotExist:
             raise
@@ -390,6 +412,17 @@ class PhotoContestWinner(models.Model):
             photo_contest_winner_obj.save()
 
         return True
+
+    def get_last_photocontest_winner(self, photocontest_code, contest_type_code):
+        """Function to retrieve last photocontest winner if exists"""
+        return_var = None
+
+        last_photocontest_winner = PhotoContestWinner.objects.filter(photo_contest__code=photocontest_code, photo_contest__contest_type__code=contest_type_code).order_by('-creation_date')[:1]
+
+        if last_photocontest_winner:
+            return_var = last_photocontest_winner[0]
+
+        return return_var
 
 """
 Per partecipare ai sottoconcorsi occorre:

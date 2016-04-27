@@ -554,13 +554,15 @@ def catwalk_photo_contest_list(request):
 
     return render(request, 'website/catwalk/catwalk_photo_contest_list.html', context)
 
+# TODO: lavorare qui
 def catwalk_photo_contest_pics(request, photocontest_code):
     """View to show all images about a photocontest"""
-    from django_photo_contest.models import PhotoContest, PhotoContestPictures
+    from django_photo_contest.models import PhotoContest, PhotoContestPictures, PhotoContestWinner
 
     contest_obj = Contest()
     photo_contest_obj = PhotoContest()
     photo_contest_pictures_obj = PhotoContestPictures()
+    photo_contest_winner_obj = PhotoContestWinner()
     photocontest_images_exist = False
 
     # common function to set contest type
@@ -576,6 +578,9 @@ def catwalk_photo_contest_pics(request, photocontest_code):
     if photo_contest_pictures_obj.photocontest_images_exist(photo_contest_code=photocontest_code, contest_type_code=contest_type_code):
         photocontest_images_exist = True
 
+    # controllo se esiste già un vincitore per questo photocontest
+    last_photocontest_winner = photo_contest_winner_obj.get_last_photocontest_winner(photocontest_code=photocontest_code, contest_type_code=contest_type_code)
+
     context = {
 	"photocontest_code" : photocontest_code,
 	"photocontest_like_limit" : user_photocontest_info.get("like_limit"),
@@ -583,6 +588,7 @@ def catwalk_photo_contest_pics(request, photocontest_code):
 	"photocontest_description" : user_photocontest_info.get("description"),
 	"photocontest_rules" : user_photocontest_info.get("rules"),
 	"photocontest_images_exist" : photocontest_images_exist,
+	"last_photocontest_winner" : last_photocontest_winner,
     }
 
     return render(request, 'website/catwalk/catwalk_photo_contest_pics.html', context)
@@ -590,13 +596,17 @@ def catwalk_photo_contest_pics(request, photocontest_code):
 # TODO
 def catwalk_photo_contest_pics_info(request, photocontest_code, user_id):
     """View to show a single image about a photocontest"""
-    from django_photo_contest.models import PhotoContest, PhotoContestPictures
+    from django_photo_contest.models import PhotoContest, PhotoContestPictures, PhotoContestVote
 
     contest_obj = Contest()
     account_obj =  Account()
     photo_contest_obj = PhotoContest()
     photo_contest_pictures_obj = PhotoContestPictures()
+    photo_contest_vote_obj = PhotoContestVote()
     photocontest_images_exist = False
+    user_already_registered = False
+    email_is_verified = False
+    votation_is_valid = False
 
     # common function to set contest type
     contest_obj.common_view_set_contest_type(request=request)
@@ -626,18 +636,30 @@ def catwalk_photo_contest_pics_info(request, photocontest_code, user_id):
 	messages.add_message(request, settings.POPUP_ALERT, 'Ci spiace, la foto non è più presente per la votazione.')
         return HttpResponseRedirect('/passerella/dettaglio-utente/' + str(user_id))
 
+    # add a visit to this photocontest image
+    photo_contest_pictures_obj.add_photocontest_image_visit(photo_contest_pictures_id=user_photocontest_picture.photo_contest_pictures_id)
+
     # calcolo i like rimanenti
-    photocontest_image_like_remaining = int(user_photocontest_info.get("like_limit")) - int(user_photocontest_picture.like)
+    photocontest_image_like_remaining = photo_contest_pictures_obj.calculate_remaining_like(photocontest_likes=user_photocontest_info.get("like_limit"), photocontest_image_likes=user_photocontest_picture.like)
 
     # calcolo la percentuale di like rimanente
-    photocontest_image_like_perc = 0
-    if user_photocontest_picture.like:
-        photocontest_image_like_perc = 100 / (int(user_photocontest_info.get("like_limit")) / (int(user_photocontest_picture.like) * 1.0))
+    photocontest_image_like_perc = photo_contest_pictures_obj.calculate_like_perc(photocontest_likes=user_photocontest_info.get("like_limit"), photocontest_image_likes=user_photocontest_picture.like)
 
-    # TODO: check if user can vote
+    # TODO: check if user can vote !!LAVORARE QUI!!
+    # 1) controllo che l'utente sia loggato
+    if request.user.id:
+        user_already_registered = True
+        # 2) controllo che la mail dell'utente sia verificata
+        if account_obj.has_permission(user_obj=request.user, permission_codename='user_verified'):
+            email_is_verified = True
+            # 3) controllo che l'utente non abbia già votato
+            if photo_contest_vote_obj.check_if_user_can_add_like(from_user_id=request.user.id, to_user_id=user_id, photocontest_code=photocontest_code, request=request):
+                votation_is_valid = True
 
     context = {
-        "user_can_vote" : True, # TODO: implements
+        "user_already_registered" : user_already_registered,
+        "email_is_verified" : email_is_verified,
+        "votation_is_valid" : votation_is_valid,
         "user_info" : account_info,
 	"photocontest_code" : photocontest_code,
 	"photocontest_like_limit" : user_photocontest_info.get("like_limit"),
