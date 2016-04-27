@@ -366,8 +366,8 @@ class PhotoContestWinner(models.Model):
     photo_contest_winner_id = models.AutoField(primary_key=True)
     photo_contest = models.ForeignKey(PhotoContest) # related photo contest
     user = models.ForeignKey(User) # related user
-    image_url = models.ImageField(max_length=500, null=True) # winner user image path
-    thumbnail_image_url = models.ImageField(max_length=500, null=True) # winner user thumbnail image path
+    # TODO: gestire l'immagine in questo modo
+    image = models.ForeignKey(cropUploadedImages) # user image path
     creation_date = models.DateTimeField(auto_now_add=True) # photo winning date
 
     class Meta:
@@ -383,7 +383,7 @@ class PhotoContestWinner(models.Model):
 
         try:
             # inserisco il vincitore in PhotoContestWinner
-            self.add_contest_winner(user_id=user_id, photocontest_code=photocontest_code)
+            self.add_contest_winner(user_id=user_id, photocontest_code=photocontest_code, contest_type_code=contest_type_code)
         except PhotoContestPictures.DoesNotExist:
             raise
 
@@ -395,21 +395,28 @@ class PhotoContestWinner(models.Model):
 
         return True
 
-    def add_contest_winner(self, user_id, photocontest_code):
+    def add_contest_winner(self, user_id, photocontest_code, contest_type_code):
         """Function to add a new photocontest winner"""
         photocontest_pictures_obj = PhotoContestPictures()
+	photo_contest_obj = PhotoContest()
 
         try:
+	    # prelevo il concorso dell'immagine vincitrice
+	    user_photo_contest_obj = photo_contest_obj.get_by_code_contest_type(code=photocontest_code, contest_type_code=contest_type_code)
+        except PhotoContest.DoesNotExist:
+            raise
+
+        try:
+	    # prelevo l'immagine vincitrice
             user_photocontest_pictures_obj = photocontest_pictures_obj.get_user_photocontest_picture(user_id=user_id, photocontest_code=photocontest_code)
         except PhotoContestPictures.DoesNotExist:
             raise
-        else:
-            photo_contest_winner_obj = PhotoContestWinner()
-            photo_contest_winner_obj.user.id = user_id
-            photo_contest_winner_obj.photo_contest.code = photocontest_code
-            photo_contest_winner_obj.image_url = user_photocontest_pictures_obj.image.image
-            photo_contest_winner_obj.thumbnail_image_url = user_photocontest_pictures_obj.image.thumbnail_image.image
-            photo_contest_winner_obj.save()
+
+	photo_contest_winner_obj = PhotoContestWinner()
+	photo_contest_winner_obj.user_id = user_id
+	photo_contest_winner_obj.photo_contest = user_photo_contest_obj
+	photo_contest_winner_obj.image = user_photocontest_pictures_obj.image
+	photo_contest_winner_obj.save()
 
         return True
 

@@ -1,18 +1,23 @@
 {% extends "website/inc/base_catwalk.html" %}
-{% load staticfiles static website_extras %}
+{% load staticfiles static django_bootstrap_breadcrumbs website_extras %}
 
 {% block title %}{{ site_name }} | concorsi a tema{% endblock title %}
 
 {% block description %}Concorsi a tema: scopri tutti i concorsi a tema e vota i partecipanti che preferisci.{% endblock description %}
 
-{% block breadcrumbs %}{% endblock %}
+{% block breadcrumbs %}
+	{% breadcrumb "Seleziona un concorso" "/concorsi-a-tema/" %}
+{% endblock %}
 
 {# hide go to catwalk banner #}
 {% block catwalk_banner %}{% endblock catwalk_banner %}
 
+{# hide top 5 users #}
+{% block top_users_banner %}{% endblock %}
+
 {# page tip block (blocco a destra con titolo e descrizione) #}
 {% block page_tip %}
-{% include "website/inc/include_blocks/page_tip.html" with title="Concorsi a tema" text="Ciao, questa è la passerella, qui puoi trovare tutti i partecipanti di "|str_cat:site_name|str_cat:". Vota i tuoi preferiti!" only %}
+{% include "website/inc/include_blocks/page_tip.html" with title="Concorsi a tema" text="Esplora i concorsi a tema, guarda tutte le foto e dai anche tu il \"Mi piace\" alle tue preferite per metterle in evidenza." only %}
 {% endblock %}
 
 {# main navigation active element #}

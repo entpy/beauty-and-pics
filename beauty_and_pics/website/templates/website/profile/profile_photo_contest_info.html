@@ -20,7 +20,7 @@
 	</div>
 	<div class="col-sm-12">
 		<div class="alert alert-info">
-			<p>Qui sono presenti le informazioni della foto inserita nel concorso a tema. Per dare il tuo primo mi piace alla foto clicca sul pulsante <b>Visualizza nella bacheca</b> qui sotto.</p>
+			<p>Qui sono presenti le informazioni della foto inserita nel concorso a tema. Per dare il tuo primo "Mi piace" alla foto clicca sul pulsante <b>Visualizza pagina pubblica</b> qui sotto.</p>
 		</div>
 	</div>
 </div>
@@ -36,7 +36,7 @@
 	<div class="right">
 		<div class="top user_stats_container">
 			<div class="container_row1 user_stats_block">
-				<span><span class="position">{{ photocontest_image_likes }}</span> su {{ photocontest_like_limit }} mi piace ottenuti</span>
+				<span><span class="position">{{ photocontest_image_likes }}</span> su {{ photocontest_like_limit }} "Mi piace" ottenuti</span>
 			</div>
 			<!-- stats block -->
 			<div class="container_row1 text-left">
@@ -55,11 +55,11 @@
 				<div class="user_stats_space"></div>
 				<div class="user_stats_block">
 					<span class="points">{{ photocontest_image_like_remaining }}</span>
-					<span>Mi piace mancanti</span>
+					<span>"Mi piace" mancanti</span>
 				</div>
 			</div>
 			<div class="container_row1">
-				<a href="{{ vote_image_url }}" class="btn btn-success">Visualizza pagina pubblica</a>
+				<a href="{{ vote_image_url }}" target="_blank" class="btn btn-success">Visualizza pagina pubblica</a>
 			</div>
 		</div>
 	</div>
@@ -72,7 +72,7 @@
 	</div>
 	<div class="col-md-12">
 		<div class="alert alert-info">
-			<p>Avere molta visibilità è fondamentale per raggiungere i {{ photocontest_like_limit }} mi piace, ottienili prima di tutti condividendo la tua foto sui social network.<br /><b>Per condividerla ora, clicca sui pulsanti sotto.</b></p>
+			<p>Avere molta visibilità è fondamentale per raggiungere i {{ photocontest_like_limit }} "Mi piace", ottienili prima di tutti condividendo la tua foto sui social network.<br /><b>Per condividerla ora, clicca sui pulsanti sotto.</b></p>
 		</div>
 	</div>
 </div>
@@ -100,7 +100,7 @@
 	</div>
 	<div class="col-md-12">
 		<div class="alert alert-info">
-			<p>Ottieni ulteriori "mi piace" condividendo manualmente la tua foto sui siti che preferisci. Per farlo copia il link che vedi sotto e incollalo dove molta gente possa vederlo<br /><strong>(seleziona l'URL sotto e premi CTRL+C per copiarlo)</strong>.</p>
+			<p>Ottieni ulteriori "Mi piace" condividendo manualmente la tua foto sui siti che preferisci. Per farlo copia il link che vedi sotto e incollalo dove molta gente possa vederlo<br /><strong>(seleziona l'URL sotto e premi CTRL+C per copiarlo)</strong>.</p>
 		</div>
 	</div>
 	<div class="col-md-12">
@@ -119,7 +119,7 @@
 		// remove current image from photocontest click action
 		$(document).on("click",".removePhotocontestImageClickAction", function(){
 			var photocontestCode = "{{ photocontest_code }}";
-			if (confirm("Stai per rimuovere l'immagine dal concorso, perderai tutti i \"mi piace\" ricevuti, confermi?")) {
+			if (confirm("Stai per rimuovere l'immagine dal concorso, perderai tutti i \"Mi piace\" ricevuti, confermi?")) {
 				removePhotocontestImage(photocontestCode);
 			}
 

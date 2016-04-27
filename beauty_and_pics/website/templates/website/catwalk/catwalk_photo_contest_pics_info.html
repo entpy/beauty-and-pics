@@ -3,7 +3,7 @@
 
 {% block title %}{{ site_name }} | concorso a tema '{{ photocontest_name }}'{% endblock title %}
 
-{% block description %}Concorso a tema '{{ photocontest_name }}', dai anche tu il tuo "mi piace" per la foto di {{ user_info.first_name }} {{ user_info.last_name }}.{% endblock description %}
+{% block description %}Concorso a tema '{{ photocontest_name }}', dai anche tu il tuo "Mi piace" per la foto di {{ user_info.first_name }} {{ user_info.last_name }}.{% endblock description %}
 
 {# Open Graph metatags #}
 {% block og_metatags %}
@@ -35,7 +35,7 @@
 <div class="row">
 	<div class="col-md-12">
 		<div class="alert alert-info display_only_small">
-			<p>Dai il tuo "<b>mi piace</b>" a {{ user_info.first_name }}: se riuscirà a raggiungerne <b>{{ photocontest_like_limit }}</b> prima di tutti gli altri avrà un posto in evidenza nella passerella.</p>
+			<p>Dai un "<b>Mi piace</b>" per {{ user_info.first_name }}: se riuscirà a raggiungere i <b>{{ photocontest_like_limit }}</b> "Mi piace" prima di tutti, la sua fotò vincerà il concorso a tema e verrà messa in evidenza.</p>
 		</div>
 	</div>
 </div>
@@ -66,14 +66,14 @@
 		<div class="top user_stats_container container_row1">
 			<div class="container_row display_only_big">
 				<div class="alert alert-info">
-					<p>Dai un "<b>mi piace</b>" per {{ user_info.first_name }}: se riuscirà a raggiungere i <b>{{ photocontest_like_limit }}</b> mi piace prima di tutti avrà un posto in evidenza nella passerella.</p>
+					<p>Dai un "<b>Mi piace</b>" per {{ user_info.first_name }}: se riuscirà a raggiungere i <b>{{ photocontest_like_limit }}</b> "Mi piace" prima di tutti, la sua fotò vincerà il concorso a tema e verrà messa in evidenza.</p>
 				</div>
 			</div>
 			{% if not user_already_registered %}
 				<div class="row">
 					<div class="col-md-12">
 						<div class="alert alert-warning">
-							<span class="msgTextAction">Per dare il "mi piace" alla foto di {{ user_info.first_name }} devi prima registrarti.</span>
+							<span class="msgTextAction">Per dare il "Mi piace" alla foto di {{ user_info.first_name }} devi prima <a class="alert-link" href="/registrati/">registrarti</a>.</span>
 						</div>
 					</div>
 				</div>
@@ -81,7 +81,7 @@
 				<div class="row">
 					<div class="col-md-12">
 						<div class="alert alert-warning">
-							<span class="msgTextAction">Per dare il "mi piace" alla foto di {{ user_info.first_name }} devi prima confermare la tua email.</span>
+							<span class="msgTextAction">Per dare il "Mi piace" alla foto di {{ user_info.first_name }} devi prima <a class="alert-link openResendConfirmationModalClickAction" href="#">confermare la tua email</a>.</span>
 						</div>
 					</div>
 				</div>
@@ -92,7 +92,7 @@
 					<div class="row">
 						<div class="col-md-12">
 							<div class="alert alert-warning">
-								<span class="msgTextAction">Hai già dato il tuo "mi piace" per {{ user_info.first_name }}.</span>
+								<span class="msgTextAction">Hai già dato il tuo "Mi piace" per {{ user_info.first_name }}.</span>
 							</div>
 						</div>
 					</div>
@@ -102,7 +102,7 @@
 				<span>Piace a <span class="position imageContestLikeAction">{{ photocontest_image_likes }}</span> persone</span>
 			</div>
 			<div class="container_row container_row_common10">
-				<span><b class="imageContestLikeRemainingAction">{{ photocontest_image_like_remaining }}</b> "mi piace" mancanti</span>
+				<span><b class="imageContestLikeRemainingAction">{{ photocontest_image_like_remaining }}</b> "Mi piace" mancanti</span>
 			</div>
 			{% if user_already_registered and email_is_verified and votation_is_valid %}
 				<div class="container_row user_stats_block text-center addLikeButtonContainerAction">
@@ -129,7 +129,7 @@
 
 		// add photo like
 		$("body").on("click",".addPhotoLikeClickAction", function(){
-			if (confirm('Confermi il "mi piace"?')) {
+			if (confirm('Confermi il "Mi piace"?')) {
 				var photocontestCode = "{{ photocontest_code }}";
 				var photocontestUserId = "{{ user_info.user_id }}";
 				addPhotocontestImageLike(photocontestCode, photocontestUserId);
@@ -178,10 +178,10 @@
 		if (image_contest_like_remaining > 0) {
 			$(".imageContestLikeRemainingAction").html(image_contest_like_remaining - 1);
 			// open success bootstrap modal
-			bootstrapModalsObect.showMessageModal('Grazie per aver dato tuo "<b>mi piace</b>" a {{ user_info.first_name }}.<br />Visita anche il suo <a href="/passerella/dettaglio-utente/{{ user_info.user_id }}/">profilo completo</a> e guarda tutte le sue foto.', 'Votazione completata');
+			bootstrapModalsObect.showMessageModal('Grazie per aver dato tuo "<b>Mi piace</b>" a {{ user_info.first_name }}.<br />Visita anche il suo <a href="/passerella/dettaglio-utente/{{ user_info.user_id }}/">profilo completo</a> e guarda tutte le sue foto.', 'Votazione completata');
 		} else if (image_contest_like_remaining == 0) {
 			// complimenti hai fatto vincere la foto
-			bootstrapModalsObect.showMessageModal('Complimenti, grazie al tuo mi "<b>mi piace</b>" la foto di {{ user_info.first_name }} ha vinto il concorso a tema \'{{ photocontest_name }}\'.<br />Visita anche il suo <a href="/passerella/dettaglio-utente/{{ user_info.user_id }}/">profilo completo</a> e guarda tutte le sue foto.', 'Voto decisivo');
+			bootstrapModalsObect.showMessageModal('Complimenti, grazie al tuo mi "<b>Mi piace</b>" la foto di {{ user_info.first_name }} ha vinto il concorso a tema \'{{ photocontest_name }}\'.<br />Visita anche il suo <a href="/passerella/dettaglio-utente/{{ user_info.user_id }}/">profilo completo</a> e guarda tutte le sue foto.', 'Voto decisivo');
 		}
 
 		return true;
