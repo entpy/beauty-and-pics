@@ -3,7 +3,7 @@
 
 {% block title %}{{ site_name }} | concorso a tema '{{ photocontest_name }}'{% endblock %}
 
-{% block description %}Informazioni concorso a tema: da questa pagina puoi visualizzare informazioni e statistiche del concorso a tema '{{ photocontest_name }}'.{% endblock %}
+{% block description %}Informazioni concorso a tema: da questa pagina puoi visualizzare informazioni e statistiche del concorso a tema {{ photocontest_name }}.{% endblock %}
 
 {# navigation tabs active element #}
 {% block container4_navigation_profile_photocontest %}active{% endblock %}
@@ -27,7 +27,7 @@
 <div class="background_container1 generic_container8">
 	<div class="left">
 		<div class="top">
-			<img alt="Imagine profilo" class="catwalk_user_main_image" src="{{ photocontest_image_url }}">
+			<img alt="Immagine concorso a tema '{{ photocontest_name }}'" class="catwalk_user_main_image" src="{{ photocontest_image_url }}">
 		</div>
 		<div class="bottom user_action_link_container">
 			<a href="#" class="removePhotocontestImageClickAction">Rimuovi dal concorso</a>
@@ -105,7 +105,7 @@
 	</div>
 	<div class="col-md-12">
 		<div class="profile_share_url_container">
-			<strong class="profilePageUrlAction">{{ photocontest_image_url }}</strong>
+			<strong class="profilePageUrlAction">{{ vote_image_url }}</strong>
 		</div>
 	</div>
 </div>

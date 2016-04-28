@@ -554,7 +554,6 @@ def catwalk_photo_contest_list(request):
 
     return render(request, 'website/catwalk/catwalk_photo_contest_list.html', context)
 
-# TODO: lavorare qui
 def catwalk_photo_contest_pics(request, photocontest_code):
     """View to show all images about a photocontest"""
     from django_photo_contest.models import PhotoContest, PhotoContestPictures, PhotoContestWinner
@@ -593,7 +592,6 @@ def catwalk_photo_contest_pics(request, photocontest_code):
 
     return render(request, 'website/catwalk/catwalk_photo_contest_pics.html', context)
 
-# TODO
 def catwalk_photo_contest_pics_info(request, photocontest_code, user_id):
     """View to show a single image about a photocontest"""
     from django_photo_contest.models import PhotoContest, PhotoContestPictures, PhotoContestVote
@@ -645,7 +643,10 @@ def catwalk_photo_contest_pics_info(request, photocontest_code, user_id):
     # calcolo la percentuale di like rimanente
     photocontest_image_like_perc = photo_contest_pictures_obj.calculate_like_perc(photocontest_likes=user_photocontest_info.get("like_limit"), photocontest_image_likes=user_photocontest_picture.like)
 
-    # TODO: check if user can vote !!LAVORARE QUI!!
+    # prlevo eventuale prossima data per votare
+    next_votation_date = photo_contest_vote_obj.get_next_votation_date(user_id=user_id, photo_contest_pictures_id=user_photocontest_picture.photo_contest_pictures_id)
+
+    # check if user can vote
     # 1) controllo che l'utente sia loggato
     if request.user.id:
         user_already_registered = True
@@ -653,7 +654,7 @@ def catwalk_photo_contest_pics_info(request, photocontest_code, user_id):
         if account_obj.has_permission(user_obj=request.user, permission_codename='user_verified'):
             email_is_verified = True
             # 3) controllo che l'utente non abbia già votato
-            if photo_contest_vote_obj.check_if_user_can_add_like(from_user_id=request.user.id, to_user_id=user_id, photocontest_code=photocontest_code, request=request):
+            if photo_contest_vote_obj.check_if_user_can_add_like(user_id=request.user.id, photo_contest_pictures_id=user_photocontest_picture.photo_contest_pictures_id):
                 votation_is_valid = True
 
     context = {
@@ -671,6 +672,8 @@ def catwalk_photo_contest_pics_info(request, photocontest_code, user_id):
         "photocontest_image_visits" : user_photocontest_picture.visits,
         "photocontest_image_like_remaining" : photocontest_image_like_remaining,
         "photocontest_image_like_perc" : photocontest_image_like_perc,
+        "vote_image_url" : settings.SITE_URL + "/concorsi-a-tema/" + str(photocontest_code) + "/" + str(user_id) + "/",
+        "next_votation_date" : next_votation_date,
     }
 
     return render(request, 'website/catwalk/catwalk_photo_contest_pics_info.html', context)
@@ -1342,7 +1345,7 @@ def profile_photo_contest_info(request, photocontest_code):
     # set current contest_type
     contest_obj.set_contest_type(request=request, contest_type=autenticated_user_data["contest_type"])
 
-    # TODO: funzione per controllare se l'utente sta già partecipando a questo photocontest
+    # funzione per controllare se l'utente sta già partecipando a questo photocontest
     #	- se SI redirect direttamente nella pagina di info
     #	- se NO mando alla pagina di selezione immagine per il photocontest
 
@@ -1375,7 +1378,7 @@ def profile_photo_contest_info(request, photocontest_code):
         "photocontest_image_visits" : user_photocontest_picture.visits,
         "photocontest_image_like_remaining" : photocontest_image_like_remaining,
         "photocontest_image_like_perc" : photocontest_image_like_perc,
-        "vote_image_url" : "/concorsi-a-tema/" + str(photocontest_code) + "/" + str(user_id) + "/",
+        "vote_image_url" : settings.SITE_URL + "/concorsi-a-tema/" + str(photocontest_code) + "/" + str(user_id) + "/",
     }
 
     return render(request, 'website/profile/profile_photo_contest_info.html', context)

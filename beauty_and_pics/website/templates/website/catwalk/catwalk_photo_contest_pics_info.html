@@ -3,12 +3,12 @@
 
 {% block title %}{{ site_name }} | concorso a tema '{{ photocontest_name }}'{% endblock title %}
 
-{% block description %}Concorso a tema '{{ photocontest_name }}', dai anche tu il tuo "Mi piace" per la foto di {{ user_info.first_name }} {{ user_info.last_name }}.{% endblock description %}
+{% block description %}Concorso a tema '{{ photocontest_name }}', dai anche tu il tuo 'Mi piace' per la foto di {{ user_info.first_name }} {{ user_info.last_name }}.{% endblock description %}
 
 {# Open Graph metatags #}
 {% block og_metatags %}
 <meta property="og:locale" content="it_IT" />
-<meta property="og:url" content="{{ photocontest_image_url }}" />
+<meta property="og:url" content="{{ vote_image_url }}" />
 <meta property="og:type" content="profile" />
 <meta property="og:title" content="{{ user_info.first_name }} {{ user_info.last_name }}" />
 <meta property="og:site_name" content="Beauty and Pics"/>
@@ -25,6 +25,9 @@
 
 {# hide photoboard list banner #}
 {% block photoboard_list_banner %}{% endblock %}
+
+{# hide top 5 users #}
+{% block top_users_banner %}{% endblock %}
 
 {% block container4_content %}
 {# Facebook SDK {{{ #}
@@ -73,7 +76,7 @@
 				<div class="row">
 					<div class="col-md-12">
 						<div class="alert alert-warning">
-							<span class="msgTextAction">Per dare il "Mi piace" alla foto di {{ user_info.first_name }} devi prima <a class="alert-link" href="/registrati/">registrarti</a>.</span>
+							Per dare il "Mi piace" alla foto di {{ user_info.first_name }} devi prima <a class="alert-link" href="/registrati/">registrarti</a>.
 						</div>
 					</div>
 				</div>
@@ -81,7 +84,7 @@
 				<div class="row">
 					<div class="col-md-12">
 						<div class="alert alert-warning">
-							<span class="msgTextAction">Per dare il "Mi piace" alla foto di {{ user_info.first_name }} devi prima <a class="alert-link openResendConfirmationModalClickAction" href="#">confermare la tua email</a>.</span>
+							Per dare il "Mi piace" alla foto di {{ user_info.first_name }} devi prima <a class="alert-link openResendConfirmationModalClickAction" href="#">confermare la tua email</a>.
 						</div>
 					</div>
 				</div>
@@ -92,7 +95,7 @@
 					<div class="row">
 						<div class="col-md-12">
 							<div class="alert alert-warning">
-								<span class="msgTextAction">Hai già dato il tuo "Mi piace" per {{ user_info.first_name }}.</span>
+								<span class="msgTextAction">Potrai nuovamente votare questa foto tra: {{ next_votation_date | timeuntil }}.</span>
 							</div>
 						</div>
 					</div>
@@ -122,7 +125,7 @@
 		$("body").on("click",".shareOnFacebookClickAction", function(){
 
 			// create facebook share dialog
-			FB.ui({ method: 'share', href: '{{ photocontest_image_url }}' }, function(response){});
+			FB.ui({ method: 'share', href: '{{ vote_image_url }}' }, function(response){});
 
 			return false;
 		});
@@ -168,16 +171,17 @@
 	function votationSuccessCallback() {
 		// show user voted msg block
 		$(".userVotedMsgBlockAction").removeClass("hide");
+		$(".msgTextAction").html("Potrai nuovamente votare questa foto tra: 7 giorni.");
 
 		// decrease/increase like/remaining like
-		var image_contest_like = parseInt($(".imageContestLikeAction").html());
-		var image_contest_like_remaining = parseInt($(".imageContestLikeRemainingAction").html());
-		$(".imageContestLikeAction").html(image_contest_like + 1);
+		var image_contest_like = parseInt($(".imageContestLikeAction").html()) + 1;
+		var image_contest_like_remaining = parseInt($(".imageContestLikeRemainingAction").html()) - 1;
+		$(".imageContestLikeAction").html(image_contest_like);
+		$(".imageContestLikeRemainingAction").html(image_contest_like_remaining);
 
 		// decremento i "like" rimanenti solo se sono maggiori di 0
 		if (image_contest_like_remaining > 0) {
-			$(".imageContestLikeRemainingAction").html(image_contest_like_remaining - 1);
-			// open success bootstrap modal
+			// grazie per il tuo "Mi piace"
 			bootstrapModalsObect.showMessageModal('Grazie per aver dato tuo "<b>Mi piace</b>" a {{ user_info.first_name }}.<br />Visita anche il suo <a href="/passerella/dettaglio-utente/{{ user_info.user_id }}/">profilo completo</a> e guarda tutte le sue foto.', 'Votazione completata');
 		} else if (image_contest_like_remaining == 0) {
 			// complimenti hai fatto vincere la foto

@@ -2,15 +2,17 @@
 
 from django.db import models
 from django.db.models import F
-from datetime import datetime
+from django.conf import settings
 from django.contrib.auth.models import User
+from datetime import datetime, timedelta
+from dateutil.relativedelta import *
+import logging
+from beauty_and_pics.consts import project_constants
 from beauty_and_pics.common_utils import CommonUtils
 from contest_app.models.contest_types import Contest_Type
 from upload_image_box.models import cropUploadedImages 
 from .settings import *
 from .exceptions import *
-from beauty_and_pics.consts import project_constants
-import logging
 
 # Get an instance of a logger
 logger = logging.getLogger(__name__)
@@ -254,14 +256,12 @@ class PhotoContestPictures(models.Model):
 
         return True
 
-    # TODO
     def clear_image_stats(self, photocontest_code, contest_type_code):
         """Function to clear image like and visits"""
         PhotoContestPictures.objects.filter(photo_contest__code=photocontest_code, photo_contest__contest_type__code=contest_type_code).update(like=0, visits=0)
 
         return True
 
-    # TODO
     def is_photocontest_winner(self, user_id, photocontest_code, contest_type_code):
         """Function to check if a photocontest image is winning"""
         photo_contest_obj = PhotoContest()
@@ -294,19 +294,19 @@ class PhotoContestVote(models.Model):
     Per sapere se un utente può essere votato o no
     """
     photo_contest_vote_id = models.AutoField(primary_key=True)
-    photo_contest = models.ForeignKey(PhotoContest) # related photo contest
-    from_user = models.ForeignKey(User, related_name='photocontest_vote_from_user')
-    to_user = models.ForeignKey(User, related_name='photocontest_vote_to_user')
+    photo_contest_pictures = models.ForeignKey(PhotoContestPictures) # related photo contest pictures
+    user = models.ForeignKey(User)
     ip_address = models.CharField(max_length=50)
     date = models.DateTimeField(auto_now=True)
 
     class Meta:
         app_label = 'django_photo_contest'
+        unique_together = ('photo_contest_pictures', 'user')
 
     def __unicode__(self):
         return str(self.photo_contest_vote_id)
 
-    def check_if_user_can_add_like(self, from_user_id, to_user_id, photocontest_code, request):
+    def check_if_user_can_add_like(self, user_id, photo_contest_pictures_id):
         """
         Function to check if a user can add like:
          - 1) controllo data ultima votazione
@@ -314,7 +314,7 @@ class PhotoContestVote(models.Model):
         return_var = False
 
         try:
-            photocontest_vote_obj = PhotoContestVote.objects.get(from_user__id=from_user_id, to_user__id=to_user_id, photo_contest__code=photocontest_code)
+            photocontest_vote_obj = PhotoContestVote.objects.get(user__id=user_id, photo_contest_pictures__photo_contest_pictures_id=photo_contest_pictures_id)
             # 2) controllo data ultimo like
             # like già dato se vote date is < SECONDS_BETWEEN_VOTATION
             datediff = datetime.now() - photocontest_vote_obj.date
@@ -331,30 +331,38 @@ class PhotoContestVote(models.Model):
 
         return return_var
 
-    def create_votation(self, from_user_id, to_user_id, photocontest_code, request, contest_type_code):
+    # TODO
+    def get_next_votation_date(self, user_id, photo_contest_pictures_id):
+        """Function to retrieve next votation date"""
+        return_var = False
+
+        try:
+            photocontest_vote_obj = PhotoContestVote.objects.get(user__id=user_id, photo_contest_pictures__photo_contest_pictures_id=photo_contest_pictures_id)
+            return_var = photocontest_vote_obj.date + timedelta(seconds=SECONDS_BETWEEN_VOTATION + 60)
+            # return_var = relativedelta(datetime.now(), photocontest_vote_obj.date)
+            logger.debug("get_next_votation_date: " + str(return_var))
+        except PhotoContestVote.DoesNotExist:
+            # l'utente non ha mai votato, non è presente una next votation date
+            pass
+
+        return return_var
+
+    def create_votation(self, user_id, photo_contest_pictures_id, request):
 	"""Function to add a new votation"""
-	photo_contest_obj = PhotoContest()
 	photocontest_vote_obj = PhotoContestVote()
         common_utils_obj = CommonUtils()
 
-	try:
-	    user_photo_contest_obj = photo_contest_obj.get_by_code_contest_type(code=photocontest_code, contest_type_code=contest_type_code)
-        except PhotoContest.DoesNotExist:
-            raise
-
 	# il photocontest esiste, procedo con l'inserimento della votazione
-	photocontest_vote_obj.photo_contest = user_photo_contest_obj
-	photocontest_vote_obj.from_user_id = from_user_id
-	photocontest_vote_obj.to_user_id = to_user_id
+	photocontest_vote_obj.photo_contest_pictures_id = photo_contest_pictures_id
+	photocontest_vote_obj.user_id = user_id
 	photocontest_vote_obj.ip_address = common_utils_obj.get_ip_address(request=request)
  	photocontest_vote_obj.save()
 
 	return True
 
-    # TODO
     def delete_photocontest_vote(self, photocontest_code, contest_type_code):
         """Function to delete all votes about a photocontest"""
-        PhotoContestVote.objects.filter(photo_contest__code=photocontest_code, photo_contest__contest_type__code=contest_type_code).delete()
+        PhotoContestVote.objects.filter(photo_contest_pictures__photo_contest__code=photocontest_code, photo_contest_pictures__photo_contest__contest_type__code=contest_type_code).delete()
 
         return True
 
@@ -366,7 +374,6 @@ class PhotoContestWinner(models.Model):
     photo_contest_winner_id = models.AutoField(primary_key=True)
     photo_contest = models.ForeignKey(PhotoContest) # related photo contest
     user = models.ForeignKey(User) # related user
-    # TODO: gestire l'immagine in questo modo
     image = models.ForeignKey(cropUploadedImages) # user image path
     creation_date = models.DateTimeField(auto_now_add=True) # photo winning date
 
@@ -387,8 +394,9 @@ class PhotoContestWinner(models.Model):
         except PhotoContestPictures.DoesNotExist:
             raise
 
+        # XXX: per ora no
         # elimino tutti i voti per il contest_type_code e il photocontest_code
-        photo_contest_vote_obj.delete_photocontest_vote(photocontest_code=photocontest_code, contest_type_code=contest_type_code)
+        # photo_contest_vote_obj.delete_photocontest_vote(photocontest_code=photocontest_code, contest_type_code=contest_type_code)
 
         # azzero tutte le visite e i voti dell'immagine
         photo_contest_pictures_obj.clear_image_stats(photocontest_code=photocontest_code, contest_type_code=contest_type_code)
@@ -422,12 +430,18 @@ class PhotoContestWinner(models.Model):
 
     def get_last_photocontest_winner(self, photocontest_code, contest_type_code):
         """Function to retrieve last photocontest winner if exists"""
-        return_var = None
+        photo_contest_pictures_obj = PhotoContestPictures()
+        return_var = {}
 
-        last_photocontest_winner = PhotoContestWinner.objects.filter(photo_contest__code=photocontest_code, photo_contest__contest_type__code=contest_type_code).order_by('-creation_date')[:1]
+        last_photocontest_winner_list = PhotoContestWinner.objects.filter(photo_contest__code=photocontest_code, photo_contest__contest_type__code=contest_type_code).order_by('-creation_date')[:1]
 
-        if last_photocontest_winner:
-            return_var = last_photocontest_winner[0]
+        if last_photocontest_winner_list:
+            last_photocontest_winner = last_photocontest_winner_list[0]
+            return_var["image_url"] = last_photocontest_winner.image.image.url
+            return_var["vote_image_url"] = settings.SITE_URL + "/concorsi-a-tema/" + str(photocontest_code) + "/" + str(last_photocontest_winner.user.id) + "/"
+
+            # controllo che l'immagine esista ancora nel photocontest
+            return_var["photocontest_image_exists"] = photo_contest_pictures_obj.exists_user_photocontest_picture(user_id=last_photocontest_winner.user.id, photocontest_code=photocontest_code)
 
         return return_var
 
