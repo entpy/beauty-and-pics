@@ -882,20 +882,22 @@ var bootstrapModalsObect = {
 	},
 
 	/* Function to build and show photocontest info modal bootstrap modal */
-	showPhotocontestInfoModal(photocontestCode, photocontestName, photocontestDescription, photocontestLikeLimit, photocontestImageUrl) {
+	showPhotocontestInfoModal(photocontestCode, photocontestName, photocontestDescription, photocontestLikeLimit, photocontestImageUrl, questionPointImageUrl) {
 		if (photocontestCode && photocontestName && photocontestDescription && photocontestLikeLimit) {
 			this.resetBootstrapModal();
 			var messageBlockTemplate = '';
 			messageBlockTemplate += '<div class="row">';
-			messageBlockTemplate += '<div class="col-md-4">';
+			messageBlockTemplate += '<div class="col-md-4 margin_bottom_15 text-xs-center text-sm-center">';
 			messageBlockTemplate += '<img alt="' + photocontestName + '" src="' + photocontestImageUrl + '">';
 			messageBlockTemplate += '</div>';
-			messageBlockTemplate += '<div class="col-md-8"><div>' + photocontestDescription + '</div><div>"Mi piace" richiesti: <b>' + photocontestLikeLimit + '</b></div></div>';
+			messageBlockTemplate += '<div class="col-md-8"><div>' + photocontestDescription + '</div><div>"Mi piace" richiesti: <b>' + photocontestLikeLimit + '</b>&nbsp;<img data-toggle="tooltip" data-placement="top" title="" data-original-title="Il numero di \'Mi piace\' che la tua immagine dovrà ricevere per vincere il concorso a tema" src="' + questionPointImageUrl + '" alt="Cosa significa?"></div></div>';
 			messageBlockTemplate += '</div>';
 			$(".bootstrap_modal").find('.modal-title').html(photocontestName);
 			$(".bootstrap_modal").find('.modal-footer').html('<button type="button" class="btn btn-default" data-dismiss="modal">Annulla</button><button type="button" class="btn btn-success photocontestEnterClickAction" data-photocontest-code="' + photocontestCode + '" data-dismiss="modal">Partecipa</button>');
 			$(".bootstrap_modal").find('.modal-body').html(messageBlockTemplate);
 			this.showBootstrapModal();
+			// mostro la tooltip nella modal
+			$('[data-toggle="tooltip"]').tooltip();
 		}
 
 		return false;

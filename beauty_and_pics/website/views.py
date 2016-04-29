@@ -1321,8 +1321,16 @@ def profile_photo_contest_list(request):
     # set current contest_type
     contest_obj.set_contest_type(request=request, contest_type=autenticated_user_data["contest_type"])
 
+    # list of all photocontest
+    photocontest_list = photo_contest_obj.get_photocontest_fullinfo_list(contest_type_code=autenticated_user_data["contest_type"])
+
+    # i concorsi a tema nei quali l'utente è già presente devono avere
+    # un'icona differente e al click devo entrare subito nella pagina di info concorso
+    user_partecipation_photocontest = photo_contest_obj.get_user_partecipation_photocontest(user_id=request.user.id, available_photocontest_list=photocontest_list)
+
     context = {
-        "photo_contest_list" : photo_contest_obj.get_photocontest_fullinfo_list(contest_type_code=autenticated_user_data["contest_type"]),
+        "photo_contest_list" : photocontest_list,
+        "user_partecipation_photocontest" : user_partecipation_photocontest,
     }
 
     return render(request, 'website/profile/profile_photo_contest_list.html', context)

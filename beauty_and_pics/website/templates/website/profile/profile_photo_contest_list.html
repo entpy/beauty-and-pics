@@ -8,6 +8,13 @@
 {# navigation tabs active element #}
 {% block container4_navigation_profile_photocontest %}active{% endblock %}
 
+{% block custom_css %}
+<style>
+	/* evidenzio i photocontest ai quali l'utente sta prendendo parte */
+	.photocontest_grid_button_active { background-color: green; }
+</style>
+{% endblock %}
+
 {% block container4_content %}
 <div class="row">
 	<div class="col-md-12">
@@ -15,7 +22,7 @@
 	</div>
 	<div class="col-md-12">
 		<div class="alert alert-info">
-			<p>Prendi parte ad un concorso a tema, carica solo le foto che corrispondono ai requisiti e ottieni più mi piace per avere la foto in evidenza.</p>
+			<p>Ottieni un bonus di 40 punti: prendi parte ad un concorso a tema, carica solo le foto che corrispondono ai requisiti e ottieni più mi piace per avere la foto in evidenza ed ottenere il bonus di 40 punti.</p>
 		</div>
 	</div>
 </div>
@@ -24,7 +31,11 @@
 	<div class="row">
 	{% for photo_contest in photo_contest_list %}
 		<div class="col-xs-12 col-sm-6 col-md-4 col-lg-3">
-			<a href="#" class="thumbnail grid_button_1 showPhotocontestInfoClickAction" data-photocontest-code="{{ photo_contest.code }}" data-photocontest-name="{{ photo_contest.name }}" data-photocontest-like-limit="{{ photo_contest.like_limit }}" data-photocontest-description="{{ photo_contest.description }}" data-photocontest-imageurl="{% static "website/img/photocontest/"|str_cat:photo_contest.code|str_cat:".png" %}" data-toggle="tooltip" data-placement="top" data-original-title="Clicca per avere maggiori informazioni sul concorso '{{ photo_contest.name }}'">
+			{% if user_partecipation_photocontest|get_item:photo_contest.code %}
+				<a href="/profilo/concorsi-a-tema/{{ photo_contest.code }}/" class="thumbnail grid_button_1 photocontest_grid_button_active" data-toggle="tooltip" data-placement="top" data-original-title="Clicca per entrare nel concorso a tema '{{ photo_contest.name }}'">
+			{% else %}
+				<a href="#" class="thumbnail grid_button_1 showPhotocontestInfoClickAction" data-photocontest-code="{{ photo_contest.code }}" data-photocontest-name="{{ photo_contest.name }}" data-photocontest-like-limit="{{ photo_contest.like_limit }}" data-photocontest-description="{{ photo_contest.description }}" data-photocontest-imageurl="{% static "website/img/photocontest/"|str_cat:photo_contest.code|str_cat:".png" %}" data-toggle="tooltip" data-placement="top" data-original-title="Clicca per avere maggiori informazioni sul concorso '{{ photo_contest.name }}'">
+			{% endif %}
 				<span class="grid_button_image grid_button_image_h_90">
 					<img src="{% static "website/img/photocontest/"|str_cat:photo_contest.code|str_cat:".png" %}" alt="{{ photo_contest.name }}">
 				</span>
@@ -50,9 +61,10 @@
 			var photocontestDescription = $(this).data("photocontestDescription");
 			var photocontestLikeLimit = $(this).data("photocontestLikeLimit");
 			var photocontestImageUrl = $(this).data("photocontestImageurl");
+			var questionPointImageUrl = "{% static "website/img/question-point.png" %}";
 
 			// open bootstrap modal
-			bootstrapModalsObect.showPhotocontestInfoModal(photocontestCode, photocontestName, photocontestDescription, photocontestLikeLimit, photocontestImageUrl);
+			bootstrapModalsObect.showPhotocontestInfoModal(photocontestCode, photocontestName, photocontestDescription, photocontestLikeLimit, photocontestImageUrl, questionPointImageUrl);
 
 			return false;
 		});

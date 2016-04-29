@@ -141,6 +141,29 @@ class PhotoContest(models.Model):
 
         return return_var
 
+    def get_user_partecipation_photocontest(self, user_id, available_photocontest_list):
+        """Function to list all photocontest in which the user play"""
+        return_var = {}
+
+        # list of all photocontest about user_id
+        user_photocontest_codes_list = PhotoContestPictures.objects.values_list('photo_contest__code', flat=True).filter(user__id=user_id)
+
+        if available_photocontest_list:
+            for photocontest in available_photocontest_list:
+                # controllo se l'utente sta partecipando al photocontest
+                # logger.debug("codice: " + str(photocontest.get("code")) + " | lista codici presenti: " + str(user_photocontest_codes_list))
+                if photocontest.get("code") in user_photocontest_codes_list:
+                    # si, l'utente sta partecipando al photocontest
+                    return_var[photocontest.get("code")] = True
+
+        return return_var
+
+    # TODO
+    def assign_winner_points(self):
+	from contest_app.models.votes import Vote
+        vote_obj = Vote()
+        vote_obj = Vote()
+
 class PhotoContestPictures(models.Model):
     photo_contest_pictures_id = models.AutoField(primary_key=True)
     user = models.ForeignKey(User) # related user
@@ -170,7 +193,6 @@ class PhotoContestPictures(models.Model):
 
         return return_var
 
-    # TODO
     def add_photocontest_image_like(self, user_id, photocontest_code):
         """Function to add a photocontest image like"""
 
@@ -186,7 +208,6 @@ class PhotoContestPictures(models.Model):
 
         return True
 
-    # TODO
     def add_photocontest_image_visit(self, photo_contest_pictures_id):
         """Function to add a photocontest image visit"""
         PhotoContestPictures.objects.filter(photo_contest_pictures_id=photo_contest_pictures_id).update(visits=F('visits') + 1)
@@ -197,7 +218,6 @@ class PhotoContestPictures(models.Model):
         """Function to calculate remaining like"""
         return int(photocontest_likes) - int(photocontest_image_likes)
 
-    # TODO
     def calculate_like_perc(self, photocontest_likes, photocontest_image_likes):
         """Function to calculate remaining like"""
         return_var = 0
