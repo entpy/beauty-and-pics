@@ -465,6 +465,30 @@ class PhotoContestWinner(models.Model):
 
         return return_var
 
+    # TODO
+    def check_if_image_is_winning(self, user_id, photocontest_code, contest_type_code):
+	"""Function to check if current image is a winning image"""
+        photo_contest_pictures_obj = PhotoContestPictures()
+        return_var = False
+	last_photocontest_winning_image = False
+
+	# prelevo l'ultima immagine vincitrice
+        last_photocontest_winning_list = PhotoContestWinner.objects.filter(photo_contest__code=photocontest_code, photo_contest__contest_type__code=contest_type_code).order_by('-creation_date')[:1]
+        if last_photocontest_winning_list:
+            last_photocontest_winning_image = last_photocontest_winning_list[0]
+
+	# prelevo l'immagine dell'attuale photocontest
+	try:
+	    user_photo_contest_pictures_obj = photo_contest_pictures_obj.get_user_photocontest_picture(user_id=user_id, photocontest_code=photocontest_code)
+        except PhotoContestPictures.DoesNotExist:
+            pass
+
+	if last_photocontest_winning_image and user_photo_contest_pictures_obj:
+	    if last_photocontest_winning_image.image_id == user_photo_contest_pictures_obj.image_id:
+		return_var = True
+
+        return return_var
+
 """
 Per partecipare ai sottoconcorsi occorre:
     - aver verificato il proprio account

@@ -890,7 +890,7 @@ var bootstrapModalsObect = {
 			messageBlockTemplate += '<div class="col-md-4 margin_bottom_15 text-xs-center text-sm-center">';
 			messageBlockTemplate += '<img alt="' + photocontestName + '" src="' + photocontestImageUrl + '">';
 			messageBlockTemplate += '</div>';
-			messageBlockTemplate += '<div class="col-md-8"><div>' + photocontestDescription + '</div><div>"Mi piace" richiesti: <b>' + photocontestLikeLimit + '</b>&nbsp;<img data-toggle="tooltip" data-placement="top" title="" data-original-title="Il numero di \'Mi piace\' che la tua immagine dovrà ricevere per vincere il concorso a tema" src="' + questionPointImageUrl + '" alt="Cosa significa?"></div></div>';
+			messageBlockTemplate += '<div class="col-md-8"><div>' + photocontestDescription + '</div><div><span class="vertical_align_middle">"Mi piace" richiesti: <b>' + photocontestLikeLimit + '</b>&nbsp;</span><img class="space-left-5" data-toggle="tooltip" data-placement="top" title="" data-original-title="Il numero di \'Mi piace\' che la tua immagine dovrà ricevere per vincere il concorso a tema" src="' + questionPointImageUrl + '" alt="Cosa significa?"></div></div>';
 			messageBlockTemplate += '</div>';
 			$(".bootstrap_modal").find('.modal-title').html(photocontestName);
 			$(".bootstrap_modal").find('.modal-footer').html('<button type="button" class="btn btn-default" data-dismiss="modal">Annulla</button><button type="button" class="btn btn-success photocontestEnterClickAction" data-photocontest-code="' + photocontestCode + '" data-dismiss="modal">Partecipa</button>');
@@ -911,7 +911,7 @@ var bootstrapModalsObect = {
 			messageBlockTemplate += '<div class="row">';
 			messageBlockTemplate += '<div class="col-md-12">';
 			messageBlockTemplate += '<p>';
-			messageBlockTemplate += 'Stai per inserire la seguente immagine nel concorso a tema "' + photocontestName + '".<br />(Sarà comunque possibile rimuoverla e caricarne un\'altra in un qualsiasi momento).<br />Confermi la selezione?'
+			messageBlockTemplate += 'Stai per inserire la seguente immagine nel concorso a tema "<b>' + photocontestName + '</b>".<br />(Sarà comunque possibile rimuoverla e caricarne un\'altra in un qualsiasi momento).<br />Confermi la selezione?'
 			messageBlockTemplate += '</p>';
 			messageBlockTemplate += '</div>';
 			messageBlockTemplate += '</div>';

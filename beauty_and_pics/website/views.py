@@ -594,13 +594,14 @@ def catwalk_photo_contest_pics(request, photocontest_code):
 
 def catwalk_photo_contest_pics_info(request, photocontest_code, user_id):
     """View to show a single image about a photocontest"""
-    from django_photo_contest.models import PhotoContest, PhotoContestPictures, PhotoContestVote
+    from django_photo_contest.models import PhotoContest, PhotoContestPictures, PhotoContestVote, PhotoContestWinner
 
     contest_obj = Contest()
     account_obj =  Account()
     photo_contest_obj = PhotoContest()
     photo_contest_pictures_obj = PhotoContestPictures()
     photo_contest_vote_obj = PhotoContestVote()
+    photo_contest_winner_obj = PhotoContestWinner()
     photocontest_images_exist = False
     user_already_registered = False
     email_is_verified = False
@@ -643,6 +644,9 @@ def catwalk_photo_contest_pics_info(request, photocontest_code, user_id):
     # calcolo la percentuale di like rimanente
     photocontest_image_like_perc = photo_contest_pictures_obj.calculate_like_perc(photocontest_likes=user_photocontest_info.get("like_limit"), photocontest_image_likes=user_photocontest_picture.like)
 
+    # controllo se l'immagine è la vincitrice
+    image_is_winning = photo_contest_winner_obj.check_if_image_is_winning(user_id=user_id, photocontest_code=photocontest_code, contest_type_code=contest_type_code)
+
     # prlevo eventuale prossima data per votare
     next_votation_date = photo_contest_vote_obj.get_next_votation_date(user_id=user_id, photo_contest_pictures_id=user_photocontest_picture.photo_contest_pictures_id)
 
@@ -674,6 +678,7 @@ def catwalk_photo_contest_pics_info(request, photocontest_code, user_id):
         "photocontest_image_like_perc" : photocontest_image_like_perc,
         "vote_image_url" : settings.SITE_URL + "/concorsi-a-tema/" + str(photocontest_code) + "/" + str(user_id) + "/",
         "next_votation_date" : next_votation_date,
+        "image_is_winning" : image_is_winning,
     }
 
     return render(request, 'website/catwalk/catwalk_photo_contest_pics_info.html', context)

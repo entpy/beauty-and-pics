@@ -87,7 +87,7 @@ ul.grid_container_three li { width: 30.84% }
 
 /* profile section {{{ */
 /* navigation */
-.user_profile_navigation { margin-top: -20px; }
+.user_profile_navigation { margin-top: -25px; }
 
 .favorites_question_point_container img { margin-left: 5px; vertical-align: text-bottom; }
 .manage_buttons_container { display: table; }

@@ -30,6 +30,8 @@ textarea { resize: none; }
 .no-gutter { padding-right: 0; padding-left: 0; }
 .disabled-only-graphics { box-shadow: none; cursor: not-allowed; border-color: #BAC4C5; background-color: #BAC4C5; }
 .positio-relative { position: relative; }
+.space-left-5 { margin-left: 5px; }
+.space-left-10 { margin-left: 10px; }
 
 /* www main block */
 .www_container { height: 100%; }
@@ -190,7 +192,7 @@ textarea { resize: none; }
 
 /* catwalk user details page */
 .background_container1 { background-color: #E0E0E0; padding: 20px; }
-.generic_container8 { background-color: #e0e0e0; display: inline-block; float: left; padding: 20px; width: 100%; }
+.generic_container8 { background-color: #e0e0e0; display: inline-block; padding: 20px; width: 100%; }
 .user_stats_container { text-align: center; }
 .user_stats_container .user_stats_block { display: inline-block; }
 .user_stats_container .user_stats_block .position { font-size: 55px; }

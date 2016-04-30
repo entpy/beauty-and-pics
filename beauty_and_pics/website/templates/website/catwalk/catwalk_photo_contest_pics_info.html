@@ -37,8 +37,8 @@
 {# Facebook SDK }}} #}
 <div class="row">
 	<div class="col-md-12">
-		<div class="alert alert-info display_only_small">
-			<p>Dai un "<b>Mi piace</b>" per {{ user_info.first_name }}: se riuscirà a raggiungere i <b>{{ photocontest_like_limit }}</b> "Mi piace" prima di tutti, la sua fotò vincerà il concorso a tema e verrà messa in evidenza.</p>
+		<div class="display_only_small">
+			<p class="text-primary text-justify">Dai un "<b>Mi piace</b>" per {{ user_info.first_name }}: se riuscirà a raggiungere i <b>{{ photocontest_like_limit }}</b> "Mi piace" prima di tutti, la sua fotò vincerà il concorso a tema e verrà messa in evidenza.</p>
 		</div>
 	</div>
 </div>
@@ -67,10 +67,11 @@
 	</div>
 	<div class="right">
 		<div class="top user_stats_container container_row1">
+			<div class="container_row currentWinningImageAction {% if not image_is_winning %}hide{% endif %}">
+				<p class="text-warning text-justify">La foto è attualmente la preferita del concorso a tema <b>{{ photocontest_name }}</b>.</p>
+			</div>
 			<div class="container_row display_only_big">
-				<div class="alert alert-info">
-					<p>Dai un "<b>Mi piace</b>" per {{ user_info.first_name }}: se riuscirà a raggiungere i <b>{{ photocontest_like_limit }}</b> "Mi piace" prima di tutti, la sua fotò vincerà il concorso a tema e verrà messa in evidenza.</p>
-				</div>
+				<p class="text-primary text-justify">Dai un "<b>Mi piace</b>" per {{ user_info.first_name }}: se riuscirà a raggiungere i <b>{{ photocontest_like_limit }}</b> "Mi piace" prima di tutti, la sua fotò vincerà il concorso a tema e verrà messa in evidenza.</p>
 			</div>
 			{% if not user_already_registered %}
 				<div class="row">
@@ -94,7 +95,7 @@
 				<div class="userVotedMsgBlockAction {% if votation_is_valid %}hide{% endif %}">
 					<div class="row">
 						<div class="col-md-12">
-							<div class="alert alert-warning">
+							<div class="alert alert-info">
 								<span class="msgTextAction">Potrai nuovamente votare questa foto tra: {{ next_votation_date | timeuntil }}.</span>
 							</div>
 						</div>
@@ -171,7 +172,7 @@
 	function votationSuccessCallback() {
 		// show user voted msg block
 		$(".userVotedMsgBlockAction").removeClass("hide");
-		$(".msgTextAction").html("Potrai nuovamente votare questa foto tra: 7 giorni.");
+		$(".msgTextAction").html("Potrai nuovamente votare questa foto tra: 1 settimana.");
 
 		// decrease/increase like/remaining like
 		var image_contest_like = parseInt($(".imageContestLikeAction").html()) + 1;
@@ -186,6 +187,8 @@
 		} else if (image_contest_like_remaining == 0) {
 			// complimenti hai fatto vincere la foto
 			bootstrapModalsObect.showMessageModal('Complimenti, grazie al tuo mi "<b>Mi piace</b>" la foto di {{ user_info.first_name }} ha vinto il concorso a tema \'{{ photocontest_name }}\'.<br />Visita anche il suo <a href="/passerella/dettaglio-utente/{{ user_info.user_id }}/">profilo completo</a> e guarda tutte le sue foto.', 'Voto decisivo');
+			// mostro messaggio per far sapere che l'immagine è vincitrice
+			$(".currentWinningImageAction").removeClass("hide");
 		}
 
 		return true;

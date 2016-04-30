@@ -151,3 +151,13 @@ $ pip install -U Django
 $ python manage.py collectstatic
 $ python manage.py makemigrations
 $ python manage.py migrate
+
+
+Concorsi a tema
+---------------
+icona statistiche nel pannello di controllo
+aggiungere 40 punti alla vittoria del concorso a tema
+nella pagina dedicata alla foto di un concorso a tema stampare se la foto è attualmente la vincitrice
+aggiungere notifica utente alla vittoria del concorso a tema
+test grafica
+test funzionalità

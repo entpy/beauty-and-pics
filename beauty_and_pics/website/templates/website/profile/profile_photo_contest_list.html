@@ -11,7 +11,8 @@
 {% block custom_css %}
 <style>
 	/* evidenzio i photocontest ai quali l'utente sta prendendo parte */
-	.photocontest_grid_button_active { background-color: green; }
+	.photocontest_grid_button_active { background-color: #18bc9c; color: #fff; }
+	.legend_block { background-color: #18bc9c; display: inline-block; height: 20px; vertical-align: middle; width: 20px; }
 </style>
 {% endblock %}
 
@@ -32,7 +33,7 @@
 	{% for photo_contest in photo_contest_list %}
 		<div class="col-xs-12 col-sm-6 col-md-4 col-lg-3">
 			{% if user_partecipation_photocontest|get_item:photo_contest.code %}
-				<a href="/profilo/concorsi-a-tema/{{ photo_contest.code }}/" class="thumbnail grid_button_1 photocontest_grid_button_active" data-toggle="tooltip" data-placement="top" data-original-title="Clicca per entrare nel concorso a tema '{{ photo_contest.name }}'">
+				<a href="/profilo/concorsi-a-tema/{{ photo_contest.code }}/" class="thumbnail grid_button_1 photocontest_grid_button_active" data-toggle="tooltip" data-placement="top" data-original-title="Clicca per entrare nella pagina riepilogativa del concorso a tema '{{ photo_contest.name }}'">
 			{% else %}
 				<a href="#" class="thumbnail grid_button_1 showPhotocontestInfoClickAction" data-photocontest-code="{{ photo_contest.code }}" data-photocontest-name="{{ photo_contest.name }}" data-photocontest-like-limit="{{ photo_contest.like_limit }}" data-photocontest-description="{{ photo_contest.description }}" data-photocontest-imageurl="{% static "website/img/photocontest/"|str_cat:photo_contest.code|str_cat:".png" %}" data-toggle="tooltip" data-placement="top" data-original-title="Clicca per avere maggiori informazioni sul concorso '{{ photo_contest.name }}'">
 			{% endif %}
@@ -44,6 +45,7 @@
 		</div>
 	{% endfor %}
 	</div>
+	<p class="text-primary">NOTA: i concorsi dove stai partecipando sono evidenziati di questo colore: <span class="legend_block">&nbsp;</span></p>
 {% endif %}
 {# }}} #}
 {% endblock container4_content %}
