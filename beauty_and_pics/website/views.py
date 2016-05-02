@@ -360,6 +360,10 @@ def www_howto_votations(request):
     """view to show howto about votations"""
     return render(request, 'website/www/howto/www_howto_votations.html', False)
 
+def www_howto_photocontest(request):
+    """view to show howto about photocontest"""
+    return render(request, 'website/www/howto/www_howto_photocontest.html', False)
+
 def www_features(request):
     """view to show platform features"""
     return render(request, 'website/www/www_features.html', False)
@@ -1344,12 +1348,13 @@ def profile_photo_contest_list(request):
 @user_passes_test(check_if_is_a_catwalker_user)
 def profile_photo_contest_info(request, photocontest_code):
     """View to show info about photocontest"""
-    from django_photo_contest.models import PhotoContest, PhotoContestPictures
+    from django_photo_contest.models import PhotoContest, PhotoContestPictures, PhotoContestWinner
 
     account_obj =  Account()
     contest_obj = Contest()
     photo_contest_obj = PhotoContest()
     photo_contest_pictures_obj = PhotoContestPictures()
+    photo_contest_winner_obj = PhotoContestWinner()
     user_obj = request.user
     user_id = user_obj.id
 
@@ -1375,6 +1380,9 @@ def profile_photo_contest_info(request, photocontest_code):
     # calcolo i like rimanenti
     photocontest_image_like_remaining = int(user_photocontest_info.get("like_limit")) - int(user_photocontest_picture.like)
 
+    # controllo se l'immagine è la vincitrice
+    image_is_winning = photo_contest_winner_obj.check_if_image_is_winning(user_id=user_id, photocontest_code=photocontest_code, contest_type_code=autenticated_user_data["contest_type"])
+
     # calcolo la percentuale di like rimanente
     photocontest_image_like_perc = 0
     if user_photocontest_picture.like:
@@ -1392,6 +1400,7 @@ def profile_photo_contest_info(request, photocontest_code):
         "photocontest_image_like_remaining" : photocontest_image_like_remaining,
         "photocontest_image_like_perc" : photocontest_image_like_perc,
         "vote_image_url" : settings.SITE_URL + "/concorsi-a-tema/" + str(photocontest_code) + "/" + str(user_id) + "/",
+        "image_is_winning" : image_is_winning,
     }
 
     return render(request, 'website/profile/profile_photo_contest_info.html', context)

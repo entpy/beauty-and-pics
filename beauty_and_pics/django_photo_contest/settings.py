@@ -47,7 +47,7 @@ DPC_PHOTO_CONTEST_INFO = {
     },
     'graffiti' : {
         'name' : 'Graffiti',
-        'description' : "Solo per gente underground. Concorso a tema che si prefigge di evidenziare in maniera artistica alcuni elementi della città.",
+        'description' : "Solo per gente underground. Il concorso a tema si prefigge di evidenziare in maniera artistica alcuni elementi della città.",
         'rules' : ['Valide solo foto che hanno come location la metropoli', 'Nella foto deve essere presente almeno un graffito'],
         'like_limit' : 20,
         'order' : 5000,

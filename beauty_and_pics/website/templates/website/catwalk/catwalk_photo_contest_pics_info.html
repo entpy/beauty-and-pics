@@ -71,7 +71,13 @@
 				<p class="text-warning text-justify">La foto è attualmente la preferita del concorso a tema <b>{{ photocontest_name }}</b>.</p>
 			</div>
 			<div class="container_row display_only_big">
-				<p class="text-primary text-justify">Dai un "<b>Mi piace</b>" per {{ user_info.first_name }}: se riuscirà a raggiungere i <b>{{ photocontest_like_limit }}</b> "Mi piace" prima di tutti, la sua fotò vincerà il concorso a tema e verrà messa in evidenza.</p>
+				<p class="text-primary text-justify">
+					{% if image_is_winning %}
+						Dai un "<b>Mi piace</b>" per {{ user_info.first_name }}: se riuscirà a raggiungere i <b>{{ photocontest_like_limit }}</b> "Mi piace" prima di tutti, la sua foto continuerà ad essere in evidenza.
+					{% else %}
+						Dai un "<b>Mi piace</b>" per {{ user_info.first_name }}: se riuscirà a raggiungere i <b>{{ photocontest_like_limit }}</b> "Mi piace" prima di tutti, la sua foto vincerà il concorso a tema e verrà messa in evidenza.
+					{% endif %}
+				</p>
 			</div>
 			{% if not user_already_registered %}
 				<div class="row">

@@ -36,6 +36,7 @@ urlpatterns = [
     url(r'^email-confermata/$', 'website.views.www_email_successfully_confirmed', name='www_email_successfully_confirmed'),
     # howto
     url(r'^howto/le-votazioni/$', 'website.views.www_howto_votations', name='www_howto_votations'),
+    url(r'^howto/concorsi-a-tema/$', 'website.views.www_howto_photocontest', name='www_howto_photocontest'),
 
     # catwalk
     url(r'^concorsi-a-tema/$', 'website.views.catwalk_photo_contest_list', name='catwalk_photo_contest_list'), # elenco di tutti i photocontest

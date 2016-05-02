@@ -30,11 +30,16 @@
 			<img alt="Immagine concorso a tema '{{ photocontest_name }}'" class="catwalk_user_main_image" src="{{ photocontest_image_url }}">
 		</div>
 		<div class="bottom user_action_link_container">
-			<a href="#" class="removePhotocontestImageClickAction">Rimuovi dal concorso</a>
+			<a href="#" class="removePhotocontestImageClickAction">Smetti di partecipare</a>
 		</div>
 	</div>
 	<div class="right">
 		<div class="top user_stats_container">
+			{% if image_is_winning %}
+				<div class="container_row">
+					<p class="text-warning text-justify">Complimenti, attualmente la tua foto è la preferita del concorso a tema <b>{{ photocontest_name }}</b>.</p>
+				</div>
+			{% endif %}
 			<div class="container_row1 user_stats_block">
 				<span><span class="position">{{ photocontest_image_likes }}</span> su {{ photocontest_like_limit }} "Mi piace" ottenuti</span>
 			</div>

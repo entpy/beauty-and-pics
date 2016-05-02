@@ -158,12 +158,6 @@ class PhotoContest(models.Model):
 
         return return_var
 
-    # TODO
-    def assign_winner_points(self):
-	from contest_app.models.votes import Vote
-        vote_obj = Vote()
-        vote_obj = Vote()
-
 class PhotoContestPictures(models.Model):
     photo_contest_pictures_id = models.AutoField(primary_key=True)
     user = models.ForeignKey(User) # related user
@@ -183,6 +177,10 @@ class PhotoContestPictures(models.Model):
     def exists_user_photocontest_picture(self, user_id, photocontest_code):
         """Function to check if exists user photocontest picture"""
         return PhotoContestPictures.objects.filter(user__id=user_id, photo_contest__code=photocontest_code).exists()
+
+    def winner_image_match_photocontest_picture(self, winner_image_id, user_id, photocontest_code):
+        """Function to check if exists user photocontest picture"""
+        return PhotoContestPictures.objects.filter(image__id=winner_image_id, user__id=user_id, photo_contest__code=photocontest_code).exists()
 
     def get_user_photocontest_picture(self, user_id, photocontest_code):
         """Function to retrieve an user photocontest pictures instance"""
@@ -446,6 +444,27 @@ class PhotoContestWinner(models.Model):
 	photo_contest_winner_obj.image = user_photocontest_pictures_obj.image
 	photo_contest_winner_obj.save()
 
+        # assegno i punti al vincitore
+        self.assign_user_points(to_user_obj=user_photocontest_pictures_obj.user)
+
+        return True
+
+    # TODO
+    def assign_user_points(self, to_user_obj):
+	from contest_app.models.votes import Vote
+        vote_obj = Vote()
+
+        # setto i punti da assegnare
+        metrics_points = {
+            project_constants.VOTE_METRICS_LIST["smile_metric"] : 8,
+            project_constants.VOTE_METRICS_LIST["look_metric"] : 8,
+            project_constants.VOTE_METRICS_LIST["global_metric"] : 8,
+            project_constants.VOTE_METRICS_LIST["style_metric"] : 8,
+        }
+
+        # assegno i punti
+        vote_obj.add_metrics_points(metrics_points=metrics_points, to_user_obj=to_user_obj)
+
         return True
 
     def get_last_photocontest_winner(self, photocontest_code, contest_type_code):
@@ -461,7 +480,7 @@ class PhotoContestWinner(models.Model):
             return_var["vote_image_url"] = settings.SITE_URL + "/concorsi-a-tema/" + str(photocontest_code) + "/" + str(last_photocontest_winner.user.id) + "/"
 
             # controllo che l'immagine esista ancora nel photocontest
-            return_var["photocontest_image_exists"] = photo_contest_pictures_obj.exists_user_photocontest_picture(user_id=last_photocontest_winner.user.id, photocontest_code=photocontest_code)
+            return_var["photocontest_image_exists"] = photo_contest_pictures_obj.winner_image_match_photocontest_picture(winner_image_id=last_photocontest_winner.image.id, user_id=last_photocontest_winner.user.id, photocontest_code=photocontest_code)
 
         return return_var
 
