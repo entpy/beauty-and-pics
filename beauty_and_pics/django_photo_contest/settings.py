@@ -41,7 +41,7 @@ DPC_PHOTO_CONTEST_INFO = {
     'retro' : {
         'name' : 'Rétro',
         'description' : "Per gli amanti del rétro. Sei dell'idea che l'old school non passi mai di moda? Questo concorso a tema racchiude le foto che conservano l'anima e le emozioni del passato.",
-        'rules' : ['Valide solo foto in abiti rétro'],
+        'rules' : ['Valide solo foto in abiti e ambientazioni rétro'],
         'like_limit' : 20,
         'order' : 4000,
     },

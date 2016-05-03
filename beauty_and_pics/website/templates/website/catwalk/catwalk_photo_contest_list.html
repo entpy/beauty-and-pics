@@ -3,7 +3,7 @@
 
 {% block title %}{{ site_name }} | concorsi a tema{% endblock title %}
 
-{% block description %}Concorsi a tema: scopri tutti i concorsi a tema e vota i partecipanti che preferisci.{% endblock description %}
+{% block description %}Concorsi a tema: scopri tutti i concorsi a tema e dai il tuo "Mi piace" alle fotografie che preferisci.{% endblock description %}
 
 {% block breadcrumbs %}
 	{% breadcrumb "Seleziona un concorso" "/concorsi-a-tema/" %}
@@ -17,7 +17,7 @@
 
 {# page tip block (blocco a destra con titolo e descrizione) #}
 {% block page_tip %}
-{% include "website/inc/include_blocks/page_tip.html" with title="Concorsi a tema" text="Esplora i concorsi a tema,<br />guarda tutte le foto e dai anche tu il \"<b>Mi piace</b>\" alle tue preferite!" only %}
+{% include "website/inc/include_blocks/page_tip.html" with title="Concorsi a tema" text="Esplora i concorsi a tema,<br />guarda tutte le foto e dai anche tu il \"<b>Mi piace</b>\" alle tue preferite!<div class=\"text-right\"><a href=\"/howto/concorsi-a-tema/\">Scopri di più</a></div>" only %}
 {% endblock %}
 
 {# main navigation active element #}

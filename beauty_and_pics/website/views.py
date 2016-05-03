@@ -818,7 +818,7 @@ def profile_index(request, welcome):
 @user_passes_test(check_if_is_a_catwalker_user)
 def profile_data(request):
     # set current contest_type
-    account_obj =  Account()
+    account_obj = Account()
     autenticated_user_data = account_obj.get_autenticated_user_data(request=request)
     contest_obj = Contest()
     contest_obj.set_contest_type(request=request, contest_type=autenticated_user_data["contest_type"])

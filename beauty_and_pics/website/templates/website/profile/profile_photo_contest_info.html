@@ -1,5 +1,5 @@
 {% extends "website/inc/base_profile.html" %}
-{% load staticfiles l10n %}
+{% load staticfiles l10n website_extras %}
 
 {% block title %}{{ site_name }} | concorso a tema '{{ photocontest_name }}'{% endblock %}
 
@@ -91,7 +91,7 @@
 		</a>
 	</div>
 	<div class="col-xs-12 col-sm-6 col-md-4 col-lg-3">
-		<a href="https://twitter.com/intent/tweet?url={{ vote_image_url|urlencode }}&text={{ "Votatemi:"|urlencode }}" class="thumbnail grid_button_1" data-toggle="tooltip" data-placement="top" data-original-title="Condividi la foto su Twitter">
+		<a href="https://twitter.com/intent/tweet?url={{ vote_image_url|urlencode }}&text={{ site_name|str_cat:", concorso a tema '"|str_cat:photocontest_name|str_cat:":"|urlencode }}" class="thumbnail grid_button_1" data-toggle="tooltip" data-placement="top" data-original-title="Condividi la foto su Twitter">
 			<span class="grid_button_image">
 				<img src="{% static "website/img/profile_tw_share.png" %}" alt="Condividi su Twitter">
 			</span>

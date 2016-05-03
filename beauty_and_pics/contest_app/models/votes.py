@@ -156,28 +156,30 @@ class Vote(models.Model):
         """
 	from contest_app.models.contests import Contest
 	from contest_app.models.metrics import Metric
+        return_var = False
 	contest_obj = Contest()
 	metric_obj = Metric()
 
         # retrieve to_user contest_obj
         user_contest_obj = contest_obj.get_active_contests_by_type(contest_type=to_user_obj.account.contest_type)
-        if not user_contest_obj:
-            raise PerformVotationUserContestMissingError
 
-        # retrieve metrics obj
-        smile_metric_obj = metric_obj.get_metric_by_name(name=project_constants.VOTE_METRICS_LIST["smile_metric"])
-        look_metric_obj = metric_obj.get_metric_by_name(name=project_constants.VOTE_METRICS_LIST["look_metric"])
-        global_metric_obj = metric_obj.get_metric_by_name(name=project_constants.VOTE_METRICS_LIST["global_metric"])
-        style_metric_obj = metric_obj.get_metric_by_name(name=project_constants.VOTE_METRICS_LIST["style_metric"])
+        # assegno i punti solo se il contest è aperto, altrimenti non faccio nulla
+        if user_contest_obj:
+            # retrieve metrics obj
+            smile_metric_obj = metric_obj.get_metric_by_name(name=project_constants.VOTE_METRICS_LIST["smile_metric"])
+            look_metric_obj = metric_obj.get_metric_by_name(name=project_constants.VOTE_METRICS_LIST["look_metric"])
+            global_metric_obj = metric_obj.get_metric_by_name(name=project_constants.VOTE_METRICS_LIST["global_metric"])
+            style_metric_obj = metric_obj.get_metric_by_name(name=project_constants.VOTE_METRICS_LIST["style_metric"])
 
-        # inserisco i punteggi per ogni metrica
-        point_obj = Point()
-        point_obj.add_points(points=metrics_points[project_constants.VOTE_METRICS_LIST["smile_metric"]], metric_obj=smile_metric_obj, user_obj=to_user_obj, contest_obj=user_contest_obj)
-        point_obj.add_points(points=metrics_points[project_constants.VOTE_METRICS_LIST["look_metric"]], metric_obj=look_metric_obj, user_obj=to_user_obj, contest_obj=user_contest_obj)
-        point_obj.add_points(points=metrics_points[project_constants.VOTE_METRICS_LIST["global_metric"]], metric_obj=global_metric_obj, user_obj=to_user_obj, contest_obj=user_contest_obj)
-        point_obj.add_points(points=metrics_points[project_constants.VOTE_METRICS_LIST["style_metric"]], metric_obj=style_metric_obj, user_obj=to_user_obj, contest_obj=user_contest_obj)
+            # inserisco i punteggi per ogni metrica
+            point_obj = Point()
+            point_obj.add_points(points=metrics_points[project_constants.VOTE_METRICS_LIST["smile_metric"]], metric_obj=smile_metric_obj, user_obj=to_user_obj, contest_obj=user_contest_obj)
+            point_obj.add_points(points=metrics_points[project_constants.VOTE_METRICS_LIST["look_metric"]], metric_obj=look_metric_obj, user_obj=to_user_obj, contest_obj=user_contest_obj)
+            point_obj.add_points(points=metrics_points[project_constants.VOTE_METRICS_LIST["global_metric"]], metric_obj=global_metric_obj, user_obj=to_user_obj, contest_obj=user_contest_obj)
+            point_obj.add_points(points=metrics_points[project_constants.VOTE_METRICS_LIST["style_metric"]], metric_obj=style_metric_obj, user_obj=to_user_obj, contest_obj=user_contest_obj)
+            return_var = True
 
-        return True
+        return return_var
 
     def insert_vote(self, from_user_obj, to_user_obj, request):
         """Function to save a user votation"""

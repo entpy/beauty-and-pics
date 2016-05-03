@@ -11,9 +11,9 @@
 <meta property="og:url" content="{{ vote_image_url }}" />
 <meta property="og:type" content="profile" />
 <meta property="og:title" content="{{ user_info.first_name }} {{ user_info.last_name }}" />
-<meta property="og:site_name" content="Beauty and Pics"/>
-<meta property="og:description" content="Beauty and Pics, il concorso di bellezza." />
-<meta property="og:image" content="{{ profile_image_url }}" />
+<meta property="og:site_name" content="{{ site_name }}"/>
+<meta property="og:description" content="{{ site_name }}, concorso a tema '{{ photocontest_name }}'." />
+<meta property="og:image" content="{{ photocontest_image_url }}" />
 <meta property="og:image:width" content="500" />
 <meta property="og:image:height" content="500" />
 {% endblock og_metatags %}
@@ -28,6 +28,9 @@
 
 {# hide top 5 users #}
 {% block top_users_banner %}{% endblock %}
+
+{# main navigation active element #}
+{% block navigation_element2_active %}active{% endblock %}
 
 {% block container4_content %}
 {# Facebook SDK {{{ #}
@@ -73,7 +76,7 @@
 			<div class="container_row display_only_big">
 				<p class="text-primary text-justify">
 					{% if image_is_winning %}
-						Dai un "<b>Mi piace</b>" per {{ user_info.first_name }}: se riuscirà a raggiungere i <b>{{ photocontest_like_limit }}</b> "Mi piace" prima di tutti, la sua foto continuerà ad essere in evidenza.
+						Dai un "<b>Mi piace</b>" per {{ user_info.first_name }}: se riuscirà a raggiungere i <b>{{ photocontest_like_limit }}</b> "Mi piace" prima di tutti, la sua foto continuerà a rimanere in evidenza.
 					{% else %}
 						Dai un "<b>Mi piace</b>" per {{ user_info.first_name }}: se riuscirà a raggiungere i <b>{{ photocontest_like_limit }}</b> "Mi piace" prima di tutti, la sua foto vincerà il concorso a tema e verrà messa in evidenza.
 					{% endif %}
@@ -189,7 +192,7 @@
 		// decremento i "like" rimanenti solo se sono maggiori di 0
 		if (image_contest_like_remaining > 0) {
 			// grazie per il tuo "Mi piace"
-			bootstrapModalsObect.showMessageModal('Grazie per aver dato tuo "<b>Mi piace</b>" a {{ user_info.first_name }}.<br />Visita anche il suo <a href="/passerella/dettaglio-utente/{{ user_info.user_id }}/">profilo completo</a> e guarda tutte le sue foto.', 'Votazione completata');
+			bootstrapModalsObect.showMessageModal('Grazie per aver dato il tuo "<b>Mi piace</b>" a {{ user_info.first_name }}.<br />Visita anche il suo <a href="/passerella/dettaglio-utente/{{ user_info.user_id }}/">profilo completo</a> e guarda tutte le sue foto.', 'Votazione completata');
 		} else if (image_contest_like_remaining == 0) {
 			// complimenti hai fatto vincere la foto
 			bootstrapModalsObect.showMessageModal('Complimenti, grazie al tuo mi "<b>Mi piace</b>" la foto di {{ user_info.first_name }} ha vinto il concorso a tema \'{{ photocontest_name }}\'.<br />Visita anche il suo <a href="/passerella/dettaglio-utente/{{ user_info.user_id }}/">profilo completo</a> e guarda tutte le sue foto.', 'Voto decisivo');
