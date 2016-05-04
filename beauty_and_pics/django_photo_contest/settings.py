@@ -4,7 +4,9 @@
 Settings for 'django_photo_contest' app
 """
 
-SECONDS_BETWEEN_VOTATION = 604800 # 604800 seconds = 7 days
+DPC_SECONDS_BETWEEN_VOTATION = 604800 # 604800 seconds = 7 days
+DPC_ADD_WINNER_POINTS = True # indica se al vincitore devono essere assegnati i punti
+DPC_WRITE_WINNER_NOTIFY = True # indica se scrivere la notifica al vincitore
 
 # photocontest list
 DPC_PHOTO_CONTEST_LIST = [

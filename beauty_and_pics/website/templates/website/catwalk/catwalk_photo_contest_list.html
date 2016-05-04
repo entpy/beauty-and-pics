@@ -29,7 +29,7 @@
 	<div class="row">
 	{% for photo_contest in photo_contest_list %}
 		<div class="col-xs-12 col-sm-6 col-md-4 col-lg-3">
-			<a href="#" class="thumbnail grid_button_1 photocontestEnterClickAction" data-photocontest-code="{{ photo_contest.code }}" data-toggle="tooltip" data-placement="top" data-original-title="{{ photo_contest.description }}">
+			<a href="/concorsi-a-tema/{{ photo_contest.code }}/" class="thumbnail grid_button_1 photocontestEnterClickAction" data-toggle="tooltip" data-placement="top" data-original-title="{{ photo_contest.description }}">
 				<span class="grid_button_image grid_button_image_h_90">
 					<img src="{% static "website/img/photocontest/"|str_cat:photo_contest.code|str_cat:".png" %}" alt="{{ photo_contest.name }}">
 				</span>
@@ -47,14 +47,6 @@
 <script>
 	$(document).ready(function(){
 		$('[data-toggle="tooltip"]').tooltip();
-
-		// enter into the photocontest
-		$(document).on("click",".photocontestEnterClickAction", function(){
-			var photocontestCode = $(this).data("photocontestCode");
-			location.href = "/concorsi-a-tema/" + photocontestCode + "/";
-
-			return false;
-		});
 	});
 </script>
 {% endblock custom_js %}

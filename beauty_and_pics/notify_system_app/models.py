@@ -35,21 +35,22 @@ class Notify(models.Model):
     def __unicode__(self):
         return str(self.notify_id) + ' ' + str(self.title)
 
-    def create_notify(self, data, user_obj=None):
+    # TODO: testare
+    def create_notify(self, data, user_id=False):
         """Function to create a notify"""
-        return_var = None
+        return_var = False
 
         if data.get("title") and data.get("message"):
             notify_obj = Notify()
-            if user_obj:
+            if user_id:
                 # if the notify is related only with a single user
-                notify_obj.user = user_obj
+                notify_obj.user_id = user_id
             notify_obj.title = data.get("title")
             notify_obj.message = data.get("message")
             notify_obj.action_title = data.get("action_title")
             notify_obj.action_url = data.get("action_url")
             notify_obj.save()
-            return_var = notify_obj
+            return_var = True
 
         return return_var
 

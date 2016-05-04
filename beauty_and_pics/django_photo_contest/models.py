@@ -11,6 +11,7 @@ from beauty_and_pics.consts import project_constants
 from beauty_and_pics.common_utils import CommonUtils
 from contest_app.models.contest_types import Contest_Type
 from upload_image_box.models import cropUploadedImages 
+from notify_system_app.models import Notify
 from .settings import *
 from .exceptions import *
 
@@ -274,9 +275,9 @@ class PhotoContestPictures(models.Model):
 
         return True
 
-    def clear_image_stats(self, photocontest_code, contest_type_code):
-        """Function to clear image like and visits"""
-        PhotoContestPictures.objects.filter(photo_contest__code=photocontest_code, photo_contest__contest_type__code=contest_type_code).update(like=0, visits=0)
+    def clear_image_like(self, photocontest_code, contest_type_code):
+        """Function to clear image likes"""
+        PhotoContestPictures.objects.filter(photo_contest__code=photocontest_code, photo_contest__contest_type__code=contest_type_code).update(like=0)
 
         return True
 
@@ -334,12 +335,12 @@ class PhotoContestVote(models.Model):
         try:
             photocontest_vote_obj = PhotoContestVote.objects.get(user__id=user_id, photo_contest_pictures__photo_contest_pictures_id=photo_contest_pictures_id)
             # 2) controllo data ultimo like
-            # like già dato se vote date is < SECONDS_BETWEEN_VOTATION
+            # like già dato se vote date is < DPC_SECONDS_BETWEEN_VOTATION
             datediff = datetime.now() - photocontest_vote_obj.date
             logger.debug("datetime.now: " + str(datetime.now()))
             logger.debug("like date: " + str(photocontest_vote_obj.date))
             logger.debug("seconds: " + str(datediff.total_seconds()))
-            if datediff.total_seconds() >= SECONDS_BETWEEN_VOTATION:
+            if datediff.total_seconds() >= DPC_SECONDS_BETWEEN_VOTATION:
                 # user can revote this catwalker, remove user row from db table
                 photocontest_vote_obj.delete()
                 return_var = True
@@ -356,7 +357,7 @@ class PhotoContestVote(models.Model):
 
         try:
             photocontest_vote_obj = PhotoContestVote.objects.get(user__id=user_id, photo_contest_pictures__photo_contest_pictures_id=photo_contest_pictures_id)
-            return_var = photocontest_vote_obj.date + timedelta(seconds=SECONDS_BETWEEN_VOTATION + 60)
+            return_var = photocontest_vote_obj.date + timedelta(seconds=DPC_SECONDS_BETWEEN_VOTATION + 60) # NOTA: sommo 60 secondi altrimenti la funzione nel template mi farebbe vedere: mancano 0 minuti, per evitarlo ho sommato i 60
             # return_var = relativedelta(datetime.now(), photocontest_vote_obj.date)
             logger.debug("get_next_votation_date: " + str(return_var))
         except PhotoContestVote.DoesNotExist:
@@ -416,8 +417,8 @@ class PhotoContestWinner(models.Model):
         # elimino tutti i voti per il contest_type_code e il photocontest_code
         # photo_contest_vote_obj.delete_photocontest_vote(photocontest_code=photocontest_code, contest_type_code=contest_type_code)
 
-        # azzero tutte le visite e i voti dell'immagine
-        photo_contest_pictures_obj.clear_image_stats(photocontest_code=photocontest_code, contest_type_code=contest_type_code)
+        # azzero tutti voti dell'immagine
+        photo_contest_pictures_obj.clear_image_like(photocontest_code=photocontest_code, contest_type_code=contest_type_code)
 
         return True
 
@@ -444,8 +445,14 @@ class PhotoContestWinner(models.Model):
 	photo_contest_winner_obj.image = user_photocontest_pictures_obj.image
 	photo_contest_winner_obj.save()
 
-        # assegno i punti al vincitore
-        self.assign_user_points(to_user_obj=user_photocontest_pictures_obj.user)
+        if DPC_ADD_WINNER_POINTS:
+            # assegno i punti al vincitore
+            self.assign_user_points(to_user_obj=user_photocontest_pictures_obj.user)
+
+        if DPC_WRITE_WINNER_NOTIFY:
+            # scrivo la notifica all'utente vincitore
+            photocontest_info = DPC_PHOTO_CONTEST_INFO.get(photocontest_code) # (per prelevare il nome del photocontest)
+            self.notify_to_winning_user(user_id=user_id, photocontest_name=photocontest_info.get("name"))
 
         return True
 
@@ -464,6 +471,22 @@ class PhotoContestWinner(models.Model):
 
         # assegno i punti
         vote_obj.add_metrics_points(metrics_points=metrics_points, to_user_obj=to_user_obj)
+
+        return True
+
+    # TODO: testare
+    def notify_to_winning_user(self, user_id, photocontest_name):
+        """Function to write a notify to a winning user"""
+        notify_obj = Notify()
+
+        # create notify details
+        notify_data = {
+            "title" : "La tua foto ha vinto il concorso a tema '" + str(photocontest_name) + "'.",
+            "message" : "Complimenti, ottenendo il maggior numero di \"Mi piace\" hai vinto il bonus di +32 punti nella classifica generale e il posto in evidenza nel concorso a tema '" + str(photocontest_name) + "'.",
+        }
+
+        # save notify about this user
+        notify_obj.create_notify(data=notify_data, user_id=user_id)
 
         return True
 
