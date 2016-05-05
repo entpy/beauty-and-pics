@@ -29,14 +29,14 @@
 </div>
 {# image grid block {{{ #}
 {% if exists_user_images %}
-<div class="row">
-	<div class="col-sm-12 margin_top_15 image_grid_container"></div>
-</div>
-<div class="text-center">
-	<a class="btn btn-success loadMoreElementsAction" href="#">Mostra altre immagini</a>
-</div>
+	<div class="row">
+		<div class="col-sm-12 margin_top_15 image_grid_container"></div>
+	</div>
+	<div class="text-center">
+		<a class="btn btn-success loadMoreElementsAction" href="#">Mostra altre immagini</a>
+	</div>
 {% else %}
-<p>Non hai ancora caricato nessuna immagine. <a href="/profilo/#book_anchor">Carica adesso</a> la tua prima immagine del book fotografico.</p>
+	<p>Ops...il tuo book non contiene immagini. <a href="/profilo/#book_anchor">Carica adesso</a> la tua prima immagine.</p>
 {% endif %}
 {# image grid block }}} #}
 {% endblock container4_content %}

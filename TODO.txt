@@ -156,8 +156,9 @@ $ python manage.py migrate
 Concorsi a tema
 ---------------
 icona statistiche nel pannello di controllo
-aggiungere 40 punti alla vittoria del concorso a tema
-nella pagina dedicata alla foto di un concorso a tema stampare se la foto è attualmente la vincitrice
-aggiungere notifica utente alla vittoria del concorso a tema
+icona nell'howto dei concorsi a tema
 test grafica
 test funzionalità
+FATTO aggiungere 32 punti alla vittoria del concorso a tema
+FATTO nella pagina dedicata alla foto di un concorso a tema stampare se la foto è attualmente la vincitrice
+FATTO aggiungere notifica utente alla vittoria del concorso a tema

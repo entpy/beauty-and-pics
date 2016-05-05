@@ -12,6 +12,7 @@
 <style>
 	/* evidenzio i photocontest ai quali l'utente sta prendendo parte */
 	.photocontest_grid_button_active { background-color: #18bc9c; color: #fff; }
+	.photocontest_grid_button_active.grid_button_1 > .grid_button_label { color: #fff; }
 	.legend_block { background-color: #18bc9c; display: inline-block; height: 20px; vertical-align: middle; width: 20px; }
 </style>
 {% endblock %}
@@ -21,7 +22,7 @@
 	<div class="col-md-12">
 		<h3>Concorsi a tema
 			<a href="/howto/concorsi-a-tema/">
-				<img data-toggle="tooltip" data-placement="top" title="" data-original-title="Clicca per scoprire come come funzionano" src="{% static "website/img/question-point.png" %}" alt="Cosa indica?">
+				<img data-toggle="tooltip" data-placement="top" title="" data-original-title="Scopri come funzionano..." src="{% static "website/img/question-point.png" %}" alt="Cosa indica?">
 			</a>
 		</h3>
 	</div>

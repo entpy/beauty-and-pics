@@ -482,7 +482,7 @@ class PhotoContestWinner(models.Model):
         # create notify details
         notify_data = {
             "title" : "La tua foto ha vinto il concorso a tema '" + str(photocontest_name) + "'.",
-            "message" : "Complimenti, ottenendo il maggior numero di \"Mi piace\" hai vinto il bonus di +32 punti nella classifica generale e il posto in evidenza nel concorso a tema '" + str(photocontest_name) + "'.",
+            "message" : "Complimenti, ottenendo il maggior numero di \"Mi piace\" hai vinto il bonus di <b>+32 punti</b> nella classifica generale e il posto in <b>evidenza</b> nel concorso a tema '" + str(photocontest_name) + "'.",
         }
 
         # save notify about this user
@@ -500,10 +500,14 @@ class PhotoContestWinner(models.Model):
         if last_photocontest_winner_list:
             last_photocontest_winner = last_photocontest_winner_list[0]
             return_var["image_url"] = last_photocontest_winner.image.image.url
-            return_var["vote_image_url"] = settings.SITE_URL + "/concorsi-a-tema/" + str(photocontest_code) + "/" + str(last_photocontest_winner.user.id) + "/"
 
             # controllo che l'immagine esista ancora nel photocontest
-            return_var["photocontest_image_exists"] = photo_contest_pictures_obj.winner_image_match_photocontest_picture(winner_image_id=last_photocontest_winner.image.id, user_id=last_photocontest_winner.user.id, photocontest_code=photocontest_code)
+            if photo_contest_pictures_obj.winner_image_match_photocontest_picture(winner_image_id=last_photocontest_winner.image.id, user_id=last_photocontest_winner.user.id, photocontest_code=photocontest_code):
+                # se esiste il link punta alla foto
+                return_var["vote_image_url"] = "/concorsi-a-tema/" + str(photocontest_code) + "/" + str(last_photocontest_winner.user.id) + "/"
+            else:
+                # se non esiste il link punta al profilo utente
+                return_var["vote_image_url"] = "/passerella/dettaglio-utente/" + str(last_photocontest_winner.user.id) + "/"
 
         return return_var
 

@@ -482,6 +482,7 @@ var bootstrapModalsObect = {
 	showZoomImageModal: function(imageUrl) {
 		if (imageUrl) {
 			this.resetBootstrapModal();
+			$(".bootstrap_modal").find('.modal-header').remove();
 			$(".bootstrap_modal").find('.modal-body').html(this.getImageHtmlBlock(imageUrl));
 			$(".bootstrap_modal").find('.modal-footer').html('<button type="button" class="btn btn-default" data-dismiss="modal">Chiudi</button>');
 			this.showBootstrapModal();

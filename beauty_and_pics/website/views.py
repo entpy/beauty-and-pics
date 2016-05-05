@@ -66,6 +66,7 @@ def check_if_is_staff_user(user):
 # view decorators }}}
 
 # www {{{
+@ensure_csrf_cookie
 def www_email_confirm(request, auth_token):
     """View to confirm email address"""
 
@@ -146,6 +147,7 @@ def www_terms(request):
 def www_cookie_policy(request):
     return render(request, 'website/www/www_cookie_policy.html', False)
 
+@ensure_csrf_cookie
 def www_login(request):
     # if this is a POST request we need to process the form data
     if request.method == 'POST':
@@ -175,11 +177,13 @@ def www_login(request):
 
     return render(request, 'website/www/www_login.html', context)
 
+@ensure_csrf_cookie
 def www_logout(request):
     logout(request)
     return HttpResponseRedirect('/')
     # return render(request, 'website/www/www_index.html', False)
 
+@ensure_csrf_cookie
 def www_forgot_password(request):
     # if this is a POST request we need to process the form data
     if request.method == 'POST':
@@ -205,6 +209,7 @@ def www_forgot_password(request):
 
     return render(request, 'website/www/www_forgot_password.html', context)
 
+@ensure_csrf_cookie
 def www_register(request):
     """View to show register page"""
 
@@ -234,6 +239,7 @@ def www_register(request):
 
     return render(request, 'website/www/www_register.html', context)
 
+@ensure_csrf_cookie
 def www_fast_register(request, user_id):
     """
         View to show a fast register page, will be requested only:
@@ -558,6 +564,7 @@ def catwalk_photo_contest_list(request):
 
     return render(request, 'website/catwalk/catwalk_photo_contest_list.html', context)
 
+@ensure_csrf_cookie
 def catwalk_photo_contest_pics(request, photocontest_code):
     """View to show all images about a photocontest"""
     from django_photo_contest.models import PhotoContest, PhotoContestPictures, PhotoContestWinner
@@ -596,6 +603,7 @@ def catwalk_photo_contest_pics(request, photocontest_code):
 
     return render(request, 'website/catwalk/catwalk_photo_contest_pics.html', context)
 
+@ensure_csrf_cookie
 def catwalk_photo_contest_pics_info(request, photocontest_code, user_id):
     """View to show a single image about a photocontest"""
     from django_photo_contest.models import PhotoContest, PhotoContestPictures, PhotoContestVote, PhotoContestWinner
@@ -1414,6 +1422,7 @@ def profile_photo_contest_select(request, photocontest_code):
     user_obj = request.user
     user_id = user_obj.id
     account_obj =  Account()
+    book_obj = Book()
     contest_obj = Contest()
     photo_contest_obj = PhotoContest()
     photo_contest_pictures_obj = PhotoContestPictures()
@@ -1430,8 +1439,11 @@ def profile_photo_contest_select(request, photocontest_code):
     # prelevo le informazioni sul photocontest corrente
     user_photocontest_info = photo_contest_obj.get_photocontest_fullinfo(code=photocontest_code, contest_type_code=autenticated_user_data["contest_type"])
 
+    # check if exists book images
+    exists_user_images = book_obj.exists_user_images(user_id=user_id)
+
     context = {
-	"exists_user_images" : True,
+	"exists_user_images" : exists_user_images,
 	"user_id" : user_id,
 	"photocontest_code" : photocontest_code,
 	"photocontest_like_limit" : user_photocontest_info.get("like_limit"),

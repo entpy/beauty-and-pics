@@ -112,7 +112,7 @@
 				</div>
 			{% endif %}
 			<div class="container_row container_row_bottom16-xl container_row_s40 user_stats_block">
-				<span>Piace a <span class="position imageContestLikeAction">{{ photocontest_image_likes }}</span> persone</span>
+				<span>Piace a <span class="position imageContestLikeAction">{{ photocontest_image_likes }}</span> {% if photocontest_image_likes == 1%}<span class="imageContestLikeLabelAction">persona</span>{% else %}<span class="imageContestLikeLabelAction">persone</span>{% endif %}</span>
 			</div>
 			<div class="container_row container_row_common10">
 				<span><b class="imageContestLikeRemainingAction">{{ photocontest_image_like_remaining }}</b> "Mi piace" mancanti</span>
@@ -189,6 +189,9 @@
 		$(".imageContestLikeAction").html(image_contest_like);
 		$(".imageContestLikeRemainingAction").html(image_contest_like_remaining);
 
+		// scrivo la label a destra dei like
+		writeLikeLabel(image_contest_like);
+
 		// decremento i "like" rimanenti solo se sono maggiori di 0
 		if (image_contest_like_remaining > 0) {
 			// grazie per il tuo "Mi piace"
@@ -198,6 +201,19 @@
 			bootstrapModalsObect.showMessageModal('Complimenti, grazie al tuo mi "<b>Mi piace</b>" la foto di {{ user_info.first_name }} ha vinto il concorso a tema \'{{ photocontest_name }}\'.<br />Visita anche il suo <a href="/passerella/dettaglio-utente/{{ user_info.user_id }}/">profilo completo</a> e guarda tutte le sue foto.', 'Voto decisivo');
 			// mostro messaggio per far sapere che l'immagine è vincitrice
 			$(".currentWinningImageAction").removeClass("hide");
+		}
+
+		return true;
+	}
+
+	/* funzione per scrivere la label a destra dei like */
+	function writeLikeLabel(imageLike) {
+		if (imageLike == 1) {
+			// se è presente un solo like mostro il singolare
+			$(".imageContestLikeLabelAction").html("persona");
+		} else {
+			// se sono presenti più like mostro il plurale
+			$(".imageContestLikeLabelAction").html("persone");
 		}
 
 		return true;
