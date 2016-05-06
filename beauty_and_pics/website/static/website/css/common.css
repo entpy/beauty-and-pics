@@ -232,8 +232,8 @@ ul.grid_container li img:hover { opacity: 0.5; }
 .user_profile_navigation .navigation_wrapper .menu-item-container { width: 50%; }
 .navigation_bar { background-color: white; box-shadow: 0 7px 12px -10px gray; width: 100%; }
 .navigation_bar .navigation_wrapper { display: table; }
-.navigation_bar .navigation_wrapper a { color: transparent; }
-.navigation_bar .navigation_wrapper .menu-item-container { display: table-cell; padding: 0px 20px; cursor: pointer; }
+.navigation_bar .navigation_wrapper a { color: transparent; display: table-cell; }
+.navigation_bar .navigation_wrapper .menu-item-container { padding: 0px 20px; cursor: pointer; }
 .navigation_bar .navigation_wrapper .menu-item-container div { border-bottom: 3px solid transparent; border-top: 3px solid transparent; color: gray; display: inline-block; padding: 20px 0px; }
 .navigation_bar .navigation_wrapper .menu-item-container:hover div { border-bottom: 3px solid #18bc9c; }
 .navigation_bar .navigation_wrapper .menu-item-container.active div { border-bottom: 3px solid #18bc9c; color: #18bc9c; font-weight: bold; }

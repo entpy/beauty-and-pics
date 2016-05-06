@@ -69,8 +69,8 @@
 /* catwalk section {{{ */
 .vote_type_list a { margin-bottom: 10px; }
 .vote_points_container_title { margin-top: 6px; margin-bottom: 14px; text-align: center; }
-.navigation_bar2 .navigation_wrapper .menu-item-container { margin-bottom: 10px; }
 .navigation_bar .navigation_wrapper { margin: 0 auto; }
+.navigation_bar2 .navigation_wrapper .menu-item-container { margin-bottom: 10px; padding: 0px 15px; }
 /* catwalk section }}} */
 
 .generic_container8 .left { margin-bottom: 15px; text-align: center; }

@@ -883,7 +883,7 @@ var bootstrapModalsObect = {
 	},
 
 	/* Function to build and show photocontest info modal bootstrap modal */
-	showPhotocontestInfoModal(photocontestCode, photocontestName, photocontestDescription, photocontestLikeLimit, photocontestImageUrl, questionPointImageUrl) {
+	showPhotocontestInfoModal: function(photocontestCode, photocontestName, photocontestDescription, photocontestLikeLimit, photocontestImageUrl, questionPointImageUrl) {
 		if (photocontestCode && photocontestName && photocontestDescription && photocontestLikeLimit) {
 			this.resetBootstrapModal();
 			var messageBlockTemplate = '';
