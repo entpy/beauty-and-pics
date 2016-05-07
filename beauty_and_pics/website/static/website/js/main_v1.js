@@ -495,6 +495,7 @@ var bootstrapModalsObect = {
 	showDeleteImageModal: function(imageUrl, imageId) {
 		if (imageUrl && imageId) {
 			this.resetBootstrapModal();
+			$(".bootstrap_modal").find('.modal-header').remove();
 			$(".bootstrap_modal").find('.modal-body').html(this.getImageHtmlBlock(imageUrl));
 			$(".bootstrap_modal").find('.modal-footer').html(this.deleteImageButtonHtmlBlock(imageId));
 			this.showBootstrapModal();

@@ -89,7 +89,7 @@
 				</div>
 				<div class="form-group {% if form.gender.errors %}has-error{% endif %}">
 					<label for="{{ form.gender.id_for_label }}" class="col-md-4 control-label">{{ form.gender.label }} *</label>
-					<div class="col-md-4">
+					<div class="col-md-8">
 						<select name="{{ form.gender.name }}" class="form-control" id="{{ form.gender.id_for_label }}">
 							<option selected="selected">{{ form.gender.label }}</option>
 							{% for key,value in form.fields.gender.choices %}
@@ -99,10 +99,10 @@
 					</div>
 				</div>
 			</fieldset>
-			<div class="col-md-12">
+			<div class="col-md-12 no-gutter">
 				<h3>Qualcosa su di te...</h3>
 			</div>
-			<div class="col-md-12">
+			<div class="col-md-12 no-gutter">
 				<div class="alert alert-info">
 					<p>Fornisci qualche informazione più dettagliata su di te.</p>
 				</div>
@@ -110,7 +110,7 @@
 			<fieldset class="col-md-9">
 				<div class="form-group {% if form.hair.errors %}has-error{% endif %}">
 					<label for="{{ form.hair.id_for_label }}" class="col-md-4 control-label">{{ form.hair.label }} *</label>
-					<div class="col-md-4">
+					<div class="col-md-8">
 						<select name="{{ form.hair.name }}" class="form-control" id="{{ form.hair.id_for_label }}">
 							{% for key,value in form.fields.hair.choices %}
 								<option value="{{ key }}" {% if post.hair == key|slugify %}selected="selected"{% endif %}>{{ value }}</option>
@@ -120,7 +120,7 @@
 				</div>
 				<div class="form-group {% if form.eyes.errors %}has-error{% endif %}">
 					<label for="{{ form.eyes.id_for_label }}" class="col-md-4 control-label">{{ form.eyes.label }} *</label>
-					<div class="col-md-4">
+					<div class="col-md-8">
 						<select name="{{ form.eyes.name }}" class="form-control" id="{{ form.eyes.id_for_label }}">
 							{% for key,value in form.fields.eyes.choices %}
 								<option value="{{ key }}" {% if post.eyes == key|slugify %}selected="selected"{% endif %}>{{ value }}</option>
@@ -130,7 +130,7 @@
 				</div>
 				<div class="form-group {% if form.height.errors %}has-error{% endif %}">
 					<label for="{{ form.height.id_for_label }}" class="col-md-4 control-label">{{ form.height.label }} *</label>
-					<div class="col-md-4">
+					<div class="col-md-8">
 						<input name="{{ form.height.name }}" class="form-control" id="{{ form.height.id_for_label }}" placeholder="Es. 167" value="{{ post.height }}" type="text">
 					</div>
 				</div>

@@ -20,27 +20,33 @@
 	</div>
 </div>
 {% if exist_valid_notify %}
-<div class="row">
-	<div class="col-md-12">
-		<table class="table table-striped table-hover ">
-			<thead>
-				<tr>
-					<th>Titolo</th>
-					<th class="display_only_big">Data</th>
-					<th class="text-center">Stato</th>
-				</tr>
-			</thead>
-			<tbody class="table_body_block_container">
-				{# this will be populated with JavaScript #}
-			</tbody>
-		</table>
+	<div class="row">
+		<div class="col-md-12">
+			<table class="table table-striped table-hover ">
+				<thead>
+					<tr>
+						<th>Titolo</th>
+						<th class="display_only_big">Data</th>
+						<th class="text-center">Stato</th>
+					</tr>
+				</thead>
+				<tbody class="table_body_block_container">
+					{# this will be populated with JavaScript #}
+				</tbody>
+			</table>
+		</div>
 	</div>
-</div>
-<div class="text-center">
-	<a class="btn btn-success loadMoreElementsAction" href="#">Mostra notifiche precedenti</a>
-</div>
+	<div class="text-center">
+		<a class="btn btn-success loadMoreElementsAction" href="#">Mostra notifiche precedenti</a>
+	</div>
 {% else %}
-<p>Non è stata pubblicata ancora nessuna notifica.</p>
+	<div class="row">
+		<div class="col-sm-12">
+			<div class="text-info">
+				<p>Non è stata pubblicata ancora nessuna notifica.</p>
+			</div>
+		</div>
+	</div>
 {% endif %}
 {% endblock container4_content %}
 

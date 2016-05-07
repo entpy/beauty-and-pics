@@ -95,11 +95,11 @@
 			<p>Da questa sezione puoi rimuovere completamente il tuo account, ma non lo farai mai...vero?</p>
 		</div>
 	</div>
-	<div class="col-md-8">
+	<div class="col-md-12">
 		<form class="form-horizontal" method="post" action="">
 			{% csrf_token %}
 			<input name="{{ delete_user_form.user_id.name }}" value="{{ user.id }}" type="hidden">
-			<fieldset>
+			<fieldset class="col-md-9">
 				<div class="form-group">
 					<div class="col-md-8 col-md-offset-4">
 						<button type="submit" class="btn btn-danger deleteUserClickAction" data-toggle="tooltip" data-placement="top" data-original-title="No ripensaci, sei ancora in tempo...">Elimina account</button>
