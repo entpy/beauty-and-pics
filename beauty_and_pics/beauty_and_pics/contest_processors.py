@@ -5,7 +5,6 @@ from django.conf import settings
 from account_app.models.accounts import *
 from account_app.models.images import *
 from contest_app.models.contests import *
-# from image_contest_app.models import ImageContestImage, ImageContest #imagecontestapptag
 from notify_system_app.models import Notify
 from django_survey.models import Survey
 from beauty_and_pics.consts import project_constants
@@ -20,8 +19,6 @@ def common_contest_processors(request):
     book_obj = Book()
     contest_obj = Contest()
     survey_obj = Survey()
-    # ImageContest_obj = ImageContest() #imagecontestapptag
-    # ImageContestImage_obj = ImageContestImage() #imagecontestapptag
     Notify_obj = Notify()
     contest_type = contest_obj.get_contest_type_from_session(request=request)
     logged_user_id = None
@@ -36,11 +33,6 @@ def common_contest_processors(request):
     # current contest start_time
     contest_info = contest_obj.get_contest_info_about_type(contest_type=contest_type)
     exists_active_photoboard = False
-    photoboard_contest_winner = False
-    # check if exists an active photoboard
-    # exists_active_photoboard = ImageContest_obj.exists_active_contest(contest_type=contest_type) #imagecontestapptag
-    # last photoboard contest winner
-    # photoboard_contest_winner = ImageContestImage_obj.get_closed_contest_info(contest_type=contest_type) #imagecontestapptag
 
     # create default questions and survey blocks
     survey_obj._create_defaults()
@@ -77,7 +69,6 @@ def common_contest_processors(request):
             'top_five_account': top_five_account,
             'profile_thumbnail_image_url': profile_thumbnail_image_url,
             'contest_info': contest_info,
-            'photoboard_contest_winner': photoboard_contest_winner,
             'user_is_authenticated': user_is_authenticated,
             'authenticated_user_contest_type': autenticated_user_data.get("contest_type"),
             'site_name': project_constants.SITE_NAME,

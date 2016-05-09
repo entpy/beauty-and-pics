@@ -48,9 +48,6 @@ urlpatterns = [
     url(r'^passerella/donna/$', 'website.views.catwalk_index', {"contest_type": "woman-contest"}, name='catwalk_index'),
     url(r'^passerella/uomo/$', 'website.views.catwalk_index', {"contest_type": "man-contest"}, name='catwalk_index'),
     url(r'^passerella/(?:(?P<contest_type>[a-z-]+)/)?$', 'website.views.catwalk_index', name='catwalk_index'), # per il blocco catwalk questo va messo sempre al fondo
-    #imagecontestapptag
-    # url(r'^passerella/bacheca/(?:(?P<user_id>\d+)/)$', 'website.views.catwalk_photoboard_details', name='catwalk_photoboard_details'),
-    # url(r'^passerella/bacheca/$', 'website.views.catwalk_photoboard_list', name='catwalk_photoboard_list'),
 
     # private profile
     url(r'^profilo/(?:(?P<welcome>\d+)/)?$', 'website.views.profile_index', name='profile_index'),
@@ -66,8 +63,6 @@ urlpatterns = [
     url(r'^profilo/ottieni-premio/$', 'website.views.profile_get_prize', name='profile_get_prize'),
     url(r'^profilo/intervista/$', 'website.views.profile_interview', name='profile_interview'),
     url(r'^profilo/pubblicazione-intervista/$', 'website.views.profile_interview_publishing', name='profile_interview_publishing'),
-    #imagecontestapptag
-    # url(r'^profilo/foto-bacheca/(?:(?P<image_add_success>\d+)/)?$', 'website.views.profile_photoboard', name='profile_photoboard'),
     # django_photo_contest
     url(r'^profilo/concorsi-a-tema/$', 'website.views.profile_photo_contest_list', name='profile_photo_contest_list'),
     url(r'^profilo/concorsi-a-tema/(?P<photocontest_code>[a-z-]+)/seleziona-foto/$', 'website.views.profile_photo_contest_select', name='profile_photo_contest_select'),
