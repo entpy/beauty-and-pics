@@ -10,7 +10,7 @@
 
 {% block custom_css %}
 <style>
-	/* evidenzio i photocontest ai quali l'utente sta prendendo parte */
+	/* evidenzio i photocontest dove l'utente sta partecipando */
 	.photocontest_grid_button_active { background-color: #18bc9c; color: #fff; }
 	.photocontest_grid_button_active.grid_button_1 > .grid_button_label { color: #fff; }
 	.legend_block { background-color: #18bc9c; display: inline-block; height: 20px; vertical-align: middle; width: 20px; }
@@ -28,7 +28,7 @@
 	</div>
 	<div class="col-md-12">
 		<div class="alert alert-info">
-			<p>Ottieni un bonus di +32 punti: prendi parte ad un concorso a tema, carica solo le foto che corrispondono ai requisiti e ottieni più mi piace per avere la foto in evidenza ed ottenere il bonus di 32 punti.</p>
+			<p>Guadagna un bonus di +32 punti: prendi parte ad un concorso a tema, carica solo le foto che corrispondono ai requisiti e ottieni più mi piace per avere la foto in evidenza e il bonus di 32 punti.</p>
 		</div>
 	</div>
 </div>
@@ -36,7 +36,7 @@
 {% if photo_contest_list %}
 	<div class="row">
 	{% for photo_contest in photo_contest_list %}
-		<div class="col-xs-12 col-sm-6 col-md-4 col-lg-3">
+		<div class="col-xs-6 col-sm-6 col-md-4 col-lg-3">
 			{% if user_partecipation_photocontest|get_item:photo_contest.code %}
 				<a href="/profilo/concorsi-a-tema/{{ photo_contest.code }}/" class="thumbnail grid_button_1 photocontest_grid_button_active" data-toggle="tooltip" data-placement="top" data-original-title="Clicca per entrare nella pagina riepilogativa del concorso a tema '{{ photo_contest.name }}'">
 			{% else %}
@@ -50,7 +50,7 @@
 		</div>
 	{% endfor %}
 	</div>
-	<p class="text-primary">NOTA: i concorsi dove stai partecipando sono evidenziati di questo colore: <span class="legend_block">&nbsp;</span></p>
+	<p class="text-primary">NOTA: i concorsi dove stai partecipando sono evidenziati di questo colore <span class="legend_block">&nbsp;</span></p>
 {% endif %}
 {# }}} #}
 {% endblock container4_content %}
@@ -76,12 +76,12 @@
 			return false;
 		});
 
-		// enter into the photocontest
+		// go to photocontest
 		$(document).on("click",".photocontestEnterClickAction", function(){
 			var photocontestCode = $(this).data("photocontestCode");
 			location.href = "/profilo/concorsi-a-tema/" + photocontestCode + "/";
 
-			return false;
+			return true;
 		});
 	});
 </script>

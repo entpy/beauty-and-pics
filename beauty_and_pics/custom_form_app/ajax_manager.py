@@ -21,9 +21,6 @@ from beauty_and_pics.common_utils import CommonUtils
 from contest_app.models.votes import Vote
 from account_app.models import *
 from contest_app.models import Contest
-from image_contest_app.models import ImageContest, ImageContestImage, ImageContestVote
-from image_contest_app.settings import ICA_VATE_COOKIE_NAME, ICA_VATE_COOKIE_EXPIRING
-from image_contest_app.exceptions import ImageAlreadyVotedError, ImageContestClosedError
 from upload_image_box.models import cropUploadedImages
 from notify_system_app.models import Notify
 from django_survey.models import UserSurvey, Survey
@@ -52,8 +49,6 @@ class ajaxManager():
         self.__valid_action_list += ('add_favorite',)
         self.__valid_action_list += ('get_user_info',)
         self.__valid_action_list += ('count_unread_notify',)
-        # self.__valid_action_list += ('add_image_to_photoboard',)
-        self.__valid_action_list += ('remove_image_from_photoboard',)
         self.__valid_action_list += ('add_photoboard_like',)
         self.__valid_action_list += ('resend_confirmation_email',)
         self.__valid_action_list += ('publish_interview',)
@@ -593,85 +588,6 @@ class ajaxManager():
 
         return True
 
-    """
-    def add_image_to_photoboard(self):
-        ""unction to add a photo to photoboard""
-        from image_contest_app.exceptions import AddImageContestImageFieldMissignError, AddImageContestIntegrityError
-
-        logger.debug("ajax_function: @@add_image_to_photoboard@@")
-        logger.debug("parametri della chiamata: " + str(self.request.POST))
-
-        book_image_id = self.request.POST.get("book_image_id")
-
-        account_obj = Account()
-        contest_obj = Contest()
-        ImageContest_obj = ImageContest()
-        ImageContestImage_obj = ImageContestImage()
-        cropUploadedImages_obj = cropUploadedImages()
-
-        # retrieve logged user_obj
-        user_obj = self.request.user
-        # retrieve user contest_obj
-        image_user_contest_obj = ImageContest_obj.get_image_contest_about_user(user_obj=user_obj)
-        # retrieve selected image_obj
-        image_obj = cropUploadedImages_obj.get_image_obj_from_id(book_image_id=book_image_id)
-        # add picture to photoboard
-        data = {
-            'user_obj' : user_obj,
-            'image_user_contest_obj' : image_user_contest_obj,
-            'image_obj' : image_obj,
-        }
-
-        try:
-            savedImageContestImage_obj = ImageContestImage_obj.add_contest_image(data=data)
-        except AddImageContestImageFieldMissignError:
-            data = {'error' : True, 'message': 'AddImageContestImageFieldMissignError exception'}
-        except AddImageContestIntegrityError:
-            data = {'error' : True, 'message': 'AddImageContestIntegrityError exception'}
-        else:
-            # build valid json response
-            image_contest_image_id = savedImageContestImage_obj.image_contest_image_id
-            image_url = savedImageContestImage_obj.image.image.url
-            data = {
-                    'success' : True,
-                    'image_contest_image_id' : image_contest_image_id,
-                    'image_url' : image_url,
-            }
-
-        json_data_string = json.dumps(data)
-        self.set_json_response(json_response=json_data_string)
-
-        return True
-    """
-
-    """
-    def remove_image_from_photoboard(self):
-        ""Function to remove a photo from photoboard""
-        # from image_contest_app.models import ImageContest, ImageContestImage
-
-        logger.debug("ajax_function: @@remove_image_from_photoboard@@")
-        logger.debug("parametri della chiamata: " + str(self.request.POST))
-
-        ImageContestImage_obj = ImageContestImage()
-
-        # retrieve logged user_obj
-        user_id = self.request.user.id
-
-        try:
-            # remove image from photoboard about this user
-            ImageContestImage_obj.remove_contest_image_about_user(user_id=user_id)
-            # TODO: definire e testare l'eccezione
-        except ImageContestImage.DoesNotExist:
-            data = {'error' : True, 'message' : 'L\'immagine da eliminare non è stata trovata.'}
-        else:
-            data = {'success' : True,}
-
-        json_data_string = json.dumps(data)
-        self.set_json_response(json_response=json_data_string)
-
-        return True
-    """
-
     def add_photoboard_like(self):
         """Function to add a photoboard like"""
         logger.debug("ajax_function: @@add_photoboard_like@@")
@@ -1019,7 +935,7 @@ class ajaxManager():
             else:
                 try:
                     # try to add a photocontest image like
-                    photo_contest_pictures_obj.add_photocontest_image_like(user_id=user_id, photocontest_code=photocontest_code)
+                    photo_contest_pictures_obj.add_photocontest_image_like(user_id=photocontest_user_id, photocontest_code=photocontest_code)
 
                     # prelevo i dati dell'account da votare per creare la votazione
                     account_info = account_obj.custom_user_id_data(user_id=photocontest_user_id)
@@ -1028,9 +944,9 @@ class ajaxManager():
                     photo_contest_vote_obj.create_votation(user_id=user_id, photo_contest_pictures_id=user_photocontest_picture_obj.photo_contest_pictures_id, request=self.request)
 
                     # controllo se per caso l'utente fosse diventato vincitore
-                    if photo_contest_pictures_obj.is_photocontest_winner(user_id=user_id, photocontest_code=photocontest_code, contest_type_code=account_info.get("contest_type")):
+                    if photo_contest_pictures_obj.is_photocontest_winner(user_id=photocontest_user_id, photocontest_code=photocontest_code, contest_type_code=account_info.get("contest_type")):
                         # la foto è la vincitrice del photocontest, eseguo le operazioni necessarie
-                        photo_contest_winner_obj.manage_photocontest_winner(user_id=user_id, photocontest_code=photocontest_code, contest_type_code=account_info.get("contest_type"))
+                        photo_contest_winner_obj.manage_photocontest_winner(user_id=photocontest_user_id, photocontest_code=photocontest_code, contest_type_code=account_info.get("contest_type"))
                 except PhotoContest.DoesNotExist:
                     # ERRORE: il photocontest non esiste
                     logger.error("utente da votare non più esistente vote_user_id: " + str(photocontest_user_id) + " da parte di: " + str(user_id) + " con photocontest_code: " + str(photocontest_code))

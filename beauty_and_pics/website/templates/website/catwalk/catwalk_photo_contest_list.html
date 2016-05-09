@@ -28,7 +28,7 @@
 {% if photo_contest_list %}
 	<div class="row">
 	{% for photo_contest in photo_contest_list %}
-		<div class="col-xs-12 col-sm-6 col-md-4 col-lg-3">
+		<div class="col-xs-6 col-sm-6 col-md-4 col-lg-3">
 			<a href="/concorsi-a-tema/{{ photo_contest.code }}/" class="thumbnail grid_button_1 photocontestEnterClickAction" data-toggle="tooltip" data-placement="top" data-original-title="{{ photo_contest.description }}">
 				<span class="grid_button_image grid_button_image_h_90">
 					<img src="{% static "website/img/photocontest/"|str_cat:photo_contest.code|str_cat:".png" %}" alt="{{ photo_contest.name }}">

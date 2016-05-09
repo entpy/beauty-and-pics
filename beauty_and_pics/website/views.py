@@ -35,10 +35,7 @@ from custom_form_app.forms.unsubscribe_form import *
 from custom_form_app.forms.get_prize_form import GetPrizeForm
 from custom_form_app.forms.survey_form import SurveyForm
 from notify_system_app.models import Notify
-from image_contest_app.settings import ICA_LIKE_LIMIT
 from website.exceptions import ContestClosedNotExistsError
-from image_contest_app.exceptions import ImageAlreadyVotedError, ImageContestClosedError
-from image_contest_app.models import ImageContest, ImageContestImage, ImageContestVote
 # from django_survey.models import Answer
 import logging, time, urllib
 
