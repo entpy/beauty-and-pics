@@ -657,7 +657,7 @@ def catwalk_photo_contest_pics_info(request, photocontest_code, user_id):
     image_is_winning = photo_contest_winner_obj.check_if_image_is_winning(user_id=user_id, photocontest_code=photocontest_code, contest_type_code=contest_type_code)
 
     # prlevo eventuale prossima data per votare
-    next_votation_date = photo_contest_vote_obj.get_next_votation_date(user_id=user_id, photo_contest_pictures_id=user_photocontest_picture.photo_contest_pictures_id)
+    next_votation_date = photo_contest_vote_obj.get_next_votation_date(user_id=request.user.id, photo_contest_pictures_id=user_photocontest_picture.photo_contest_pictures_id)
 
     # check if user can vote
     # 1) controllo che l'utente sia loggato

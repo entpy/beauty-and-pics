@@ -243,7 +243,7 @@ class PhotoContestPictures(models.Model):
         select images where image_contest.contest.type = contest_type and status=0
         """
         return_var = PhotoContestPictures.objects.values('user__id', 'image__thumbnail_image__image').filter(photo_contest__code=photo_contest_code, photo_contest__contest_type__code=contest_type_code)
-	return_var = return_var.order_by('insert_date')
+	return_var = return_var.order_by('-insert_date')
 
         # apply limits
         if filters_list.get("start_limit") and filters_list.get("show_limit"):
@@ -426,6 +426,7 @@ class PhotoContestWinner(models.Model):
         """Function to add a new photocontest winner"""
         photocontest_pictures_obj = PhotoContestPictures()
 	photo_contest_obj = PhotoContest()
+        points_added = False
 
         try:
 	    # prelevo il concorso dell'immagine vincitrice
@@ -447,12 +448,12 @@ class PhotoContestWinner(models.Model):
 
         if DPC_ADD_WINNER_POINTS:
             # assegno i punti al vincitore
-            self.assign_user_points(to_user_obj=user_photocontest_pictures_obj.user)
+            points_added = self.assign_user_points(to_user_obj=user_photocontest_pictures_obj.user)
 
         if DPC_WRITE_WINNER_NOTIFY:
             # scrivo la notifica all'utente vincitore
             photocontest_info = DPC_PHOTO_CONTEST_INFO.get(photocontest_code) # (per prelevare il nome del photocontest)
-            self.notify_to_winning_user(user_id=user_id, photocontest_name=photocontest_info.get("name"))
+            self.notify_to_winning_user(user_id=user_id, photocontest_name=photocontest_info.get("name"), points_added=points_added)
 
         return True
 
@@ -460,6 +461,7 @@ class PhotoContestWinner(models.Model):
     def assign_user_points(self, to_user_obj):
 	from contest_app.models.votes import Vote
         vote_obj = Vote()
+        return_var = False
 
         # setto i punti da assegnare
         metrics_points = {
@@ -469,21 +471,29 @@ class PhotoContestWinner(models.Model):
             project_constants.VOTE_METRICS_LIST["style_metric"] : 8,
         }
 
-        # assegno i punti
-        vote_obj.add_metrics_points(metrics_points=metrics_points, to_user_obj=to_user_obj)
+        # assegno i punti (solo se il contest è aperto)
+        return_var = vote_obj.add_metrics_points(metrics_points=metrics_points, to_user_obj=to_user_obj)
 
-        return True
+        return return_var
 
     # TODO: testare
-    def notify_to_winning_user(self, user_id, photocontest_name):
+    def notify_to_winning_user(self, user_id, photocontest_name, points_added=False):
         """Function to write a notify to a winning user"""
         notify_obj = Notify()
 
         # create notify details
-        notify_data = {
-            "title" : "La tua foto ha vinto il concorso a tema '" + str(photocontest_name) + "'.",
-            "message" : "Complimenti, ottenendo il maggior numero di \"Mi piace\" hai vinto il bonus di <b>+32 punti</b> nella classifica generale e il posto in <b>evidenza</b> nel concorso a tema '" + str(photocontest_name) + "'.",
-        }
+        if points_added:
+            # il concorso è aperto ed ho aggiunto dei punti
+            notify_data = {
+                "title" : "La tua foto ha vinto il concorso a tema '" + str(photocontest_name) + "'.",
+                "message" : "Complimenti, ottenendo il maggior numero di \"Mi piace\" hai vinto il bonus di <b>+32 punti</b> nella classifica generale e il posto in <b>evidenza</b> nel concorso a tema '" + str(photocontest_name) + "'.<br />Continua ad accumulare voti per rimanere in testa.",
+            }
+        else:
+            # il concorso è chiuso e quindi non ho potuto aggiungere dei punti
+            notify_data = {
+                "title" : "La tua foto ha vinto il concorso a tema '" + str(photocontest_name) + "'.",
+                "message" : "Complimenti, ottenendo il maggior numero di \"Mi piace\" hai vinto il posto in <b>evidenza</b> nel concorso a tema '" + str(photocontest_name) + "'.<br />Continua ad accumulare voti per rimanere in testa.",
+            }
 
         # save notify about this user
         notify_obj.create_notify(data=notify_data, user_id=user_id)

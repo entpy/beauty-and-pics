@@ -72,7 +72,7 @@
 .vote_points_container_title { margin-top: 6px; margin-bottom: 14px; text-align: center; }
 .navigation_bar .navigation_wrapper { display: block; margin: 0 10px; }
 .navigation_bar .navigation_wrapper a { display: inline-block; }
-.navigation_bar .navigation_wrapper .menu-item-container { display: block; padding: 0 5px; }
+.navigation_bar .navigation_wrapper .menu-item-container { display: inline; }
 .navigation_bar .navigation_wrapper .menu-item-container.active div { font-weight: normal; }
 .navigation_bar2 .navigation_wrapper .menu-item-container { margin-bottom: 10px; padding: 0px 15px; }
 /* catwalk section }}} */

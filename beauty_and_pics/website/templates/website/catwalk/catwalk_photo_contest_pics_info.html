@@ -198,7 +198,7 @@
 			bootstrapModalsObect.showMessageModal('Grazie per aver dato il tuo "<b>Mi piace</b>" a {{ user_info.first_name }}.<br />Visita anche il suo <a href="/passerella/dettaglio-utente/{{ user_info.user_id }}/">profilo completo</a> e guarda tutte le sue foto.', 'Votazione completata');
 		} else if (image_contest_like_remaining == 0) {
 			// complimenti hai fatto vincere la foto
-			bootstrapModalsObect.showMessageModal('Complimenti, grazie al tuo mi "<b>Mi piace</b>" la foto di {{ user_info.first_name }} ha vinto il concorso a tema \'{{ photocontest_name }}\'.<br />Visita anche il suo <a href="/passerella/dettaglio-utente/{{ user_info.user_id }}/">profilo completo</a> e guarda tutte le sue foto.', 'Voto decisivo');
+			bootstrapModalsObect.showMessageModal('Complimenti, grazie al tuo "<b>Mi piace</b>" la foto di {{ user_info.first_name }} ha vinto il concorso a tema \'{{ photocontest_name }}\'.<br />Visita anche il suo <a href="/passerella/dettaglio-utente/{{ user_info.user_id }}/">profilo completo</a> e guarda tutte le sue foto.', 'Voto decisivo');
 			// mostro messaggio per far sapere che l'immagine è vincitrice
 			$(".currentWinningImageAction").removeClass("hide");
 		}

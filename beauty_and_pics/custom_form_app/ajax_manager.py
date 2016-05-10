@@ -824,6 +824,8 @@ class ajaxManager():
         book_image_id = self.request.POST.get("book_image_id")
         photocontest_code = self.request.POST.get("photocontest_code")
 
+        #XXX: check futuri, controllare che il 'book_image_id' appartenga effettivamente a questo utente
+
         # retrieve user info
         account_info = account_obj.custom_user_id_data(user_id=user_id)
 
