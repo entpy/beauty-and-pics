@@ -159,6 +159,18 @@ class PhotoContest(models.Model):
 
         return return_var
 
+    def get_photocontest_rules_list(self, photocontest_rules_list):
+        """Function to build a photocontest rules html list"""
+        return_var = ""
+
+        if photocontest_rules_list:
+            return_var = '<div class="photocontestRulesListAction" style="display: none;"><ul class="photocontest_rules_list">'
+            for rules in photocontest_rules_list:
+                return_var += '<li>' + str(rules) + '</li>'
+            return_var += '</ul></div>'
+
+        return return_var
+
 class PhotoContestPictures(models.Model):
     photo_contest_pictures_id = models.AutoField(primary_key=True)
     user = models.ForeignKey(User) # related user

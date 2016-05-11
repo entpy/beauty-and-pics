@@ -26,8 +26,17 @@
 {# hide photoboard list banner #}
 {% block photoboard_list_banner %}{% endblock %}
 
+{# hide go to catwalk banner #}
+{% block catwalk_banner %}{% endblock %}
+
 {# hide top 5 users #}
 {% block top_users_banner %}{% endblock %}
+
+{# page tip block (blocco a destra con titolo e descrizione) #}
+{% block page_tip %}
+{% static "website/img/photocontest/"|str_cat:photocontest_code|str_cat:".png" as image_src %}
+{% include "website/inc/include_blocks/page_tip.html" with title=photocontest_name text=photocontest_description|str_cat:"<div class=\"text-right\"><a href=\"/concorsi-a-tema/"|str_cat:photocontest_code|str_cat:"/\">Guarda altre foto simili</a></div>"|safe image_src=image_src image_alt=photocontest_name only %}
+{% endblock %}
 
 {# main navigation active element #}
 {% block navigation_element2_active %}active{% endblock %}
@@ -74,11 +83,11 @@
 				<p class="text-warning text-justify">La foto è attualmente la preferita del concorso a tema <b>{{ photocontest_name }}</b>.</p>
 			</div>
 			<div class="container_row display_only_big">
-				<p class="text-primary text-justify">
+				<p class="text-primary text-left">
 					{% if image_is_winning %}
-						Dai un "<b>Mi piace</b>" per {{ user_info.first_name }}: se riuscirà a raggiungere i <b>{{ photocontest_like_limit }}</b> "Mi piace" prima di tutti, la sua foto continuerà a rimanere in evidenza.
+						Dai un "<b>Mi piace</b>" per {{ user_info.first_name }}.<br />Se raggiungerà <b>{{ photocontest_like_limit }}</b> "Mi piace" prima di tutti, la sua foto continuerà a rimanere in evidenza.
 					{% else %}
-						Dai un "<b>Mi piace</b>" per {{ user_info.first_name }}: se riuscirà a raggiungere i <b>{{ photocontest_like_limit }}</b> "Mi piace" prima di tutti, la sua foto vincerà il concorso a tema e verrà messa in evidenza.
+						Dai un "<b>Mi piace</b>" per {{ user_info.first_name }}.<br />Se raggiungerà <b>{{ photocontest_like_limit }}</b> "Mi piace" prima di tutti, la sua foto vincerà il concorso a tema e verrà messa in evidenza.
 					{% endif %}
 				</p>
 			</div>
@@ -86,7 +95,7 @@
 				<div class="row">
 					<div class="col-md-12">
 						<div class="alert alert-warning">
-							Per dare il "Mi piace" alla foto di {{ user_info.first_name }} devi prima <a class="alert-link" href="/registrati/">registrarti</a>.
+							Per dare il tuo "Mi piace" devi prima <a class="alert-link" href="/registrati/">registrarti</a>.
 						</div>
 					</div>
 				</div>

@@ -588,12 +588,16 @@ def catwalk_photo_contest_pics(request, photocontest_code):
     # controllo se esiste già un vincitore per questo photocontest
     last_photocontest_winner = photo_contest_winner_obj.get_last_photocontest_winner(photocontest_code=photocontest_code, contest_type_code=contest_type_code)
 
+    # build photocontest rules list
+    photocontest_rules_list = photo_contest_obj.get_photocontest_rules_list(photocontest_rules_list=user_photocontest_info.get("rules"))
+
     context = {
 	"photocontest_code" : photocontest_code,
 	"photocontest_like_limit" : user_photocontest_info.get("like_limit"),
         "photocontest_name" : user_photocontest_info.get("name"),
 	"photocontest_description" : user_photocontest_info.get("description"),
 	"photocontest_rules" : user_photocontest_info.get("rules"),
+	"photocontest_rules_list" : photocontest_rules_list,
 	"photocontest_images_exist" : photocontest_images_exist,
 	"last_photocontest_winner" : last_photocontest_winner,
     }
@@ -659,6 +663,9 @@ def catwalk_photo_contest_pics_info(request, photocontest_code, user_id):
     # prlevo eventuale prossima data per votare
     next_votation_date = photo_contest_vote_obj.get_next_votation_date(user_id=request.user.id, photo_contest_pictures_id=user_photocontest_picture.photo_contest_pictures_id)
 
+    # build photocontest rules list
+    photocontest_rules_list = photo_contest_obj.get_photocontest_rules_list(photocontest_rules_list=user_photocontest_info.get("rules"))
+
     # check if user can vote
     # 1) controllo che l'utente sia loggato
     if request.user.id:
@@ -685,6 +692,7 @@ def catwalk_photo_contest_pics_info(request, photocontest_code, user_id):
         "photocontest_image_visits" : user_photocontest_picture.visits,
         "photocontest_image_like_remaining" : photocontest_image_like_remaining,
         "photocontest_image_like_perc" : photocontest_image_like_perc,
+        "photocontest_rules_list" : photocontest_rules_list,
         "vote_image_url" : settings.SITE_URL + "/concorsi-a-tema/" + str(photocontest_code) + "/" + str(user_id) + "/",
         "next_votation_date" : next_votation_date,
         "image_is_winning" : image_is_winning,

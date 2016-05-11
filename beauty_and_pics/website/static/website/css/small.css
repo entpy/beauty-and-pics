@@ -75,6 +75,7 @@
 .navigation_bar .navigation_wrapper .menu-item-container { display: inline; }
 .navigation_bar .navigation_wrapper .menu-item-container.active div { font-weight: normal; }
 .navigation_bar2 .navigation_wrapper .menu-item-container { margin-bottom: 10px; padding: 0px 15px; }
+.grid_button_1 > .grid_button_image { margin-bottom: 5px; }
 /* catwalk section }}} */
 
 .generic_container8 .left { margin-bottom: 15px; text-align: center; }

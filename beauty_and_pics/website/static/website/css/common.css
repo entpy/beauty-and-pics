@@ -169,7 +169,7 @@ textarea { resize: none; }
 /*.tip_container > .title { color: white; }*/
 .generic_container6 > .button_container { margin-bottom: 20px; }
 .generic_container6 > img { margin-bottom: 10px; max-width: 80%; }
-.generic_container9 { padding: 0 25px 25px; }
+.generic_container9 { padding: 0 10px 10px; }
 .generic_container9 > .title { margin-top: 15px; }
 .generic_container8 > .left .container8_image_bottom_block { margin-top: 5px; }
 .generic_container5 { background-color: #ecf0f1; }
@@ -189,6 +189,9 @@ textarea { resize: none; }
 .banner_B > .title { color: #2c3e50; }
 .banner_C { background-color: #ecf0f1; }
 .banner_C > .title { color: #2c3e50; }
+
+.tip_container .photocontest_rules_list { margin-top: 0px; padding-left: 14px; list-style-type: square; }
+.tip_container .tip_button_container { margin-top: 10px; }
 
 /* catwalk user details page */
 .background_container1 { background-color: #E0E0E0; padding: 20px; }
@@ -309,7 +312,7 @@ a.thumbnail { color: transparent; }
 /* catwalk winner block */
 .winner_block_wrapper .winner_block_name { margin-bottom: 10px; }
 .winner_block_wrapper .winner_block_img { margin-bottom: 10px; }
-.winner_block_wrapper .winner_block_img img { max-width: 250px; width: 80%; }
+.winner_block_wrapper .winner_block_img img { max-width: 500px; width: 90%; }
 
 /* grid buttons style */
 .grid_button_1 { background-color: #e4e4e4; text-align: center; }

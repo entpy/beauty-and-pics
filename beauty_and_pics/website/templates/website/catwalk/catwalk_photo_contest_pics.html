@@ -18,7 +18,7 @@
 {# page tip block (blocco a destra con titolo e descrizione) #}
 {% block page_tip %}
 {% static "website/img/photocontest/"|str_cat:photocontest_code|str_cat:".png" as image_src %}
-{% include "website/inc/include_blocks/page_tip.html" with title=photocontest_name text=photocontest_description image_src=image_src image_alt=photocontest_name only %}
+{% include "website/inc/include_blocks/page_tip.html" with title=photocontest_name text=photocontest_description|str_cat:"<div class=\"text-right tip_button_container\"><a class=\"showPhotocontestRulesAction btn btn-success btn-xs\" href=\"#\">Mostra vincoli</a></div>"|str_cat:photocontest_rules_list|safe image_src=image_src image_alt=photocontest_name only %}
 {% endblock %}
 
 {# photocontest winner image #}
@@ -65,7 +65,30 @@
 			return false;
 		});
 
+		/* Function to manage rules button click */
+		$(".showPhotocontestRulesAction").click(function(){
+			managePhotocontestRulesButton();
+
+			return false;
+		});
+
 		$(".loadMoreElementsAction").click();
 	});
+
+	/* Function to manage rules button label and classes */
+	function managePhotocontestRulesButton() {
+		$(".photocontestRulesListAction").toggle();
+		if ($(".photocontestRulesListAction").is(":visible")) {
+			// il div con le regole è aperto
+			$(".showPhotocontestRulesAction").html("Chiudi");
+			$(".showPhotocontestRulesAction").removeClass("btn btn-success btn-xs");
+		} else {
+			// il div con le regole è chiuso
+			$(".showPhotocontestRulesAction").html("Guarda i vincoli");
+			$(".showPhotocontestRulesAction").addClass("btn btn-success btn-xs");
+		}
+
+		return true;
+	}
 </script>
 {% endblock custom_js %}
