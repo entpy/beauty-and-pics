@@ -35,7 +35,7 @@
 {# page tip block (blocco a destra con titolo e descrizione) #}
 {% block page_tip %}
 {% static "website/img/photocontest/"|str_cat:photocontest_code|str_cat:".png" as image_src %}
-{% include "website/inc/include_blocks/page_tip.html" with title=photocontest_name text=photocontest_description|str_cat:"<div class=\"text-right\"><a href=\"/concorsi-a-tema/"|str_cat:photocontest_code|str_cat:"/\">Guarda altre foto simili</a></div>"|safe image_src=image_src image_alt=photocontest_name only %}
+{% include "website/inc/include_blocks/page_tip.html" with title=photocontest_name text="<div class=\"text-right\"><a href=\"/concorsi-a-tema/"|str_cat:photocontest_code|str_cat:"/\">Guarda altre foto simili</a></div>"|safe image_src=image_src image_alt=photocontest_name only %}
 {% endblock %}
 
 {# main navigation active element #}

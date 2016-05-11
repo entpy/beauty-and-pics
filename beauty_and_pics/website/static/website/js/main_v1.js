@@ -917,7 +917,7 @@ var bootstrapModalsObect = {
 			messageBlockTemplate += '</p>';
 			messageBlockTemplate += '</div>';
 			messageBlockTemplate += '</div>';
-			messageBlockTemplate += '<div class="row"><div class="col-sm-4 col-sm-offset-4">' + this.getImageHtmlBlock(imageUrl) + '</div></div>';
+			messageBlockTemplate += '<div class="row"><div class="col-sm-4 col-sm-offset-4 text-center photocontest_popup_img_container">' + this.getImageHtmlBlock(imageUrl) + '</div></div>';
 			$(".bootstrap_modal").find('.modal-title').html("Conferma");
 			$(".bootstrap_modal").find('.modal-footer').html('<button type="button" class="btn btn-default" data-dismiss="modal">Annulla</button><button type="button" class="btn btn-success addImageToPhotocontestClickAction" data-image-id="' + imageId + '" data-dismiss="modal">Conferma</button>');
 			$(".bootstrap_modal").find('.modal-body').html(messageBlockTemplate);

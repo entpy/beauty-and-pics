@@ -77,16 +77,16 @@
 
 	/* Function to manage rules button label and classes */
 	function managePhotocontestRulesButton() {
-		$(".photocontestRulesListAction").toggle();
 		if ($(".photocontestRulesListAction").is(":visible")) {
-			// il div con le regole è aperto
-			$(".showPhotocontestRulesAction").html("Chiudi");
-			$(".showPhotocontestRulesAction").removeClass("btn btn-success btn-xs");
-		} else {
 			// il div con le regole è chiuso
 			$(".showPhotocontestRulesAction").html("Guarda i vincoli");
-			$(".showPhotocontestRulesAction").addClass("btn btn-success btn-xs");
+			$(".showPhotocontestRulesAction").addClass("btn-success");
+		} else {
+			// il div con le regole è aperto
+			$(".showPhotocontestRulesAction").html("Chiudi");
+			$(".showPhotocontestRulesAction").removeClass("btn-success");
 		}
+		$(".photocontestRulesListAction").slideToggle(300);
 
 		return true;
 	}
