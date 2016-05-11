@@ -929,7 +929,7 @@ class ajaxManager():
             if not account_obj.has_permission(user_obj=user_obj, permission_codename='user_verified'):
                 # ERRORE: l'utente votante non è stato verificato
                 logger.error("add_photocontest_image_like error, utente non verificato")
-                msg = "Non è possibile assegnare il like se non viene verificato l'account."
+                msg = "Non è possibile assegnare il like se non viene verificato l'account o non si è registrati."
             elif not photo_contest_vote_obj.check_if_user_can_add_like(user_id=user_id, photo_contest_pictures_id=user_photocontest_picture_obj.photo_contest_pictures_id):
                 # ERRORE: utente già votato, il like non può essere assegnato
                 logger.error("add_photocontest_image_like error, like già assegnato | error code: " + str(django_photo_contest.exceptions.LikeAlreadyAssigned.get_error_code))
@@ -952,7 +952,7 @@ class ajaxManager():
                 except PhotoContest.DoesNotExist:
                     # ERRORE: il photocontest non esiste
                     logger.error("utente da votare non più esistente vote_user_id: " + str(photocontest_user_id) + " da parte di: " + str(user_id) + " con photocontest_code: " + str(photocontest_code))
-                    msg = "Errore inaspettato nella votazione, utente non più esistente."
+                    msg = "Errore inaspettato nella votazione, photocontest non più esistente."
                 except PhotoContestPictures.DoesNotExist:
                     # ERRORE: la foto da votare non esiste più nel photocontest
                     logger.error("foto non più esistente nella votazione di: " + str(photocontest_user_id) + " da parte di: " + str(user_id) + " con photocontest_code: " + str(photocontest_code))

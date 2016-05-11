@@ -41,15 +41,16 @@
 		</div>
 	</div>
 </div>
+{% else %}
+	{# image grid block {{{ #}
+	<div class="row">
+		<div class="col-sm-12 image_grid_container"></div>
+	</div>
+	{# image grid block }}} #}
+	<div class="text-center">
+		<a class="btn btn-success loadMoreElementsAction" href="#">Mostra altre</a>
+	</div>
 {% endif %}
-{# image grid block {{{ #}
-<div class="row">
-	<div class="col-sm-12 image_grid_container"></div>
-</div>
-{# image grid block }}} #}
-<div class="text-center">
-	<a class="btn btn-success loadMoreElementsAction" href="#">Mostra altre</a>
-</div>
 {% endblock container4_content %}
 
 {% block custom_js %}
@@ -72,7 +73,9 @@
 			return false;
 		});
 
-		$(".loadMoreElementsAction").click();
+		{% if photocontest_images_exist %}
+			$(".loadMoreElementsAction").click();
+		{% endif %}
 	});
 
 	/* Function to manage rules button label and classes */
