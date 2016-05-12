@@ -400,7 +400,7 @@ class PhotoContestVote(models.Model):
 class PhotoContestWinner(models.Model):
     """
     I vincitori dei vari photocontest verranno salvati qui, ogni utente
-    quindi potrebbe avere più righe per lo stesso photo contest
+    quindi potrebbe avere più righe per lo stesso photocontest
     """
     photo_contest_winner_id = models.AutoField(primary_key=True)
     photo_contest = models.ForeignKey(PhotoContest) # related photo contest
@@ -424,10 +424,6 @@ class PhotoContestWinner(models.Model):
             self.add_contest_winner(user_id=user_id, photocontest_code=photocontest_code, contest_type_code=contest_type_code)
         except PhotoContestPictures.DoesNotExist:
             raise
-
-        # XXX: per ora no
-        # elimino tutti i voti per il contest_type_code e il photocontest_code
-        # photo_contest_vote_obj.delete_photocontest_vote(photocontest_code=photocontest_code, contest_type_code=contest_type_code)
 
         # azzero tutti voti dell'immagine
         photo_contest_pictures_obj.clear_image_like(photocontest_code=photocontest_code, contest_type_code=contest_type_code)
