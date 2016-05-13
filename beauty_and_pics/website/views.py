@@ -578,8 +578,12 @@ def catwalk_photo_contest_pics(request, photocontest_code):
     # retrieve contest_type
     contest_type_code = contest_obj.get_contest_type_from_session(request=request)
 
-    # prelevo le informazioni sul photocontest corrente
-    user_photocontest_info = photo_contest_obj.get_photocontest_fullinfo(code=photocontest_code, contest_type_code=contest_type_code)
+    try:
+        # prelevo le informazioni sul photocontest corrente
+        user_photocontest_info = photo_contest_obj.get_photocontest_fullinfo(code=photocontest_code, contest_type_code=contest_type_code)
+    except PhotoContest.DoesNotExist:
+        # ERRORE: il photocontest non esiste
+        return HttpResponseRedirect('/concorsi-a-tema/')
 
     # controllo se il photocontest selezionato contiene immagini
     if photo_contest_pictures_obj.photocontest_images_exist(photo_contest_code=photocontest_code, contest_type_code=contest_type_code):
@@ -1275,7 +1279,11 @@ def profile_photo_contest_select(request, photocontest_code):
         return HttpResponseRedirect('/profilo/concorsi-a-tema/' + photocontest_code)
 
     # prelevo le informazioni sul photocontest corrente
-    user_photocontest_info = photo_contest_obj.get_photocontest_fullinfo(code=photocontest_code, contest_type_code=autenticated_user_data["contest_type"])
+    try:
+        user_photocontest_info = photo_contest_obj.get_photocontest_fullinfo(code=photocontest_code, contest_type_code=autenticated_user_data["contest_type"])
+    except PhotoContest.DoesNotExist:
+        # ERRORE: il photocontest non esiste
+        return HttpResponseRedirect('/profilo/concorsi-a-tema/')
 
     # check if exists book images
     exists_user_images = book_obj.exists_user_images(user_id=user_id)

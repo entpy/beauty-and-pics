@@ -289,7 +289,6 @@ class ajaxManager():
 		    }),
 
         # photocontest section
-        # TODO: testare
         if elements_list_type == "photocontest":
             photo_contest_pictures_obj = PhotoContestPictures()
 	    contest_obj = Contest()
@@ -897,7 +896,6 @@ class ajaxManager():
 
         return True
 
-    # TODO: testarla
     def add_photocontest_image_like(self):
         """Function to add photocontest image like"""
         logger.debug("ajax_function: @@add_photocontest_image_like@@")
@@ -942,7 +940,7 @@ class ajaxManager():
                     # prelevo i dati dell'account da votare per creare la votazione
                     account_info = account_obj.custom_user_id_data(user_id=photocontest_user_id)
 
-                    # creo la votazione TODO
+                    # creo la votazione
                     photo_contest_vote_obj.create_votation(user_id=user_id, photo_contest_pictures_id=user_photocontest_picture_obj.photo_contest_pictures_id, request=self.request)
 
                     # controllo se per caso l'utente fosse diventato vincitore

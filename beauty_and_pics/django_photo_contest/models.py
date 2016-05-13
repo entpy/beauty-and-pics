@@ -275,7 +275,6 @@ class PhotoContestPictures(models.Model):
 
         return return_var
 
-    # TODO: testare eliminazione immagine
     def delete_user_photocontest_image(self, user_id, photocontest_code):
         """Function to delete a user photocontest image"""
         try:
@@ -362,7 +361,6 @@ class PhotoContestVote(models.Model):
 
         return return_var
 
-    # TODO
     def get_next_votation_date(self, user_id, photo_contest_pictures_id):
         """Function to retrieve next votation date"""
         return_var = False
@@ -465,7 +463,6 @@ class PhotoContestWinner(models.Model):
 
         return True
 
-    # TODO
     def assign_user_points(self, to_user_obj):
 	from contest_app.models.votes import Vote
         vote_obj = Vote()
@@ -484,7 +481,6 @@ class PhotoContestWinner(models.Model):
 
         return return_var
 
-    # TODO: testare
     def notify_to_winning_user(self, user_id, photocontest_name, points_added=False):
         """Function to write a notify to a winning user"""
         notify_obj = Notify()
@@ -529,7 +525,6 @@ class PhotoContestWinner(models.Model):
 
         return return_var
 
-    # TODO
     def check_if_image_is_winning(self, user_id, photocontest_code, contest_type_code):
 	"""Function to check if current image is a winning image"""
         photo_contest_pictures_obj = PhotoContestPictures()
