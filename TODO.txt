@@ -162,3 +162,17 @@ test funzionalità
 FATTO aggiungere 32 punti alla vittoria del concorso a tema
 FATTO nella pagina dedicata alla foto di un concorso a tema stampare se la foto è attualmente la vincitrice
 FATTO aggiungere notifica utente alla vittoria del concorso a tema
+test photocontest
+=================
+- verificare che a contest chiuso venga scritto solo il messaggio
+- verificare che a contest aperto vengano assegnati 32 punti con messaggio
+- eliminare l'immagine vincitrice e testare il click sul banner
+- far vincere il concorso ad un'immagine
+- assegnazione punti da non registrato
+- assegnazione punti da non verificato
+- assegnazione punti ad un'immagine NON esistente
+- assegnazione punti ad un'immagine esistente
+- pagina pubblica con immagine NON esistente
+- pagina pubblica con immagine esistente
+- rimozione immagine dal photocontest
+- aggiunta immagine al photocontest
