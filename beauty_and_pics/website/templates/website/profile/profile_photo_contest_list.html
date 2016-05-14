@@ -42,7 +42,7 @@
 			{% else %}
 				<a href="#" class="thumbnail grid_button_1 showPhotocontestInfoClickAction" data-photocontest-code="{{ photo_contest.code }}" data-photocontest-name="{{ photo_contest.name }}" data-photocontest-like-limit="{{ photo_contest.like_limit }}" data-photocontest-description="{{ photo_contest.description }}" data-photocontest-imageurl="{% static "website/img/photocontest/"|str_cat:photo_contest.code|str_cat:".png" %}" data-toggle="tooltip" data-placement="top" data-original-title="Clicca per avere maggiori informazioni sul concorso '{{ photo_contest.name }}'">
 			{% endif %}
-				<span class="grid_button_image grid_button_image_h_90">
+				<span class="grid_button_image grid_button_image_w_60_perc">
 					<img src="{% static "website/img/photocontest/"|str_cat:photo_contest.code|str_cat:".png" %}" alt="{{ photo_contest.name }}">
 				</span>
 				<span class="grid_button_label">{{ photo_contest.name }}</span>
