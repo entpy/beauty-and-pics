@@ -117,23 +117,19 @@ header {
 	clear: both;
 	font-size: 28px;
 	line-height: 32px;
-	text-align: center;
-	font-weight: 300;
+	font-weight: bold;
 	color: #222;
 }
 #features h2 {
 	margin: 0;
-	padding-bottom: 70px;
 	display: block;
 	clear: both;
 	font-size: 18px;
 	line-height: 22px;
-	text-align: center;
 	font-weight: 300;
 	color: #222;
 }
 .more-features {
-	padding-top: 110px;
 	padding-bottom: 110px;
 }
 .features-item {
@@ -184,6 +180,7 @@ header {
 .icnp {
 	text-align: center;
 	line-height: 1.6;
+	font-weight: 300;
 }
 .iconbox > div {
 	height: 128px;
