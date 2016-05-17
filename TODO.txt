@@ -176,3 +176,21 @@ test photocontest
 - pagina pubblica con immagine esistente
 - rimozione immagine dal photocontest
 - aggiunta immagine al photocontest
+
+Nuovi aggiornamenti della piattaforma.
+
+Ecco le novità principali introdotte nella nuova release di Beauty and Pics, oltre a piccole rivisitazioni grafiche e ad alcuni bugfix:
+
+Intervista
+-------------
+Possibilità, di realizzare e pubblicare un'intervista personalizzata, l'intervista è utile per farsi conoscere (sarà visibile dal proprio profilo). La realizzazione è molto semplice, alcune domande dipendono dalle risposte fornite, in questo modo ci saranno delle interviste differenti per ogni utente.
+Per realizzare la tua intervista personalizzata clicca qui.
+
+Concorsi a tema
+---------------
+Altra importante e divertente novità introdotta in questa nuova versione. I concorsi a tema permettono di ottenere punti extra nella classifica (ben 32 punti in più per ogni vittoria).
+In breve un concorso a tema, permette la partecipazione secondo determinati vincoli, per partecipare al concorso 'bianco e nero', per esempio, occorrerà caricare solo fotografie in bianco e nero, saranno valide solo foto di selfie nel concorso 'selfie' e così via. Clicca qui per maggiori informazioni sui concorsi a tema.
+
+Piccole rivisitazioni grafiche e bugfix.
+
+Happy pics!
