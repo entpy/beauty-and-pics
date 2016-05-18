@@ -325,7 +325,7 @@ a.thumbnail:hover, a.thumbnail:focus, a.thumbnail.active { border-color: transpa
 .grid_button > .grid_button_image.grid_button_image_w_60_perc > img { height: auto; max-width: 150px; width: 60%; }
 .grid_button > .grid_button_label { margin-bottom: 15px; }
 .grid_button > .grid_button_label { color: #3498db; }
-.grid_button:hover > .grid_button_label, .grid_button:active > .grid_button_label { color: #fff; }
+.grid_button:hover > .grid_button_label, .grid_button:active > .grid_button_label, .grid_button:focus > .grid_button_label { color: #fff; }
 
 .grid_button.grid_button_1:hover { background-color: #3498db; }
 .grid_button.grid_button_1:hover > .grid_button_label { color: #fff; }
