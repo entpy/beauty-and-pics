@@ -1500,7 +1500,7 @@ var elementsListObject = {
 		$.each(elementsList, function(index, singleElement) {
 			blockUrl = "/passerella/dettaglio-utente/" + singleElement.user_id;
 			blockThumbnailImageUrl = singleElement.thumbnail_image_url;
-			items += elementsListObject.getSingleHtmlBlock(blockUrl, blockThumbnailImageUrl, false, false, false);
+			items += elementsListObject.getSingleHtmlBlock(blockUrl, blockThumbnailImageUrl, false, "hvr-grow-rotate", false);
 		});
 		// return jQuery object
 		return $(items);
@@ -1512,7 +1512,7 @@ var elementsListObject = {
 		$.each(elementsList, function(index, singleElement) {
 			blockUrl = "#";
 			blockThumbnailImageUrl = singleElement.thumbnail_image_url;
-			items += elementsListObject.getSingleHtmlBlock(blockUrl, blockThumbnailImageUrl, false, "zoom-image", singleElement.user_id);
+			items += elementsListObject.getSingleHtmlBlock(blockUrl, blockThumbnailImageUrl, false, "hvr-grow-rotate zoom-image", singleElement.user_id);
 		});
 
 		// return jQuery object
@@ -1539,7 +1539,7 @@ var elementsListObject = {
 			blockThumbnailImageUrl = singleElement.thumbnail_image_url;
 			blockImageUrl = singleElement.image_url;
 			blockImageId = singleElement.image_id;
-			items += elementsListObject.getSingleHtmlBlock(blockUrl, blockThumbnailImageUrl, blockImageUrl, "zoom-image", blockImageId);
+			items += elementsListObject.getSingleHtmlBlock(blockUrl, blockThumbnailImageUrl, blockImageUrl, "hvr-grow-rotate zoom-image", blockImageId);
 		});
 
 		// return jQuery object
@@ -1553,7 +1553,7 @@ var elementsListObject = {
 			photocontestCode = singleElement.photo_contest_code
 			blockUrl = "/concorsi-a-tema/" + photocontestCode + "/" + singleElement.user_id;
 			blockThumbnailImageUrl = singleElement.thumbnail_image_url;
-			items += elementsListObject.getSingleHtmlBlock(blockUrl, blockThumbnailImageUrl);
+			items += elementsListObject.getSingleHtmlBlock(blockUrl, blockThumbnailImageUrl, false, "hvr-grow-rotate");
 		});
 
 		// return jQuery object

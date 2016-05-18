@@ -75,7 +75,10 @@
 .navigation_bar .navigation_wrapper .menu-item-container { display: inline; }
 .navigation_bar .navigation_wrapper .menu-item-container.active div { font-weight: normal; }
 .navigation_bar2 .navigation_wrapper .menu-item-container { margin-bottom: 10px; padding: 0px 15px; }
-.grid_button_1 > .grid_button_image { margin-bottom: 5px; }
+.grid_button > .grid_button_image { margin-bottom: 5px; }
+.grid_button { background-color: #e4e4e4; }
+.grid_button:hover { background-color: #3498db; }
+
 .photocontest_popup_img_container img { width: 60%!important; }
 /* catwalk section }}} */
 
