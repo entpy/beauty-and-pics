@@ -210,7 +210,7 @@
 			var blockSize = elementsListObject.getBlockSize();
 
 			// build html block with link and image
-			var returnVar = '<div class="col-lg-' + blockSize["lg_size"] + ' col-md-' + blockSize["md_size"] + ' col-xs-' + blockSize["xs_size"] + ' col-sm-' + blockSize["sm_size"] + ' thumb imgBlockContainer_' + jsonResponse.image_id + '"><a href="#" class="thumbnail"><img alt="Immagine del book" data-fullimage-url="' + jsonResponse.image_url + '" data-image-id="' + jsonResponse.image_id + '" class="img-responsive zoom-image" src="' + jsonResponse.image_url + '"></a></div>'
+			var returnVar = '<div class="col-lg-' + blockSize["lg_size"] + ' col-md-' + blockSize["md_size"] + ' col-xs-' + blockSize["xs_size"] + ' col-sm-' + blockSize["sm_size"] + ' thumb imgBlockContainer_' + jsonResponse.image_id + '"><a href="#" class="thumbnail"><img alt="Immagine del book" data-fullimage-url="' + jsonResponse.image_url + '" data-image-id="' + jsonResponse.image_id + '" class="img-responsive zoom-image hvr-grow-rotate" src="' + jsonResponse.image_url + '"></a></div>'
 
 			$(".image_grid_container").prepend(returnVar);
 		};
