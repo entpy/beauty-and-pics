@@ -24,7 +24,7 @@
 {# photocontest winner image #}
 {% block photoboard_winner_banner %}
 	{% if last_photocontest_winner %}
-		{% include "website/inc/include_blocks/photocontest_winner_banner.html" with title="La foto più votata" text="del concorso '"|str_cat:photocontest_name|str_cat:"'" link_url=last_photocontest_winner.vote_image_url image_alt="Immagine vincitrice" image_srv=last_photocontest_winner.image_url only %}
+		{% include "website/inc/include_blocks/photocontest_winner_banner.html" with title="La foto più votata" text="del concorso <b><i>"|str_cat:photocontest_name|str_cat:"</i></b>"|safe link_url=last_photocontest_winner.vote_image_url image_alt="Immagine vincitrice" image_srv=last_photocontest_winner.image_url only %}
 	{% endif %}
 {% endblock photoboard_winner_banner %}
 

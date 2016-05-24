@@ -913,7 +913,7 @@ var bootstrapModalsObect = {
 			messageBlockTemplate += '<div class="row">';
 			messageBlockTemplate += '<div class="col-md-12">';
 			messageBlockTemplate += '<p>';
-			messageBlockTemplate += 'Stai per inserire la seguente immagine nel concorso a tema "<b>' + photocontestName + '</b>".<br />(Potrai comunque rimuoverla e caricarne un\'altra in un momento successivo).<br />Confermi la selezione?'
+			messageBlockTemplate += 'Stai per inserire la seguente immagine nel concorso a tema <b><i>' + photocontestName + '</i></b>.<br />(Potrai comunque rimuoverla e caricarne un\'altra in un successivo momento).<br />Confermi la selezione?'
 			messageBlockTemplate += '</p>';
 			messageBlockTemplate += '</div>';
 			messageBlockTemplate += '</div>';

@@ -36,7 +36,7 @@ DPC_PHOTO_CONTEST_INFO = {
     'spiaggia' : {
         'name' : 'Spiaggia',
         'description' : "Scopri la suggestiva scenografia che offre il mare. Se ami le location marine questo è il posto giusto per te.",
-        'rules' : ['Nella foto deve essere visibile il mare'],
+        'rules' : ['Nella foto deve essere visibile il mare e/o la spiaggia'],
         'like_limit' : 20,
         'order' : 3000,
     },
