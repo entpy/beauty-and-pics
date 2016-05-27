@@ -114,7 +114,7 @@
 					<div class="row">
 						<div class="col-md-12">
 							<div class="alert alert-info">
-								<span class="msgTextAction">Potrai nuovamente votare questa foto tra: {{ next_votation_date | timeuntil }}.</span>
+								<span class="msgTextAction">Potrai votare nuovamente questa foto tra: {{ next_votation_date | timeuntil }}.</span>
 							</div>
 						</div>
 					</div>
@@ -190,7 +190,7 @@
 	function votationSuccessCallback() {
 		// show user voted msg block
 		$(".userVotedMsgBlockAction").removeClass("hide");
-		$(".msgTextAction").html("Potrai nuovamente votare questa foto tra: 1 settimana.");
+		$(".msgTextAction").html("Potrai votare nuovamente questa foto tra: 1 settimana.");
 
 		// decrease/increase like/remaining like
 		var image_contest_like = parseInt($(".imageContestLikeAction").html()) + 1;
