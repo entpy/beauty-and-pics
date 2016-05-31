@@ -143,7 +143,8 @@
 		// share on Facebook action
 		$("body").on("click",".shareOnFacebookClickAction", function(){
 
-			// create facebook share dialog
+			// create Facebook share dialog
+			// reference -> https://developers.facebook.com/docs/javascript/reference/FB.ui
 			FB.ui({ method: 'share', href: '{{ vote_image_url }}' }, function(response){});
 
 			return false;

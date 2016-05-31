@@ -137,7 +137,7 @@
 			// reference -> https://developers.facebook.com/docs/javascript/reference/FB.ui
 			FB.ui({
 				method: 'share',
-				href: '{{ photocontest_image_url }}' },
+				href: '{{ vote_image_url }}' },
 				// callback
 				function(response) {
 					if (response && !response.error_message) {
