@@ -11,5 +11,5 @@ $ cd beauty_and_pics/
 $ python manage.py collectstatic
 $ python manage.py makemigrations
 $ python manage.py migrate
-$ python manage.py syncdb
+$ python manage.py syncdb # non più necessario da Django 1.8
     - reload del webserver, in genere un bel init 6, 30 secondi di down e vai fratello!
