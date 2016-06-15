@@ -519,7 +519,7 @@ var bootstrapModalsObect = {
 		performLoginTemplate += '</div>';
 		performLoginTemplate += '<div class="row">';
 		performLoginTemplate += '<div class="col-md-12 margin_top_30">';
-		performLoginTemplate += '<b>Non sei ancora registrato?</b> <a href="/registrati/">Registrati</a> e partecipa al concorso, la prossima star di Beauty & Pics potresti essere tu!</p>';
+		performLoginTemplate += '<b>Non sei ancora registrato?</b> <a href="/registrati/">Registrati</a>, la prossima star di Beauty & Pics potresti essere tu!</p>';
 		performLoginTemplate += '</div>';
 		performLoginTemplate += '</div>';
 		performLoginTemplate += '</div>';
@@ -653,14 +653,14 @@ var bootstrapModalsObect = {
 		messageBlockTemplate += '<div class="row">';
 		messageBlockTemplate += '<div class="col-md-12">';
 		messageBlockTemplate += '<p>';
-		messageBlockTemplate += '<h4>Ciao ' + userFirstName + ',</h4>';
-		messageBlockTemplate += 'questo è <b>Beauty and Pics</b>, il concorso più fico dell\'universo!<br />'
-		messageBlockTemplate += 'Ecco qualche dritta per iniziare: <ol class="welcome_list"><li><b>Carica</b> un\'immagine profilo.</li><li><b>Carica</b> almeno 5/6 immagini del book.</li><li><b>Chiedi</b> ai tuoi amici e parenti di votarti.</li></ol>';
-		messageBlockTemplate += 'Quindi aspetta i primi voti e tieni d\'occhio la classifica...pronta/o per diventare una star del web?';
+		messageBlockTemplate += '<h4>Ciao ' + userFirstName + '!</h4>';
+		messageBlockTemplate += 'Grazie per la registrazione su <b>Beauty and Pics</b>.<br />'
+		messageBlockTemplate += 'Ecco qualche dritta per iniziare: <ol class="welcome_list"><li><b>Carica</b> un\'immagine profilo.</li><li><b>Carica</b> almeno 5/6 immagini del book.</li><li><b>Partecipa</b> ai concorsi a tema.</li></ol>';
+		messageBlockTemplate += 'Se hai bisogno di aiuto clicca sul link <b>Richiesta aiuto</b> in fondo alla pagina.';
 		messageBlockTemplate += '</p>';
 		messageBlockTemplate += '</div>';
-		$(".bootstrap_modal").find('.modal-title').html("Benvenuta/o al concorso!");
-		$(".bootstrap_modal").find('.modal-footer').html('<button type="button" class="btn btn-success" data-dismiss="modal">Si, iniziamo!</button>');
+		$(".bootstrap_modal").find('.modal-title').html("Questo è Beauty and Pics");
+		$(".bootstrap_modal").find('.modal-footer').html('<button type="button" class="btn btn-success" data-dismiss="modal">Chiudi</button>');
 		$(".bootstrap_modal").find('.modal-body').html(messageBlockTemplate);
 		this.showBootstrapModal();
 
