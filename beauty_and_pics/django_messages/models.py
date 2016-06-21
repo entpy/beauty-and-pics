@@ -73,3 +73,41 @@ class UserRoom(models.Model):
 
     def __unicode__(self):
         return str(self.id_room)
+
+########
+
+class Message(models.Model):
+    id_message = models.AutoField(primary_key=True)
+    sender = models.ForeignKey(User) # mittente del messaggio
+    recipient = models.ForeignKey(User) # destinatario del messaggio
+    text = models.TextField() # testo del messaggio
+    write_date = models.DateTimeField(auto_now=True)
+    read_date = models.DateTimeField(null=True, blank=True) # se non settato il messaggio non è stato letto
+    sender_deleted_at = models.DateTimeField("deleted by sender at", null=True, blank=True)
+    recipient_deleted_at = models.DateTimeField("deleted by recipient at", null=True, blank=True)
+
+    class Meta:
+        app_label = 'django_messages'
+
+    def __unicode__(self):
+        return str(self.id_message)
+
+    def write_message(self):
+        """Function to write a new message"""
+
+        return True
+
+    def delete_conversation(self, sender_id, recipient_id):
+        """Function to delete a conversation"""
+
+        return True
+
+    def count_unread_messages(self, recipient_id):
+        """Function to count all unread messages about a recipient"""
+
+        return True
+
+    def get_messages_about_sender(self, sender_id):
+        """Function to retrieve all undeleted message about a sender"""
+
+        return True
