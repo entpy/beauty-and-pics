@@ -67,6 +67,7 @@ urlpatterns = [
     url(r'^profilo/concorsi-a-tema/$', 'website.views.profile_photo_contest_list', name='profile_photo_contest_list'),
     url(r'^profilo/concorsi-a-tema/(?P<photocontest_code>[a-z-]+)/seleziona-foto/$', 'website.views.profile_photo_contest_select', name='profile_photo_contest_select'),
     url(r'^profilo/concorsi-a-tema/(?P<photocontest_code>[a-z-]+)/$', 'website.views.profile_photo_contest_info', name='profile_photo_contest_info'),
+    url(r'^profilo/messaggi/$', 'website.views.profile_messages', name='profile_messages'),
 
     # email test
     url(r'^email-test/(?P<email_name>\w+)/(?P<email_mode>\w+)/$', 'website.views.email_test', name='email_test'),

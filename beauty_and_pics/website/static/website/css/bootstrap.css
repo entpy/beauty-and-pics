@@ -6874,6 +6874,10 @@ hr { border-color: #dcdcdc; }
 .text-xs-center { text-align: center; }
 .text-xs-justify { text-align: justify; }
 
+/* classi generiche per il float */
+.float-left { float: left; }
+.float-right { float: right; }
+
 @media (min-width: 768px) {
 	.col-sm-15 { width: 20%; float: left; }
 	.text-sm-left { text-align: left; }

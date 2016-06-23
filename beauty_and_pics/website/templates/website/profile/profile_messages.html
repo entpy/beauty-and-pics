@@ -1,0 +1,239 @@
+{% extends "website/inc/base_profile.html" %}
+{% load staticfiles %}
+
+{% block title %}{{ site_name }} | messaggi{% endblock %}
+
+{% block description %}Messaggi: comunica con la community di {{ site_name }}.{% endblock %}
+
+{# navigation tabs active element #}
+{% block container4_navigation_profile_messages %}active{% endblock %}
+
+{% block container4_content %}
+<div class="row">
+	<div class="col-md-12">
+		<h3>Messaggi</h3>
+	</div>
+	<div class="col-md-12">
+		<div class="alert alert-info">
+			<p>Comunica con la community di {{ site_name }}.</p>
+		</div>
+	</div>
+</div>
+{% if not exists_converstions %}
+	<div class="row">
+		<div class="col-sm-12">
+			<div class="text-info">
+				<p>Non hai creato ancora nessuna conversazione.<br />Per iniziare una nuova conversazione visita la pagina di un utente e clicca sul pulsante [icona_messaggi].</p>
+			</div>
+		</div>
+	</div>
+{% endif %}
+	<div class="row">
+		<div class="col-sm-12">
+			<div class="col-md-4 no-gutter">
+				<!-- single conversation item -->
+				<div class="col-sm-12 no-gutter conversation_item active">
+					<div class="col-md-3 no-gutter conversation_icon">
+						<img src="{% static "website/img/tmp/1.png" %}" alt="Nome_Cognome">
+					</div>
+					<div class="col-md-9 no-gutter row_container">
+						<div class="col-sm-12 no-gutter row1">
+							<div class="float-left name">Nome Cognome</div>
+							<div class="float-right close_conversation">X</div>
+						</div>
+						<div class="col-sm-12 no-gutter row2">Questo è il testo dell'ultimo mess...</div>
+						<div class="col-sm-12 no-gutter row3">
+							<div class="float-left">
+								<img src="{% static "website/img/unread.png" %}" alt="Non letto">
+							</div>
+							<div class="float-right last_message_date">23/06/2016</div>
+						</div>
+					</div>
+				</div>
+				<!-- single conversation item -->
+				<div class="col-sm-12 no-gutter conversation_item">
+					<div class="col-md-3 no-gutter conversation_icon">
+						<img src="{% static "website/img/tmp/2.png" %}" alt="Nome_Cognome">
+					</div>
+					<div class="col-md-9 no-gutter row_container">
+						<div class="col-sm-12 no-gutter row1">
+							<div class="float-left name">Nome Cognome</div>
+							<div class="float-right close_conversation">X</div>
+						</div>
+						<div class="col-sm-12 no-gutter row2">Questo è il testo dell'ultimo mess...</div>
+						<div class="col-sm-12 no-gutter row3">
+							<div class="float-left">
+								<img src="{% static "website/img/read.png" %}" alt="Non letto">
+							</div>
+							<div class="float-right last_message_date">23/06/2016</div>
+						</div>
+					</div>
+				</div>
+				<!-- single conversation item -->
+				<div class="col-sm-12 no-gutter conversation_item">
+					<div class="col-md-3 no-gutter conversation_icon">
+						<img src="{% static "website/img/tmp/3.png" %}" alt="Nome_Cognome">
+					</div>
+					<div class="col-md-9 no-gutter row_container">
+						<div class="col-sm-12 no-gutter row1">
+							<div class="float-left name">Nome Cognome</div>
+							<div class="float-right close_conversation">X</div>
+						</div>
+						<div class="col-sm-12 no-gutter row2">Questo è il testo dell'ultimo mess...</div>
+						<div class="col-sm-12 no-gutter row3">
+							<div class="float-left">
+								<img src="{% static "website/img/read.png" %}" alt="Non letto">
+							</div>
+							<div class="float-right last_message_date">23/06/2016</div>
+						</div>
+					</div>
+				</div>
+				<!-- single conversation item -->
+				<div class="col-sm-12 no-gutter conversation_item">
+					<div class="col-md-3 no-gutter conversation_icon">
+						<img src="{% static "website/img/tmp/4.png" %}" alt="Nome_Cognome">
+					</div>
+					<div class="col-md-9 no-gutter row_container">
+						<div class="col-sm-12 no-gutter row1">
+							<div class="float-left name">Nome Cognome</div>
+							<div class="float-right close_conversation">X</div>
+						</div>
+						<div class="col-sm-12 no-gutter row2">Questo è il testo dell'ultimo mess...</div>
+						<div class="col-sm-12 no-gutter row3">
+							<div class="float-left">
+								<img src="{% static "website/img/unread.png" %}" alt="Non letto">
+							</div>
+							<div class="float-right last_message_date">23/06/2016</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="col-md-8 no-gutter messages_container">
+				<div class="col-sm-12 no-gutter messages">
+					<div class="messages_actions">
+						<a href="#">Blocca utente</a>
+					</div>
+					<!-- singola risposta all'interno della conversazione -->
+					<div class="col-sm-12 no-gutter single_message">
+						<div class="col-md-1 no-gutter messages_icon">
+							<img src="{% static "website/img/tmp/2.png" %}" alt="Nome_Cognome">
+						</div>
+						<div class="col-md-11 no-gutter message_info">
+							<div class="col-sm-12 no-gutter messages_header">
+								<div class="float-left message_owner_name"><a href="#">Nome Cognome</a></div>
+								<div class="float-right message_date">23/06/2016</div>
+							</div>
+							<div class="col-sm-12 no-gutter">
+								Ma la volpe col suo balzo ha raggiunto il quieto Fido. Quel vituperabile xenofobo zelante assaggia il whisky ed esclama: alleluja! Aquel vituperable xenófobo apasionado prueba su güisqui y exclama: ¡Aleluya! Ma la volpe col suo balzo ha raggiunto il quieto Fido. Quel vituperabile xenofobo zelante assaggia il whisky ed esclama: alleluja! Aquel vituperable xenófobo apasionado prueba su güisqui y exclama: ¡Aleluya! Ma la volpe col suo balzo ha raggiunto il quieto Fido.
+							</div>
+						</div>
+					</div>
+					<!-- singola risposta all'interno della conversazione -->
+					<div class="col-sm-12 no-gutter single_message">
+						<div class="col-md-1 no-gutter messages_icon">
+							<img src="{% static "website/img/tmp/2.png" %}" alt="Nome_Cognome">
+						</div>
+						<div class="col-md-11 no-gutter message_info">
+							<div class="col-sm-12 no-gutter messages_header">
+								<div class="float-left message_owner_name"><a href="#">Nome Cognome</a></div>
+								<div class="float-right message_date">23/06/2016</div>
+							</div>
+							<div class="col-sm-12 no-gutter">
+								ok?
+							</div>
+						</div>
+					</div>
+					<!-- singola risposta all'interno della conversazione -->
+					<div class="col-sm-12 no-gutter single_message">
+						<div class="col-md-1 no-gutter messages_icon">
+							<img src="{% static "website/img/tmp/3.png" %}" alt="Nome_Cognome">
+						</div>
+						<div class="col-md-11 no-gutter message_info">
+							<div class="col-sm-12 no-gutter messages_header">
+								<div class="float-left message_owner_name"><a href="#">Nome Cognome</a></div>
+								<div class="float-right message_date">23/06/2016</div>
+							</div>
+							<div class="col-sm-12 no-gutter">
+								Questo è il testo dell'ultimo messaggio che potrebbe venire troncato nel caso in cui fosse troppo lungo!
+							</div>
+						</div>
+					</div>
+					<!-- singola risposta all'interno della conversazione -->
+					<div class="col-sm-12 no-gutter single_message">
+						<div class="col-md-1 no-gutter messages_icon">
+							<img src="{% static "website/img/tmp/2.png" %}" alt="Nome_Cognome">
+						</div>
+						<div class="col-md-11 no-gutter message_info">
+							<div class="col-sm-12 no-gutter messages_header">
+								<div class="float-left message_owner_name"><a href="#">Nome Cognome</a></div>
+								<div class="float-right message_date">23/06/2016</div>
+							</div>
+							<div class="col-sm-12 no-gutter">
+								Ma la volpe col suo balzo ha raggiunto il quieto Fido. Quel vituperabile xenofobo zelante assaggia il whisky ed esclama: alleluja! Aquel vituperable xenófobo apasionado prueba su güisqui y exclama: ¡Aleluya! Ma la volpe col suo balzo ha raggiunto il quieto Fido. Quel vituperabile xenofobo zelante assaggia il whisky ed esclama: alleluja! Aquel vituperable xenófobo apasionado prueba su güisqui y exclama: ¡Aleluya! Ma la volpe col suo balzo ha raggiunto il quieto Fido.
+							</div>
+						</div>
+					</div>
+					<!-- singola risposta all'interno della conversazione -->
+					<div class="col-sm-12 no-gutter single_message">
+						<div class="col-md-1 no-gutter messages_icon">
+							<img src="{% static "website/img/tmp/3.png" %}" alt="Nome_Cognome">
+						</div>
+						<div class="col-md-11 no-gutter message_info">
+							<div class="col-sm-12 no-gutter messages_header">
+								<div class="float-left message_owner_name"><a href="#">Nome Cognome</a></div>
+								<div class="float-right message_date">23/06/2016</div>
+							</div>
+							<div class="col-sm-12 no-gutter">
+								ok?
+							</div>
+						</div>
+					</div>
+					<!-- singola risposta all'interno della conversazione -->
+					<div class="col-sm-12 no-gutter single_message">
+						<div class="col-md-1 no-gutter messages_icon">
+							<img src="{% static "website/img/tmp/2.png" %}" alt="Nome_Cognome">
+						</div>
+						<div class="col-md-11 no-gutter message_info">
+							<div class="col-sm-12 no-gutter messages_header">
+								<div class="float-left message_owner_name"><a href="#">Nome Cognome</a></div>
+								<div class="float-right message_date">23/06/2016</div>
+							</div>
+							<div class="col-sm-12 no-gutter">
+								Ma la volpe col suo balzo ha raggiunto il quieto Fido. Quel vituperabile xenofobo zelante assaggia il whisky ed esclama: alleluja! Aquel vituperable xenófobo apasionado prueba su güisqui y exclama: ¡Aleluya! Ma la volpe col suo balzo ha raggiunto il quieto Fido. Quel vituperabile xenofobo zelante assaggia il whisky ed esclama: alleluja! Aquel vituperable xenófobo apasionado prueba su güisqui y exclama: ¡Aleluya! Ma la volpe col suo balzo ha raggiunto il quieto Fido.
+							</div>
+						</div>
+					</div>
+					<!-- singola risposta all'interno della conversazione -->
+					<div class="col-sm-12 no-gutter single_message">
+						<div class="col-md-1 no-gutter messages_icon">
+							<img src="{% static "website/img/tmp/3.png" %}" alt="Nome_Cognome">
+						</div>
+						<div class="col-md-11 no-gutter message_info">
+							<div class="col-sm-12 no-gutter messages_header">
+								<div class="float-left message_owner_name"><a href="#">Nome Cognome</a></div>
+								<div class="float-right message_date">23/06/2016</div>
+							</div>
+							<div class="col-sm-12 no-gutter">
+								ok?
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="col-sm-12 no-gutter answers_message">
+					<textarea rows="3" class="form-control" placeholder="Scrivi il messaggio..."></textarea>
+				</div>
+				<div class="col-sm-12 no-gutter text-right">
+					<button class="btn btn-success submitButtonClickAction" type="submit">Invia</button>
+				</div>
+			</div>
+		</div>
+	</div>
+{% endblock container4_content %}
+
+{% block custom_js %}
+<script>
+	$(document).ready(function(){
+
+	});
+</script>
+{% endblock custom_js %}

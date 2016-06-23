@@ -1299,6 +1299,27 @@ def profile_photo_contest_select(request, photocontest_code):
     }
 
     return render(request, 'website/profile/profile_photo_contest_select.html', context)
+
+@login_required
+@user_passes_test(check_if_is_a_catwalker_user)
+def profile_messages(request):
+    """Messages view"""
+    user_obj = request.user
+    user_id = user_obj.id
+    account_obj =  Account()
+    contest_obj = Contest()
+
+    # get logged in user data
+    autenticated_user_data = account_obj.get_autenticated_user_data(request=request)
+    # set current contest_type
+    contest_obj.set_contest_type(request=request, contest_type=autenticated_user_data["contest_type"])
+
+    context = {
+	"exists_converstions" : False,
+	"user_id" : user_id,
+    }
+
+    return render(request, 'website/profile/profile_messages.html', context)
 # }}}
 
 # test email {{{
