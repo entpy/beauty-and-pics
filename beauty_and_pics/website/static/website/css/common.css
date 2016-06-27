@@ -340,16 +340,24 @@ a.thumbnail:hover, a.thumbnail:focus, a.thumbnail.active { border-color: transpa
 /* messages style*/
 /* box a sinistra con elenco contatti */
 .conversation_item { background-color: #e4e4e4; cursor: pointer; margin-bottom: 3px; padding: 10px; }
-.conversation_item:hover, .conversation_item.active, .conversation_item.active .row_container .row3 .last_message_date, .conversation_item:hover .row_container .row3 .last_message_date { background-color: #3498db; color: #fff; }
+.conversation_item:hover,
+.conversation_item.active,
+.conversation_item.active .row_container .row2,
+.conversation_item:hover .row_container .row2,
+.conversation_item.active .row_container .row3 .last_message_date,
+.conversation_item:hover .row_container .row3 .last_message_date { background-color: #3498db; color: #fff; }
 .conversation_item .conversation_icon img { width: 90%; }
 .conversation_item .row_container .row1 .close_conversation:hover { font-weight: bold; }
+.conversation_item .row_container .row2 { color: gray; }
 .conversation_item .row_container .row3 { max-width: 100%; }
 .conversation_item .row_container .row3 .last_message_date { color: gray; margin-top: 4px; }
+.conversation_item .row_container .row3 .message_not_read_placeholder { background-color: #212e3c; border-radius: 25px; display: inline-block; height: 6px; width: 6px; }
+.conversation_item .row_container .row3 .message_read_placeholder { background-color: transparent; border: 1px solid #212e3c; border-radius: 25px; display: inline-block; height: 6px; width: 6px; }
 
 /* box a destra con la conversazione */
 .messages_container .messages { background-color: #fff; }
-.messages_container .messages .messages_actions { text-align: right; padding: 10px 25px 0; }
-.messages_container .messages .single_message { padding: 25px; }
+.messages_container .messages .messages_actions { text-align: right; padding: 10px 10px 0; }
+.messages_container .messages .single_message { padding: 10px; }
 .messages_container .messages .messages_icon img { width: 100%; }
 .messages_container .messages .message_info { padding-left: 10px; }
 .messages_container .messages .message_info .messages_header { margin-top: -5px; }

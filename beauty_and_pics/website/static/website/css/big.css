@@ -121,6 +121,8 @@ ul.grid_container_three li { width: 30.84% }
 /* box a destra con la conversazione */
 .messages_container { padding-left: 3px; }
 .messages_container .messages { min-height: 100px; }
+.messages_container .messages .messages_actions { padding: 10px 25px 0; }
+.messages_container .messages .single_message { padding: 25px; }
 .messages_container .messages .message_info { padding-left: 10px; }
 .messages_container .messages .message_info .messages_header { margin-top: -5px; }
 .messages_container .messages .message_info .messages_header .message_owner_name { font-size: 15px; }
