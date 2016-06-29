@@ -11,10 +11,7 @@ logger = logging.getLogger(__name__)
 
 class Conversation(models.Model):
     id_conversation = models.AutoField(primary_key=True)
-    master_user = models.ForeignKey(User) # creatore della conversazione
-    partecipant = models.ForeignKey(User) # partecipante della conversazione
-    sender_deleted_at = models.DateTimeField("cancellato dal mittente il", null=True, blank=True)
-    recipient_deleted_at = models.DateTimeField("cancellato dal destinatario il", null=True, blank=True)
+    title = models.CharField(max_length=200, null=True, blank=True)
     creation_date = models.DateTimeField(auto_now=True) # la data di creazione della conversazione
 
     class Meta:
@@ -54,13 +51,35 @@ class Conversation(models.Model):
         return list(Conversation.objects.values('sender__id', 'recipient__id').filter(Q('sender__id=' + user_id) | Q('recipient__id=' + recipient_id)))
 
 
+class Participant(models.Model):
+    id_participant = models.AutoField(primary_key=True)
+    conversation = models.ForeignKey(Conversation)
+    user = models.ForeignKey(User) # partecipante della conversazione
+    is_master = models.IntegerField(default=0) # se = 1 è il creatore della conversazione
+    join_date = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        app_label = 'django_messages'
+
+    def __unicode__(self):
+        return str(self.id_participant)
+
+
+class BlockList(models.Model):
+    id_block_list = models.AutoField(primary_key=True)
+
+    class Meta:
+        app_label = 'django_messages'
+
+    def __unicode__(self):
+        return str(self.id_block_list)
+
+
 class Message(models.Model):
     id_message = models.AutoField(primary_key=True)
-    conversation = models.ForeignKey(Conversation)
-    message = models.TextField() # testo del messaggio
+    participant = models.ForeignKey(Participant)
+    text = models.TextField() # testo del messaggio
     write_date = models.DateTimeField(auto_now=True)
-    read_date = models.DateTimeField(null=True, blank=True) # se non settato il messaggio non è stato letto
-    sender_is_blocked = models.IntegerField(default=0) # se 1 il mittente del messaggio è bloccato (quindi il messaggio non deve essere visibile al destinatario)
 
     class Meta:
         app_label = 'django_messages'
