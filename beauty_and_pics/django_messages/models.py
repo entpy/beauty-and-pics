@@ -24,11 +24,6 @@ class Conversation(models.Model):
         """Function to retrieve a conversation instance"""
         return_var = None
 
-        try:
-            return_var = Conversation.objects.get(Q('sender__id=' + user_id1, 'recipient__id=' + user_id2) | Q('sender__id=' + user_id2, 'recipient__id=' + user_id1))
-        except Conversation.DoesNotExist:
-            raise
-
         return return_var
 
     def create_conversation(self, sender_id, recipient_id):
@@ -42,13 +37,6 @@ class Conversation(models.Model):
             return_var = Conversation_obj
 
         return return_var
-
-    def get_user_conversations(self, user_id):
-        """Function to retrieve a conversation list about a user (in genere
-        l'utente loggato)"""
-        return_var = None
-
-        return list(Conversation.objects.values('sender__id', 'recipient__id').filter(Q('sender__id=' + user_id) | Q('recipient__id=' + recipient_id)))
 
 
 class Participant(models.Model):
@@ -65,14 +53,17 @@ class Participant(models.Model):
         return str(self.id_participant)
 
 
-class BlockList(models.Model):
-    id_block_list = models.AutoField(primary_key=True)
+class MessageRead(models.Model):
+    id_message_read = models.AutoField(primary_key=True)
+    message = models.ForeignKey(Message)
+    participant = models.ForeignKey(Participant)
+    read_date = models.DateTimeField(auto_now=True)
 
     class Meta:
         app_label = 'django_messages'
 
     def __unicode__(self):
-        return str(self.id_block_list)
+        return str(self.id_message_read)
 
 
 class Message(models.Model):
@@ -160,50 +151,5 @@ class Message(models.Model):
     def count_unread_messages(self, recipient_id):
         """Function to count all unread messages about a recipient, it they
         have read_date unset"""
-
-        return True
-
-
-class UserBlock(models.Model):
-    id_user_block = models.AutoField(primary_key=True)
-    user = models.ForeignKey(User) # l'utente che ha bloccato
-    user_blocked = models.ForeignKey(User) # l'utente che è stato bloccato
-    date = models.DateTimeField(auto_now=True) # la data in cui è avvenuto il blocco
-
-    class Meta:
-        app_label = 'django_messages'
-
-    def __unicode__(self):
-        return str(self.id_user_blocked)
-
-    def block_user(self, user_id, user_blocked_id):
-        """Function to block a user"""
-        return_var = False
-        UserBlock_obj = UserBlock()
-
-        UserBlock_obj.user_id = user_id
-        UserBlock_obj.user_blocked_id = user_blocked_id
-        if UserBlock_obj.save():
-            return_var = True
-
-        return return_var
-
-    def unblock_user(self, user_id, user_blocked_id):
-        """Function to un-block a user"""
-        if UserBlock.objects.filter('user__id=' + user_id, 'user_blocked__id=' + user_blocked_id).delete()
-
-        return True
-
-    def check_if_user_is_blocked(self, user_id, user_blocked_id):
-        """Function to check if a user is blocked"""
-        return_var = False
-
-        if UserBlock.objects.filter('user__id=' + user_id, 'user_blocked__id=' + user_blocked_id).exists():
-            return_var = True
-
-        return return_var
-
-    def show_unblocked_recipients(self):
-        """Function to show all unblocked recipients"""
 
         return True
