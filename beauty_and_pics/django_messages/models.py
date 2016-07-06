@@ -18,21 +18,26 @@ class Conversation(models.Model):
         app_label = 'django_messages'
 
     def __unicode__(self):
-        return str(self.id_conversation)
+        return str(self.id_conversation) + " - " + str(self.title)
 
-    def get_conversation(self, user_id1, user_id2):
+    def get_conversation(self, id_conversation):
         """Function to retrieve a conversation instance"""
         return_var = None
+        try:
+            return_var = Conversation.objects.get(pk=id_conversation)
+        except Conversation.DoesNotExist:
+            raise
 
         return return_var
 
-    def create_conversation(self, sender_id, recipient_id):
+    def create_conversation(self, title=None):
         """Function to create a new conversation between two users"""
         return_var = None
 
         Conversation_obj = Conversation()
-        Conversation_obj.sender_id = sender_id
-        Conversation_obj.recipient_id = recipient_id
+        if title:
+            Conversation_obj.title = title
+
         if Conversation_obj.save():
             return_var = Conversation_obj
 
@@ -51,6 +56,36 @@ class Participant(models.Model):
 
     def __unicode__(self):
         return str(self.id_participant)
+
+    def add_participant(self, user_id, conversation_id, is_master=False):
+        """Function to add a participant"""
+        return_var = None
+
+        if user_id and conversation_id:
+            Participant_obj = Participant()
+            Participant_obj.conversation_id = conversation_id
+            Participant_obj.user_id = user_id
+            Participant_obj.is_master = is_master
+            return_var = Participant_obj.save()
+
+        return return_var
+
+    def remove_participant(self, user_id, conversation_id):
+        """Function to remove a participant"""
+        return_var = None
+
+        return return_var
+
+    def get_participant(self, user_id, conversation_id):
+        """Function to retrieve a participant instance"""
+        return_var = None
+
+        try:
+            return_var = Participant.objects.get(user_id=user_id, conversation_id=conversation_id)
+        except Participant.DoesNotExist:
+            raise
+
+        return return_var
 
 
 class MessageRead(models.Model):
@@ -78,29 +113,17 @@ class Message(models.Model):
     def __unicode__(self):
         return str(self.id_message)
 
-    def add_message_to_conversation(self, sender_id, recipient_id, message):
-        """Function to add a message to a conversation between two users"""
+    def write_message(self, user_id, conversation_id, text):
+        """Function to write a new message into a conversation"""
         return_var = False
-        Conversation_obj = Conversation()
-        UserBlock_obj = UserBlock()
-        Message_obj = Message()
+        Participant_obj = Participant()
 
-        # prelevo la conversazione tra i due (non so chi tra i due sia il
-        # mittente e chi il destinatario)
-        try:
-            Message_obj.conversation = Conversation_obj.get_conversation(user_id1=sender_id , user_id2=recipient_id)
-        except Conversation.DoesNotExist:
-            # la conversazione tra i due non esiste, quindi la creo
-            Message_obj.conversation = Conversation_obj.create_conversation(sender_id=sender_id, recipient_id=recipient_id)
-
-        # controllo che il destinatario non abbia bloccato il mittente
-        if UserBlock_obj.check_if_user_is_blocked(user_id=recipient_id, user_blocked_id=sender_id):
-            # il mittente è stato bloccato
-            Message_obj.sender_is_blocked = 1
-
-        Message_obj.message = message
-        if Message_obj.save():
-            return_var = True
+        if user_id and conversation_id and text:
+            Message_obj = Message()
+            # retrieve participant instance
+            Message_obj.participant_id = Participant_obj.get_participant(user_id=user_id, conversation_id=conversation_id)
+            Message_obj.text = text
+            return_var = Message_obj.save()
 
         return return_var
 
