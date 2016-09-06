@@ -10,7 +10,9 @@
 		<meta charset="utf-8">
 		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
 		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
-		<meta name="description" content="{% block description %}{% endblock description %}">
+		{% comment %}<meta name="description" content="{% block description %}{% endblock description %}">{% endcomment %}
+
+		<meta name="description" content="Modelle, Modelli, Fotografia, Concorsi Fotografici, Sito di modelle, Sito per modelle, Vorrei fare la modella, Cerco fotografi, Interviste alle modelle">
 
 		{# Open Graph metatags (es. Facebook) #}
 		{% block og_metatags %}
@@ -23,7 +25,8 @@
 		<!-- Firefox, Chrome, Safari, IE 11+ and Opera. 196x196 pixels in size. -->
 		<link rel="icon" href="{% static "website/favicon.png" %}">
 
-		<title>{% block title %}{{ site_name }}: il portale per modelle, modelli e appassionati di fotografia{% endblock title %}</title>
+		{% comment %}<title>{% block title %}{{ site_name }}: il portale per modelle, modelli e appassionati di fotografia{% endblock title %}</title>{% endcomment %}
+		<title>Modelle, Modelli, Fotografia, Concorsi Fotografici e Interviste</title>
 
                 <link rel="stylesheet" href="{% static "website/css/bootstrap.css" %}">
                 <link rel="stylesheet" href="{% static "website/css/common.css" %}">
