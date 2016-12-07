@@ -154,8 +154,9 @@ class Contest(models.Model):
         # create contests
         self.__create_default_types()
         self.__close_contests()
-        self.__create_contests()
-        self.__activate_contests()
+        # XXX dec 7, 2016 ==> DEATH: non creo/apro piu' i contest (la plebe non apprezza)
+        # self.__create_contests()
+        # self.__activate_contests()
 
         return True
 
